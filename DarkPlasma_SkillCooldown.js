@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCoolDown 1.0.1
+// DarkPlasma_SkillCooldown 2.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/09/01 1.0.1 クールダウンターン数が1少ない不具合を修正
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -57,19 +58,27 @@
  */
 /*~struct~SkillCooldown:
  * @param triggerSKillId
+ * @desc クールタイムを発生させるトリガーとなるスキル
+ * @text トリガースキル
  * @type skill
  * @default 0
  *
  * @param targetSkills
+ * @desc クールタイムを発生させる対象
+ * @text 対象設定
  * @type struct<SkillCooldownTarget>[]
  * @default []
  */
 /*~struct~SkillCooldownTarget:
  * @param targetSkillId
+ * @desc クールタイムを発生させる対象となるスキル
+ * @text 対象スキル
  * @type skill
  * @default 0
  *
  * @param cooldownTurnCount
+ * @desc クールタイムのターン数
+ * @text ターン数
  * @type number
  * @default 3
  */
