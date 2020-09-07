@@ -20,7 +20,7 @@ jobs:
           ref: master
           path: stage
       - name: Setup Node
-        uses: action/setup-node@v2.1.0
+        uses: actions/setup-node@v2.1.0
         with:
           node-version: '12.x'
       - name: Get yarn cache
