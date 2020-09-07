@@ -1,9 +1,0 @@
-_dist/
-node_modules/
-_build/
-
-src/excludes/
-release/
-stage/
-
-scripts/copyToProject/config.yml

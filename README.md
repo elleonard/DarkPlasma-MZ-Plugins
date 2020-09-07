@@ -1,86 +1,130 @@
-# このリポジトリは何？
+# RPGツクールMZ用プラグイン
 
-DarkPlasmaによるRPGツクールMZのプラグイン開発を行うリポジトリです。
+RPGツクールMZ 1.0系 で動作するプラグインです。
+RPGツクールMVにおける動作は保証しません。
+RPGツクールMV用プラグインは[こちら](https://github.com/elleonard/RPGtkoolMV-Plugins)
 
-# プラグインをダウンロードしたい
+There are plugins working with RMMZ 1.0.1 or later.
+[RMMV plugins](https://github.com/elleonard/RPGtkoolMV-Plugins).
 
-TODO: 
+## 使い方
 
-# ビルドしたい
+jsファイルをゲームプロジェクトの js/plugins ディレクトリ下において
+RPGツクールMZのプラグイン管理から読み込んでください
 
-node と yarn が必要です。
+## 修正したい方へ
 
-```bash
-yarn install
-yarn build
-```
-`yarn install` は初回のみ必要です。
+[CONTRIBUTING.md](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/master/CONTRIBUTING.md) をお読みください。
 
-# 動作確認したい
+# プラグインの説明
 
-./scripts/copyToProject/config.yml に、プロジェクトのディレクトリパスを追記した上で、下記コマンドで watch モードにすると、編集後にビルド結果を自動的にプロジェクトにコピーしてくれます。
+## DarkPlasma_AdditionalAttackAnimation.js
 
-```bash
-yarn install
-yarn watch
-```
-`yarn install` は初回のみ必要です。
+特定条件で攻撃アニメーションを追加するプラグイン
 
-# コミットしたい
+特定のステートにかかっている敵や、特定の種類の敵に攻撃したとき、アニメーションを追加表示します
 
-[CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
+## DarkPlasma_BattleItemVisibility.js
 
-# ディレクトリ構造
+戦闘中のアイテムリストに表示するアイテムを制御するプラグイン
 
-## _dist
+戦闘中に使用不可なアイテムを表示できます
 
-ビルド後の成果物を出力します。
+## DarkPlasma_BountyList.js
 
-## extensions/rollup
+賞金首一覧を表示するプラグイン
 
-rollup.js の拡張を配置します。  
-RPGツクールMZ向けプラグインだけ書きたいのであれば、意識しなくても構いません。
+## DarkPlasma_BuffRate.js
 
-## node_modules
+バフ・デバフの倍率を個別に変更するプラグイン
 
-yarn のモジュールが自動的に配置されます。  
-RPGツクールMZ向けプラグインだけ書きたいのであれば、意識しなくても構いません。
+攻撃力のバフのみ抑えめにしたり、防御力のバフデバフのみ強力にしたりできます
 
-## scripts
+## DarkPlasma_ClearEquip.js
 
-ビルド用スクリプトを配置します。  
-RPGツクールMZ向けプラグインだけ書きたいのであれば、ほぼ意識しなくても構いません。
+装備をすべてはずすプラグイン
 
-./scripts/copyToProject/config.yml のみ、ビルド結果をプロジェクトディレクトリにコピーして確認するためのディレクトリパス設定を書く必要があります。
-同ディレクトリにいる comfig_sample.yml を参考に書いてください。
+パーティメンバーから抜けた際に、自動で抜けたメンバーの装備をすべてはずすプラグインパラメータを提供します
+任意の名前のメンバーの装備をはずすプラグインコマンドを提供します
 
-## src
+## DarkPlasma_EnemyBook.js
 
-ビルド前の編集すべきファイルを配置します。
+拡張エネミー図鑑プラグイン
 
-### src/codes
+ドロップアイテム取得やエネミー遭遇の達成率を表示します
+取得していないドロップアイテムを？表記にしたり、未確認の要素をグレーで表示できます
 
-`yarn generate (プラグイン名)` コマンドにより、プラグイン名のディレクトリを作り、その下に `DarkPlasma_(プラグイン名).js` という名前でプラグインのソースコード本体を、 `config.yml` を配置します。
+## DarkPlasma_EscapePenalty.js
 
-プラグインを書いたり修正したりする場合、必ずこのソースコード本体と `config.yml` を編集してください。
+逃走成功時にペナルティを与えるプラグイン
 
-### src/common
+## DarkPlasma_ExpandTargetScope.js
 
-共通処理が入っています。基本的に意識しなくて構いません。
+スキル/アイテムの対象を全体化できるようにするプラグイン
 
-### src/excludes
+## DarkPlasma_ForceFormation.js
 
-リポジトリにコミットしたくないプラグインを書く場合、以下のコマンドを使うと codes ディレクトリの代わりにこちらへプラグインのベースを生成します。
+全滅時に強制的に後衛と入れ替えるプラグイン
 
-```bash
-yarn generate (プラグイン名) e
-```
+## DarkPlasma_MaxItemCount.js
 
-### src/templates
+アイテムの所持最大数を設定するプラグイン
 
-ビルド用テンプレートが入っています。基本的に意識しなくて構いません。
+## DarkPlasma_MinimumDamageValue.js
 
-### src/typings
+最低ダメージ保証システムを追加するプラグイン
 
-RPGツクールMZ向けの型定義ファイルを配置します。  
-まだMVの内容も混じっているので、適宜更新していきます。
+## DarkPlasma_NameWindow.js
+
+会話イベント中に名前ウィンドウを表示するプラグイン
+
+MV時代の\n<名前>表記に対応しているため、移行用に最適です
+アクターごとに名前の色を指定したり、開きカッコを検出して自動で名前ウィンドウを表示したりできます
+
+## DarkPlasma_OrderIdAlias.js
+
+スキル/アイテムの表示順IDを制御するプラグイン
+
+後々追加したスキルやアイテムの表示をどこかに差し込みたいときなどにどうぞ
+
+## DarkPlasma_ParameterText.js
+
+追加能力値、特殊能力値の表記テキストを返す関数を提供するプラグイン
+
+## DarkPlasma_SkillCooldown.js
+
+スキルにクールタイムを設定するプラグイン
+
+## DarkPlasma_SkillCostExtension.js
+
+スキルのコストを拡張するプラグイン
+
+HPを消費する, HPを割合で消費する, MPを割合で消費する, アイテムを消費する, お金を消費する などの設定が可能です
+アイテムは複数種類の消費に対応しています
+
+## DarkPlasma_StateBuffOnBattleStart.js
+
+戦闘開始時にステートやバフをかけるプラグイン
+
+## DarkPlasma_StateGroup.js
+
+ステートをグルーピングして優先度をつけます
+優先度の高いステートで上書きします（例: 毒を猛毒で上書きする）
+
+## DarkPlasma_SupponREE.js
+
+ランダムな構成の敵を出現させるプラグイン
+
+## DarkPlasma_SurpriseControl.js
+
+スイッチや敵の種類によって先制を制御します
+特定スイッチがONのときに必ず先制する/先制される/先制しない/先制されない設定が可能です
+敵グループに特定のモンスターが混じっているときにも同様の制御が可能です
+
+## DarkPlasma_TinyMedal.js
+
+ちいさなメダルシステムを実現するプラグイン
+
+## DarkPlasma_WaitForCloseChoiceList.js
+
+シーンチェンジの際に、選択肢ウィンドウが閉じきるのを待つプラグイン
