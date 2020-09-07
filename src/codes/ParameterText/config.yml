@@ -1,9 +1,12 @@
 DarkPlasma_ParameterText:
   name: DarkPlasma_ParameterText
-  version: '1.0.1'
+  version: '1.0.2'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/08'
+      version: '1.0.2'
+      description: 'rollup構成へ移行'
     - date: '2020/09/01'
       version: '1.0.1'
       description: 'ゲームが起動できなくなる不具合を修正'
@@ -18,92 +21,92 @@ DarkPlasma_ParameterText:
   parameters:
     - param: extraParamNameCritical
       text:
-       ja: 会心率表記
+        ja: 会心率表記
       type: string
       default: 会心率
     - param: extraParamNameCriticalEvasion
       text:
-       ja: 会心回避率表記
+        ja: 会心回避率表記
       type: string
       default: 会心回避率
     - param: extraParamNameMagicEvasion
       text:
-       ja: 魔法回避率表記
+        ja: 魔法回避率表記
       type: string
       default: 魔法回避率
     - param: extraParamNameMagicReflection
       text:
-       ja: 魔法反射率表記
+        ja: 魔法反射率表記
       type: string
       default: 魔法反射率
     - param: extraParamNameCounterAttack
       text:
-       ja: 反撃率表記
+        ja: 反撃率表記
       type: string
       default: 反撃率
     - param: extraParamNameHpRegeneration
       text:
-       ja: HP再生率表記
+        ja: HP再生率表記
       type: string
       default: HP再生率
     - param: extraParamNameMpRegeneration
       text:
-       ja: MP再生率表記
+        ja: MP再生率表記
       type: string
       default: MP再生率
     - param: extraParamNameTpRegeneration
       text:
-       ja: TP再生率表記
+        ja: TP再生率表記
       type: string
       default: TP再生率
     - param: specialParamNameTargetRate
       text:
-       ja: 狙われ率表記
+        ja: 狙われ率表記
       type: string
       default: 狙われ率
     - param: specialParamNameGuardEffectRate
       text:
-       ja: 防御効果率表記
+        ja: 防御効果率表記
       type: string
       default: 防御効果率
     - param: specialParamNameRecoveryEffectRate
       text:
-       ja: 回復効果率表記
+        ja: 回復効果率表記
       type: string
       default: 回復効果率
     - param: specialParamNamePharmacology
       text:
-       ja: 薬の知識表記
+        ja: 薬の知識表記
       type: string
       default: 薬の知識
     - param: specialParamNameMpCostRate
       text:
-       ja: MP消費率表記
+        ja: MP消費率表記
       type: string
       default: MP消費率
     - param: specialParamNameTpChargeRate
       text:
-       ja: TPチャージ率表記
+        ja: TPチャージ率表記
       type: string
       default: TPチャージ率
     - param: specialParamNamePhysicalDamageRate
       text:
-       ja: 物理ダメージ率表記
+        ja: 物理ダメージ率表記
       type: string
       default: 物理ダメージ率
     - param: specialParamNameMagicDamageRate
       text:
-       ja: 魔法ダメージ率表記
+        ja: 魔法ダメージ率表記
       type: string
       default: 魔法ダメージ率
     - param: specialParamNameFloorDamageRate
       text:
-       ja: 床ダメージ率表記
+        ja: 床ダメージ率表記
       type: string
       default: 床ダメージ率
     - param: specialParamNameExperienceRate
       text:
-       ja: 経験獲得率表記
+        ja: 経験獲得率表記
       type: string
       default: 経験獲得率
   commands: []

@@ -1,10 +1,13 @@
 DarkPlasma_WaitForCloseChoiceList:
   name: DarkPlasma_WaitForCloseChioceList
-  version: '1.0.0'
+  version: '1.0.1'
   year: 2020
   license: MIT
   histories:
-    - date: '2020/08/05'
+    - date: '2020/09/08'
+      version: '1.0.1'
+      description: 'rollup構成へ移行'
+    - date: '2020/08/25'
       version: '1.0.0'
       description: '公開'
 

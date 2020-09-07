@@ -1,9 +1,12 @@
 DarkPlasma_OrderIdAlias:
   name: DarkPlasma_OrderIdAlias
-  version: '1.0.0'
+  version: '1.0.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/08'
+      version: '1.0.1'
+      description: 'rollup構成へ移行'
     - date: '2020/08/27'
       version: '1.0.0'
       description: 'MZ版公開'

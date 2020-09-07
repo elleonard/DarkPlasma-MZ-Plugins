@@ -1,9 +1,12 @@
 DarkPlasma_BountyList:
   name: DarkPlasma_BountyList
-  version: '1.0.1'
+  version: '2.0.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/08'
+      version: '2.0.0'
+      description: 'パラメータ名変更'
     - date: '2020/08/24'
       version: '1.0.1'
       description: 'URL修正'
@@ -23,16 +26,16 @@ DarkPlasma_BountyList:
         ja: 賞金首リストに表示する情報。このリストの順番どおりに表示します
       type: BountyInformation[]
       default:
-        - metaTag: "bountyRequest"
-          text: "依頼内容"
-        - metaTag: "bountyWhere"
-          text: "出現場所"
-        - metaTag: "bountyReward"
-          text: "討伐報酬"
-        - metaTag: "bountyDifficulty"
-          text: "討伐難度"
-        - metaTag: "bountyDescription"
-          text: ""
+        - metaTag: 'bountyRequest'
+          text: '依頼内容'
+        - metaTag: 'bountyWhere'
+          text: '出現場所'
+        - metaTag: 'bountyReward'
+          text: '討伐報酬'
+        - metaTag: 'bountyDifficulty'
+          text: '討伐難度'
+        - metaTag: 'bountyDescription'
+          text: ''
     - param: unknownName
       text:
         ja: 未表示名
