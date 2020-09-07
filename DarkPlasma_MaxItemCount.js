@@ -1,9 +1,10 @@
-// DarkPlasma_MaxItemCount 1.0.0
+// DarkPlasma_MaxItemCount 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/30 1.0.0 公開
  */
 

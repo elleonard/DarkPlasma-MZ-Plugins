@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 1.0.0
+// DarkPlasma_EnemyBook 2.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/30 1.0.0 MZ版公開
  */
 

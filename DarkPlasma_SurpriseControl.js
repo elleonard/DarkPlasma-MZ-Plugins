@@ -1,9 +1,10 @@
-// DarkPlasma_SurpriseControl 1.0.1
+// DarkPlasma_SurpriseControl 2.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.1 イベントコマンドの戦闘の処理で無限に戦闘が繰り返される不具合を修正
  * 2020/08/26 1.0.0 MZ版公開
  */

@@ -1,9 +1,10 @@
-// DarkPlasma_ParameterText 1.0.1
+// DarkPlasma_ParameterText 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 1.0.2 rollup構成へ移行
  * 2020/09/01 1.0.1 ゲームが起動できなくなる不具合を修正
  * 2020/09/01 1.0.0 公開
  */

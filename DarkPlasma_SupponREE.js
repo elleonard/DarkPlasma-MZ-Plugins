@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.0.2
+// DarkPlasma_SupponREE 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/08 1.0.3 rollup構成へ移行
  * 2020/09/01 1.0.2 フロントビューにおいて敵スプライトにゴミが表示される不具合を修正
  * 2020/08/29 1.0.1 フロントビューにおける敵配置の調整
  * 2020/08/26 1.0.0 MZ対応
