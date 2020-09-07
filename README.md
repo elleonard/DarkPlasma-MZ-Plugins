@@ -4,7 +4,7 @@ DarkPlasmaによるRPGツクールMZのプラグイン開発を行うリポジ�
 
 # プラグインをダウンロードしたい
 
-TODO: 
+[release ブランチ](https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release)をご覧ください。
 
 # ビルドしたい
 
