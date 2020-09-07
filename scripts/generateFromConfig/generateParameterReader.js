@@ -1,6 +1,5 @@
 const path = require('path');
 const prettier = require('prettier');
-const { isNumber } = require('util');
 const { PluginParameter } = require('./generateHeader');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
