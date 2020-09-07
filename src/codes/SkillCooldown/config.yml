@@ -1,5 +1,5 @@
-DarkPlasma_SkillCoolDown:
-  name: DarkPlasma_SkillCoolDown
+DarkPlasma_SkillCooldown:
+  name: DarkPlasma_SkillCooldown
   version: '2.0.0'
   year: 2020
   license: MIT
