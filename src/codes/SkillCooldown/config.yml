@@ -1,0 +1,97 @@
+DarkPlasma_SkillCoolDown:
+  name: DarkPlasma_SkillCoolDown
+  version: '2.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/08'
+      version: '2.0.0'
+      description: 'パラメータ名を変更'
+    - date: '2020/09/01'
+      version: '1.0.1'
+      description: 'クールダウンターン数が1少ない不具合を修正'
+    - date: '2020/08/27'
+      version: '1.0.0'
+      description: MZ版公開
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルにクールタイムを指定する'
+  parameters:
+    - param: skillCooldownSettings
+      text:
+        ja: スキルクールタイム
+      type: SkillCooldown[]
+      default: []
+    - param: displaySetting
+      text:
+        ja: クールタイム表示設定
+      dummy: true
+    - param: displayCooldownTurn
+      desc:
+        ja: スキル消費の代わりにクールタイムを表示する
+      text:
+        ja: クールタイム表示
+      type: boolean
+      default: true
+      parent: displaySetting
+    - param: cooldownFormat
+      desc:
+        ja: 'クールタイムの表示形式（{turn}がターン数に置き換えられる）'
+      text:
+        ja: クールタイム表示形式
+      type: string
+      default: 'CT:{turn}'
+      parent: displaySetting
+    - param: cooldownTextColor
+      desc:
+        ja: クールタイムの表示色
+      text:
+        ja: クールタイム表示色
+      type: number
+      default: 2
+      parent: displaySetting
+    - param: decreaseBenchwarmersCooldown
+      desc:
+        ja: 控えメンバーのクールタイムも進める
+      text:
+        ja: 控えクールタイム減
+      type: boolean
+      default: true
+  commands: []
+  structures:
+    SkillCooldown:
+      - param: triggerSKillId
+        desc:
+          ja: クールタイムを発生させるトリガーとなるスキル
+        text:
+          ja: トリガースキル
+        type: skill
+        default: 0
+      - param: targetSkills
+        desc:
+          ja: クールタイムを発生させる対象
+        text:
+          ja: 対象設定
+        type: SkillCooldownTarget[]
+        default: []
+    SkillCooldownTarget:
+      - param: targetSkillId
+        desc:
+          ja: クールタイムを発生させる対象となるスキル
+        text:
+          ja: 対象スキル
+        type: skill
+        default: 0
+      - param: cooldownTurnCount
+        desc:
+          ja: クールタイムのターン数
+        text:
+          ja: ターン数
+        type: number
+        default: 3
+  help:
+    ja: |
+      スキルにクールタイムを指定します。
+      スキルX使用後、スキルYの使用を一定ターン数制限することができます。
