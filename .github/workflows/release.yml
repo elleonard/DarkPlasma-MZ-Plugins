@@ -41,7 +41,7 @@ jobs:
         working-directory: ./stage
       - name: Commit fisle
         run: |
-          git commit -m ${{ GITHUB_SHA }}
+          git commit -m ${GITHUB_SHA}
       - name: deploy
         uses: ad-m/github-push-action@master
         with:
