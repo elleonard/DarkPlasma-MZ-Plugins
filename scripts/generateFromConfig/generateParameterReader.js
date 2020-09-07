@@ -6,23 +6,24 @@ const { PluginParameter } = require('./generateHeader');
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
 function generateParameterReader(config) {
-  const parameters = config.parameters ?
-    config.parameters
-      .filter(parameter => !parameter.dummy)
-      .map(parameter => {
-      return {
-        name: parameter.param,
-        parser: generateParser(config, parameter),
-      };
-    }) : [];
+  const parameters = config.parameters
+    ? config.parameters
+        .filter((parameter) => !parameter.dummy)
+        .map((parameter) => {
+          return {
+            name: parameter.param,
+            parser: generateParser(config, parameter),
+          };
+        })
+    : [];
 
-  return prettier.resolveConfig(prettierConfig).then(options => {
+  return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
     const code = `import { pluginParameters } from '../../../common/pluginParameters';
     
     export const settings = {
-      ${parameters.map(parameter => `${parameter.name}: ${parameter.parser}`).join(',\n')}
+      ${parameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
     };`;
 
     return prettier.format(code, options);
@@ -54,13 +55,14 @@ function generateParser(config, parameter) {
       parser = booleanParser(parameter);
       break;
     case 'select':
-      if (parameter.options[0].value && Number.isFinite(parameter.options[0].value)) {
+      if (parameter.options[0].value || Number.isFinite(parameter.options[0].value)) {
         parser = numberParser(parameter);
       } else {
         parser = stringParser(parameter);
       }
       break;
-    default:  // structure or array
+    default:
+      // structure or array
       if (parameter.type.endsWith('[]')) {
         parser = arrayParser(config, parameter);
         break;
@@ -88,7 +90,7 @@ function arrayParser(config, parameter) {
   const parameterObject = new PluginParameter(parameter);
   const subParameter = {
     type: parameterObject.baseType(),
-    symbol: 'e'
+    symbol: 'e',
   };
   if (parameter.options) {
     subParameter.options = parameter.options;
@@ -107,11 +109,12 @@ function structParser(config, parameter) {
   return `((parameter) => {
     const parsed = JSON.parse(parameter);
     return {
-      ${structure.map(subParameter => {
-        subParameter.symbol = `parsed.${subParameter.param}`;
-        return `${subParameter.param}: ${generateParser(config, subParameter)}`;
-      }).join(',\n')
-    }};
+      ${structure
+        .map((subParameter) => {
+          subParameter.symbol = `parsed.${subParameter.param}`;
+          return `${subParameter.param}: ${generateParser(config, subParameter)}`;
+        })
+        .join(',\n')}};
   })(${parameterSymbol(parameter)} || '${default_}')`;
 }
 
