@@ -1,0 +1,37 @@
+DarkPlasma_SkillCostExtension:
+  name: DarkPlasma_SkillCostExtension
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/27'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルコストを拡張する'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      スキルのメモ欄に以下のように記述するとコストを追加できます。
+
+      <SkillCost:
+        hp:（消費HP 固定値）
+        hpRate:（消費HP 最大値に対する割合）
+        mpRate:（消費MP 最大値に対する割合）
+        item:（アイテムID）:（個数）
+        gold:（お金）
+      >
+
+      指定する項目はどれか一つでもよく また、itemについては複数指定が可能です。
+
+      例1: アイテムID1とアイテムID2を一つずつ消費するスキル
+
+      <SkillCost:
+        item:1:1
+        item:2:1
+      >

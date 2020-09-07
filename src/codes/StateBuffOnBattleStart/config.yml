@@ -1,0 +1,116 @@
+DarkPlasma_StateBuffOnBattleStart:
+  name: DarkPlasma_StateBuffOnBattleStart
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/27'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '戦闘開始時にステート/バフにかかる'
+  parameters:
+    - param: stateOnBattleStart
+      text:
+        ja: 戦闘開始時ステート
+      type: StateOnBattleStart[]
+      default: []
+    - param: buffOnBattleStart
+      text:
+        ja: 戦闘開始時バフ
+      type: BuffOnBattleStart[]
+      default: []
+  commands: []
+  structures:
+    StateOnBattleStart:
+      - param: id
+        desc: 
+          ja: ID（メモ欄に指定する用）
+        text: 
+          ja: ID
+        type: number
+        default: 0
+      - param: stateId
+        text: 
+          ja: ステートID
+        type: state
+        default: 1
+      - param: turn
+        desc: 
+          ja: 持続ターン（負の数にするとデフォルトと同じ）
+        text: 
+          ja: 持続ターン
+        type: number
+        default: -1
+    BuffOnBattleStart:
+      - param: id
+        desc: 
+          ja: ID（メモ欄に指定する用）
+        text: 
+          ja: ID
+        type: number
+        default: 0
+      - param: paramId
+        desc: 
+          ja: バフデバフ対象パラメータ
+        text: 
+          ja: 対象パラメータ
+        type: select
+        options:
+        - name: 最大HP
+          value: 0
+        - name: 最大MP
+          value: 1
+        - name: 攻撃力
+          value: 2
+        - name: 防御力
+          value: 3
+        - name: 魔法力
+          value: 4
+        - name: 魔法防御
+          value: 5
+        - name: 敏捷性
+          value: 6
+        - name: 運
+          value: 7
+        default: 0
+      - param: buffStep
+        text: 
+          ja: バフデバフ段階
+        type: select
+        options:
+        - name: 2段階強化
+          value: 2
+        - name: 1段階強化
+          value: 1
+        - name: 1段階弱化
+          value: -1
+        - name: 2段階弱化
+          value: -2
+        default: 1
+      - param: turn
+        text: 
+          ja: 持続ターン
+        type: number
+        default: 3
+  help:
+    ja: |
+      持続ターン数を上書き指定できるようにする
+
+      任意のアクター、職業、スキル、装備、敵キャラのメモ欄に以下のように記述してください。
+
+      アクター: そのアクターであれば自身に
+      職業: その職業であれば自身に
+      スキル: そのスキルを習得していれば自身に
+      装備: その武器/防具を装備していれば自身に
+
+      敵キャラ: そのエネミーであれば自身に（敵キャラにステートやバフがかかる）
+
+      <StateOnBattleStartId: id1, id2, id3, ...>
+      戦闘開始時にステートにかかる
+
+      <BuffOnBattleStartId: id1, id2, id3, ...>
+      戦闘開始時にバフにかかる

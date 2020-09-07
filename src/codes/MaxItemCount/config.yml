@@ -1,0 +1,93 @@
+DarkPlasma_MaxItemCount:
+  name: DarkPlasma_MaxItemCount
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/30'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテム最大所持数変更'
+  parameters:
+    - param: defaultMaxItemCount
+      text:
+        ja: アイテム所持数限界
+      desc:
+        ja: アイテムごとの所持数限界値です。
+      type: number
+      default: 99
+  commands:
+    - command: changeDefaultMaxItemCount
+      text:
+        ja: 全アイテムの所持限界数変更
+      desc: ゲーム中に全アイテム/武器/防具のアイテム別所持限界数を変更します。
+      args:
+        - arg: count
+          text:
+            ja: 変更後の限界数
+          type: number
+    - command: changeMaxItemCount
+      text:
+        ja: アイテムの所持限界数変更
+      desc:
+        ja: ゲーム中にアイテムごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
+      args:
+        - arg: count
+          text:
+            ja: 変更後の限界数
+          type: number
+        - arg: id
+          text:
+            ja: アイテムID
+          type: item
+    - command: changeMaxWeaponCount
+      text:
+        ja: 武器の所持限界数変更
+      desc:
+        ja: ゲーム中に武器ごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
+      args:
+        - arg: count
+          text:
+            ja: 変更後の限界数
+          type: number
+        - arg: id
+          text:
+            ja: 武器ID
+          type: weapon
+    - command: changeMaxArmorCount
+      text:
+        ja: 防具の所持限界数変更
+      desc:
+        ja: ゲーム中に防具ごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
+      args:
+        - arg: count
+          text:
+            ja: 変更後の限界数
+          type: number
+        - arg: id
+          text:
+            ja: 防具ID
+          type: armor
+  structures:
+  help:
+    ja: |
+      アイテムごとに最大所持数を設定できます。
+
+      アイテムのメモ欄に以下のように記述してください。
+
+      <maxCount:1010>
+
+      これにより、記述したアイテムの所持数限界が1010個になります。
+
+      設定した値の優先順位は以下の通りです。
+      プラグインコマンドによるアイテム別設定
+       > メモ欄の設定
+       > プラグインコマンドによる全アイテムの設定
+       > デフォルトの最大所持数
+
+      本プラグインのプラグインコマンドを使用して
+      アイテムの所持数最大値を変更するとセーブデータを拡張します。

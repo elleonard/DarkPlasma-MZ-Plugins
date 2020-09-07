@@ -1,0 +1,52 @@
+DarkPlasma_MinimumDamageValue:
+  name: DarkPlasma_MinimumDamageValue
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/27'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '攻撃命中時のダメージの最低値を設定する'
+  parameters:
+    - param: minimumPhysicalDamage
+      text:
+        ja: 物理最低ダメージ
+      type: number
+      default: 1
+    - param: minimumMagicalDamage
+      text:
+        ja: 魔法最低ダメージ
+      type: number
+      default: 0
+    - param: ignoreIfRateLEZero
+      desc:
+        ja: 属性有効度0以下の場合に最低ダメージ設定を無視するかどうか
+      text:
+        ja: 有効度0以下優先
+      type: boolean
+      default: true
+    - param: randomMinimumDamage
+      desc:
+        ja: 最低ダメージを0から設定値の間のランダムにするかどうか
+      text:
+        ja: ランダム最低ダメージ
+      type: boolean 
+      default: false
+  commands: []
+  structures:
+  help:
+    ja: |
+     攻撃が命中したときのダメージの最低値を設定します。
+
+     最低ダメージ保証と呼んでいますが、実際はダメージに設定値を加算するシステムです。
+     属性耐性など種々のダメージ計算の後、設定した値をダメージに加算します。
+
+     有効度0以下優先がONの場合、属性有効度が0以下なら最低ダメージの設定を無視します。
+     有効度1％の敵に確定で通るダメージを設定したいが、
+     有効度0以下の敵にはダメージを通したくない。
+     そんな場合にはONにしておくと良いでしょう。

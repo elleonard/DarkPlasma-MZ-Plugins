@@ -1,0 +1,94 @@
+DarkPlasma_BuffRate:
+  name: DarkPlasma_BuffRate
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/27'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'バフの倍率を個別に設定する'
+  parameters:
+    - param: attack
+      text:
+        ja: 攻撃力の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+    - param: defense
+      text:
+        ja: 防御力の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+    - param: magicAttack
+      text:
+        ja: 魔法力の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+    - param: magicDefense
+      text:
+        ja: 魔法防御力の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+    - param: agility
+      text:
+        ja: 敏捷性の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+    - param: luck
+      text:
+        ja: 運の強化/弱化倍率
+      type: BuffRate
+      default:
+        buffRate1: 25
+        buffRate2: 50
+        debuffRate1: 25
+        debuffRate2: 50
+  structures:
+    BuffRate:
+      - param: buffRate1
+        text:
+          ja: 1段階目強化倍率（％）
+        type: number
+        default: 25
+      - param: buffRate2
+        text:
+          ja: 2段階目強化倍率（％）
+        type: number
+        default: 50
+      - param: debuffRate1
+        text:
+          ja: 1段階目弱化倍率（％）
+        type: number
+        default: 25
+      - param: debuffRate2
+        text:
+          ja: 2段階目弱化倍率（％）
+        type: number
+        default: 50
+  help:
+    ja: |
+      バフ（強化状態）の能力強化/弱化倍率を個別に設定できるようにします。

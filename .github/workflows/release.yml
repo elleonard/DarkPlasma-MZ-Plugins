@@ -1,0 +1,47 @@
+name: release plugins
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: release
+    runs-on: ubuntu-18.04
+    env:
+      TZ: 'Asia/Tokyo'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: release
+          path: release
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+          path: stage
+      - name: Setup Node
+        uses: action/setup-node@v2.1.0
+        with:
+          node-version: '12.x'
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --frozen-lockfile
+        working-directory: ./stage
+      - run: yarn build
+        working-directory: ./stage
+      - run: node ./scripts/publish.js ../release
+        working-directory: ./stage
+      - name: deploy
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release
+          directory: ../release

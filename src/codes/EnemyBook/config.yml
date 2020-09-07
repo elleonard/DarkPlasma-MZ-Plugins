@@ -1,0 +1,416 @@
+DarkPlasma_EnemyBook:
+  name: DarkPlasma_EnemyBook
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/08/30'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+    - en
+  plugindesc:
+    ja: 'モンスター図鑑'
+    en: 'Displays detailed statuses of enemies.'
+  parameters:
+    - param: unknownData
+      text:
+        ja: 未確認要素表示名
+        en: Unknown Data
+      type: string
+      default:
+        ja: ？？？？？？
+        en: '??????'
+    - param: grayOutUnknown
+      text:
+        ja: 未確認要素グレー表示
+        en: Gray out Unknown Enemy
+      type: boolean
+      default: false
+    - param: maskUnknownDropItem
+      text:
+        ja: 未確認ドロップ隠し
+        en: Mask Unknown Drop Item
+      type: boolean
+      default: false
+    - param: enemyPercentLabel
+      text:
+        ja: 図鑑収集率ラベル
+        en: Enemy Percent Label
+      type: string
+      default: Enemy
+    - param: dropItemPercentLabel
+      text:
+        ja: ドロップ取得率ラベル
+        en: Drop Item Percent Label
+      type: string
+      default: 'Drop Item'
+    - param: displayDropRate
+      text:
+        ja: ドロップ率表示
+        en: Display Drop Rate
+      type: boolean
+      default: false
+    - param: detailMode
+      text:
+        ja: 詳細モード設定
+        en: Detail Mode
+      dummy: true
+    - param: enableDetailMode
+      text:
+        ja: 詳細モード有効
+        en: Enable Detail Mode
+      desc:
+        ja: 詳細モードを有効にします。決定キーで詳細モードON/OFFを切り替えます。縦型デザイン時は無効になります
+        en: Enable Ok button for display enemy detail.
+      parent: detailMode
+      type: boolean
+      default: false
+    - param: elementIcons
+      text:
+        ja: 属性アイコンリスト
+        en: Element Icons
+      desc:
+        ja: 属性アイコンリストを設定します（順序はデータベースのタイプ設定に対応します）
+        en: Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
+      parent: detailMode
+      type: number[]
+      default:
+        - 0
+        - 76
+        - 64
+        - 65
+        - 66
+        - 67
+        - 68
+        - 69
+        - 70
+        - 71
+    - param: weakElementAndStateLabel
+      text:
+        ja: 弱点ラベル
+        en: Weak Label
+      desc:
+        ja: 弱点属性/ステート/弱体のラベルを設定します
+        en: Label for weak elements and states.
+      parent: detailMode
+      type: string
+      default:
+        ja: 弱点属性/ステート/弱体
+        en: Weak
+    - param: resistElementAndStateLabel
+      text:
+        ja: 耐性ラベル
+        en: Resist Label
+      desc:
+        ja: 耐性属性/ステート/弱体のラベルを設定します
+        en: Label for resist elements and states.
+      parent: detailMode
+      type: string
+      default:
+        ja: 耐性属性/ステート/弱体
+        en: Resist
+    - param: devideResistAndNoEffect
+      text:
+        ja: 耐性と無効を分ける
+        en: Devide resist and no effect
+      desc:
+        ja: 耐性属性/ステート/弱体と無効属性/ステート/弱体を分けて表示します
+        en: Display no effect elements and states apart from the resists.
+      parent: detailMode
+      type: boolean
+      default: false
+    - param: noEffectElementAndStateLabel
+      text:
+        ja: 無効ラベル
+        en: No Effect Label
+      desc:
+        ja: 無効属性/ステート/弱体のラベルを設定します
+        en: Label for no effect elements and states.
+      parent: detailMode
+      type: string
+      default:
+        ja: 無効属性/ステート/弱体
+        en: No Effect
+    - param: excludeWeakStates
+      text:
+        ja: 弱点表示しないステート
+        en: Exclude weak states
+      desc:
+        ja: 弱点ステートに表示しないステートを設定します
+        en: List for states not to display as weak states.
+      parent: detailMode
+      type: state[]
+      default: []
+    - param: excludeResistStates
+      text:
+        ja: 耐性表示しないステート
+        en: Exclude resist states
+      desc:
+        ja: 耐性/無効ステートに表示しないステートを設定します
+        en: List for states not to display as resist states.
+      parent: detailMode
+      type: state[]
+      default: []
+    - param: debuffStatus
+      text:
+        ja: 弱体有効度の表示
+        en: Debuff status
+      dummy: true
+    - param: displayDebuffStatus
+      text:
+        ja: 有効弱体/耐性弱体を表示
+        en: Display debuff status
+      type: boolean
+      default: true
+      parent: debuffStatus
+    - param: debuffStatusIcons
+      text:
+        ja: ステータス弱体アイコン
+        en: Debuff Status Icons
+      parent: debuffStatus
+      type: DebuffStatusIcons
+      default:
+        mhp:
+          small: 48
+          large: 56
+        mmp:
+          small: 49
+          large: 57
+        atk:
+          small: 50
+          large: 58
+        def:
+          small: 51
+          large: 59
+        mat:
+          small: 52
+          large: 60
+        mdf:
+          small: 53
+          large: 61
+        agi:
+          small: 54
+          large: 62
+        luk:
+          small: 55
+          large: 63
+    - param: debuffStatusThreshold
+      text:
+        ja: 弱体有効度閾値
+        en: Debuff Status Threshold
+      parent: debuffStatus
+      type: DebuffStatusThresholds
+      default:
+        weak:
+          small: 100
+          large: 150
+        resist:
+          small: 100
+          large: 50
+    - param: verticalLayout
+      text:
+        ja: 縦型レイアウト
+        en: Vertical Layout
+      desc:
+        ja: ウィンドウ配置を縦型に変更する
+        en: Window layout to vertical
+      type: boolean
+      default: false
+    - param: enableInBattle
+      text:
+        ja: 戦闘中に開く
+        en: Enable In Battle
+      desc:
+        ja: 戦闘中に図鑑ウィンドウを開けるかどうか
+        en: Enable enemy book in battle
+      type: boolean
+      default: true
+    - param: openKeyInBattle
+      text:
+        ja: 図鑑ウィンドウボタン
+        en: Open Key In Battle
+      desc:
+        ja: 戦闘中に図鑑ウィンドウを開閉するためのボタン。戦闘中に開ける設定の場合のみ有効です
+        en: Open key for enemy book window in battle
+      type: select
+      default: shift
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+  commands:
+    - command: open enemyBook
+      text:
+        ja: 図鑑を開く
+        en: open enemy book
+    - command: add to enemyBook
+      text:
+        ja: 図鑑に登録する
+        en: add to enemy book
+      args:
+        - arg: id
+          text:
+            ja: 敵キャラID
+            en: enemy id
+          type: enemy
+    - command: remove from enemyBook
+      text:
+        ja: 図鑑から登録抹消する
+        en: remove from enemy book
+      args:
+        - arg: id
+          text:
+            ja: 敵キャラID
+            en: enemy id
+          type: enemy
+    - command: complete enemyBook
+      text:
+        ja: 図鑑を完成させる
+        en: complete enemy book
+    - command: clear enemyBook
+      text:
+        ja: 図鑑を初期化する
+        en: clear enemy book
+  structures:
+    DebuffStatusIcons:
+      - param: mhp
+        text:
+          ja: 最大HP弱体アイコン
+          en: Debuff max hp icons
+        type: DebuffStatusIcon
+        default:
+          small: 48
+          large: 56
+      - param: mmp
+        text:
+          ja: 最大MP弱体アイコン
+          en: Debuff max mp icons
+        type: DebuffStatusIcon
+        default:
+          small: 49
+          large: 57
+      - param: atk
+        text:
+          ja: 攻撃力弱体アイコン
+          en: Debuff attack icons
+        type: DebuffStatusIcon
+        default:
+          small: 50
+          large: 58
+      - param: def
+        text:
+          ja: 防御力弱体アイコン
+          en: Debuff defense icons
+        type: DebuffStatusIcon
+        default:
+          small: 51
+          large: 59
+      - param: mat
+        text:
+          ja: 魔法力弱体アイコン
+          en: Debuff magical attack icons
+        type: DebuffStatusIcon
+        default:
+          small: 52
+          large: 60
+      - param: mdf
+        text:
+          ja: 魔法防御弱体アイコン
+          en: Debuff magical defense icons
+        type: DebuffStatusIcon
+        default:
+          small: 53
+          large: 61
+      - param: agi
+        text:
+          ja: 敏捷性弱体アイコン
+          en: Debuff agility icons
+        type: DebuffStatusIcon
+        default:
+          small: 54
+          large: 62
+      - param: luk
+        text:
+          ja: 運弱体アイコン
+          en: Debuff luck icons
+        type: DebuffStatusIcon
+        default:
+          small: 55
+          large: 63
+    DebuffStatusIcon:
+      - param: small
+        text:
+          ja: 弱体アイコン（小）
+          en: Debuff status icon Lv1.
+        type: number
+      - param: large
+        text:
+          ja: 弱体アイコン（大）
+          en: Debuff status icon Lv2.
+        type: number
+    DebuffStatusThresholds:
+      - param: weak
+        text:
+          ja: 弱点閾値
+          en: Weak Threshold
+        desc:
+          ja: 弱点弱体のアイコン表示判定の閾値。有効度がこれらの値よりも大ならアイコンを弱点弱体に表示
+          en: Display debuff status icon as weak if debuff rate of the enemy is larger than this value.
+        type: DebuffStatusThreshold
+        default:
+          small: 100
+          large: 150
+      - param: resist
+        text:
+          ja: 耐性閾値
+          en: Resist Threshold
+        desc:
+          ja: 耐性弱体のアイコン表示判定の閾値。有効度がこれらの値よりも小ならアイコンを耐性弱体に表示
+          en: Display debuff status icon as resist if debuff rate of the enemy is smaller than this value.
+        type: DebuffStatusThreshold
+        default:
+          small: 100
+          large: 50
+    DebuffStatusThreshold:
+      - param: small
+        text:
+          ja: 閾値（小）
+          en: Threshold (small)
+        type: number
+      - param: large
+        text:
+          ja: 閾値（大）
+          en: Threshold (large)
+        type: number
+  help:
+    ja: |
+      このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
+      DarkPlasmaが改変を加えたものです。
+
+      スクリプト:
+        $gameSystem.percentCompleteEnemy() # 図鑑のエネミー遭遇達成率を取得する
+        $gameSystem.percentCompleteDrop()  # 図鑑のドロップアイテム取得達成率を取得する
+        SceneManager.push(Secne_EnemyBook) # 図鑑を開く
+
+      敵キャラのメモ:
+        <desc1:なんとか>       # 説明１行目
+        <desc2:かんとか>       # 説明２行目
+        <book:no>              # 図鑑に載せない場合
+    en: |
+      The original plugin is RMMV official plugin written by Yoji Ojima.
+      Arranged by DarkPlasma.
+     
+      Script:
+        $gameSystem.percentCompleteEnemy() # Get percentage of enemy.
+        $gameSystem.percentCompleteDrop()  # Get percentage of drop item.
+        SceneManager.push(Secne_EnemyBook) # Open enemy book.
+     
+      Enemy Note:
+        <desc1:foobar>         # Description text in the enemy book, line 1
+        <desc2:blahblah>       # Description text in the enemy book, line 2
+        <book:no>              # This enemy does not appear in the enemy book

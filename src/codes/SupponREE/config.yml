@@ -1,0 +1,128 @@
+DarkPlasma_SupponREE:
+  name: DarkPlasma_SupponREE
+  version: "1.0.2"
+  year: 2020
+  license: MIT
+  author: "Suppon, DarkPlasma"
+  histories:
+    - date: "2020/09/01"
+      version: "1.0.2"
+      description: "フロントビューにおいて敵スプライトにゴミが表示される不具合を修正"
+    - date: "2020/08/29"
+      version: "1.0.1"
+      description: "フロントビューにおける敵配置の調整"
+    - date: "2020/08/26"
+      version: "1.0.0"
+      description: MZ対応
+
+  locates:
+    - ja
+    - en
+  plugindesc:
+    ja: "モンスターランダム出現"
+    en: "Random Enemies emergence."
+  parameters: []
+  commands:
+    - command: supponREE
+      text:
+        ja: ランダム出現設定
+        en: Random encounter
+      desc:
+        ja: 敵グループのバトルイベントの1ページ目に記述すると、そのグループがランダム出現になります。
+        en: If you write this command in enemy group's battle event page 1, the group become random.
+      args:
+        - arg: randomEncounter
+          text:
+            ja: ランダム出現設定
+            en: Random Encounter setting
+          type: RandomEncounter[]
+  structures:
+    RandomEncounter:
+      - param: id
+        text:
+          ja: 敵キャラID
+          en: Enemy Id
+        desc:
+          ja: ランダム出現判定用の敵キャラID。指定しない場合、敵種族で判定します。
+          en: Enemy Id for random encounter.If not set this, enemy type name parameter is enabled.
+        type: enemy
+      - param: type
+        text:
+          ja: 敵種族名
+          en: Enemy Type Name
+        desc:
+          ja: 敵のメモ欄に指定したEnemyTypeタグの値を指定すると、同じ値の指定された敵キャラからランダムに出現判定を行います。
+          en: pick up enemy what has note tag EnemyType:(this value).
+        type: string
+      - param: ratio
+        text:
+          ja: 出現確率（％）
+          en: "Appear ratio (%)"
+        desc:
+          ja: 100以上で確定出現します。全敵キャラの出現判定に失敗した場合、敵が出ずに勝利になります。
+          en: If you set this value greater than or equal 100, the enemy certainly appear.
+        type: number
+  dependencies:
+    base: PluginCommonBase
+  help:
+    ja: |
+      プラグインコマンド（非推奨）:
+        supponREE ratio times id id id・・・
+        ratio : 出現確率％
+        times : 繰り返す回数
+        id    : エネミーのID
+        times回、羅列したIDのモンスターのうちどれかを出現させるかどうか判定します。
+        確定出現枠の指定（後述）がない場合、
+        最初の1回は必ず羅列したIDのどれか1体を出現させます。
+
+        fixedEnemy id id id...
+        id    : エネミーのID
+        確定出現枠を指定します。
+        このプラグインコマンドで指定したIDのモンスターは全て、確定で出現します。
+
+        fixedEnemyType TypeName TypeName...
+        TypeName : 種類名
+        このプラグインコマンドで指定した種類名のモンスターは、
+        指定した数だけ出現します。
+        この確定枠は1枠ごとに、同名種族の中からランダムで選ばれます。
+
+      使用例
+        supponREE 80 20 1 2 3 4
+        fixedEnemy 1
+        fixedEnemyType スライム族LV1
+
+      TroopsのBattle Eventの1ページ目に入れてください。ほかのページでは動きません。
+      複数行いれてもOKです。数字はスペースで区切ってください。
+      最後にスペースを入れないでください。
+
+      敵キャラのメモ欄:
+        <EnemyType:スライム族LV1>
+
+        敵キャラの種類を指定できます。種類はスペース区切りで複数指定できます。
+    en: |
+      Plugin Command(Deprecated):
+        supponREE ratio times id id id....       
+        ratio : Emergence probability numer 
+        times : Repetition number
+        id    : Enemy ID
+
+        fixedEnemy id id id...
+        id    : Enemy ID
+
+        fixedEnemyType TypeName
+        TypeName : Enemy Type Name
+
+      Example
+        supponREE 80 20 1 2 3 4
+        (Optional) fixedEnemy 1
+        (Optional) fixedEnemyType slime1
+
+        Enter the sentence in Battle Event 1st page of Troops.
+        It doesen't work when it put other page.
+        Punctuate numbers by space, but don't put space at end.
+        It can read and works more than 2 sentence at once.
+
+      Enemy Notes:
+        <EnemyType:slime1>
+
+        You can Enter the enemy types.
