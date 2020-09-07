@@ -1,6 +1,6 @@
 class TypedParameter {
   type() {
-    return "";
+    return '';
   }
 
   isDummy() {
@@ -9,7 +9,7 @@ class TypedParameter {
 
   baseType() {
     if (this.isDummy()) {
-      return "";
+      return '';
     }
     return this.isArray() ? this.type().substring(0, this.type().length - 2) : this.type();
   }
@@ -22,18 +22,34 @@ class TypedParameter {
    */
   languageSuffixedType(language) {
     if (language !== 'ja' && this.isStructure()) {
-      const suffix = `${language.substring(0, 1).toUpperCase()}${language.substring(1)}`
+      const suffix = `${language.substring(0, 1).toUpperCase()}${language.substring(1)}`;
       return `${this.baseType()}${suffix}`;
     }
     return this.baseType();
   }
 
   isBasicType() {
-    return !this.isDummy() && [
-      'string', 'number', 'boolean', 'select', 'actor',
-      'enemy', 'skill', 'item', 'weapon', 'armor', 'animation', 'state',
-      'switch', 'variable', 'common_event', 'file',
-    ].includes(this.baseType());
+    return (
+      !this.isDummy() &&
+      [
+        'string',
+        'number',
+        'boolean',
+        'select',
+        'actor',
+        'enemy',
+        'skill',
+        'item',
+        'weapon',
+        'armor',
+        'animation',
+        'state',
+        'switch',
+        'variable',
+        'common_event',
+        'file',
+      ].includes(this.baseType())
+    );
   }
 
   isArray() {
@@ -49,7 +65,9 @@ class TypedParameter {
    * @return {string}
    */
   typeText(language) {
-    return `${this.isStructure() ? `struct<${this.languageSuffixedType(language)}>` : this.baseType()}${this.isArray() ? '[]' : ''}`;
+    return `${this.isStructure() ? `struct<${this.languageSuffixedType(language)}>` : this.baseType()}${
+      this.isArray() ? '[]' : ''
+    }`;
   }
 }
 
@@ -73,7 +91,7 @@ class PluginParameter extends TypedParameter {
 
   defaultValue(language) {
     if (this._parameter.default === undefined || this._parameter.default === null) {
-      return "";
+      return '';
     }
     if (typeof this._parameter.default === 'boolean' || Number.isFinite(this._parameter.default)) {
       return this._parameter.default;
@@ -84,6 +102,9 @@ class PluginParameter extends TypedParameter {
   /**
    * トップコメントやパラメータパース用のデフォルト値を返す
    * トップコメント用は余分なクオートやエスケープが必要なのでやや汚い
+   * FIXME: 余分なクオートを取り除くオプションはバグの恐れがある
+   * パーサに食わせるのだからトップコメント用と同じエスケープをつけるべき
+   * prettierでエスケープが最適化されてしまうので、 singleQuote オプションを切るのが良いだろう
    *
    * @param {string} language 言語
    * @param {boolean} withoutExtraQuotes トップコメント用のクオートを外す（パラメータパースコード用）
@@ -100,46 +121,59 @@ class PluginParameter extends TypedParameter {
          * 雑判定だが、二重配列のパラメータはサポートしないのでこれで良い
          */
         if (typeof defaultValue[0] === 'object') {
-          const result = `[${defaultValue.map(defaultValue => {
-            const objectKeyValue = this.escapeDoubleQuote(Object.entries(defaultValue)
-              .map(([key, value]) => {
-                return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
-              }).join(','));
-            return withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`;
-          }).join(',')}]`;
+          const result = `[${defaultValue
+            .map((defaultValue) => {
+              const objectKeyValue = this.escapeDoubleQuote(
+                Object.entries(defaultValue)
+                  .map(([key, value]) => {
+                    return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+                  })
+                  .join(',')
+              );
+              return withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`;
+            })
+            .join(',')}]`;
           return result;
         }
-        return `[${defaultValue.map(value => `"${value}"`).join(', ')}]`;
+        return `[${defaultValue.map((value) => `"${value}"`).join(', ')}]`;
       }
       if (typeof defaultValue === 'object') {
-        return `{${Object.entries(defaultValue).map(([key, value]) => {
-          return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
-        }).join(', ')}}`;
+        return `{${Object.entries(defaultValue)
+          .map(([key, value]) => {
+            return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+          })
+          .join(', ')}}`;
       }
       return defaultValue;
     }
-    return "";
+    return '';
   }
 
   defaultObjectKeyValueToText(key, value, withoutExtraQuotes) {
     if (Array.isArray(value)) {
       if (value.length === 0) {
-        return `"${key}":${withoutExtraQuotes ? "[]" : '"[]"'}`;
+        return `"${key}":${withoutExtraQuotes ? '[]' : '"[]"'}`;
       }
       if (typeof value[0] === 'object') {
-        const objectKeyValue = Object.entries(value).map(([k, v]) => {
-          return this.defaultObjectKeyValueToText(k, v);
-        }).join(', ');
+        const objectKeyValue = Object.entries(value)
+          .map(([k, v]) => {
+            return this.defaultObjectKeyValueToText(k, v);
+          })
+          .join(', ');
         return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
       }
-      return `"${key}":${withoutExtraQuotes ?
-        `[${value.map(v => `"${v}"`).join(',')}]` :
-        `"[${value.map(v => `"${v}"`).join(',')}]"`}`;
+      return `"${key}":${
+        withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${value.map((v) => `"${v}"`).join(',')}]"`
+      }`;
     }
     if (value && typeof value === 'object') {
-      const objectKeyValue = this.escapeDoubleQuote(Object.entries(value).map(([k, v]) => {
-        return this.defaultObjectKeyValueToText(k, v);
-      }).join(', '));
+      const objectKeyValue = this.escapeDoubleQuote(
+        Object.entries(value)
+          .map(([k, v]) => {
+            return this.defaultObjectKeyValueToText(k, v);
+          })
+          .join(', ')
+      );
       return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
     }
     return `"${key}":"${value}"`;
@@ -155,9 +189,7 @@ class PluginParameter extends TypedParameter {
   }
 
   toParameterText(language) {
-    const result = [
-      ` * @param ${this._parameter.param}`,
-    ];
+    const result = [` * @param ${this._parameter.param}`];
     if (this._parameter.desc && this._parameter.desc[language]) {
       result.push(` * @desc ${this._parameter.desc[language]}`);
     }
@@ -169,8 +201,8 @@ class PluginParameter extends TypedParameter {
      */
     if (!this._parameter.dummy) {
       result.push(` * @type ${this.typeText(language)}`);
-      if (this._parameter.type === "select" && this._parameter.options) {
-        this._parameter.options.forEach(option => {
+      if (this._parameter.type === 'select' && this._parameter.options) {
+        this._parameter.options.forEach((option) => {
           result.push(` * @option ${option.name}`);
           if (option.value || Number.isFinite(option.value)) {
             result.push(` * @value ${option.value}`);
@@ -182,11 +214,13 @@ class PluginParameter extends TypedParameter {
         result.push(` * @default ${default_}`);
       }
     }
-    ['parent', 'min', 'max', 'dir'].filter(annotation => {
-      return !!this._parameter[annotation];
-    }).forEach(annotation => {
-      result.push(` * @${annotation} ${this._parameter[annotation]}`);
-    });
+    ['parent', 'min', 'max', 'dir']
+      .filter((annotation) => {
+        return !!this._parameter[annotation];
+      })
+      .forEach((annotation) => {
+        result.push(` * @${annotation} ${this._parameter[annotation]}`);
+      });
     return result.join('\n');
   }
 }
@@ -202,9 +236,7 @@ class PluginCommandArgument extends TypedParameter {
   }
 
   toArgumentText(language) {
-    const result = [
-      ` * @arg ${this._argument.arg}`
-    ];
+    const result = [` * @arg ${this._argument.arg}`];
     if (this._argument.text) {
       result.push(` * @text ${this._argument.text[language]}`);
     }
@@ -230,14 +262,12 @@ class PluginCommand {
   }
 
   toCommandText(language) {
-    const result = [
-      ` * @command ${this._command.command}`
-    ];
+    const result = [` * @command ${this._command.command}`];
     if (this._command.text) {
       result.push(` * @text ${this._command.text[language]}`);
     }
     if (this._command.args) {
-      this._command.args.forEach(arg => {
+      this._command.args.forEach((arg) => {
         const argument = new PluginCommandArgument(arg);
         if (argument.isStructure()) {
           this._structureArgumentTypes.push(argument.baseType());
@@ -250,60 +280,66 @@ class PluginCommand {
 }
 
 function generateHeader(config) {
-  const topCommentLine = generateTopComments(
-    config.name,
-    config.version,
-    config.year,
-    config.license
-  );
+  const topCommentLine = generateTopComments(config.name, config.version, config.year, config.license);
   const historyLine = generateHistories(config.histories);
 
-  const description = config.locates.map((language, index) => {
-    const dependenciesText = config.dependencies ? ['base', 'orderAfter', 'orderBefore']
-      .filter(key => config.dependencies[key])
-      .map(key => {
-        return ` * @${key} ${config.dependencies[key]}`
-      }).join('\n') : "";
-    const structureTypes = [];
-    const parametersText = config.parameters.map(parameter => {
-      const parameterObject = new PluginParameter(parameter);
-      if (parameterObject.isStructure()) {
-        const structureType = parameterObject.baseType();
-        if (!config.structures || !config.structures[structureType]) throw `unknown structure: ${structureType}`;
-        structureTypes.push(structureType);
-      }
-      return parameterObject.toParameterText(language);
-    }).join('\n *\n');
-    const noteText = config.notes ? config.notes.map(note => {
-      return [
-        ` * @noteParam ${note.param}`,
-        ` * @noteDir ${note.dir}`,
-        ` * @noteType file`,
-        ` * @noteData ${note.data}`,
-      ].join('\n');
-    }) : "";
-    const commandsText = config.commands ? config.commands.map(command => {
-      const commandObject = new PluginCommand(command);
-      /**
-       * toCommandTextで構造体の洗い出しもしているので、先に呼んでおく必要がある
-       */
-      const commandText = commandObject.toCommandText(language);
-      commandObject.structureArgumentTypes.forEach(structureType => structureTypes.push(structureType));
-      return commandText;
-    }).join('\n *\n') : "";
-    const structuresText = generateStructuresText(config, structureTypes, structureTypes, language);
+  const description = config.locates
+    .map((language, index) => {
+      const dependenciesText = config.dependencies
+        ? ['base', 'orderAfter', 'orderBefore']
+            .filter((key) => config.dependencies[key])
+            .map((key) => {
+              return ` * @${key} ${config.dependencies[key]}`;
+            })
+            .join('\n')
+        : '';
+      const structureTypes = [];
+      const parametersText = config.parameters
+        .map((parameter) => {
+          const parameterObject = new PluginParameter(parameter);
+          if (parameterObject.isStructure()) {
+            const structureType = parameterObject.baseType();
+            if (!config.structures || !config.structures[structureType]) throw `unknown structure: ${structureType}`;
+            structureTypes.push(structureType);
+          }
+          return parameterObject.toParameterText(language);
+        })
+        .join('\n *\n');
+      const noteText = config.notes
+        ? config.notes.map((note) => {
+            return [
+              ` * @noteParam ${note.param}`,
+              ` * @noteDir ${note.dir}`,
+              ` * @noteType file`,
+              ` * @noteData ${note.data}`,
+            ].join('\n');
+          })
+        : '';
+      const commandsText = config.commands
+        ? config.commands
+            .map((command) => {
+              const commandObject = new PluginCommand(command);
+              /**
+               * toCommandTextで構造体の洗い出しもしているので、先に呼んでおく必要がある
+               */
+              const commandText = commandObject.toCommandText(language);
+              commandObject.structureArgumentTypes.forEach((structureType) => structureTypes.push(structureType));
+              return commandText;
+            })
+            .join('\n *\n')
+        : '';
+      const structuresText = generateStructuresText(config, structureTypes, structureTypes, language);
 
-    return `${[generatePluginMetaText(config, language)]
-      .concat(dependenciesText)
-      .concat(parametersText)
-      .concat(noteText)
-      .concat(commandsText)
-      .concat([[
-        ` * @help`,
-      ].concat(generateHelp(config.help[language]))
-        .concat([' */']).join('\n')])
-      .filter(array => array.length > 0).join('\n *\n')}\n${structuresText}`;
-  }).join('\n');
+      return `${[generatePluginMetaText(config, language)]
+        .concat(dependenciesText)
+        .concat(parametersText)
+        .concat(noteText)
+        .concat(commandsText)
+        .concat([[` * @help`].concat(generateHelp(config.help[language])).concat([' */']).join('\n')])
+        .filter((array) => array.length > 0)
+        .join('\n *\n')}\n${structuresText}`;
+    })
+    .join('\n');
 
   return [topCommentLine, historyLine, description].join('\n\n');
 }
@@ -316,23 +352,27 @@ function generateHeader(config) {
  * @return {string[]}
  */
 function generateTopComments(pluginName, version, year, license) {
-  const result = [
-    `// ${pluginName} ${version}`,
-    `// Copyright (c) ${year} DarkPlasma`,
-  ];
+  const result = [`// ${pluginName} ${version}`, `// Copyright (c) ${year} DarkPlasma`];
   if (license === 'MIT') {
-    return result.concat([
-      `// This software is released under the MIT license.`,
-      `// http://opensource.org/licenses/mit-license.php`,
-    ]).join('\n');
+    return result
+      .concat([
+        `// This software is released under the MIT license.`,
+        `// http://opensource.org/licenses/mit-license.php`,
+      ])
+      .join('\n');
   }
   return result.join('\n');
 }
 
 function generateHistories(histories) {
-  return ['/**'].concat(histories.map(history => {
-    return ` * ${history.date} ${history.version} ${history.description}`;
-  })).concat([' */']).join('\n');
+  return ['/**']
+    .concat(
+      histories.map((history) => {
+        return ` * ${history.date} ${history.version} ${history.description}`;
+      })
+    )
+    .concat([' */'])
+    .join('\n');
 }
 
 /**
@@ -341,7 +381,7 @@ function generateHistories(histories) {
  * @return {string}
  */
 function generatePluginMetaText(config, language) {
-  const result =  [
+  const result = [
     `/*:${language}`,
     ` * @plugindesc ${config.plugindesc[language]}`,
     ` * @author ${config.author ? config.author : 'DarkPlasma'}`,
@@ -350,20 +390,18 @@ function generatePluginMetaText(config, language) {
     ` * @target MZ`,
   ];
   if (config.license === 'MIT') {
-    return result.concat([
-      ` * @url https://github.com/elleonard/RPGtkoolMZ-Plugins`,
-    ]).join('\n');
+    return result.concat([` * @url https://github.com/elleonard/RPGtkoolMZ-Plugins`]).join('\n');
   }
   return result.join('\n');
 }
 
 function generateHelp(help) {
   const helpLines = help.split('\n');
-  return helpLines.slice(0, helpLines.length - 1).map(line => ` *${line ? ' ' : ''}${line}`);
+  return helpLines.slice(0, helpLines.length - 1).map((line) => ` *${line ? ' ' : ''}${line}`);
 }
 
 /**
- * 
+ *
  * @param {object} config コンフィグ
  * @param {string[]} structureTypes 構造体の型一覧
  * @param {string[]} knownTypes 既知の構造体一覧
@@ -372,13 +410,16 @@ function generateHelp(help) {
  */
 function generateStructuresText(config, structureTypes, knownTypes, language) {
   const probablyNewTypes = [];
-  const result = structureTypes.filter((x, i, self) => self.indexOf(x) === i).map(structureType => {
-    return generateStructureText(config, structureType, language, probablyNewTypes);
-  }).join('\n');
+  const result = structureTypes
+    .filter((x, i, self) => self.indexOf(x) === i)
+    .map((structureType) => {
+      return generateStructureText(config, structureType, language, probablyNewTypes);
+    })
+    .join('\n');
   /**
    * 未知の型が入れ子で登場した場合、再帰する
    */
-  const newTypes = probablyNewTypes.filter(type => !knownTypes.includes(type));
+  const newTypes = probablyNewTypes.filter((type) => !knownTypes.includes(type));
   if (newTypes.length > 0) {
     return `${result}\n${generateStructuresText(config, newTypes, knownTypes.concat(newTypes), language)}`;
   }
@@ -398,7 +439,8 @@ function generateStructureText(config, type, language, probablyNewTypes) {
   const parameters = config.structures[type];
   if (!parameters) throw `unknown structure: ${type}`;
   return `/*~struct~${languageSuffixedType(type, language)}:
-${parameters.map(parameter => {
+${parameters
+  .map((parameter) => {
     const parameterObject = new PluginParameter(parameter);
     if (parameterObject.isStructure()) {
       const structureType = parameterObject.baseType();
@@ -406,7 +448,8 @@ ${parameters.map(parameter => {
       probablyNewTypes.push(structureType);
     }
     return parameterObject.toParameterText(language);
-  }).join('\n *\n')}
+  })
+  .join('\n *\n')}
  */`;
 }
 
@@ -418,7 +461,7 @@ ${parameters.map(parameter => {
  */
 function languageSuffixedType(type, language) {
   if (language !== 'ja') {
-    const suffix = `${language.substring(0, 1).toUpperCase()}${language.substring(1)}`
+    const suffix = `${language.substring(0, 1).toUpperCase()}${language.substring(1)}`;
     return `${type}${suffix}`;
   }
   return type;
@@ -426,5 +469,5 @@ function languageSuffixedType(type, language) {
 
 module.exports = {
   generateHeader,
-  PluginParameter
+  PluginParameter,
 };
