@@ -12,7 +12,7 @@ if (!fs.statSync(targetDir).isDirectory()) {
 glob.sync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) => {
   const name = path.basename(file);
 
-  console.log(file);
+  console.log(`${file} to ${targetDir}`);
 
   fs.copyFileSync(file, path.join(targetDir, name));
 });
