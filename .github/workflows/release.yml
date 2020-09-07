@@ -45,7 +45,7 @@ jobs:
           git config --global user.email ${COMMITTER_EMAIL}
           git config --global user.name "elleonard"
           git add .
-          git commit -m ${GITHUB_SHA}
+          git commit -m ${GITHUB_SHA} || echo "No changes to commit"
         working-directory: ./release
       - name: deploy
         uses: ad-m/github-push-action@master
