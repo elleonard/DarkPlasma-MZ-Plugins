@@ -39,9 +39,11 @@ jobs:
         working-directory: ./stage
       - run: node ./scripts/publish.js ../release
         working-directory: ./stage
-      - name: Commit fisle
+      - name: Commit file
         run: |
+          git add .
           git commit -m ${GITHUB_SHA}
+        working-directory: ./release
       - name: deploy
         uses: ad-m/github-push-action@master
         with:
