@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const ejs = require('ejs');
 
@@ -13,22 +13,28 @@ async function generateConfig(destDir) {
       }
       throw err;
     }
-    ejs.renderFile(templatePath, {
-      pluginName: `DarkPlasma_${path.basename(destDir)}`,
-      license: /excludes/.test(destDir) ? 'No License' : 'MIT'
-    }, {}, (err, str) => {
-      if (err) {
-        throw err;
-      } else {
-        fs.write(fd, str, 'utf-8', (err) => {
-          if (err) {
-            throw err;
-          } else {
-            console.log(`generate config file done.: ${destDir}config.yml`);
-          }
-        })
+    ejs.renderFile(
+      templatePath,
+      {
+        pluginName: `DarkPlasma_${path.basename(destDir)}`,
+        license: /excludes/.test(destDir) ? 'No License' : 'MIT',
+      },
+      {},
+      (err, str) => {
+        if (err) {
+          throw err;
+        } else {
+          fs.write(fd, str, 'utf-8', (err) => {
+            if (err) {
+              throw err;
+            } else {
+              console.log(`generate config file done.: ${destDir}config.yml`);
+            }
+          });
+        }
       }
-    });
+    );
+    fs.ensureFile(path.resolve(destDir, `${path.basename(destDir)}.js`));
   });
 }
 
