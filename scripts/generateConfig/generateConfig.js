@@ -34,7 +34,7 @@ async function generateConfig(destDir) {
         }
       }
     );
-    fs.ensureFile(path.resolve(destDir, `${path.basename(destDir)}.js`));
+    fs.ensureFile(path.resolve(destDir, `DarkPlasma_${path.basename(destDir)}.js`));
   });
 }
 

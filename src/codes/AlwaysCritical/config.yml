@@ -1,0 +1,21 @@
+DarkPlasma_AlwaysCritical:
+  name: DarkPlasma_AlwaysCritical
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/10'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '常時クリティカルが出るスキル'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      スキルのメモ欄に<alwaysCritical>と書くと、
+      そのスキルが常にクリティカルヒットします。
