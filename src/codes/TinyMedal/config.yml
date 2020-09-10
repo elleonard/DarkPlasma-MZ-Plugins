@@ -1,0 +1,158 @@
+DarkPlasma_TinyMedal:
+  name: DarkPlasma_TinyMedal
+  version: '2.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/10'
+      version: '2.0.0'
+      description: 'パラメータ名を変更'
+    - date:
+      version:
+      description: 'ウェイトなし歩行が遅れる不具合を修正'
+    - date: '2020/08/25'
+      version: '1.0.0'
+      description: 'MZ版公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ちいさなメダルシステム'
+  parameters:
+    - param: medalItem
+      desc:
+        ja: メダルアイテム
+      text:
+        ja: メダルアイテム
+      type: item
+      default: 1
+    - param: medalCountVariable
+      desc:
+        ja: メダルの預かり数を記録する変数
+      text:
+        ja: メダル預かり数変数
+      type: variable
+      default: 1
+      min: 1
+    - param: medalUnit
+      desc:
+        ja: メダルカウントの単位
+      text:
+        ja: メダルの単位
+      type: string
+      default: 枚
+    - param: rewardItems
+      desc:
+        ja: 報酬アイテムの一覧
+      text:
+        ja: 報酬アイテム
+      type: RewardItems[]
+      default: []
+    - param: rewardWeapons
+      desc:
+        ja: 報酬武器の一覧
+      text:
+        ja: 報酬武器
+      type: RewardWeapons[]
+      default: []
+    - param: rewardArmors
+      desc:
+        ja: 報酬防具の一覧
+      text:
+        ja: 報酬防具
+      type: RewardArmors[]
+      default: []
+    - param: rewardMessages
+      desc:
+        ja: 報酬メッセージリスト
+      text:
+        ja: 報酬メッセージ
+      type: RewardMessage[]
+      default:
+        - message: '${itemName} を手に入れた！'
+          faceFile: ''
+          faceIndex: 0
+  commands:
+    - command: gotoSceneMedal
+      text:
+        ja: ちいさなメダルシーンを開く
+      desc:
+        ja: 小さなメダルメニューが開き、報酬アイテム一覧が確認できます。
+    - command: processTinyMedal
+      text:
+        ja: ちいさなメダルを渡す
+      desc:
+        ja: ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
+  structures:
+    RewardItems:
+      - param: medalCount
+        desc:
+          ja: アイテムをもらうために必要なメダルの数
+        text:
+          ja: 必要メダル数
+        type: number
+        default: 1
+      - param: id
+        desc:
+          ja: もらえるアイテム
+        text:
+          ja: 報酬アイテム
+        type: item
+        default: 1
+    RewardWeapons:
+      - param: medalCount
+        desc:
+          ja: 武器をもらうために必要なメダルの数
+        text:
+          ja: 必要メダル数
+        type: number
+        default: 1
+      - param: id
+        desc:
+          ja: もらえる武器
+        text:
+          ja: 報酬武器
+        type: weapon
+        default: 1
+    RewardArmors:
+      - param: medalCount
+        desc:
+          ja: 防具をもらうために必要なメダルの数
+        text:
+          ja: 必要メダル数
+        type: number
+        default: 1
+      - param: id
+        desc:
+          ja: もらえる防具
+        text:
+          ja: 報酬防具
+        type: armor
+        default: 1
+    RewardMessage:
+      - param: message
+        desc:
+          ja: 報酬をもらった際のメッセージ
+        text:
+          ja: 報酬メッセージ
+        type: string
+        default: ${itemName} を手に入れた！
+      - param: faceFile
+        desc:
+          ja: 報酬メッセージの顔グラファイル
+        text:
+          ja: 顔グラファイル
+        type: file
+        dir: img/faces
+      - param: faceIndex
+        desc:
+          ja: 報酬メッセージの顔グラ番号
+        text:
+          ja: 顔グラ番号
+        type: number
+        default: 0
+        min: 0
+        max: 7
+  help:
+    ja: |
+      DQシリーズのちいさなメダルシステム（累計式）を実現します。

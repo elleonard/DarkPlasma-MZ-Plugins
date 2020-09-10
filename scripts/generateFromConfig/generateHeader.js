@@ -365,10 +365,24 @@ function generateTopComments(pluginName, version, year, license) {
 }
 
 function generateHistories(histories) {
+  const writtenDates = [];
+  const writtenVersions = [];
   return ['/**']
     .concat(
       histories.map((history) => {
-        return ` * ${history.date} ${history.version} ${history.description}`;
+        let date = history.date;
+        let version = history.version;
+        if (writtenDates.includes(history.date) || !history.date) {
+          date = ''.padStart(writtenDates[writtenDates.length - 1].length, ' ');
+        } else {
+          writtenDates.push(history.date);
+        }
+        if (writtenVersions.includes(history.version) || !history.version) {
+          version = ''.padStart(writtenVersions[writtenVersions.length - 1].length, ' ');
+        } else {
+          writtenVersions.push(history.version);
+        }
+        return ` * ${date} ${version} ${history.description}`;
       })
     )
     .concat([' */'])
