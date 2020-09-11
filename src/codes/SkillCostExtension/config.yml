@@ -1,9 +1,12 @@
 DarkPlasma_SkillCostExtension:
   name: DarkPlasma_SkillCostExtension
-  version: '1.0.1'
+  version: '1.1.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/11'
+      version: '1.1.0'
+      description: 'アイテム/ゴールド消費数を選択時に反映するオプション追加'
     - date: '2020/09/08'
       version: '1.0.1'
       description: 'rollup構成へ移行'
@@ -15,9 +18,18 @@ DarkPlasma_SkillCostExtension:
     - ja
   plugindesc:
     ja: 'スキルコストを拡張する'
-  parameters: []
+  parameters:
+    - param: consumeImmediately
+      text:
+        ja: 入力時に消費反映
+      desc:
+        ja: アイテムやゴールドを消費するスキルを選択した際、後続のメンバーが参照するアイテム数/ゴールドを消費後のものにする
+      type: boolean
+      default: true
   commands: []
   structures:
+  dependencies:
+    orderAfter: DarkPlasma_ConsumeItemImmediately
   help:
     ja: |
       スキルのメモ欄に以下のように記述するとコストを追加できます。
@@ -38,3 +50,10 @@ DarkPlasma_SkillCostExtension:
         item:1:1
         item:2:1
       >
+
+      アイテム選択時に消費をアイテム数へ反映する機能について
+      本プラグインではスキルによる消費数の反映のみ行っています。
+      アイテムを直接使用した場合の消費数の反映については、
+      DarkPlasma_ConsumeItemImmediately をご利用ください。
+      本プラグインと併用する場合、DarkPlasma_ConsumeItemImmediatelyよりも
+      本プラグインを下に配置してください。
