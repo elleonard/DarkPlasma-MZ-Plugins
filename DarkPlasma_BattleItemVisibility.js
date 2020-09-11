@@ -1,9 +1,10 @@
-// DarkPlasma_BattleItemVisibility 2.0.0
+// DarkPlasma_BattleItemVisibility 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/11 2.0.1 戦闘中にアイテム欄を開くとエラーが出る不具合を修正
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -102,6 +103,9 @@
 
   const _Window_BattleItem_includes = Window_BattleItem.prototype.includes;
   Window_BattleItem.prototype.includes = function (item) {
+    if (!item) {
+      return false;
+    }
     const usableSecretItemCondition = settings.showUsableSecretItems || (item.itypeId !== 3 && item.itypeId !== 4);
     return (
       (_Window_BattleItem_includes.call(this, item) && usableSecretItemCondition) ||
@@ -117,7 +121,7 @@
         (item.occasion === 2 || item.occasion === 3)) ||
       settings.showWeapons ||
       (settings.showArmors && DataManager.isArmor(item)) ||
-      (item && item.visibleInBattle)
+      item.visibleInBattle
     );
   };
 })();
