@@ -10,6 +10,9 @@ DataManager.extractMetadata = function (data) {
 
 const _Window_BattleItem_includes = Window_BattleItem.prototype.includes;
 Window_BattleItem.prototype.includes = function (item) {
+  if (!item) {
+    return false;
+  }
   const usableSecretItemCondition = settings.showUsableSecretItems || (item.itypeId !== 3 && item.itypeId !== 4);
   return (
     (_Window_BattleItem_includes.call(this, item) && usableSecretItemCondition) ||
@@ -25,6 +28,6 @@ Window_BattleItem.prototype.includes = function (item) {
       (item.occasion === 2 || item.occasion === 3)) ||
     (settings.showWeapons && DataManager.isWeapon(item)) ||
     (settings.showArmors && DataManager.isArmor(item)) ||
-    (item && item.visibleInBattle)
+    item.visibleInBattle
   );
 };
