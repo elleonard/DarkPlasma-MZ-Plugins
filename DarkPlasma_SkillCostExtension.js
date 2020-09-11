@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.0.1
+// DarkPlasma_SkillCostExtension 1.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/11 1.1.0 アイテム/ゴールド消費数を選択時に反映するオプション追加
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -15,6 +16,14 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ *
+ * @orderAfter DarkPlasma_ConsumeItemImmediately
+ *
+ * @param consumeImmediately
+ * @desc アイテムやゴールドを消費するスキルを選択した際、後続のメンバーが参照するアイテム数/ゴールドを消費後のものにする
+ * @text 入力時に消費反映
+ * @type boolean
+ * @default true
  *
  * @help
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
@@ -35,10 +44,125 @@
  *   item:1:1
  *   item:2:1
  * >
+ *
+ * アイテム選択時に消費をアイテム数へ反映する機能について
+ * 本プラグインではスキルによる消費数の反映のみ行っています。
+ * アイテムを直接使用した場合の消費数の反映については、
+ * DarkPlasma_ConsumeItemImmediately をご利用ください。
+ * 本プラグインと併用する場合、DarkPlasma_ConsumeItemImmediatelyよりも
+ * 本プラグインを下に配置してください。
  */
 
 (() => {
   'use strict';
+
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
+
+  const pluginParameters = PluginManager.parameters(pluginName);
+
+  const settings = {
+    consumeImmediately: String(pluginParameters.consumeImmediately || true) === 'true',
+  };
+
+  /**
+   * ターン中に選択したスキル
+   */
+  class ReservedSkills {
+    constructor() {
+      this.initialize();
+    }
+
+    initialize() {
+      /**
+       * @type {MV.Skill[]}
+       */
+      this._skills = [];
+    }
+
+    /**
+     * @param {MV.Skill} skill スキルデータ
+     */
+    reserve(skill) {
+      this._skills.push(skill);
+    }
+
+    /**
+     * 入力キャンセル
+     */
+    cancel() {
+      this._skills.pop();
+    }
+
+    /**
+     * アイテムの消費数
+     * @param {MV.item} item アイテムデータ
+     * @return {number}
+     */
+    costItemCount(item) {
+      return this._skills
+        .filter((skill) => skill.additionalCost && skill.additionalCost.item)
+        .map((skill) => skill.additionalCost.item)
+        .flat()
+        .filter((costItem) => costItem.id === item.id)
+        .reduce((previous, current) => previous + current.num, 0);
+    }
+
+    /**
+     * ゴールドの消費数
+     * @return {number}
+     */
+    costGold() {
+      return this._skills
+        .filter((skill) => skill.additionalCost && skill.additionalCost.gold)
+        .reduce((previous, current) => previous + current.additionalCost.gold, 0);
+    }
+  }
+
+  const _BattleManager_initMembers = BattleManager.initMembers;
+  BattleManager.initMembers = function () {
+    _BattleManager_initMembers.call(this);
+    this._reservedSkills = new ReservedSkills();
+  };
+
+  const _BattleManager_startTurn = BattleManager.startTurn;
+  BattleManager.startTurn = function () {
+    _BattleManager_startTurn.call(this);
+    this._reservedSkills.initialize();
+  };
+
+  BattleManager.reserveSkill = function (skill) {
+    this._reservedSkills.reserve(skill);
+  };
+
+  BattleManager.cancelSkill = function () {
+    this._reservedSkills.cancel();
+  };
+
+  const _BattleManager_reservedItemCount = BattleManager.reservedItemCount;
+  BattleManager.reservedItemCount = function (item) {
+    return _BattleManager_reservedItemCount
+      ? _BattleManager_reservedItemCount.call(this, item) + this.reservedSkillCostItemCount(item)
+      : this.reservedSkillCostItemCount(item);
+  };
+
+  /**
+   * 既に入力済みのスキルコストアイテム数
+   * @param {MV.item} item アイテムデータ
+   * @return {number}
+   */
+  BattleManager.reservedSkillCostItemCount = function (item) {
+    return this._reservedSkills.costItemCount(item);
+  };
+
+  /**
+   * 既に入力済みのスキルコストゴールド
+   * @return {number}
+   */
+  BattleManager.reservedSkillCostGold = function () {
+    return this._reservedSkills.costGold();
+  };
 
   const _DataManager_extractMetadata = DataManager.extractMetadata;
   DataManager.extractMetadata = function (data) {
@@ -86,11 +210,30 @@
     const match = re.exec(cost);
     if (match) {
       return {
-        id: match[1],
-        num: match[2],
+        id: Number(match[1]),
+        num: Number(match[2]),
       };
     }
     return null;
+  };
+
+  const _Scene_Battle_selectNextCommand = Scene_Battle.prototype.selectNextCommand;
+  Scene_Battle.prototype.selectNextCommand = function () {
+    const action = BattleManager.inputtingAction();
+    if (action && action.isSkill()) {
+      const skill = action.item();
+      BattleManager.reserveSkill(skill);
+    }
+    _Scene_Battle_selectNextCommand.call(this);
+  };
+
+  const _Scene_Battle_selectPreviousCommand = Scene_Battle.prototype.selectPreviousCommand;
+  Scene_Battle.prototype.selectPreviousCommand = function () {
+    _Scene_Battle_selectPreviousCommand.call(this);
+    const action = BattleManager.inputtingAction();
+    if (action && action.isSkill()) {
+      BattleManager.cancelSkill();
+    }
   };
 
   const _Scene_Boot_start = Scene_Boot.prototype.start;
@@ -141,7 +284,7 @@
   };
 
   Game_BattlerBase.prototype.canPaySkillItemCost = function (skill) {
-    return !this.skillItemCosts(skill).some((item) => $gameParty.numItems($dataItems[item.id]) < item.num);
+    return !this.skillItemCosts(skill).some((item) => $gameParty.numItemsForDisplay($dataItems[item.id]) < item.num);
   };
 
   const _Game_BattlerBase_canPaySkillCost = Game_BattlerBase.prototype.canPaySkillCost;
@@ -165,5 +308,37 @@
       .filter((itemCost) => $dataItems[itemCost.id].consumable)
       .forEach((itemCost) => $gameParty.loseItem($dataItems[itemCost.id], itemCost.num, false));
     _Game_BattlerBase_paySkillCost.call(this, skill);
+  };
+
+  /**
+   * アイテムの表示上の個数を返す
+   * numItemsはgainItemの挙動に影響してしまうため、類似の別メソッドが必要
+   * @param {MV.item} item アイテムデータ
+   * @return {number}
+   */
+  Game_Party.prototype.numItemsForDisplay = function (item) {
+    return this.inBattle() && BattleManager.isInputting() && settings.consumeImmediately
+      ? this.numItems(item) - BattleManager.reservedItemCount(item)
+      : this.numItems(item);
+  };
+
+  const _Game_Party_gold = Game_Party.prototype.gold;
+  Game_Party.prototype.gold = function () {
+    return this.inBattle() && BattleManager.isInputting()
+      ? _Game_Party_gold.call(this) - BattleManager.reservedSkillCostGold()
+      : _Game_Party_gold.call(this);
+  };
+
+  /**
+   * 戦闘中のアイテムの個数表示
+   * 表示上の個数と実際の個数がズレる上、numItemsはgainItemの挙動に影響してしまうため、
+   * まるごと上書きしてしまう。
+   * @param {MV.item} item アイテムデータ
+   */
+  Window_BattleItem.prototype.drawItemNumber = function (item, x, y, width) {
+    if (this.needsNumber()) {
+      this.drawText(':', x, y, width - this.textWidth('00'), 'right');
+      this.drawText($gameParty.numItemsForDisplay(item), x, y, width, 'right');
+    }
   };
 })();
