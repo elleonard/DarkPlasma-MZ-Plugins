@@ -2,6 +2,8 @@
 // rpg_sprites.js v1.3.4
 //=============================================================================
 
+import { EffekseerEffect, EffekseerHandle } from 'effekseer';
+
 //-----------------------------------------------------------------------------
 /**
  * The sprite class with a feature which displays animations.
@@ -169,7 +171,7 @@ declare class Sprite_Battler extends Sprite_Base {
 declare class Sprite_Actor extends Sprite_Battler {
   public constructor(battler: Game_Actor | null);
 
-  public static readonly MOTIONS: { [type: string]: { readonly index: number; readonly loop: boolean; } };
+  public static readonly MOTIONS: { [type: string]: { readonly index: number; readonly loop: boolean } };
 
   public _actor: Game_Actor | null;
   public _battlerName: string;
@@ -281,12 +283,73 @@ declare class Sprite_Enemy extends Sprite_Battler {
 declare class Sprite_Animation extends Sprite {
   public constructor();
 
-  public static _checker1: { [animation: string]: boolean };
-  public static _checker2: { [animation: string]: boolean };
-
-  public _reduceArtifacts: boolean;
-  public _target: Sprite_Base;
+  public _targets: Sprite[];
   public _animation: MZ.Animation | null;
+  public _mirror: boolean;
+  public _delay: number;
+  public _previous: Sprite_Animation | Sprite_AnimationMV;
+  public _effect: EffekseerEffect | null;
+  public _handle: EffekseerHandle | null;
+  public _playing: boolean;
+  public _started: boolean;
+  public _frameIndex: number;
+  public _maxTimingFrames: number;
+  public _flashColor: number[];
+  public _flashDuration: number;
+  public _viewportSize: number;
+  public _originalViewport: Int32Array | null;
+
+  public z: number;
+
+  public initialize(...args: any[]): void;
+  public initMembers(): void;
+
+  public destroy(options: object): void;
+
+  public setup(
+    targets: Sprite[],
+    animation: MZ.Animation | null,
+    mirror: boolean,
+    delay: number,
+    previous: Sprite_Animation | Sprite_AnimationMV
+  ): void;
+
+  public update(): void;
+
+  public canStart(): boolean;
+  public shouldWaitForPrevious(): boolean;
+
+  public updateEffectGeometry(): void;
+  public updateMain(): void;
+  public processSoundTimings(): void;
+  public processFlashTimings(): void;
+  public checkEnd(): void;
+
+  public updateFlash(): void;
+
+  public isPlaying(): boolean;
+  public setRotation(x: number, y: number, z: number): void;
+
+  public _render(renderer: any): void;
+
+  public setProjectionMatrix(renderer: any): void;
+  public setCameraMatrix(): void;
+  public setViewport(renderer: any): void;
+
+  public targetPosition(renderer: any): Point;
+  public targetSpritePosition(sprite: Sprite): Point;
+
+  public saveViewport(renderer: any): void;
+  public resetViewport(renderer: any): void;
+  public onBeforeRender(renderer: any): void;
+  public onAfterRender(renderer: any): void;
+}
+
+declare class Sprite_AnimationMV extends Sprite {
+  public constructor();
+
+  public _targets: Sprite[];
+  public _animation: MZ.AnimationMV;
   public _mirror: boolean;
   public _delay: number;
   public _rate: number;
@@ -295,45 +358,42 @@ declare class Sprite_Animation extends Sprite {
   public _flashDuration: number;
   public _screenFlashDuration: number;
   public _hidingDuration: number;
+  public _hue1: number;
+  public _hue2: number;
   public _bitmap1: Bitmap | null;
   public _bitmap2: Bitmap | null;
   public _cellSprites: Sprite[];
-  public _screenFlashSprite: ScreenSprite | null;
-  public _duplicated: boolean;
+  public _screenFlashSprite: ScreenSprite;
+  public z: number;
 
   public initialize(...args: any[]): void;
-  public initMembers(): void;
-
-  public setup(target: Sprite_Base, animation: MZ.Animation | null, mirror: boolean, delay: number): void;
-  public remove(): void;
+  public setup(targets: Sprite[], animation: MZ.AnimationMV, mirror: boolean, delay: number): void;
   public setupRate(): void;
   public setupDuration(): void;
-
   public update(): void;
   public updateFlash(): void;
   public updateScreenFlash(): void;
   public absoluteX(): number;
   public absoluteY(): number;
   public updateHiding(): void;
-
   public isPlaying(): boolean;
   public loadBitmaps(): void;
   public isReady(): boolean;
 
-  public createSprites(): void;
   public createCellSprites(): void;
   public createScreenFlashSprite(): void;
 
   public updateMain(): void;
   public updatePosition(): void;
   public updateFrame(): void;
-  public currentFrameIndex(): number;
-  public updateAllCellSprites(frame: number[][]): void;
-  public updateCellSprite(sprite: Sprite, cell: number[]): void;
-  public processTimingData(timing: MZ.Animation.Timing): void;
+  public currentFrameIndex(): void;
+  public updateAllCellSprites(frame: any[]): void;
+  public updateCellSprite(sprite: Sprite, cell: any[]): void;
+  public processTimingData(timing: MZ.AnimationMV.Timing): void;
   public startFlash(color: number[], duration: number): void;
   public startScreenFlash(color: number[], duration: number): void;
   public startHiding(duration: number): void;
+  public onEnd(): void;
 }
 
 //-----------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 // rmmz_core.js v1.0.0
 //=============================================================================
 
+import { EffekseerContext } from 'effekseer';
+
 //-----------------------------------------------------------------------------
 /**
  * This is not a class, but contains some methods that will be added to the
@@ -294,7 +296,7 @@ declare class Utils {
    * @return {Boolean} True if the audio files are encrypted.
    */
   public static hasEncryptedAudio(): boolean;
-  
+
   /**
    * Decrypts encrypted data.
    *
@@ -323,7 +325,7 @@ declare class Point extends PIXI.Point {
  * The rectangle class.
  */
 declare class Rectangle extends PIXI.Rectangle {
-  /** 
+  /**
    * @class Rectangle
    * @constructor
    * @param {Number} x The x coordinate for the upper-left corner
@@ -339,7 +341,7 @@ declare class Rectangle extends PIXI.Rectangle {
  * The basic object that represents an image.
  */
 declare class Bitmap {
-  /** 
+  /**
    * @class Bitmap
    * @constructor
    * @param {Number} width The width of the bitmap
@@ -375,7 +377,7 @@ declare class Bitmap {
 
   /**
    * Whether the font is bold.
-   * 
+   *
    * @property fontBold
    * @type Boolean
    */
@@ -557,7 +559,17 @@ declare class Bitmap {
    * @param {Number} [dw=sw] The width to draw the image in the destination
    * @param {Number} [dh=sh] The height to draw the image in the destination
    */
-  public blt(source: Bitmap, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw?: number, dh?: number): void;
+  public blt(
+    source: Bitmap,
+    sx: number,
+    sy: number,
+    sw: number,
+    sh: number,
+    dx: number,
+    dy: number,
+    dw?: number,
+    dh?: number
+  ): void;
 
   /**
    * Returns pixel color at the specified point.
@@ -640,7 +652,15 @@ declare class Bitmap {
    * @param {String} color2 The end color of the gradation
    * @param {Boolean} vertical Whether it draws a vertical gradient
    */
-  public gradientFillRect(x: number, y: number, width: number, height: number, color1: string, color2: string, vertical?: boolean): void;
+  public gradientFillRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color1: string,
+    color2: string,
+    vertical?: boolean
+  ): void;
 
   /**
    * Draw the filled circle.
@@ -711,7 +731,7 @@ type BitmapLoadListener = () => void;
  * The static class that carries out graphics processing.
  */
 declare class Graphics {
-  /** 
+  /**
    * @class Graphics
    */
   private constructor();
@@ -724,6 +744,9 @@ declare class Graphics {
    * @return {Boolean} True if the graphics system is available.
    */
   public static initialize(): boolean;
+
+  public static app: PIXI.Application;
+  public static effekseer: EffekseerContext;
 
   public static _width: number;
   public static _height: number;
@@ -962,7 +985,7 @@ namespace Graphics {
  * The static class that handles input data from the keyboard and gamepads.
  */
 declare class Input {
-  /** 
+  /**
    * @class Input
    */
   private constructor();
@@ -1126,7 +1149,7 @@ declare class Input {
  * The static class that handles input data from the mouse and touchscreen.
  */
 declare class TouchInput {
-  /** 
+  /**
    * @class TouchInput
    */
   private constructor();
@@ -1353,7 +1376,7 @@ namespace TouchInput {
  * The basic object that is rendered to the game screen.
  */
 declare class Sprite extends PIXI.Sprite {
-  /** 
+  /**
    * @class Sprite
    * @constructor
    * @param {Bitmap} bitmap The image for the sprite
@@ -1517,7 +1540,7 @@ declare class Sprite extends PIXI.Sprite {
  * The tilemap which displays 2D tile-based game map.
  */
 declare class Tilemap extends PIXI.Container {
-  /** 
+  /**
    * @class Tilemap
    * @constructor
    */
@@ -1794,7 +1817,7 @@ namespace Tilemap {
  * The sprite object for a tiling image.
  */
 declare class TilingSprite extends PIXI.TilingSprite {
-  /** 
+  /**
    * @class TilingSprite
    * @constructor
    * @param {Bitmap} bitmap The image for the tiling sprite
@@ -1883,7 +1906,7 @@ declare class TilingSprite extends PIXI.TilingSprite {
  * The sprite which covers the entire game screen.
  */
 declare class ScreenSprite extends PIXI.Container {
-  /** 
+  /**
    * @class ScreenSprite
    * @constructor
    */
@@ -1940,7 +1963,7 @@ declare class ScreenSprite extends PIXI.Container {
  * The window in the game.
  */
 declare class Window extends PIXI.Container {
-  /** 
+  /**
    * @class Window
    * @constructor
    */
@@ -2281,7 +2304,7 @@ declare class Window extends PIXI.Container {
  * The layer which contains game windows.
  */
 declare class WindowLayer extends PIXI.Container {
-  /** 
+  /**
    * @class WindowLayer
    * @constructor
    */
@@ -2308,7 +2331,7 @@ declare class WindowLayer extends PIXI.Container {
  * The weather effect which displays rain, storm, or snow.
  */
 declare class Weather extends PIXI.Container {
-  /** 
+  /**
    * @class Weather
    * @constructor
    */
@@ -2414,7 +2437,7 @@ declare class ColorFilter extends PIXI.Filter {
  * The root object of the display tree.
  */
 declare class Stage extends PIXI.Container {
-  /** 
+  /**
    * @class Stage
    * @constructor
    */
@@ -2433,7 +2456,7 @@ declare class Stage extends PIXI.Container {
  * The audio object of Web Audio API.
  */
 declare class WebAudio {
-  /** 
+  /**
    * @class WebAudio
    * @constructor
    * @param {String} url The url of the audio file
@@ -2725,7 +2748,7 @@ declare class Video {
  * The static class that handles JSON with object information.
  */
 declare class JsonEx {
-  /** 
+  /**
    * @class JsonEx
    */
   private constructor();

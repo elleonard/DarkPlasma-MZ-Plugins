@@ -51,6 +51,28 @@ declare namespace MZ {
     }
   }
 
+  interface AnimationMV {
+    animation1Hue: number;
+    animation1Name: string;
+    animation2Hue: number;
+    animation2Name: string;
+    frames: number[][][];
+    id: number;
+    name: string;
+    position: number;
+    timings: AnimationMV.Timing[];
+  }
+
+  namespace AnimationMV {
+    interface Timing {
+      flashColor: number[];
+      flashDuration: number;
+      flashScope: number;
+      frame: number;
+      se: AudioFile;
+    }
+  }
+
   interface Armor {
     atypeId: number;
     description: string;
