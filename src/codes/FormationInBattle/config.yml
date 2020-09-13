@@ -1,0 +1,45 @@
+DarkPlasma_FormationInBattle:
+  name: DarkPlasma_FormationInBattle
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '戦闘のパーティコマンドに並び替えを追加'
+  parameters:
+    - param: cooldownTurnCount
+      text:
+        ja: クールタイム
+      desc:
+        ja: 並び替え後、このターン数が経過するまで再度並び替えできない（0で即時変更可能）
+      type: number
+      default: 0
+    - param: cooldownOnlyWhenSwapForwardAndBenchwarmer
+      text:
+        ja: 前後入れ替え時のみクール
+      desc:
+        ja: 前衛後衛を入れ替えた場合のみクールタイムを有効にする
+      type: boolean
+      default: true
+    - param: cooldownFormat
+      text:
+        ja: クールタイム表示形式
+      desc:
+        ja: クールタイムの表示形式（{turn}がターン数に置き換えられる）
+      type: string
+      default: (CT:{turn})
+  commands: []
+  structures:
+  dependencies:
+    base: DarkPlasma_Formation
+  help:
+    ja: |
+      戦闘シーンで並び替えできるようになります。
+
+      DarkPlasma_Formationが必要です。

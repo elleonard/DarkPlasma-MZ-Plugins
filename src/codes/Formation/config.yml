@@ -1,0 +1,50 @@
+DarkPlasma_Formation:
+  name: DarkPlasma_Formation
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '並び替えシーン'
+  parameters:
+    - param: characterWidth
+      text:
+        ja: キャラグラの横サイズ
+      type: number
+      default: 48
+    - param: characterHeight
+      text:
+        ja: キャラグラの縦サイズ
+      type: number
+      default: 48
+    - param: characterDirectionToLeft
+      text:
+        ja: キャラグラ左向き
+      type: boolean
+      default: true
+    - param: inheritMenuBackground
+      text:
+        ja: メニュー背景使用
+      desc:
+        ja: メニュー系の画面から遷移した場合に背景を引き継ぐかどうか
+      type: boolean
+      default: true
+  commands:
+    - command: openFormationScene
+      text:
+        ja: 並び替えシーンを開く
+  structures:
+  help:
+    ja: |
+      並び替えシーンを提供します。
+
+      プラグインコマンドで並び替えシーンを開始できます。
+
+      並び替えシーン開始スクリプト:
+      SceneManager.push(Scene_Formation);
