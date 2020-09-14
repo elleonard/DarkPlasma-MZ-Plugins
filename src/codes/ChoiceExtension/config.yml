@@ -1,0 +1,47 @@
+DarkPlasma_ChoiceExtension:
+  name: DarkPlasma_ChoiceExtension
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/15'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '選択肢を拡張する'
+  parameters:
+    - param: maxPageRows
+      text:
+        ja: 1ページの行数
+      type: number
+      default: 6
+  commands: []
+  structures:
+  help:
+    ja: |
+      選択肢を拡張します。
+
+      注意:
+        本プラグインはMPP_ChoiceEXの機能を一部MZ対応していますが、
+        積極的に全機能を移植するつもりはありません。
+
+      選択肢の文章中に
+      if(条件式)
+      を書くと、条件次第で項目の表示非表示を切り替えます。
+      MVプロジェクトの移行に用いてください。
+      en(条件式)
+      を書くと、条件次第で選択肢の有効無効を切り替えます。
+
+      条件式には下記の記法が使用できます
+      - v[n] (変数n番を参照する)
+      - s[n] (スイッチn番を参照する)
+
+      選択肢の書き方の例:
+      if(v[5]>3)hogehoge (変数5番の値が3より大の場合のみ選択肢hogehogeを表示する)
+      en(s[3])fugafuga (スイッチ3番がONの場合のみ選択肢fugafugaを有効にする)
+
+      イベントコマンド「選択肢の表示」を続けて配置すると
+      それらに設定された選択肢をまとめて表示します。
