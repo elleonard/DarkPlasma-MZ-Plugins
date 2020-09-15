@@ -33,6 +33,7 @@ function generateParser(config, parameter) {
   let parser = 'TODO';
   switch (parameter.type) {
     case 'string':
+    case 'multiline_string':
     case 'file':
       parser = stringParser(parameter);
       break;

@@ -33,6 +33,7 @@ class TypedParameter {
       !this.isDummy() &&
       [
         'string',
+        'multiline_string',
         'number',
         'boolean',
         'select',
