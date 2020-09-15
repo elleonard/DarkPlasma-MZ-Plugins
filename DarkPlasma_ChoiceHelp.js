@@ -1,10 +1,11 @@
-// DarkPlasma_ChoiceHelp 1.0.0
+// DarkPlasma_ChoiceHelp 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/09/16 1.0.0 公開
+ * 2020/09/16 1.0.1 入れ子の選択肢にヘルプが引き継がれる不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -44,6 +45,12 @@
     $gameMessage.setChoiceHelp(choiceHelp);
   });
 
+  const _Game_Message_clear = Game_Message.prototype.clear;
+  Game_Message.prototype.clear = function () {
+    _Game_Message_clear.call(this);
+    this.resetChoiceHelp();
+  };
+
   const _Game_Message_originalIndexOfDisplayedChoices = Game_Message.prototype.originalIndexOfDiplayedChoices;
   Game_Message.prototype.originalIndexOfDiplayedChoices = function () {
     return _Game_Message_originalIndexOfDisplayedChoices
@@ -62,15 +69,6 @@
 
   Game_Message.prototype.resetChoiceHelp = function () {
     this._choiceHelp = [];
-  };
-
-  const _Game_Interpreter_command404 = Game_Interpreter.prototype.command404;
-  Game_Interpreter.prototype.command404 = function (params) {
-    if (_Game_Interpreter_command404) {
-      _Game_Interpreter_command404.call(this, params);
-    }
-    $gameMessage.resetChoiceHelp();
-    return true;
   };
 
   const _Scene_Message_createAllWindows = Scene_Message.prototype.createAllWindows;
