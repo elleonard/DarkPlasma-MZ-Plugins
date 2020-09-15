@@ -50,12 +50,50 @@ class ChoiceBranchIndex {
   }
 }
 
+const _Game_Message_clear = Game_Message.prototype.clear;
+Game_Message.prototype.clear = function () {
+  _Game_Message_clear.call(this);
+  this._choiceEnabled = [];
+  this._originalChoices = [];
+};
+
 Game_Message.prototype.setChoiceEnabled = function (choiceEnabled) {
   this._choiceEnabled = choiceEnabled;
 };
 
 Game_Message.prototype.choiceEnabled = function () {
   return this._choiceEnabled;
+};
+
+Game_Message.prototype.setOriginalChoices = function (originalChoices) {
+  this._originalChoices = originalChoices;
+};
+
+/**
+ * 元々の選択肢設定を、下記形式のオブジェクトの配列として返す
+ * {
+ *   displayName: string,
+ *   displayed: boolean,
+ *   enabled: boolean
+ * }
+ * @return {object[]}
+ */
+Game_Message.prototype.originalChoices = function () {
+  return this._originalChoices;
+};
+
+/**
+ * 元々の選択肢設定の中で、表示すべきものの元々のインデックス一覧を返す
+ * @return {number[]}
+ */
+Game_Message.prototype.originalIndexOfDiplayedChoices = function () {
+  const result = [];
+  this.originalChoices().forEach((choice, index) => {
+    if (choice.displayed) {
+      result.push(index);
+    }
+  });
+  return result;
 };
 
 const _Game_Interpreter_setup = Game_Interpreter.prototype.setup;
@@ -75,21 +113,23 @@ Game_Interpreter.prototype.setupChoices = function (params) {
     return;
   }
   const choices = this.mergeSequencialChoices();
+  const displayedChoices = choices.filter((choice) => choice.displayed);
   const cancelType = params[1] < choices.length ? params[1] : -2;
   const defaultType = params.length > 2 ? params[2] : 0;
   const positionType = params.length > 3 ? params[3] : 2;
   const background = params.length > 4 ? params[4] : 0;
   $gameMessage.setChoices(
-    choices.map((choice) => choice.displayName),
+    displayedChoices.map((choice) => choice.displayName),
     defaultType,
     cancelType
   );
-  $gameMessage.setChoiceEnabled(choices.map((choice) => choice.enabled));
+  $gameMessage.setChoiceEnabled(displayedChoices.map((choice) => choice.enabled));
   $gameMessage.setChoiceBackground(background);
   $gameMessage.setChoicePositionType(positionType);
   $gameMessage.setChoiceCallback((n) => {
     this._branch[this._indent] = n;
   });
+  $gameMessage.setOriginalChoices(choices);
 };
 
 /**
@@ -105,27 +145,30 @@ Game_Interpreter.prototype.mergeSequencialChoices = function () {
   ) {
     this._mergedChoices.push(new MergedSequencialChoicesIndex(commandIndex, sequencialChoiceIndex));
     this._list[commandIndex].parameters[0].forEach((choice, index) => {
-      let choiceDisplayName = choice;
-      let choiceEnabled = true;
-      if (/\s*if\((.*?)\)/.test(choice)) {
-        choiceDisplayName = this.evalChoiceIf(choice);
-      }
-      if (choiceDisplayName !== '') {
-        if (/s*en\((.*?)\)/.test(choiceDisplayName)) {
-          choiceDisplayName = choiceDisplayName.replace(/s*en\((.*?)\)/, '');
-          choiceEnabled = this.evalChoiceEnabled(choice);
-        }
+      let choiceDisplayName = choice.replace(/\s*if\((.*?)\)/, '').replace(/\s*en\((.*?)\)/, '');
+      let isDisplayed = /\s*if\((.*?)\)/.test(choice) ? this.evalChoiceIf(choice) : true;
+      let isEnabled = /s*en\((.*?)\)/.test(choice) ? this.evalChoiceEnabled(choice) : true;
+      if (isDisplayed) {
         this._choiceBranches.push(
           new ChoiceBranchIndex(this.findChoiceBranchCommandIndex(commandIndex, index), branchIndex)
         );
         branchIndex++;
-        choices.push({ displayName: choiceDisplayName, enabled: choiceEnabled });
       }
+      choices.push({
+        displayName: choiceDisplayName,
+        displayed: isDisplayed,
+        enabled: isEnabled,
+      });
     });
   }
   return choices;
 };
 
+/**
+ * 選択肢が有効であるかどうか返す
+ * @param {string} choice 選択肢テキスト
+ * @return {boolean}
+ */
 Game_Interpreter.prototype.evalChoiceEnabled = function (choice) {
   const match = /\s*en\((.*?)\)/.exec(choice);
   if (match) {
@@ -134,12 +177,17 @@ Game_Interpreter.prototype.evalChoiceEnabled = function (choice) {
   return true;
 };
 
+/**
+ * 選択肢を表示すべきかどうか返す
+ * @param {string} choice 選択肢テキスト
+ * @return {boolean}
+ */
 Game_Interpreter.prototype.evalChoiceIf = function (choice) {
   const match = /\s*if\((.*?)\)/.exec(choice);
   if (match) {
-    return this.evalChoiceCondition(match[1]) ? choice.replace(match[0], '') : '';
+    return this.evalChoiceCondition(match[1]);
   }
-  return choice;
+  return true;
 };
 
 Game_Interpreter.prototype.evalChoiceCondition = function (condition) {

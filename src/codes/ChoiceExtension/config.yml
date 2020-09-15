@@ -4,6 +4,9 @@ DarkPlasma_ChoiceExtension:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/16'
+      version: '1.1.0'
+      description: '外部プラグイン向けインターフェースを公開'
     - date: '2020/09/15'
       version: '1.0.0'
       description: '公開'
@@ -47,3 +50,10 @@ DarkPlasma_ChoiceExtension:
       それらに設定された選択肢をまとめて表示します。
 
       デフォルトやキャンセル時の挙動は最初の選択肢コマンドのものが適用されます。
+
+      プログラムインターフェース:
+      $gameMessage.originalChoices() : object[]
+        元々の選択肢一覧を表示フラグ、有効フラグとともに取得
+
+      $gameMessage.originalIndexOfDiplayedChoices() : number[]
+        表示すべき選択肢の元々のインデックス一覧を取得
