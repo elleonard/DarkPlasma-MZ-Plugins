@@ -5,6 +5,9 @@ DarkPlasma_ChoiceExtension:
   license: MIT
   histories:
     - date: '2020/09/16'
+      version: '1.1.1'
+      description: '入れ子選択肢を正しく処理できない不具合を修正'
+    - date: '2020/09/16'
       version: '1.1.0'
       description: '外部プラグイン向けインターフェースを公開'
     - date: '2020/09/15'

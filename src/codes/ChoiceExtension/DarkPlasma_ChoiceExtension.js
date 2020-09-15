@@ -209,11 +209,16 @@ Game_Interpreter.prototype.evalChoiceCondition = function (condition) {
  * @return {number}
  */
 Game_Interpreter.prototype.findChoiceBranchCommandIndex = function (fromIndex, branchIndex) {
+  const fromCommand = this._list[fromIndex];
   return (
     this._list
       .slice(fromIndex)
-      .findIndex((command) => command.code === EVENT_COMMAND.CHOICE_BRANCH && command.parameters[0] === branchIndex) +
-    fromIndex
+      .findIndex(
+        (command) =>
+          command.code === EVENT_COMMAND.CHOICE_BRANCH &&
+          command.indent === fromCommand.indent &&
+          command.parameters[0] === branchIndex
+      ) + fromIndex
   );
 };
 
