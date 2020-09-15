@@ -4,7 +4,8 @@
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/09/16 1.1.0 外部プラグイン向けインターフェースを公開
+ * 2020/09/16 1.1.1 入れ子選択肢を正しく処理できない不具合を修正
+ *            1.1.0 外部プラグイン向けインターフェースを公開
  * 2020/09/15 1.0.0 公開
  */
 
@@ -278,11 +279,16 @@
    * @return {number}
    */
   Game_Interpreter.prototype.findChoiceBranchCommandIndex = function (fromIndex, branchIndex) {
+    const fromCommand = this._list[fromIndex];
     return (
       this._list
         .slice(fromIndex)
-        .findIndex((command) => command.code === EVENT_COMMAND.CHOICE_BRANCH && command.parameters[0] === branchIndex) +
-      fromIndex
+        .findIndex(
+          (command) =>
+            command.code === EVENT_COMMAND.CHOICE_BRANCH &&
+            command.indent === fromCommand.indent &&
+            command.parameters[0] === branchIndex
+        ) + fromIndex
     );
   };
 
