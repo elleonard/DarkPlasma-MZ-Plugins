@@ -1,0 +1,34 @@
+DarkPlasma_ChoiceHelp:
+  name: DarkPlasma_ChoiceHelp
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/16'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '選択肢にヘルプを表示する'
+  parameters: []
+  commands:
+    - command: setChoiceHelp
+      text:
+        ja: 選択肢にヘルプテキスト
+      args:
+        - arg: helpTexts
+          text:
+            ja: ヘルプテキスト一覧
+          desc:
+            ja: ヘルプテキスト一覧を設定します。選択肢と同じ順番に設定してください。
+          type: multiline_string[]
+          default: []
+  structures:
+  help:
+    ja: |
+      選択肢にヘルプテキストを表示できます。
+
+      選択肢イベントコマンドの前にプラグインコマンドで
+      ヘルプテキスト一覧を設定してください。
