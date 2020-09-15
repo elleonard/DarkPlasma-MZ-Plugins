@@ -9,6 +9,12 @@ PluginManager.registerCommand(pluginName, COMMANDS.SET_CHOICE_HELP, (args) => {
   $gameMessage.setChoiceHelp(choiceHelp);
 });
 
+const _Game_Message_clear = Game_Message.prototype.clear;
+Game_Message.prototype.clear = function () {
+  _Game_Message_clear.call(this);
+  this.resetChoiceHelp();
+};
+
 const _Game_Message_originalIndexOfDisplayedChoices = Game_Message.prototype.originalIndexOfDiplayedChoices;
 Game_Message.prototype.originalIndexOfDiplayedChoices = function () {
   return _Game_Message_originalIndexOfDisplayedChoices
@@ -27,15 +33,6 @@ Game_Message.prototype.choiceHelp = function () {
 
 Game_Message.prototype.resetChoiceHelp = function () {
   this._choiceHelp = [];
-};
-
-const _Game_Interpreter_command404 = Game_Interpreter.prototype.command404;
-Game_Interpreter.prototype.command404 = function (params) {
-  if (_Game_Interpreter_command404) {
-    _Game_Interpreter_command404.call(this, params);
-  }
-  $gameMessage.resetChoiceHelp();
-  return true;
 };
 
 const _Scene_Message_createAllWindows = Scene_Message.prototype.createAllWindows;
