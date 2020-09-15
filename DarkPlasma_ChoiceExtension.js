@@ -1,4 +1,4 @@
-// DarkPlasma_ChoiceExtension 1.0.0
+// DarkPlasma_ChoiceExtension 1.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
