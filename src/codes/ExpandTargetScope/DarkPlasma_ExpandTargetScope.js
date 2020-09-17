@@ -136,7 +136,7 @@ const _Window_BattleEnemy_processHandling = Window_BattleEnemy.prototype.process
 Window_BattleEnemy.prototype.processHandling = function () {
   if (this.isOpenAndActive()) {
     const action = BattleManager.inputtingAction();
-    if (action.canExpandScope() && Input.isTriggered(settings.shiftScopeButton) && !this.cursorFixed()) {
+    if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
       this.setCursorAll(!this._cursorAll);
       if (this.cursorAll()) {
         $gameTroop.selectAll();
