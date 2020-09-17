@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.0.0
+// DarkPlasma_TinyMedal 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/18 2.1.0 入手順を必要メダルの少ない順に変更
  * 2020/09/10 2.0.0 パラメータ名を変更
  *                  ウェイトなし歩行が遅れる不具合を修正
  * 2020/08/25 1.0.0 MZ版公開
@@ -551,9 +552,9 @@
     $gameParty.loseAllMedalItem();
     const afterCount = $gameVariables.value(settings.medalCountVariable);
     // 報酬アイテム入手
-    const gainRewards = rewardItems.filter(
-      (rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount
-    );
+    const gainRewards = rewardItems
+      .sort((a, b) => a.medalCount - b.medalCount)
+      .filter((rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount);
     gainRewards.forEach((rewardItem) => rewardItem.complete());
   };
 
