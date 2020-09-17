@@ -1,0 +1,20 @@
+DarkPlasma_VisibleBattleLogWindow:
+  name: DarkPlasma_VisibleBattleLogWindow
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/18'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'バトルログウィンドウに縁をつける'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      バトルログウィンドウに縁をつけます。
