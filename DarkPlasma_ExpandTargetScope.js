@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.0.1
+// DarkPlasma_ExpandTargetScope 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/18 1.0.2 全体化ボタンが効いていない不具合を修正
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/09/05 1.0.0 公開
  */
@@ -198,7 +199,7 @@
   Window_BattleEnemy.prototype.processHandling = function () {
     if (this.isOpenAndActive()) {
       const action = BattleManager.inputtingAction();
-      if (action.canExpandScope() && Input.isTriggered(settings.shiftScopeButton) && !this.cursorFixed()) {
+      if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
         this.setCursorAll(!this._cursorAll);
         if (this.cursorAll()) {
           $gameTroop.selectAll();
