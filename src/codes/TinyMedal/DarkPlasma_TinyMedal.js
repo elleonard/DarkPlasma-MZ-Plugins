@@ -370,9 +370,9 @@ Game_System.prototype.processTinyMedal = function () {
   $gameParty.loseAllMedalItem();
   const afterCount = $gameVariables.value(settings.medalCountVariable);
   // 報酬アイテム入手
-  const gainRewards = rewardItems.filter(
-    (rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount
-  );
+  const gainRewards = rewardItems
+    .sort((a, b) => a.medalCount - b.medalCount)
+    .filter((rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount);
   gainRewards.forEach((rewardItem) => rewardItem.complete());
 };
 
