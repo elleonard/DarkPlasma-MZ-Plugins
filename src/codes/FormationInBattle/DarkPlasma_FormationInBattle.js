@@ -233,6 +233,7 @@ Scene_Battle.prototype.commandFormation = function () {
 
 Scene_Battle.prototype.onFormationOk = function () {
   Scene_Formation.prototype.onFormationOk.call(this);
+  $gameTemp.requestBattleRefresh();
 };
 
 Scene_Battle.prototype.onFormationCancel = function () {
