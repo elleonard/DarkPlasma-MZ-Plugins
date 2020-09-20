@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.0.0
+// DarkPlasma_FormationInBattle 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/21 1.0.1 並び替え確定時にパーティウィンドウがリフレッシュされない不具合を修正
  * 2020/09/13 1.0.0 公開
  */
 
@@ -290,6 +291,7 @@
 
   Scene_Battle.prototype.onFormationOk = function () {
     Scene_Formation.prototype.onFormationOk.call(this);
+    $gameTemp.requestBattleRefresh();
   };
 
   Scene_Battle.prototype.onFormationCancel = function () {
