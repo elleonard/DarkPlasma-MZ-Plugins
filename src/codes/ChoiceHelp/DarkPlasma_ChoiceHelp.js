@@ -43,7 +43,7 @@ Scene_Message.prototype.createAllWindows = function () {
 
 Scene_Message.prototype.createHelpWindow = function () {
   this._helpWindow = new Window_Help(this.helpWindowRect());
-  this._helpWindow.close();
+  this._helpWindow.openness = 0;
   this.addWindow(this._helpWindow);
 };
 
@@ -85,5 +85,7 @@ Window_ChoiceList.prototype.updateHelp = function () {
 const _Window_ChoiceList_close = Window_ChoiceList.prototype.close;
 Window_ChoiceList.prototype.close = function () {
   _Window_ChoiceList_close.call(this);
-  this._helpWindow.close();
+  if (this._helpWindow) {
+    this._helpWindow.close();
+  }
 };
