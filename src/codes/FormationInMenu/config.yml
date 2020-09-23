@@ -1,0 +1,22 @@
+DarkPlasma_FormationInMenu:
+  name: DarkPlasma_FormationInMenu
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/23'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'メニューの並び替えを専用シーンに変える'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: DarkPlasma_Formation
+  help:
+    ja: |
+      メニューの並び替えを DarkPlasma_Formation の専用並び替えシーンにすり替えます。
