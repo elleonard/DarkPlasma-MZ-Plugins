@@ -4,6 +4,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/23'
+      version: '1.0.1'
+      description: 'ヘルプにメニューの並び替えについて追記'
     - date: '2020/09/13'
       version: '1.0.0'
       description: '公開'
@@ -45,6 +48,11 @@ DarkPlasma_Formation:
       並び替えシーンを提供します。
 
       プラグインコマンドで並び替えシーンを開始できます。
+
+      メニューの並び替えコマンドの挙動はこのプラグインだけでは変わりません。
+      メニューの挙動を変えるプラグインと併用することで、変えることができます。
+      例えば、DarkPlasma_FormationInMenuや
+      トリアコンタンさんのMenuSubCommandがご利用いただけます。
 
       並び替えシーン開始スクリプト:
       SceneManager.push(Scene_Formation);
