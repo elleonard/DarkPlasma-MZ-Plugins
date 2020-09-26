@@ -1,0 +1,28 @@
+DarkPlasma_DisableShowFastMessage:
+  name: DarkPlasma_DisableShowFastMessage
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/09/26'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'メッセージの高速表示を禁止する'
+  parameters: []
+  commands:
+    - command: Enable showFastMessage
+      text:
+        ja: メッセージ高速表示許可
+      args: []
+    - command: Disable showFastMessage
+      text:
+        ja: メッセージ高速表示禁止
+      args: []
+  structures:
+  help:
+    ja: |
+      プラグインコマンドにより、メッセージの高速表示を禁止したり許可したりします。
