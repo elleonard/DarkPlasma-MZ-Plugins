@@ -1,9 +1,12 @@
 DarkPlasma_BountyList:
   name: DarkPlasma_BountyList
-  version: '2.0.0'
+  version: '2.0.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/29'
+      version: '2.0.1'
+      description: 'プラグインコマンドの説明を追加'
     - date: '2020/09/08'
       version: '2.0.0'
       description: 'パラメータ名変更'
@@ -96,10 +99,14 @@ DarkPlasma_BountyList:
     - command: BountyList open
       text:
         ja: 賞金首シーンを開く
+      desc:
+        ja: 賞金首シーンを開きます。
       args: []
     - command: BountyList add
       text:
         ja: 敵キャラを賞金首リストに表示
+      desc:
+        ja: 指定した敵キャラを賞金首リスト内で開示します。
       args:
         - arg: id
           text:
@@ -108,6 +115,8 @@ DarkPlasma_BountyList:
     - command: BountyList remove
       text:
         ja: 敵キャラを賞金首リストから非表示
+      desc:
+        ja: 指定した敵キャラを賞金首リストで非表示にします。
       args:
         - arg: id
           text:
@@ -116,9 +125,13 @@ DarkPlasma_BountyList:
     - command: BountyList complete
       text:
         ja: 賞金首リストを全開示
+      desc:
+        ja: 賞金首リストを全開示します。
     - command: BountyList clear
       text:
         ja: 賞金首リストを初期化
+      desc:
+        ja: 賞金首リストを初期化します。
   help:
     ja: |
       賞金首に指定したいエネミーのメモ欄に以下の記述をしてください。
