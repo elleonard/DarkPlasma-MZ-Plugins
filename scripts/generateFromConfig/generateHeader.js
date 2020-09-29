@@ -241,6 +241,9 @@ class PluginCommandArgument extends TypedParameter {
     if (this._argument.text) {
       result.push(` * @text ${this._argument.text[language]}`);
     }
+    if (this._argument.desc) {
+      result.push(` * @desc ${this._argument.desc[language]}`);
+    }
     if (this.type()) {
       result.push(` * @type ${this.typeText(language)}`);
     }
@@ -266,6 +269,9 @@ class PluginCommand {
     const result = [` * @command ${this._command.command}`];
     if (this._command.text) {
       result.push(` * @text ${this._command.text[language]}`);
+    }
+    if (this._command.desc) {
+      result.push(` * @desc ${this._command.desc[language]}`);
     }
     if (this._command.args) {
       this._command.args.forEach((arg) => {
