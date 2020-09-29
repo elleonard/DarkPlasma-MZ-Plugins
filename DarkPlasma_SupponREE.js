@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.0.3
+// DarkPlasma_SupponREE 1.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 1.0.4 プラグインコマンドに説明を追加
  * 2020/09/08 1.0.3 rollup構成へ移行
  * 2020/09/01 1.0.2 フロントビューにおいて敵スプライトにゴミが表示される不具合を修正
  * 2020/08/29 1.0.1 フロントビューにおける敵配置の調整
@@ -22,6 +23,7 @@
  *
  * @command supponREE
  * @text ランダム出現設定
+ * @desc 敵グループのバトルイベントの1ページ目に記述すると、そのグループがランダム出現になります。
  * @arg randomEncounter
  * @text ランダム出現設定
  * @type struct<RandomEncounter>[]
@@ -89,6 +91,7 @@
  *
  * @command supponREE
  * @text Random encounter
+ * @desc If you write this command in enemy group's battle event page 1, the group become random.
  * @arg randomEncounter
  * @text Random Encounter setting
  * @type struct<RandomEncounterEn>[]

@@ -1,9 +1,10 @@
-// DarkPlasma_MaxItemCount 1.0.1
+// DarkPlasma_MaxItemCount 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 1.0.2 プラグインコマンドに説明を追加
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/30 1.0.0 公開
  */
@@ -24,12 +25,14 @@
  *
  * @command changeDefaultMaxItemCount
  * @text 全アイテムの所持限界数変更
+ * @desc ゲーム中に全アイテム/武器/防具のアイテム別所持限界数を変更します。
  * @arg count
  * @text 変更後の限界数
  * @type number
  *
  * @command changeMaxItemCount
  * @text アイテムの所持限界数変更
+ * @desc ゲーム中にアイテムごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
  * @arg count
  * @text 変更後の限界数
  * @type number
@@ -39,6 +42,7 @@
  *
  * @command changeMaxWeaponCount
  * @text 武器の所持限界数変更
+ * @desc ゲーム中に武器ごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
  * @arg count
  * @text 変更後の限界数
  * @type number
@@ -48,6 +52,7 @@
  *
  * @command changeMaxArmorCount
  * @text 防具の所持限界数変更
+ * @desc ゲーム中に防具ごとに所持限界数を変更します。全アイテムの限界数よりも優先されます。
  * @arg count
  * @text 変更後の限界数
  * @type number

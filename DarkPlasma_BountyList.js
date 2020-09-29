@@ -1,9 +1,10 @@
-// DarkPlasma_BountyList 2.0.0
+// DarkPlasma_BountyList 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 2.0.1 プラグインコマンドの説明を追加
  * 2020/09/08 2.0.0 パラメータ名変更
  * 2020/08/24 1.0.1 URL修正
  *            1.0.0 MZ版公開
@@ -61,24 +62,29 @@
  *
  * @command BountyList open
  * @text 賞金首シーンを開く
+ * @desc 賞金首シーンを開きます。
  *
  * @command BountyList add
  * @text 敵キャラを賞金首リストに表示
+ * @desc 指定した敵キャラを賞金首リスト内で開示します。
  * @arg id
  * @text 敵キャラID
  * @type enemy
  *
  * @command BountyList remove
  * @text 敵キャラを賞金首リストから非表示
+ * @desc 指定した敵キャラを賞金首リストで非表示にします。
  * @arg id
  * @text 敵キャラID
  * @type enemy
  *
  * @command BountyList complete
  * @text 賞金首リストを全開示
+ * @desc 賞金首リストを全開示します。
  *
  * @command BountyList clear
  * @text 賞金首リストを初期化
+ * @desc 賞金首リストを初期化します。
  *
  * @help
  * 賞金首に指定したいエネミーのメモ欄に以下の記述をしてください。

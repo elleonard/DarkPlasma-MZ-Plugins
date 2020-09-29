@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.1.0
+// DarkPlasma_TinyMedal 2.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 2.1.1 プラグインコマンドに説明を追加
  * 2020/09/18 2.1.0 入手順を必要メダルの少ない順に変更
  * 2020/09/10 2.0.0 パラメータ名を変更
  *                  ウェイトなし歩行が遅れる不具合を修正
@@ -63,9 +64,11 @@
  *
  * @command gotoSceneMedal
  * @text ちいさなメダルシーンを開く
+ * @desc 小さなメダルメニューが開き、報酬アイテム一覧が確認できます。
  *
  * @command processTinyMedal
  * @text ちいさなメダルを渡す
+ * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。

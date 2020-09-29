@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.0
+// DarkPlasma_EnemyBook 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 2.0.1 プラグインコマンドに説明を追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/30 1.0.0 MZ版公開
  */
@@ -151,24 +152,29 @@
  *
  * @command open enemyBook
  * @text 図鑑を開く
+ * @desc 図鑑シーンを開きます。
  *
  * @command add to enemyBook
  * @text 図鑑に登録する
+ * @desc 指定した敵キャラを図鑑に登録します。
  * @arg id
  * @text 敵キャラID
  * @type enemy
  *
  * @command remove from enemyBook
  * @text 図鑑から登録抹消する
+ * @desc 指定した敵キャラを図鑑から登録抹消します。
  * @arg id
  * @text 敵キャラID
  * @type enemy
  *
  * @command complete enemyBook
  * @text 図鑑を完成させる
+ * @desc 図鑑の内容を全開示します。
  *
  * @command clear enemyBook
  * @text 図鑑を初期化する
+ * @desc 図鑑の内容を初期化します。
  *
  * @help
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
@@ -399,24 +405,29 @@
  *
  * @command open enemyBook
  * @text open enemy book
+ * @desc Open enemy book.
  *
  * @command add to enemyBook
  * @text add to enemy book
+ * @desc Add enemy to book.
  * @arg id
  * @text enemy id
  * @type enemy
  *
  * @command remove from enemyBook
  * @text remove from enemy book
+ * @desc Remove enemy from book.
  * @arg id
  * @text enemy id
  * @type enemy
  *
  * @command complete enemyBook
  * @text complete enemy book
+ * @desc Complete enemy book.
  *
  * @command clear enemyBook
  * @text clear enemy book
+ * @desc Clear enemy book.
  *
  * @help
  * The original plugin is RMMV official plugin written by Yoji Ojima.

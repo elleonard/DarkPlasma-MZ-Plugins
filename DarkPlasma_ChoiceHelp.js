@@ -1,9 +1,10 @@
-// DarkPlasma_ChoiceHelp 1.0.2
+// DarkPlasma_ChoiceHelp 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 1.0.3 プラグインコマンドに説明を追加
  * 2020/09/23 1.0.2 場所移動時に一瞬ヘルプウィンドウが表示される不具合を修正
  *                  選択肢ウィンドウを継承するプラグインとの競合を修正
  * 2020/09/16 1.0.1 入れ子の選択肢にヘルプが引き継がれる不具合を修正
@@ -20,8 +21,10 @@
  *
  * @command setChoiceHelp
  * @text 選択肢にヘルプテキスト
+ * @desc 選択肢にヘルプテキストを設定します。
  * @arg helpTexts
  * @text ヘルプテキスト一覧
+ * @desc ヘルプテキスト一覧を設定します。選択肢と同じ順番に設定してください。
  * @type multiline_string[]
  *
  * @help

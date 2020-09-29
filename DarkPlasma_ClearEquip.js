@@ -1,9 +1,10 @@
-// DarkPlasma_ClearEquip 2.0.0
+// DarkPlasma_ClearEquip 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/09/29 2.0.1 プラグインコマンドに説明を追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -24,6 +25,7 @@
  *
  * @command clearEquip
  * @text アクターの装備をすべてはずす
+ * @desc 指定したアクターの装備をすべてはずします。
  * @arg actorId
  * @text アクター
  * @type actor
