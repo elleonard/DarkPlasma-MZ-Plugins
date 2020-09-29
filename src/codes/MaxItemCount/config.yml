@@ -1,9 +1,12 @@
 DarkPlasma_MaxItemCount:
   name: DarkPlasma_MaxItemCount
-  version: '1.0.1'
+  version: '1.0.2'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/09/29'
+      version: '1.0.2'
+      description: 'プラグインコマンドに説明を追加'
     - date: '2020/09/08'
       version: '1.0.1'
       description: 'rollup構成へ移行'
@@ -27,7 +30,8 @@ DarkPlasma_MaxItemCount:
     - command: changeDefaultMaxItemCount
       text:
         ja: 全アイテムの所持限界数変更
-      desc: ゲーム中に全アイテム/武器/防具のアイテム別所持限界数を変更します。
+      desc:
+        ja: ゲーム中に全アイテム/武器/防具のアイテム別所持限界数を変更します。
       args:
         - arg: count
           text:
