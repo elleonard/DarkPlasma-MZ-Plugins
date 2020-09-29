@@ -1,10 +1,13 @@
 DarkPlasma_SupponREE:
   name: DarkPlasma_SupponREE
-  version: '1.0.3'
+  version: '1.0.4'
   year: 2020
   license: MIT
   author: 'Suppon, DarkPlasma'
   histories:
+    - date: '2020/09/29'
+      version: '1.0.4'
+      description: 'プラグインコマンドに説明を追加'
     - date: '2020/09/08'
       version: '1.0.3'
       description: 'rollup構成へ移行'
