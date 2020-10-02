@@ -209,6 +209,8 @@ class PluginParameter extends TypedParameter {
             result.push(` * @value ${option.value}`);
           }
         });
+      } else if (this._parameter.type === 'number' && this._parameter.decimals) {
+        result.push(` * @decimals ${this._parameter.decimals}`);
       }
       const default_ = this.defaultText(language);
       if (default_ || typeof default_ === 'boolean' || Number.isFinite(default_)) {
