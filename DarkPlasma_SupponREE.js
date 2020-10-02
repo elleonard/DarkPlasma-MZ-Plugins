@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.0.4
+// DarkPlasma_SupponREE 1.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/02 1.1.0 自動配置横幅設定を追加
  * 2020/09/29 1.0.4 プラグインコマンドに説明を追加
  * 2020/09/08 1.0.3 rollup構成へ移行
  * 2020/09/01 1.0.2 フロントビューにおいて敵スプライトにゴミが表示される不具合を修正
@@ -20,6 +21,12 @@
  * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
  *
  * @base PluginCommonBase
+ *
+ * @param autoPositionWidth
+ * @desc 自動配置の際、前後に動かす際の横幅の閾値を設定します。敵キャラ画像の横幅合計がこれより大きい場合、敵配置を前後にバラけさせます。
+ * @text 自動配置横幅
+ * @type number
+ * @default 816
  *
  * @command supponREE
  * @text ランダム出現設定
@@ -88,6 +95,12 @@
  * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
  *
  * @base PluginCommonBase
+ *
+ * @param autoPositionWidth
+ * @desc If sum of enemy image width is larger than this value, set enemy position front and back.
+ * @text auto position width
+ * @type number
+ * @default 816
  *
  * @command supponREE
  * @text Random encounter
@@ -331,7 +344,7 @@
     const whole_x = this._enemySprites
       .map((sprite) => Math.ceil(sprite.bitmap.width * sprite.scale.x))
       .reduce((accumlator, current) => accumlator + current, 0);
-    const line = Math.floor(whole_x / Graphics.boxWidth) + 1; // 横列数
+    const line = Math.floor(whole_x / settings.autoPositionWidth) + 1; // 横列数
     let maxx = null;
     let minx = null;
     const enemyCount = this._enemySprites.length; // エネミーの数
