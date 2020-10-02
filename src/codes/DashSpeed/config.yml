@@ -1,0 +1,39 @@
+DarkPlasma_DashSpeed:
+  name: DarkPlasma_DashSpeed
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/02'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ダッシュ速度を変更する'
+  parameters:
+    - param: defaultDashSpeed
+      text:
+        ja: デフォルトダッシュ速度
+      desc:
+        ja: デフォルトのダッシュ速度。大きくするほど早くなります。
+      type: number
+      default: 1
+      decimals: 1
+  commands:
+    - command: changeDashSpeed
+      text:
+        ja: ダッシュ速度変更
+      desc:
+        ja: ダッシュ速度を変更します。
+      args:
+        - arg: dashSpeed
+          text:
+            ja: ダッシュ速度
+          type: number
+          default: 1
+  structures:
+  help:
+    ja: |
+      ダッシュ速度を変更します。
