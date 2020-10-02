@@ -1,10 +1,13 @@
 DarkPlasma_SupponREE:
   name: DarkPlasma_SupponREE
-  version: '1.0.4'
+  version: '1.1.0'
   year: 2020
   license: MIT
   author: 'Suppon, DarkPlasma'
   histories:
+    - date: '2020/10/02'
+      version: '1.1.0'
+      description: '自動配置横幅設定を追加'
     - date: '2020/09/29'
       version: '1.0.4'
       description: 'プラグインコマンドに説明を追加'
@@ -27,7 +30,16 @@ DarkPlasma_SupponREE:
   plugindesc:
     ja: 'モンスターランダム出現'
     en: 'Random Enemies emergence.'
-  parameters: []
+  parameters:
+    - param: autoPositionWidth
+      text:
+        ja: 自動配置横幅
+        en: auto position width
+      desc:
+        ja: 自動配置の際、前後に動かす際の横幅の閾値を設定します。敵キャラ画像の横幅合計がこれより大きい場合、敵配置を前後にバラけさせます。
+        en: If sum of enemy image width is larger than this value, set enemy position front and back.
+      type: number
+      default: 816
   commands:
     - command: supponREE
       text:
