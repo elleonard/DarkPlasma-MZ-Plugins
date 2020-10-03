@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtensionView 1.0.0
+// DarkPlasma_SkillCostExtensionView 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/04 1.0.1 アイテムコストが正しく表示されない不具合を修正
  * 2020/10/03 1.0.0 公開
  */
 
@@ -89,7 +90,7 @@
   Window_SkillList.prototype.drawItemCost = function (skill, x, y, width) {
     const firstItemCost = this._actor.skillItemCosts(skill)[0];
     this.drawText(
-      `${firstItemCost.num}/${$gameParty.numItemsForDisplay($dataItems[firstItemCost.item])}`,
+      `${firstItemCost.num}/${$gameParty.numItemsForDisplay($dataItems[firstItemCost.id])}`,
       x,
       y,
       width,
