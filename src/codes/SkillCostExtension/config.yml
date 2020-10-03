@@ -1,9 +1,12 @@
 DarkPlasma_SkillCostExtension:
   name: DarkPlasma_SkillCostExtension
-  version: '1.1.0'
+  version: '1.1.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/03'
+      version: '1.1.1'
+      description: 'コメント修正, ヘルプにコスト表示を追記'
     - date: '2020/09/11'
       version: '1.1.0'
       description: 'アイテム/ゴールド消費数を選択時に反映するオプション追加'
@@ -50,6 +53,11 @@ DarkPlasma_SkillCostExtension:
         item:1:1
         item:2:1
       >
+
+      スキルリスト上でのコスト表示について
+      本プラグインではアイテムやお金の拡張コスト表示を行っていません。
+      拡張コストを表示したい場合、
+      DarkPlasma_SkillCostExtensionView等の追加プラグインをご利用ください。
 
       アイテム選択時に消費をアイテム数へ反映する機能について
       本プラグインではスキルによる消費数の反映のみ行っています。

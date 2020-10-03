@@ -10,13 +10,13 @@ class ReservedSkills {
 
   initialize() {
     /**
-     * @type {MV.Skill[]}
+     * @type {MZ.Skill[]}
      */
     this._skills = [];
   }
 
   /**
-   * @param {MV.Skill} skill スキルデータ
+   * @param {MZ.Skill} skill スキルデータ
    */
   reserve(skill) {
     this._skills.push(skill);
@@ -31,7 +31,7 @@ class ReservedSkills {
 
   /**
    * アイテムの消費数
-   * @param {MV.item} item アイテムデータ
+   * @param {MZ.item} item アイテムデータ
    * @return {number}
    */
   costItemCount(item) {
@@ -83,7 +83,7 @@ BattleManager.reservedItemCount = function (item) {
 
 /**
  * 既に入力済みのスキルコストアイテム数
- * @param {MV.item} item アイテムデータ
+ * @param {MZ.item} item アイテムデータ
  * @return {number}
  */
 BattleManager.reservedSkillCostItemCount = function (item) {
@@ -247,7 +247,7 @@ Game_BattlerBase.prototype.paySkillCost = function (skill) {
 /**
  * アイテムの表示上の個数を返す
  * numItemsはgainItemの挙動に影響してしまうため、類似の別メソッドが必要
- * @param {MV.item} item アイテムデータ
+ * @param {MZ.item} item アイテムデータ
  * @return {number}
  */
 Game_Party.prototype.numItemsForDisplay = function (item) {
@@ -267,7 +267,7 @@ Game_Party.prototype.gold = function () {
  * 戦闘中のアイテムの個数表示
  * 表示上の個数と実際の個数がズレる上、numItemsはgainItemの挙動に影響してしまうため、
  * まるごと上書きしてしまう。
- * @param {MV.item} item アイテムデータ
+ * @param {MZ.item} item アイテムデータ
  */
 Window_BattleItem.prototype.drawItemNumber = function (item, x, y, width) {
   if (this.needsNumber()) {
