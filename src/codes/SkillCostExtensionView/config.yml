@@ -1,0 +1,47 @@
+DarkPlasma_SkillCostExtensionView:
+  name: DarkPlasma_SkillCostExtensionView
+  version: '1.0.0'
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/03'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルコスト表示を拡張する'
+  parameters:
+    - param: hpCostColor
+      text:
+        ja: HPコスト色
+      desc:
+        ja: HPコストの色をツクールの色番号または#+6桁の16進数で指定します。
+      type: string
+      default: 2
+    - param: itemCostColor
+      text:
+        ja: アイテムコスト色
+      desc:
+        ja: アイテムコストの色をツクールの色番号または#+6桁の16進数で指定します。
+      type: string
+      default: 0
+    - param: goldCostColor
+      text:
+        ja: お金コスト色
+      desc:
+        ja: お金コストの色をツクールの色番号または#+6桁の16進数で指定します。
+      type: string
+      default: 6
+  commands: []
+  structures:
+  dependencies:
+    base: DarkPlasma_SkillCostExtension
+  help:
+    ja: |
+      DarkPlasma_SkillCostExtensionで設定した拡張スキルコストを
+      スキルリスト上で表示します。
+
+      以下の優先度で対象スキルのコストを1つだけ表示します。
+      お金 > アイテム > HP > TP > MP
