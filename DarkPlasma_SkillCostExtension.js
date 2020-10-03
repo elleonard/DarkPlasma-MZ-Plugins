@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.1.0
+// DarkPlasma_SkillCostExtension 1.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/03 1.1.1 コメント修正, ヘルプにコスト表示を追記
  * 2020/09/11 1.1.0 アイテム/ゴールド消費数を選択時に反映するオプション追加
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/27 1.0.0 MZ版公開
@@ -45,6 +46,11 @@
  *   item:2:1
  * >
  *
+ * スキルリスト上でのコスト表示について
+ * 本プラグインではアイテムやお金の拡張コスト表示を行っていません。
+ * 拡張コストを表示したい場合、
+ * DarkPlasma_SkillCostExtensionView等の追加プラグインをご利用ください。
+ *
  * アイテム選択時に消費をアイテム数へ反映する機能について
  * 本プラグインではスキルによる消費数の反映のみ行っています。
  * アイテムを直接使用した場合の消費数の反映については、
@@ -76,13 +82,13 @@
 
     initialize() {
       /**
-       * @type {MV.Skill[]}
+       * @type {MZ.Skill[]}
        */
       this._skills = [];
     }
 
     /**
-     * @param {MV.Skill} skill スキルデータ
+     * @param {MZ.Skill} skill スキルデータ
      */
     reserve(skill) {
       this._skills.push(skill);
@@ -97,7 +103,7 @@
 
     /**
      * アイテムの消費数
-     * @param {MV.item} item アイテムデータ
+     * @param {MZ.item} item アイテムデータ
      * @return {number}
      */
     costItemCount(item) {
@@ -149,7 +155,7 @@
 
   /**
    * 既に入力済みのスキルコストアイテム数
-   * @param {MV.item} item アイテムデータ
+   * @param {MZ.item} item アイテムデータ
    * @return {number}
    */
   BattleManager.reservedSkillCostItemCount = function (item) {
@@ -313,7 +319,7 @@
   /**
    * アイテムの表示上の個数を返す
    * numItemsはgainItemの挙動に影響してしまうため、類似の別メソッドが必要
-   * @param {MV.item} item アイテムデータ
+   * @param {MZ.item} item アイテムデータ
    * @return {number}
    */
   Game_Party.prototype.numItemsForDisplay = function (item) {
@@ -333,7 +339,7 @@
    * 戦闘中のアイテムの個数表示
    * 表示上の個数と実際の個数がズレる上、numItemsはgainItemの挙動に影響してしまうため、
    * まるごと上書きしてしまう。
-   * @param {MV.item} item アイテムデータ
+   * @param {MZ.item} item アイテムデータ
    */
   Window_BattleItem.prototype.drawItemNumber = function (item, x, y, width) {
     if (this.needsNumber()) {
