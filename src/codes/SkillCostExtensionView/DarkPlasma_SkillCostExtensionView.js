@@ -31,7 +31,7 @@ Window_SkillList.prototype.drawSkillCost = function (skill, x, y, width) {
 Window_SkillList.prototype.drawItemCost = function (skill, x, y, width) {
   const firstItemCost = this._actor.skillItemCosts(skill)[0];
   this.drawText(
-    `${firstItemCost.num}/${$gameParty.numItemsForDisplay($dataItems[firstItemCost.item])}`,
+    `${firstItemCost.num}/${$gameParty.numItemsForDisplay($dataItems[firstItemCost.id])}`,
     x,
     y,
     width,
