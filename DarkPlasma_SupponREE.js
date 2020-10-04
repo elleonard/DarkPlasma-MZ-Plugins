@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.0
+// DarkPlasma_SupponREE 1.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/04 1.1.1 戦闘時にエラーになる不具合を修正
  * 2020/10/02 1.1.0 自動配置横幅設定を追加
  * 2020/09/29 1.0.4 プラグインコマンドに説明を追加
  * 2020/09/08 1.0.3 rollup構成へ移行
@@ -159,6 +160,12 @@
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
   });
+
+  const pluginParameters = PluginManager.parameters(pluginName);
+
+  const settings = {
+    autoPositionWidth: Number(pluginParameters.autoPositionWidth || 816),
+  };
 
   const OLD_PLUGIN_COMMAND_CODE = 356;
   const PLUGIN_COMMAND_CODE = 357;
