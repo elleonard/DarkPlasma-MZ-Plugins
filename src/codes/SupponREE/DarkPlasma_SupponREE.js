@@ -1,4 +1,5 @@
 import { pluginName } from './../../common/pluginName';
+import { settings } from './_build/DarkPlasma_SupponREE_parameters';
 
 const OLD_PLUGIN_COMMAND_CODE = 356;
 const PLUGIN_COMMAND_CODE = 357;
