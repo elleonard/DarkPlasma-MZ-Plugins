@@ -1,9 +1,12 @@
 DarkPlasma_SkillCostExtension:
   name: DarkPlasma_SkillCostExtension
-  version: '1.1.1'
+  version: '1.2.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/06'
+      version: '1.2.0'
+      description: '変数をコストに設定する機能を追加'
     - date: '2020/10/03'
       version: '1.1.1'
       description: 'コメント修正, ヘルプにコスト表示を追記'
@@ -43,15 +46,23 @@ DarkPlasma_SkillCostExtension:
         mpRate:（消費MP 最大値に対する割合）
         item:（アイテムID）:（個数）
         gold:（お金）
+        variable:（変数ID）:（数値）
       >
 
-      指定する項目はどれか一つでもよく また、itemについては複数指定が可能です。
+      指定する項目はどれか一つでもよく
+      また、item, variableについては複数指定が可能です。
 
       例1: アイテムID1とアイテムID2を一つずつ消費するスキル
 
       <SkillCost:
         item:1:1
         item:2:1
+      >
+
+      例2: 変数ID1の値を5, 変数ID3の値を1消費するスキル
+      <SkillCost:
+        variable:1:5
+        variable:3:1
       >
 
       スキルリスト上でのコスト表示について

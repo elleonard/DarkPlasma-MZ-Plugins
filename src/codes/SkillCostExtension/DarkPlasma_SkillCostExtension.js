@@ -36,8 +36,8 @@ class ReservedSkills {
    */
   costItemCount(item) {
     return this._skills
-      .filter((skill) => skill.additionalCost && skill.additionalCost.item)
-      .map((skill) => skill.additionalCost.item)
+      .filter((skill) => skill.additionalCost && skill.additionalCost.items)
+      .map((skill) => skill.additionalCost.items)
       .flat()
       .filter((costItem) => costItem.id === item.id)
       .reduce((previous, current) => previous + current.num, 0);
@@ -107,16 +107,22 @@ DataManager.extractMetadata = function (data) {
 };
 
 DataManager.extractAdditionalSkillCost = function (data) {
-  var result = {};
+  const result = {};
   String(data.meta.SkillCost)
     .split('\n')
     .forEach((cost) => {
       const itemCost = DataManager.extractAdditionalSkillCostItem(cost);
+      const variableCost = DataManager.extractAdditionalSkillCostVariable(cost);
       if (itemCost) {
-        if (!result.item) {
-          result.item = [];
+        if (!result.items) {
+          result.items = [];
         }
-        result.item.push(itemCost);
+        result.items.push(itemCost);
+      } else if (variableCost) {
+        if (!result.variables) {
+          result.variables = [];
+        }
+        result.variables.push(variableCost);
       } else {
         const re = /(.+):([1-9][0-9]*)/g;
         const match = re.exec(cost);
@@ -142,6 +148,17 @@ DataManager.extractAdditionalSkillCost = function (data) {
 DataManager.extractAdditionalSkillCostItem = function (cost) {
   const re = /item:([1-9][0-9]*):([1-9][0-9]*)/g;
   const match = re.exec(cost);
+  if (match) {
+    return {
+      id: Number(match[1]),
+      num: Number(match[2]),
+    };
+  }
+  return null;
+};
+
+DataManager.extractAdditionalSkillCostVariable = function (cost) {
+  const match = /variable:([1-9][0-9]*):([1-9][0-9]*)/g.exec(cost);
   if (match) {
     return {
       id: Number(match[1]),
@@ -203,8 +220,15 @@ Game_BattlerBase.prototype.skillGoldCost = function (skill) {
 };
 
 Game_BattlerBase.prototype.skillItemCosts = function (skill) {
-  if (this.isActor() && skill.additionalCost.item) {
-    return skill.additionalCost.item;
+  if (this.isActor() && skill.additionalCost.items) {
+    return skill.additionalCost.items;
+  }
+  return [];
+};
+
+Game_BattlerBase.prototype.skillVariableCosts = function (skill) {
+  if (this.isActor() && skill.additionalCost.variables) {
+    return skill.additionalCost.variables;
   }
   return [];
 };
@@ -221,13 +245,20 @@ Game_BattlerBase.prototype.canPaySkillItemCost = function (skill) {
   return !this.skillItemCosts(skill).some((item) => $gameParty.numItemsForDisplay($dataItems[item.id]) < item.num);
 };
 
+Game_BattlerBase.prototype.canPaySkillVariableCost = function (skill) {
+  return !this.skillVariableCosts(skill).some((variable) => {
+    return $gameVariables.value(variable.id) < variable.num;
+  });
+};
+
 const _Game_BattlerBase_canPaySkillCost = Game_BattlerBase.prototype.canPaySkillCost;
 Game_BattlerBase.prototype.canPaySkillCost = function (skill) {
   return (
     _Game_BattlerBase_canPaySkillCost.call(this, skill) &&
     this.canPaySkillHpCost(skill) &&
     this.canPaySkillGoldCost(skill) &&
-    this.canPaySkillItemCost(skill)
+    this.canPaySkillItemCost(skill) &&
+    this.canPaySkillVariableCost(skill)
   );
 };
 
@@ -241,6 +272,10 @@ Game_BattlerBase.prototype.paySkillCost = function (skill) {
   this.skillItemCosts(skill)
     .filter((itemCost) => $dataItems[itemCost.id].consumable)
     .forEach((itemCost) => $gameParty.loseItem($dataItems[itemCost.id], itemCost.num, false));
+  // 変数コスト
+  this.skillVariableCosts(skill).forEach((variableCost) => {
+    $gameVariables.setValue(variableCost.id, $gameVariables.value(variableCost.id) - variableCost.num);
+  });
   _Game_BattlerBase_paySkillCost.call(this, skill);
 };
 
