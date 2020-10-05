@@ -1,9 +1,12 @@
 DarkPlasma_SkillCostExtensionView:
   name: DarkPlasma_SkillCostExtensionView
-  version: '1.0.1'
+  version: '1.1.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/06'
+      version: '1.1.0'
+      description: '変数コストの色設定を追加'
     - date: '2020/10/04'
       version: '1.0.1'
       description: 'アイテムコストが正しく表示されない不具合を修正'
@@ -37,6 +40,13 @@ DarkPlasma_SkillCostExtensionView:
         ja: お金コストの色をツクールの色番号または#+6桁の16進数で指定します。
       type: string
       default: 6
+    - param: variableCostColor
+      text:
+        ja: 変数コスト色
+      desc:
+        ja: 変数コストの色をツクールの色番号または#+6桁の16進数で指定します。
+      type: string
+      default: 5
   commands: []
   structures:
   dependencies:
@@ -47,4 +57,4 @@ DarkPlasma_SkillCostExtensionView:
       スキルリスト上で表示します。
 
       以下の優先度で対象スキルのコストを1つだけ表示します。
-      お金 > アイテム > HP > TP > MP
+      変数 > お金 > アイテム > HP > TP > MP
