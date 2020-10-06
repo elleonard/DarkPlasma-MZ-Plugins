@@ -16,7 +16,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param bountyInformations
  * @desc 賞金首リストに表示する情報。このリストの順番どおりに表示します

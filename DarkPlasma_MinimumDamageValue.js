@@ -14,7 +14,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param minimumPhysicalDamage
  * @text 物理最低ダメージ

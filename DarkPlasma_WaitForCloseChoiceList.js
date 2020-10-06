@@ -14,7 +14,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
  * RPGツクールMZでは選択肢ウィンドウの選択肢が多数ある場合、

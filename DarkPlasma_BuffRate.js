@@ -14,7 +14,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param attack
  * @text 攻撃力の強化/弱化倍率

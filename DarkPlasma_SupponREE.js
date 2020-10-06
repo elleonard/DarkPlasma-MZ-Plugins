@@ -19,7 +19,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base PluginCommonBase
  *
@@ -93,7 +93,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base PluginCommonBase
  *

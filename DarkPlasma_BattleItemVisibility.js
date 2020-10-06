@@ -15,7 +15,7 @@
  * @license MIT
  *
  * @target MZ
- * @url https://github.com/elleonard/RPGtkoolMZ-Plugins
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param showOnlyMenuItems
  * @desc メニュー画面のみ使用可能なアイテムを表示します
