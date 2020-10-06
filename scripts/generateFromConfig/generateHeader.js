@@ -413,7 +413,7 @@ function generatePluginMetaText(config, language) {
     ` * @target MZ`,
   ];
   if (config.license === 'MIT') {
-    return result.concat([` * @url https://github.com/elleonard/RPGtkoolMZ-Plugins`]).join('\n');
+    return result.concat([` * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release`]).join('\n');
   }
   return result.join('\n');
 }
