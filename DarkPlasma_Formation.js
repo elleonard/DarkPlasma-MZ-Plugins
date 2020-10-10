@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.0.1
+// DarkPlasma_Formation 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.0.2 リファクタ
  * 2020/09/23 1.0.1 ヘルプにメニューの並び替えについて追記
  * 2020/09/13 1.0.0 公開
  */
@@ -86,7 +87,7 @@
     OPEN_FORMATION_SCENE: 'openFormationScene',
   };
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.OPEN_FORMATION_SCENE, (_) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.OPEN_FORMATION_SCENE, function () {
     SceneManager.push(Scene_Formation);
   });
 

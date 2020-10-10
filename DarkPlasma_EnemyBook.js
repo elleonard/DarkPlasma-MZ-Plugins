@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.1
+// DarkPlasma_EnemyBook 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 2.0.2 リファクタ
  * 2020/09/29 2.0.1 プラグインコマンドに説明を追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/30 1.0.0 MZ版公開
@@ -649,23 +650,23 @@
     CLEAR: 'clear enemyBook',
   };
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, (_) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
     SceneManager.push(Scene_EnemyBook);
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.ADD, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.ADD, function (args) {
     $gameSystem.addToEnemyBook(Number(args.id));
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.REMOVE, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.REMOVE, function (args) {
     $gameSystem.removeFromEnemyBook(Number(args.id));
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.COMPLETE, (_) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.COMPLETE, function () {
     $gameSystem.completeEnemyBook();
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, (_) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function () {
     $gameSystem.clearEnemyBook();
   });
 

@@ -1,9 +1,10 @@
-// DarkPlasma_ChoiceHelp 1.0.3
+// DarkPlasma_ChoiceHelp 1.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.0.4 リファクタ
  * 2020/09/29 1.0.3 プラグインコマンドに説明を追加
  * 2020/09/23 1.0.2 場所移動時に一瞬ヘルプウィンドウが表示される不具合を修正
  *                  選択肢ウィンドウを継承するプラグインとの競合を修正
@@ -45,7 +46,7 @@
     SET_CHOICE_HELP: 'setChoiceHelp',
   };
 
-  PluginManager.registerCommand(pluginName, COMMANDS.SET_CHOICE_HELP, (args) => {
+  PluginManager.registerCommand(pluginName, COMMANDS.SET_CHOICE_HELP, function (args) {
     let choiceHelp = JSON.parse(args.helpTexts);
     $gameMessage.setChoiceHelp(choiceHelp);
   });

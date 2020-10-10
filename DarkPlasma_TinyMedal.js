@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.1.1
+// DarkPlasma_TinyMedal 2.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 2.1.2 リファクタ
  * 2020/09/29 2.1.1 プラグインコマンドに説明を追加
  * 2020/09/18 2.1.0 入手順を必要メダルの少ない順に変更
  * 2020/09/10 2.0.0 パラメータ名を変更
@@ -583,11 +584,11 @@
     }
   };
 
-  PluginManager.registerCommand(pluginName, 'gotoSceneMedal', (_) => {
+  PluginManager.registerCommand(pluginName, 'gotoSceneMedal', function () {
     SceneManager.push(Scene_TinyMedal);
   });
 
-  PluginManager.registerCommand(pluginName, 'processTinyMedal', (_) => {
+  PluginManager.registerCommand(pluginName, 'processTinyMedal', function () {
     $gameSystem.processTinyMedal();
     if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
       const reservedMessage = reservedRewardMessages.shift();

@@ -1,9 +1,10 @@
-// DarkPlasma_ClearEquip 2.0.1
+// DarkPlasma_ClearEquip 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 2.0.2 リファクタ
  * 2020/09/29 2.0.1 プラグインコマンドに説明を追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
@@ -59,7 +60,7 @@
     _Game_Party_removeActor.call(this, actorId);
   };
 
-  PluginManager.registerCommand(pluginName, 'clearEquip', (args) => {
+  PluginManager.registerCommand(pluginName, 'clearEquip', function (args) {
     const actor = $gameParty.members().find((actor) => actor.actorId() === Number(args.actorId));
     if (actor) {
       actor.clearEquipments();

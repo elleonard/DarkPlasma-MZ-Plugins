@@ -1,9 +1,10 @@
-// DarkPlasma_BountyList 2.0.1
+// DarkPlasma_BountyList 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 2.0.2 リファクタ
  * 2020/09/29 2.0.1 プラグインコマンドの説明を追加
  * 2020/09/08 2.0.0 パラメータ名変更
  * 2020/08/24 1.0.1 URL修正
@@ -169,23 +170,23 @@
     }
   };
 
-  PluginManager.registerCommand(pluginName, 'BountyList open', (_) => {
+  PluginManager.registerCommand(pluginName, 'BountyList open', function () {
     SceneManager.push(Scene_BountyList);
   });
 
-  PluginManager.registerCommand(pluginName, 'BountyList add', (args) => {
+  PluginManager.registerCommand(pluginName, 'BountyList add', function (args) {
     $gameSystem.addToBountyList(Number(args.id));
   });
 
-  PluginManager.registerCommand(pluginName, 'BountyList remove', (args) => {
+  PluginManager.registerCommand(pluginName, 'BountyList remove', function (args) {
     $gameSystem.removeFromBountyList(Number(args.id));
   });
 
-  PluginManager.registerCommand(pluginName, 'BountyList complete', (_) => {
+  PluginManager.registerCommand(pluginName, 'BountyList complete', function () {
     $gameSystem.completeBountyList();
   });
 
-  PluginManager.registerCommand(pluginName, 'BountyList clear', (_) => {
+  PluginManager.registerCommand(pluginName, 'BountyList clear', function () {
     $gameSystem.clearBountyList();
   });
 

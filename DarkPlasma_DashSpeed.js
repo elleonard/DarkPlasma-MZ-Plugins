@@ -1,9 +1,10 @@
-// DarkPlasma_DashSpeed 1.0.0
+// DarkPlasma_DashSpeed 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.0.1 リファクタ
  * 2020/10/02 1.0.0 公開
  */
 
@@ -68,7 +69,7 @@
     this._dashSpeed = dashSpeed;
   };
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DASH_SPEED, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DASH_SPEED, function (args) {
     $gamePlayer.setDashSpeed(Number(args.dashSpeed));
   });
 })();

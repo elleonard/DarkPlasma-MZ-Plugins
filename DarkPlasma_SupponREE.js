@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.1
+// DarkPlasma_SupponREE 1.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.1.2 リファクタ
  * 2020/10/04 1.1.1 戦闘時にエラーになる不具合を修正
  * 2020/10/02 1.1.0 自動配置横幅設定を追加
  * 2020/09/29 1.0.4 プラグインコマンドに説明を追加
@@ -195,7 +196,7 @@
     return $dataEnemies.filter((enemy) => enemy && enemy.enemyTypes.includes(type));
   };
 
-  PluginManagerEx.registerCommand(document.currentScript, COMMAND_NAME.RANDOM_ENCOUNTER, (args) => {
+  PluginManagerEx.registerCommand(document.currentScript, COMMAND_NAME.RANDOM_ENCOUNTER, function (args) {
     args.randomEncounter.forEach((encounter) => {
       $gameTroop.processRandomEncounter(encounter.id, encounter.type, encounter.ratio);
     });

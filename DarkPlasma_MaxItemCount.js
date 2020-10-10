@@ -1,9 +1,10 @@
-// DarkPlasma_MaxItemCount 1.0.2
+// DarkPlasma_MaxItemCount 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.0.3 リファクタ
  * 2020/09/29 1.0.2 プラグインコマンドに説明を追加
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/30 1.0.0 公開
@@ -99,19 +100,19 @@
     CHANGE_MAX_ARMOR_COUNT: 'changeMaxArmorCount',
   };
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DEFAULT_MAX_ITEM_COUNT, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DEFAULT_MAX_ITEM_COUNT, function (args) {
     $gameParty.changeDefaultMaxItemCount(Number(args.count));
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ITEM_COUNT, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ITEM_COUNT, function (args) {
     $gameParty.changeMaxItemCount($dataItems[Number(args.id)], Number(args.count));
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_WEAPON_COUNT, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_WEAPON_COUNT, function (args) {
     $gameParty.changeMaxItemCount($dataWeapons[Number(args.id)], Number(args.count));
   });
 
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ARMOR_COUNT, (args) => {
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ARMOR_COUNT, function (args) {
     $gameParty.changeMaxItemCount($dataArmors[Number(args.id)], Number(args.count));
   });
 

@@ -1,9 +1,10 @@
-// DarkPlasma_DisableShowFastMessage 1.0.0
+// DarkPlasma_DisableShowFastMessage 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/10 1.0.1 リファクタ
  * 2020/09/26 1.0.0 公開
  */
 
@@ -32,11 +33,11 @@
     return arguments[1];
   });
 
-  PluginManager.registerCommand(pluginName, 'Enable showFastMessage', () => {
+  PluginManager.registerCommand(pluginName, 'Enable showFastMessage', function () {
     $gameSystem.enableShowFastMessage();
   });
 
-  PluginManager.registerCommand(pluginName, 'Disable showFastMessage', () => {
+  PluginManager.registerCommand(pluginName, 'Disable showFastMessage', function () {
     $gameSystem.disableShowFastMessage();
   });
 
