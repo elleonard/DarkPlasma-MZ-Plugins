@@ -17,23 +17,23 @@ DataManager.extractMetadata = function (data) {
   }
 };
 
-PluginManager.registerCommand(pluginName, 'BountyList open', (_) => {
+PluginManager.registerCommand(pluginName, 'BountyList open', function () {
   SceneManager.push(Scene_BountyList);
 });
 
-PluginManager.registerCommand(pluginName, 'BountyList add', (args) => {
+PluginManager.registerCommand(pluginName, 'BountyList add', function (args) {
   $gameSystem.addToBountyList(Number(args.id));
 });
 
-PluginManager.registerCommand(pluginName, 'BountyList remove', (args) => {
+PluginManager.registerCommand(pluginName, 'BountyList remove', function (args) {
   $gameSystem.removeFromBountyList(Number(args.id));
 });
 
-PluginManager.registerCommand(pluginName, 'BountyList complete', (_) => {
+PluginManager.registerCommand(pluginName, 'BountyList complete', function () {
   $gameSystem.completeBountyList();
 });
 
-PluginManager.registerCommand(pluginName, 'BountyList clear', (_) => {
+PluginManager.registerCommand(pluginName, 'BountyList clear', function () {
   $gameSystem.clearBountyList();
 });
 

@@ -1,9 +1,12 @@
 DarkPlasma_DashSpeed:
   name: DarkPlasma_DashSpeed
-  version: '1.0.0'
+  version: '1.0.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/10'
+      version: '1.0.1'
+      description: 'リファクタ'
     - date: '2020/10/02'
       version: '1.0.0'
       description: '公開'

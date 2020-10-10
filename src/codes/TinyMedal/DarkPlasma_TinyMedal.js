@@ -398,11 +398,11 @@ Game_Interpreter.prototype.processReservedRewardMessages = function () {
   }
 };
 
-PluginManager.registerCommand(pluginName, 'gotoSceneMedal', (_) => {
+PluginManager.registerCommand(pluginName, 'gotoSceneMedal', function () {
   SceneManager.push(Scene_TinyMedal);
 });
 
-PluginManager.registerCommand(pluginName, 'processTinyMedal', (_) => {
+PluginManager.registerCommand(pluginName, 'processTinyMedal', function () {
   $gameSystem.processTinyMedal();
   if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
     const reservedMessage = reservedRewardMessages.shift();

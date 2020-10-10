@@ -1,10 +1,10 @@
 import { pluginName } from '../../common/pluginName';
 
-PluginManager.registerCommand(pluginName, 'Enable showFastMessage', () => {
+PluginManager.registerCommand(pluginName, 'Enable showFastMessage', function () {
   $gameSystem.enableShowFastMessage();
 });
 
-PluginManager.registerCommand(pluginName, 'Disable showFastMessage', () => {
+PluginManager.registerCommand(pluginName, 'Disable showFastMessage', function () {
   $gameSystem.disableShowFastMessage();
 });
 

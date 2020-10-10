@@ -11,23 +11,23 @@ const PLUGIN_COMMAND_NAME = {
   CLEAR: 'clear enemyBook',
 };
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, (_) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
   SceneManager.push(Scene_EnemyBook);
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.ADD, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.ADD, function (args) {
   $gameSystem.addToEnemyBook(Number(args.id));
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.REMOVE, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.REMOVE, function (args) {
   $gameSystem.removeFromEnemyBook(Number(args.id));
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.COMPLETE, (_) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.COMPLETE, function () {
   $gameSystem.completeEnemyBook();
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, (_) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function () {
   $gameSystem.clearEnemyBook();
 });
 

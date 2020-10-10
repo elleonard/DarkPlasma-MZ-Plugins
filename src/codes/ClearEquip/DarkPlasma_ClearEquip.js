@@ -10,7 +10,7 @@ Game_Party.prototype.removeActor = function (actorId) {
   _Game_Party_removeActor.call(this, actorId);
 };
 
-PluginManager.registerCommand(pluginName, 'clearEquip', (args) => {
+PluginManager.registerCommand(pluginName, 'clearEquip', function (args) {
   const actor = $gameParty.members().find((actor) => actor.actorId() === Number(args.actorId));
   if (actor) {
     actor.clearEquipments();

@@ -4,7 +4,7 @@ const COMMANDS = {
   SET_CHOICE_HELP: 'setChoiceHelp',
 };
 
-PluginManager.registerCommand(pluginName, COMMANDS.SET_CHOICE_HELP, (args) => {
+PluginManager.registerCommand(pluginName, COMMANDS.SET_CHOICE_HELP, function (args) {
   let choiceHelp = JSON.parse(args.helpTexts);
   $gameMessage.setChoiceHelp(choiceHelp);
 });

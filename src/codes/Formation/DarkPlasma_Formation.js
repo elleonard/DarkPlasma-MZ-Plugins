@@ -17,7 +17,7 @@ const PLUGIN_COMMANDS = {
   OPEN_FORMATION_SCENE: 'openFormationScene',
 };
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.OPEN_FORMATION_SCENE, (_) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.OPEN_FORMATION_SCENE, function () {
   SceneManager.push(Scene_Formation);
 });
 

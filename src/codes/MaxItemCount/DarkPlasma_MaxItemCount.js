@@ -8,19 +8,19 @@ const PLUGIN_COMMAND_NAME = {
   CHANGE_MAX_ARMOR_COUNT: 'changeMaxArmorCount',
 };
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DEFAULT_MAX_ITEM_COUNT, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DEFAULT_MAX_ITEM_COUNT, function (args) {
   $gameParty.changeDefaultMaxItemCount(Number(args.count));
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ITEM_COUNT, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ITEM_COUNT, function (args) {
   $gameParty.changeMaxItemCount($dataItems[Number(args.id)], Number(args.count));
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_WEAPON_COUNT, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_WEAPON_COUNT, function (args) {
   $gameParty.changeMaxItemCount($dataWeapons[Number(args.id)], Number(args.count));
 });
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ARMOR_COUNT, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_MAX_ARMOR_COUNT, function (args) {
   $gameParty.changeMaxItemCount($dataArmors[Number(args.id)], Number(args.count));
 });
 

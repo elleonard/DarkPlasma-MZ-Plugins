@@ -29,7 +29,7 @@ DataManager.enemiesFromType = function (type) {
   return $dataEnemies.filter((enemy) => enemy && enemy.enemyTypes.includes(type));
 };
 
-PluginManagerEx.registerCommand(document.currentScript, COMMAND_NAME.RANDOM_ENCOUNTER, (args) => {
+PluginManagerEx.registerCommand(document.currentScript, COMMAND_NAME.RANDOM_ENCOUNTER, function (args) {
   args.randomEncounter.forEach((encounter) => {
     $gameTroop.processRandomEncounter(encounter.id, encounter.type, encounter.ratio);
   });

@@ -23,6 +23,6 @@ Game_Player.prototype.setDashSpeed = function (dashSpeed) {
   this._dashSpeed = dashSpeed;
 };
 
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DASH_SPEED, (args) => {
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CHANGE_DASH_SPEED, function (args) {
   $gamePlayer.setDashSpeed(Number(args.dashSpeed));
 });
