@@ -31,6 +31,17 @@ class FormationCooldown {
    * @return {boolean}
    */
   needCooldown() {
+    /**
+     * 強制入れ替え時にクールダウンしない
+     */
+    if (
+      !settings.cooldownWithForceFormation &&
+      $gameParty.forceFormationChanged &&
+      $gameParty.forceFormationChanged()
+    ) {
+      $gameParty.resetForceFormationChangd();
+      return false;
+    }
     if (settings.cooldownOnlyWhenSwapForwardAndBenchwarmer) {
       // 前衛後衛が入れ替わっている場合のみ
       const battleMembers = $gameParty.battleMembers().map((actor) => actor.actorId());
@@ -97,6 +108,17 @@ BattleManager.startTurn = function () {
 const _BattleManager_endTurn = BattleManager.endTurn;
 BattleManager.endTurn = function () {
   _BattleManager_endTurn.call(this);
+  /**
+   * 強制入れ替えがあった場合
+   */
+  if (
+    !formationCooldown.isDuringCooldown() &&
+    settings.cooldownWithForceFormation &&
+    $gameParty.forceFormationChanged &&
+    $gameParty.forceFormationChanged()
+  ) {
+    formationCooldown.triggerCooldown();
+  }
   formationCooldown.decreaseCooldownTurn();
 };
 
