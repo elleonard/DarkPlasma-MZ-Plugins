@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.0.0
+// DarkPlasma_ForceFormation 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/13 2.1.0 戦闘中の入れ替えクールダウン用のコード追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/28 1.0.0 MZ版公開
  */
@@ -89,6 +90,12 @@
   };
 
   // GameParty
+  const _Game_Party_onBattleStart = Game_Party.prototype.onBattleStart;
+  Game_Party.prototype.onBattleStart = function (advantageous) {
+    _Game_Party_onBattleStart.call(this, advantageous);
+    this._forceFormationChanged = false;
+  };
+
   /**
    * 前衛が全滅しているかどうか
    */
@@ -125,5 +132,14 @@
         $gameTemp.requestBattleRefresh();
       }
     }, this);
+    this._forceFormationChanged = true;
+  };
+
+  Game_Party.prototype.forceFormationChanged = function () {
+    return this._forceFormationChanged;
+  };
+
+  Game_Party.prototype.resetForceFormationChanged = function () {
+    this._forceFormationChanged = false;
   };
 })();

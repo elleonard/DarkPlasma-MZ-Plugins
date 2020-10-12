@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.0.1
+// DarkPlasma_FormationInBattle 1.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/13 1.1.0 強制入れ替え時のクールダウン設定を追加
  * 2020/09/21 1.0.1 並び替え確定時にパーティウィンドウがリフレッシュされない不具合を修正
  * 2020/09/13 1.0.0 公開
  */
@@ -36,6 +37,12 @@
  * @type string
  * @default (CT:{turn})
  *
+ * @param cooldownWithForceFormation
+ * @desc 強制入れ替え時にもクールダウンする
+ * @text 強制入れ替え時クールダウン
+ * @type boolean
+ * @default true
+ *
  * @help
  * 戦闘シーンで並び替えできるようになります。
  *
@@ -56,6 +63,7 @@
     cooldownOnlyWhenSwapForwardAndBenchwarmer:
       String(pluginParameters.cooldownOnlyWhenSwapForwardAndBenchwarmer || true) === 'true',
     cooldownFormat: String(pluginParameters.cooldownFormat || '(CT:{turn})'),
+    cooldownWithForceFormation: String(pluginParameters.cooldownWithForceFormation || true) === 'true',
   };
 
   /**
@@ -89,6 +97,17 @@
      * @return {boolean}
      */
     needCooldown() {
+      /**
+       * 強制入れ替え時にクールダウンしない
+       */
+      if (
+        !settings.cooldownWithForceFormation &&
+        $gameParty.forceFormationChanged &&
+        $gameParty.forceFormationChanged()
+      ) {
+        $gameParty.resetForceFormationChangd();
+        return false;
+      }
       if (settings.cooldownOnlyWhenSwapForwardAndBenchwarmer) {
         // 前衛後衛が入れ替わっている場合のみ
         const battleMembers = $gameParty.battleMembers().map((actor) => actor.actorId());
@@ -155,6 +174,17 @@
   const _BattleManager_endTurn = BattleManager.endTurn;
   BattleManager.endTurn = function () {
     _BattleManager_endTurn.call(this);
+    /**
+     * 強制入れ替えがあった場合
+     */
+    if (
+      !formationCooldown.isDuringCooldown() &&
+      settings.cooldownWithForceFormation &&
+      $gameParty.forceFormationChanged &&
+      $gameParty.forceFormationChanged()
+    ) {
+      formationCooldown.triggerCooldown();
+    }
     formationCooldown.decreaseCooldownTurn();
   };
 
