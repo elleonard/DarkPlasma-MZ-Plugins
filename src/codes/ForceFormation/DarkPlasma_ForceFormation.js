@@ -34,6 +34,12 @@ BattleManager.checkBattleEnd = function () {
 };
 
 // GameParty
+const _Game_Party_onBattleStart = Game_Party.prototype.onBattleStart;
+Game_Party.prototype.onBattleStart = function (advantageous) {
+  _Game_Party_onBattleStart.call(this, advantageous);
+  this._forceFormationChanged = false;
+};
+
 /**
  * 前衛が全滅しているかどうか
  */
@@ -70,4 +76,13 @@ Game_Party.prototype.forceFormation = function () {
       $gameTemp.requestBattleRefresh();
     }
   }, this);
+  this._forceFormationChanged = true;
+};
+
+Game_Party.prototype.forceFormationChanged = function () {
+  return this._forceFormationChanged;
+};
+
+Game_Party.prototype.resetForceFormationChanged = function () {
+  this._forceFormationChanged = false;
 };
