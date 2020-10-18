@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.1.0
+// DarkPlasma_FormationInBattle 1.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/19 1.1.1 戦闘開始時の不要な処理を削除
  * 2020/10/13 1.1.0 強制入れ替え時のクールダウン設定を追加
  * 2020/09/21 1.0.1 並び替え確定時にパーティウィンドウがリフレッシュされない不具合を修正
  * 2020/09/13 1.0.0 公開
@@ -312,7 +313,6 @@
     this._formationWaitingMemberWindow.hide();
     this._formationSelectWindow.hide();
     this._formationSelectWindow.deactivate();
-    this.startPartyCommandSelection();
   };
 
   Scene_Battle.prototype.commandFormation = function () {
@@ -330,6 +330,7 @@
 
   Scene_Battle.prototype.quitFromFormation = function () {
     this.hideFormationWindows();
+    this.startPartyCommandSelection();
     /**
      * コマンド入力情報初期化
      */
