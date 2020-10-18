@@ -246,7 +246,6 @@ Scene_Battle.prototype.hideFormationWindows = function () {
   this._formationWaitingMemberWindow.hide();
   this._formationSelectWindow.hide();
   this._formationSelectWindow.deactivate();
-  this.startPartyCommandSelection();
 };
 
 Scene_Battle.prototype.commandFormation = function () {
@@ -264,6 +263,7 @@ Scene_Battle.prototype.onFormationCancel = function () {
 
 Scene_Battle.prototype.quitFromFormation = function () {
   this.hideFormationWindows();
+  this.startPartyCommandSelection();
   /**
    * コマンド入力情報初期化
    */
