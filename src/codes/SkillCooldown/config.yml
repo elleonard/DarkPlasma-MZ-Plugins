@@ -1,9 +1,12 @@
 DarkPlasma_SkillCooldown:
   name: DarkPlasma_SkillCooldown
-  version: '2.0.0'
+  version: '2.0.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/20'
+      version: '2.0.1'
+      description: '設定値が正常に読み込まれない不具合を修正'
     - date: '2020/09/08'
       version: '2.0.0'
       description: 'パラメータ名を変更'
@@ -62,7 +65,7 @@ DarkPlasma_SkillCooldown:
   commands: []
   structures:
     SkillCooldown:
-      - param: triggerSKillId
+      - param: triggerSkillId
         desc:
           ja: クールタイムを発生させるトリガーとなるスキル
         text:
