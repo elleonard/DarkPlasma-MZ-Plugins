@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.0.0
+// DarkPlasma_SkillCooldown 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/20 2.0.1 設定値が正常に読み込まれない不具合を修正
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/09/01 1.0.1 クールダウンターン数が1少ない不具合を修正
  * 2020/08/27 1.0.0 MZ版公開
@@ -57,7 +58,7 @@
  * スキルX使用後、スキルYの使用を一定ターン数制限することができます。
  */
 /*~struct~SkillCooldown:
- * @param triggerSKillId
+ * @param triggerSkillId
  * @desc クールタイムを発生させるトリガーとなるスキル
  * @text トリガースキル
  * @type skill
@@ -96,7 +97,7 @@
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
-          triggerSKillId: Number(parsed.triggerSKillId || 0),
+          triggerSkillId: Number(parsed.triggerSkillId || 0),
           targetSkills: JSON.parse(parsed.targetSkills || '[]').map((e) => {
             return ((parameter) => {
               const parsed = JSON.parse(parameter);
