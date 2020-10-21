@@ -289,7 +289,8 @@ class PluginCommand {
 }
 
 function generateHeader(config) {
-  const topCommentLine = generateTopComments(config.name, config.version, config.year, config.license);
+  const version = config.histories[0].version;
+  const topCommentLine = generateTopComments(config.name, version, config.year, config.license);
   const historyLine = generateHistories(config.histories);
 
   const description = config.locates

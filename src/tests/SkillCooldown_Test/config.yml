@@ -1,0 +1,19 @@
+DarkPlasma_SkillCooldown_Test:
+  name: DarkPlasma_SkillCooldown_Test
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/22'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルクールタイムプラグインをテストする'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      スキルクールタイムプラグインのテストケースを定義します。

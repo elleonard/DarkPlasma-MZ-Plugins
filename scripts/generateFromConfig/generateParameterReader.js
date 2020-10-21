@@ -4,7 +4,7 @@ const { PluginParameter } = require('./generateHeader');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-function generateParameterReader(config) {
+function generateParameterReader(config, isTest) {
   const parameters = config.parameters
     ? config.parameters
         .filter((parameter) => !parameter.dummy)
@@ -19,14 +19,19 @@ function generateParameterReader(config) {
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
-    const code = `import { pluginParameters } from '../../../common/pluginParameters';
+    const pluginParameterPath = isTest ? '../../../common/testPluginParameters' : '../../../common/pluginParameters';
+    const code = `import { pluginParameters } from '${pluginParameterPath}';
     
     export const settings = {
       ${parameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
     };`;
 
-    return prettier.format(code, options);
+    return prettier.format(isTest ? code + targetVersionCode(config) : code, options);
   });
+}
+
+function targetVersionCode(config) {
+  return `export const targetPluginVersion = "${config.histories[0].version}";`;
 }
 
 function generateParser(config, parameter) {

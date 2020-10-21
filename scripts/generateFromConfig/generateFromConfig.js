@@ -13,9 +13,21 @@ async function generateFromConfig(file) {
   for (let key of Object.keys(config)) {
     const currentConfig = config[key];
     fs.writeFileSync(path.resolve(distDir, `${key}_header.js`), generateHeader(currentConfig));
-    const parameterReader = await generateParameterReader(currentConfig);
-    fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
-  };
+    if (!key.endsWith('_Test')) {
+      const parameterReader = await generateParameterReader(currentConfig);
+      const testParameterReader = await generateParameterReader(currentConfig, true);
+      fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
+      /**
+       * テストプラグインがいる場合、パラメータをコピーする
+       */
+      const testDir = path.resolve(file, '..', '..', '..', 'tests', `${key.slice(key.indexOf('_') + 1)}_Test`);
+      const testDistDir = path.resolve(testDir, '_build');
+      if (fs.existsSync(testDir)) {
+        mkdirp.sync(testDistDir);
+        fs.writeFileSync(path.resolve(testDistDir, `${key}_Test_parameters.js`), testParameterReader);
+      }
+    }
+  }
 
   console.log(`build config: ${file}`);
   console.log('');

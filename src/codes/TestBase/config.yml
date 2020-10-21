@@ -1,0 +1,29 @@
+DarkPlasma_TestBase:
+  name: DarkPlasma_TestBase
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/22'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'プラグインの半自動テストをサポートする'
+  parameters: []
+  commands:
+    - command: openTestCase
+      text:
+        ja: テストケースシーンを開く
+  structures:
+  help:
+    ja: |
+      本プラグインはプラグインの半自動テストをサポートします。
+
+      Scene_Boot.prototype.defineTestCaseをフックしてテストケースを定義してください。
+      以下のインターフェースで定義できます。
+      this.addTestCase(string pluginName, string version, string testCaseName, boolean isAuto);
+
+      テストの実行結果を登録するには以下のように書きます。
+      $testTargetPlugins.doTest(string pluginName, string version, string testCaseName, TestSpec[] testSpecs);
