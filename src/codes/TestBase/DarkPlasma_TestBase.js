@@ -96,21 +96,6 @@ class TestTargetPlugins {
   }
 
   /**
-   * すでにセーブしてあった結果を、新規に読み込んだテストケースにマージする
-   *
-   * @param {string} pluginName プラグイン名
-   * @param {string} version バージョン
-   * @param {TestCase[]} testCases テストケース配列
-   */
-  merge(pluginName, version, testCases) {
-    const targetPlugin = this.find(pluginName, version);
-    if (!targetPlugin) {
-      return;
-    }
-    targetPlugin.mergeResults(testCases);
-  }
-
-  /**
    * テスト対象プラグインを追加する
    * @param {string} name 名前
    * @param {string} version バージョン
@@ -247,25 +232,6 @@ class TestTargetPlugin {
    */
   findTestCase(name) {
     return this.testCases.find((testCase) => testCase.name === name);
-  }
-
-  /**
-   * 与えられたテストケース配列の結果をマージする
-   * @param {TestCase[]} testCases テストケース配列
-   */
-  mergeResults(testCases) {
-    const testCaseNames = testCases.map((testCase) => testCase.name);
-    this._testCases
-      .filter((testCase) => testCaseNames.includes(testCase.name) && !testCase.isDone())
-      .forEach((testCase) => {
-        const from = testCases.find((t) => t.name === testCase.name);
-        if (from.isSuccessed()) {
-          testCase.success();
-        } else if (from.isFaild()) {
-          testCase.fail(from.messages);
-        }
-      });
-    this.load();
   }
 
   /**
