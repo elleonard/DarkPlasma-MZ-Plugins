@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 1.0.0
+// DarkPlasma_TestBase 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/23 1.0.1 不要コードの削除
  * 2020/10/22 1.0.0 公開
  */
 
@@ -129,21 +130,6 @@
      */
     get targetPlugins() {
       return this._targetPlugins;
-    }
-
-    /**
-     * すでにセーブしてあった結果を、新規に読み込んだテストケースにマージする
-     *
-     * @param {string} pluginName プラグイン名
-     * @param {string} version バージョン
-     * @param {TestCase[]} testCases テストケース配列
-     */
-    merge(pluginName, version, testCases) {
-      const targetPlugin = this.find(pluginName, version);
-      if (!targetPlugin) {
-        return;
-      }
-      targetPlugin.mergeResults(testCases);
     }
 
     /**
@@ -283,25 +269,6 @@
      */
     findTestCase(name) {
       return this.testCases.find((testCase) => testCase.name === name);
-    }
-
-    /**
-     * 与えられたテストケース配列の結果をマージする
-     * @param {TestCase[]} testCases テストケース配列
-     */
-    mergeResults(testCases) {
-      const testCaseNames = testCases.map((testCase) => testCase.name);
-      this._testCases
-        .filter((testCase) => testCaseNames.includes(testCase.name) && !testCase.isDone())
-        .forEach((testCase) => {
-          const from = testCases.find((t) => t.name === testCase.name);
-          if (from.isSuccessed()) {
-            testCase.success();
-          } else if (from.isFaild()) {
-            testCase.fail(from.messages);
-          }
-        });
-      this.load();
     }
 
     /**
