@@ -3,6 +3,9 @@ DarkPlasma_TestBase:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/24'
+      version: '2.1.0'
+      description: 'プラグインコマンド起因でテストする機能追加'
     - date: '2020/10/23'
       version: '2.0.0'
       description: 'Scene_BootのaddTestCaseを削除'
@@ -25,6 +28,13 @@ DarkPlasma_TestBase:
     - command: openTestCase
       text:
         ja: テストケースシーンを開く
+      desc:
+        ja: テストケースシーンを開きます。
+    - command: doTest
+      text:
+        ja: テスト実行
+      desc:
+        ja: プラグインコマンド起因のテストを実行します。
   structures:
   help:
     ja: |

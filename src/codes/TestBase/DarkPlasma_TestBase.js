@@ -2,6 +2,7 @@ import { pluginName } from '../../common/pluginName';
 
 const PLUGIN_COMMAND_NAME = {
   OPEN_TEST_CASE: 'openTestCase',
+  DO_TEST: 'doTest',
 };
 
 const TESTCASE_STATUS = {
@@ -18,6 +19,10 @@ PluginManager._loadedTestScriptsCount = 0;
 
 PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN_TEST_CASE, function () {
   SceneManager.push(Scene_TestCase);
+});
+
+PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.DO_TEST, function () {
+  this.doTest();
 });
 
 /**
@@ -78,6 +83,10 @@ ColorManager.autoColor = function () {
 
 ColorManager.manualColor = function () {
   return this.textColor(2);
+};
+
+Game_Interpreter.prototype.doTest = function () {
+  // DO NOTHING
 };
 
 /**

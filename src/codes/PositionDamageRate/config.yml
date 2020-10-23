@@ -1,0 +1,34 @@
+DarkPlasma_PositionDamageRate:
+  name: DarkPlasma_PositionDamageRate
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/23'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '前衛アクターの立ち位置で被ダメ倍率を変える'
+  parameters:
+    - param: physicalDamageRates
+      text:
+        ja: 物理ダメージ倍率（％）
+      desc:
+        ja: 物理被ダメージ倍率。先頭から順に隊列位置に対応。1つも指定なしで100、2つ目以降指定なしで最後に指定した値。
+      type: number[]
+      default: [100]
+    - param: magicalDamageRates
+      text:
+        ja: 魔法ダメージ倍率（％）
+      desc:
+        ja: 魔法被ダメージ倍率。先頭から順に隊列位置に対応。1つも指定なしで100、2つ目以降指定なしで最後に指定した値。
+      type: number[]
+      default: [100]
+  commands: []
+  structures:
+  help:
+    ja: |
+      前衛アクターの立ち位置（先頭から何番目か）で
+      受けるダメージの倍率を変更します。
