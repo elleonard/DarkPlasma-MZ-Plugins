@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 2.0.0
+// DarkPlasma_TestBase 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/24 2.1.0 プラグインコマンド起因でテストする機能追加
  * 2020/10/23 2.0.0 Scene_BootのaddTestCaseを削除
  *                  テストケースウィンドウの表示が固定化される不具合を修正
  *            1.0.1 不要コードの削除
@@ -20,6 +21,11 @@
  *
  * @command openTestCase
  * @text テストケースシーンを開く
+ * @desc テストケースシーンを開きます。
+ *
+ * @command doTest
+ * @text テスト実行
+ * @desc プラグインコマンド起因のテストを実行します。
  *
  * @help
  * 本プラグインはプラグインの半自動テストをサポートします。
@@ -41,6 +47,7 @@
 
   const PLUGIN_COMMAND_NAME = {
     OPEN_TEST_CASE: 'openTestCase',
+    DO_TEST: 'doTest',
   };
 
   const TESTCASE_STATUS = {
@@ -57,6 +64,10 @@
 
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN_TEST_CASE, function () {
     SceneManager.push(Scene_TestCase);
+  });
+
+  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.DO_TEST, function () {
+    this.doTest();
   });
 
   /**
@@ -117,6 +128,10 @@
 
   ColorManager.manualColor = function () {
     return this.textColor(2);
+  };
+
+  Game_Interpreter.prototype.doTest = function () {
+    // DO NOTHING
   };
 
   /**
