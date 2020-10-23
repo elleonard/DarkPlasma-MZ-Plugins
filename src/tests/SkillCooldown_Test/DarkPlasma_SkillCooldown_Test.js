@@ -40,7 +40,7 @@ function 設定値が正しくロードできている() {
       'スキルクールダウン設定'
     ),
     TestSpec.instance(
-      [TestResult.mustBeInteger, TestResult.mustBeGreatherThanZero],
+      [TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero],
       () => settings.skillCooldownSettings[0].triggerSkillId,
       'トリガースキルID'
     ),
@@ -50,19 +50,19 @@ function 設定値が正しくロードできている() {
       'ターゲットスキル一覧'
     ),
     TestSpec.instance(
-      [TestResult.mustBeInteger, TestResult.mustBeGreatherThanZero],
+      [TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero],
       () => settings.skillCooldownSettings[0].targetSkills[0].targetSkillId,
       'ターゲットスキルID'
     ),
     TestSpec.instance(
-      [TestResult.mustBeInteger, TestResult.mustBeGreatherThanZero],
+      [TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero],
       () => settings.skillCooldownSettings[0].targetSkills[0].cooldownTurnCount,
       'クールダウンターン数'
     ),
     TestSpec.instance([TestResult.mustBeBoolean], () => settings.displayCooldownTurn, 'クールダウンターン数表示ON/OFF'),
     TestSpec.instance([TestResult.mustBeString], () => settings.cooldownFormat, 'クールダウン表示フォーマット'),
     TestSpec.instance(
-      [TestResult.mustBeInteger, TestResult.mustBeGreatherThanZero],
+      [TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero],
       () => settings.cooldownTextColor,
       'クールダウン表示色'
     ),

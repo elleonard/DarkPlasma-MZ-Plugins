@@ -432,6 +432,7 @@ class Scene_TestCase extends Scene_Base {
     this._testCaseWindow = new Window_TestCase(this.testCaseWindowRect());
     this._testCaseWindow.setHandler('ok', this.onTestCaseOk.bind(this));
     this._testCaseWindow.setHandler('cancel', this.onTestCaseCancel.bind(this));
+    this._targetPluginsWindow.setTestCaseWindow(this._testCaseWindow);
     this.addWindow(this._testCaseWindow);
   }
 
@@ -508,6 +509,11 @@ class Window_TargetPlugins extends Window_Selectable {
     return testTargetPlugins.targetPlugins[index];
   }
 
+  select(index) {
+    super.select(index);
+    this.updateTestCaseWindow();
+  }
+
   updateTestCaseWindow() {
     if (this._testCaseWindow) {
       this._testCaseWindow.setTargetPlugin(this.item(this.index()));
@@ -524,6 +530,7 @@ class Window_TestCase extends Window_Selectable {
 
   setTargetPlugin(targetPlugin) {
     this._targetPlugin = targetPlugin;
+    this.refresh();
     this.updateHelp();
   }
 
@@ -627,7 +634,7 @@ class TestResult {
     return new TestResult(value === expected, TestResultMessage.notValue(name, expected));
   }
 
-  static mustBeGreatherThanZero(value, name) {
+  static mustBeGreaterThanZero(value, name) {
     return new TestResult(value > 0, TestResultMessage.lessThanOrEqualZero(name));
   }
 
