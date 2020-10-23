@@ -28,7 +28,7 @@ async function generateConfig(destDir) {
             if (err) {
               throw err;
             } else {
-              console.log(`generate config file done.: ${destDir}config.yml`);
+              console.log(`generate config file done.: ${destDir}${path.sep}config.yml`);
             }
           });
         }
