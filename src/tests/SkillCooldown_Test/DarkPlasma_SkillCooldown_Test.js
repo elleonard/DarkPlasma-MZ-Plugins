@@ -1,6 +1,7 @@
-import { targetPluginName } from '../../common/targetPluginName';
 import { settings } from './_build/DarkPlasma_SkillCooldown_Test_parameters';
 import { targetPluginVersion } from './_build/DarkPlasma_SkillCooldown_Test_parameters';
+import { doTest } from '../../common/doTest';
+import { registerTestCase } from '../../common/registerTestCase';
 
 const TESTCASE_NAME = {
   CAN_LOAD_SETTING: '設定値が正しくロードできている',
@@ -14,28 +15,19 @@ const TESTCASE_NAME = {
 const _Scene_Boot_defineTestCase = Scene_Boot.prototype.defineTestCase;
 Scene_Boot.prototype.defineTestCase = function () {
   _Scene_Boot_defineTestCase.call(this);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.CAN_LOAD_SETTING, true);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.CAN_DISPLAY_TURN_COUNT, false);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_PARTY, true);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_TROOP, true);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.START_COOLDOWN, true);
-  this.addTestCase(targetPluginName, targetPluginVersion, TESTCASE_NAME.DECREASE_COOLDOWN_TURN, true);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.CAN_LOAD_SETTING, true);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.CAN_DISPLAY_TURN_COUNT, false);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_PARTY, true);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_TROOP, true);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.START_COOLDOWN, true);
+  registerTestCase(targetPluginVersion, TESTCASE_NAME.DECREASE_COOLDOWN_TURN, true);
 };
 
 const _Scene_Boot_doTestOnBoot = Scene_Boot.prototype.doTestOnBoot;
 Scene_Boot.prototype.doTestOnBoot = function () {
   _Scene_Boot_doTestOnBoot.call(this);
-  doTest(TESTCASE_NAME.CAN_LOAD_SETTING, 設定値が正しくロードできている());
+  doTest(targetPluginVersion, TESTCASE_NAME.CAN_LOAD_SETTING, 設定値が正しくロードできている());
 };
-
-/**
- * テストを実行する
- * @param {string} testCaseName テストケース名
- * @param {TestSpec[]} testSpecs スペック一覧
- */
-function doTest(testCaseName, testSpecs) {
-  $testTargetPlugins.doTest(targetPluginName, targetPluginVersion, testCaseName, testSpecs);
-}
 
 /**
  * @return {TestSpec[]}
@@ -93,10 +85,12 @@ BattleManager.startBattle = function () {
   _BattleManager_startBattle.call(this);
   const targetSkillIds = cooldownTargetSkillIds();
   doTest(
+    targetPluginVersion,
     TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_PARTY,
     戦闘開始直後は誰もクールダウンなし($gameParty.allMembers(), targetSkillIds)
   );
   doTest(
+    targetPluginVersion,
     TESTCASE_NAME.NO_COOLDOWN_ON_BATTLE_START_TROOP,
     戦闘開始直後は誰もクールダウンなし($gameTroop.members(), targetSkillIds)
   );
@@ -126,6 +120,7 @@ Game_Battler.prototype.useItem = function (item) {
       .flat();
     targetSkills.forEach((targetSkill) => {
       doTest(
+        targetPluginVersion,
         TESTCASE_NAME.START_COOLDOWN,
         ターゲットスキルのクールダウン開始(this, targetSkill.targetSkillId, targetSkill.cooldownTurnCount + 1)
       );
@@ -166,6 +161,7 @@ BattleManager.endTurn = function () {
   _BattleManager_endTurn.call(this);
   testTargets.forEach((target) => {
     doTest(
+      targetPluginVersion,
       TESTCASE_NAME.DECREASE_COOLDOWN_TURN,
       ターン終了時にクールダウンカウントを進める(target.battler, target.skillId, target.expected)
     );

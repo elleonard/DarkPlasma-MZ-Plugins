@@ -4,6 +4,9 @@ DarkPlasma_TestBase:
   license: MIT
   histories:
     - date: '2020/10/23'
+      version: '2.0.0'
+      description: 'Scene_BootのaddTestCaseを削除'
+    - date: '2020/10/23'
       version: '1.0.1'
       description: '不要コードの削除'
     - date: '2020/10/22'

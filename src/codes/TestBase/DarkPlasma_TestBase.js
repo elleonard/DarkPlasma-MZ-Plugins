@@ -385,10 +385,6 @@ Scene_Boot.prototype.defineTestCase = function () {
   // DO NOTHING
 };
 
-Scene_Boot.prototype.addTestCase = function (pluginName, version, testCaseName, isAuto) {
-  testTargetPlugins.addTestCase(pluginName, version, testCaseName, isAuto);
-};
-
 Scene_Boot.prototype.doTestOnBoot = function () {
   // DO NOTHING
 };
