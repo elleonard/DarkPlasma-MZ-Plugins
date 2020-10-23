@@ -1,0 +1,22 @@
+DarkPlasma_DisableRegenerateOnMap:
+  name: DarkPlasma_DisableRegenerateOnMap
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/23'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップ上でのHP/MP/TP再生処理を無効にする'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      マップ上におけるHP/MP/TP再生の処理を無効にします。
+
+      自動回復系やスリップダメージの特徴を
+      戦闘時のみ有効にしたい場合に利用してください。

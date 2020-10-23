@@ -1,0 +1,24 @@
+DarkPlasma_DisableRegenerateOnMap_Test:
+  name: DarkPlasma_DisableRegenerateOnMap_Test
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/23'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップ上の再生処理無効化プラグインをテストする'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      マップ上の再生処理無効化プラグインをテストします。
+
+      HP再生処理のついた装備などをつけて、
+      HPを最大値から減らした上で以下の処理を通ってください。
+      - マップを20歩歩く
+      - 戦闘でターン終了時に生きている
