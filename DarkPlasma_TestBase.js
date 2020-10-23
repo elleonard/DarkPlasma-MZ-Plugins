@@ -1,10 +1,12 @@
-// DarkPlasma_TestBase 1.0.1
+// DarkPlasma_TestBase 2.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/10/23 1.0.1 不要コードの削除
+ * 2020/10/23 2.0.0 Scene_BootのaddTestCaseを削除
+ *                  テストケースウィンドウの表示が固定化される不具合を修正
+ *            1.0.1 不要コードの削除
  * 2020/10/22 1.0.0 公開
  */
 
@@ -422,10 +424,6 @@
     // DO NOTHING
   };
 
-  Scene_Boot.prototype.addTestCase = function (pluginName, version, testCaseName, isAuto) {
-    testTargetPlugins.addTestCase(pluginName, version, testCaseName, isAuto);
-  };
-
   Scene_Boot.prototype.doTestOnBoot = function () {
     // DO NOTHING
   };
@@ -473,6 +471,7 @@
       this._testCaseWindow = new Window_TestCase(this.testCaseWindowRect());
       this._testCaseWindow.setHandler('ok', this.onTestCaseOk.bind(this));
       this._testCaseWindow.setHandler('cancel', this.onTestCaseCancel.bind(this));
+      this._targetPluginsWindow.setTestCaseWindow(this._testCaseWindow);
       this.addWindow(this._testCaseWindow);
     }
 
@@ -551,6 +550,11 @@
       return testTargetPlugins.targetPlugins[index];
     }
 
+    select(index) {
+      super.select(index);
+      this.updateTestCaseWindow();
+    }
+
     updateTestCaseWindow() {
       if (this._testCaseWindow) {
         this._testCaseWindow.setTargetPlugin(this.item(this.index()));
@@ -567,6 +571,7 @@
 
     setTargetPlugin(targetPlugin) {
       this._targetPlugin = targetPlugin;
+      this.refresh();
       this.updateHelp();
     }
 
@@ -670,7 +675,7 @@
       return new TestResult(value === expected, TestResultMessage.notValue(name, expected));
     }
 
-    static mustBeGreatherThanZero(value, name) {
+    static mustBeGreaterThanZero(value, name) {
       return new TestResult(value > 0, TestResultMessage.lessThanOrEqualZero(name));
     }
 
