@@ -1,9 +1,10 @@
-// DarkPlasma_FallImages 1.0.0
+// DarkPlasma_FallImages 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/25 1.0.1 ヘルプ追記
  * 2020/10/24 1.0.0 公開
  */
 
@@ -39,6 +40,9 @@
  *
  * @help
  * 何らかの画像を降らせる画面演出を提供します。
+ *
+ * プラグインパラメータにIDと画像ファイルを設定し、
+ * プラグインコマンドでそのIDを指定してください。
  */
 /*~struct~FallImage:
  * @param id
