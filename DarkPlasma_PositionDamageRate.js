@@ -1,9 +1,10 @@
-// DarkPlasma_PositionDamageRate 1.0.0
+// DarkPlasma_PositionDamageRate 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/24 1.0.1 まともに動かない不具合を修正
  * 2020/10/23 1.0.0 公開
  */
 
@@ -57,7 +58,7 @@
 
   const _Game_Actor_sparam = Game_Actor.prototype.sparam;
   Game_Actor.prototype.sparam = function (sparamId) {
-    const value = _Game_Actor_sparam.call(this, sparam);
+    const value = _Game_Actor_sparam.call(this, sparamId);
     if (sparamId === SPARAM_ID.PHYSICAL_DAMAGE_RATE) {
       return value * this.physicalDamageRateByPosition();
     }
@@ -81,7 +82,7 @@
     return (
       (settings.magicalDamageRates.length > index
         ? settings.magicalDamageRates[index]
-        : settings.magicalDamageRates[settings.magicalDamageRates - 1]) / 100
+        : settings.magicalDamageRates[settings.magicalDamageRates.length - 1]) / 100
     );
   };
 })();

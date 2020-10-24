@@ -682,6 +682,10 @@
       return new TestResult(Number.isInteger(value), TestResultMessage.notInteger(name));
     }
 
+    static mustBeNumber(value, name) {
+      return new TestResult(Number.isFinite(value), TestResultMessage.notNumber(name));
+    }
+
     static mustBeZero(value, name) {
       return new TestResult(value === 0, TestResultMessage.notValue(name, 0));
     }
@@ -733,6 +737,10 @@
 
     static notInteger(name) {
       return new TestResultMessage(`${name}が整数ではありません。`);
+    }
+
+    static notNumber(name) {
+      return new TestResultMessage(`${name}が数値型ではありません。`);
     }
 
     static notValue(name, value) {
