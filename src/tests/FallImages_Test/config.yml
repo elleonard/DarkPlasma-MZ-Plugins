@@ -1,0 +1,19 @@
+DarkPlasma_FallImages_Test:
+  name: DarkPlasma_FallImages_Test
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/24'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '画像を降らせるプラグインのテスト'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      画像を降らせるプラグインのテスト

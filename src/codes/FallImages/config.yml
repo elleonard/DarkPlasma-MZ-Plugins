@@ -1,0 +1,130 @@
+DarkPlasma_FallImages:
+  name: DarkPlasma_FallImages
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/24'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '画面内に画像を降らせる'
+  parameters:
+    - param: images
+      text:
+        ja: 画像設定
+      desc:
+        ja: 降らせる画像の設定
+      type: FallImage[]
+      default: []
+  commands:
+    - command: startFall
+      text:
+        ja: 画像を降らせる
+      desc:
+        ja: 画像を画面内に降らせます。
+      args:
+        - arg: id
+          text:
+            ja: 降らせる画像設定ID
+          desc:
+            ja: 降らせる画像設定のIDです。
+          type: number
+    - command: stopFall
+      text:
+        ja: 画像を消す
+      desc:
+        ja: 降らせている画像を消し、止ませます。
+    - command: fadeOutFall
+      text:
+        ja: 画像をフェードアウトする
+      desc:
+        ja: 振らせている画像をフェードアウトさせ、止ませます。
+  structures:
+    FallImage:
+      - param: id
+        text:
+          ja: 画像設定ID
+        desc:
+          ja: 降らせる画像設定のIDです。降らせるプラグインコマンドで指定します。
+        type: number
+        default: 1
+      - param: file
+        text:
+          ja: 画像ファイル
+        desc:
+          ja: 降らせるための画像ファイルを指定します。
+        type: file
+      - param: rows
+        text:
+          ja: 画像の行数
+        desc:
+          ja: 降らせる画像の行数を指定します。
+        type: number
+        default: 5
+      - param: cols
+        text:
+          ja: 画像の列数
+        desc:
+          ja: 降らせる画像の列数を指定します。
+        type: number
+        default: 18
+      - param: count
+        text:
+          ja: 表示数
+        desc:
+          ja: 画面内に一度に表示する数を指定します。
+        type: number
+        default: 40
+      - param: waveringFrequency
+        text:
+          ja: 揺れ頻度
+        desc:
+          ja: 降る過程で揺れる頻度を指定します。最大10で、多いほど頻繁に揺れます。
+        type: number
+        min: 0
+        max: 10
+        default: 7
+      - param: minimumLifeTime
+        text:
+          ja: 最短表示時間
+        desc:
+          ja: 1枚を降らせ続ける最短の時間（フレーム単位）を指定します。
+        type: number
+        default: 150
+      - param: lifeTimeRange
+        text:
+          ja: 表示時間の範囲
+        desc:
+          ja: 1枚を降らせ続ける時間の範囲（フレーム単位）を指定します。最短表示時間とこの値の和が最長表示時間になります。
+        type: number
+        default: 500
+      - param: animationSpeed
+        text:
+          ja: アニメーション速度
+        desc:
+          ja: アニメーションする速さを指定します。小さいほど速くアニメーションします。
+        type: number
+        decimals: 0
+        default: 2
+      - param: moveSpeedX
+        text:
+          ja: 横移動速度
+        desc:
+          ja: 横方向の移動速度を指定します。大きいほど速く移動します。
+        type: number
+        decimals: 0
+        default: 4
+      - param: moveSpeedY
+        text:
+          ja: 縦移動速度
+        desc:
+          ja: 落下速度を指定します。大きいほど速く落下します。
+        type: number
+        decimals: 0
+        default: 6
+  help:
+    ja: |
+      何らかの画像を降らせる画面演出を提供します。
