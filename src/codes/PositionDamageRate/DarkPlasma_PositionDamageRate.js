@@ -7,7 +7,7 @@ const SPARAM_ID = {
 
 const _Game_Actor_sparam = Game_Actor.prototype.sparam;
 Game_Actor.prototype.sparam = function (sparamId) {
-  const value = _Game_Actor_sparam.call(this, sparam);
+  const value = _Game_Actor_sparam.call(this, sparamId);
   if (sparamId === SPARAM_ID.PHYSICAL_DAMAGE_RATE) {
     return value * this.physicalDamageRateByPosition();
   }
@@ -31,6 +31,6 @@ Game_Actor.prototype.magicalDamageRateByPosition = function () {
   return (
     (settings.magicalDamageRates.length > index
       ? settings.magicalDamageRates[index]
-      : settings.magicalDamageRates[settings.magicalDamageRates - 1]) / 100
+      : settings.magicalDamageRates[settings.magicalDamageRates.length - 1]) / 100
   );
 };
