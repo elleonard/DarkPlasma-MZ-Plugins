@@ -3,6 +3,9 @@ DarkPlasma_FallImages:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/10/25'
+      version: '1.0.1'
+      description: 'ヘルプ追記'
     - date: '2020/10/24'
       version: '1.0.0'
       description: '公開'
@@ -128,3 +131,6 @@ DarkPlasma_FallImages:
   help:
     ja: |
       何らかの画像を降らせる画面演出を提供します。
+
+      プラグインパラメータにIDと画像ファイルを設定し、
+      プラグインコマンドでそのIDを指定してください。
