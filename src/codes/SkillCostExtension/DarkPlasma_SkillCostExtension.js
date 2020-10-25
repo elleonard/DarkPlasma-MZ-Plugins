@@ -207,12 +207,13 @@ Game_BattlerBase.prototype.skillHpCost = function (skill) {
   return Math.floor(cost);
 };
 
+const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
 Game_BattlerBase.prototype.skillMpCost = function (skill) {
-  let cost = skill.mpCost;
+  let cost = _Game_BattlerBase_skillMpCost.call(this, skill);
   if (skill.additionalCost.mpRate) {
-    cost += (skill.additionalCost.mpRate * this.mmp) / 100;
+    cost += Math.floor(((skill.additionalCost.mpRate * this.mmp) / 100) * this.mcr);
   }
-  return Math.floor(cost);
+  return cost;
 };
 
 Game_BattlerBase.prototype.skillGoldCost = function (skill) {
