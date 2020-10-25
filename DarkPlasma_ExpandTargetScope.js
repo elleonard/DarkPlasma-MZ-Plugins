@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.0.3
+// DarkPlasma_ExpandTargetScope 1.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/26 1.0.4 SkillCostExtensionとの競合を修正
  * 2020/10/17 1.0.3 全体化スキル選択のカーソルが不自然になる不具合を修正
  *                  味方対象のスキルが全体化できない不具合を修正
  * 2020/09/18 1.0.2 全体化ボタンが効いていない不具合を修正
@@ -128,9 +129,9 @@
     this.aliveMembers().forEach((member) => member.requestSyncSelectionEffect());
   };
 
-  const _Game_Battler_skillMpCost = Game_Battler.prototype.skillMpCost;
-  Game_Battler.prototype.skillMpCost = function (skill) {
-    const value = _Game_Battler_skillMpCost.call(this, skill);
+  const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
+  Game_BattlerBase.prototype.skillMpCost = function (skill) {
+    const value = _Game_BattlerBase_skillMpCost.call(this, skill);
     const action = this.currentAction();
     if (action && action.isExpandedScope()) {
       return Math.floor((value * settings.mpCostRateForAll) / 100);

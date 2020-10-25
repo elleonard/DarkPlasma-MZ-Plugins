@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.2.0
+// DarkPlasma_SkillCostExtension 1.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/26 1.2.1 特徴のMP消費率が正しく反映されない不具合を修正
  * 2020/10/06 1.2.0 変数をコストに設定する機能を追加
  * 2020/10/03 1.1.1 コメント修正, ヘルプにコスト表示を追記
  * 2020/09/11 1.1.0 アイテム/ゴールド消費数を選択時に反映するオプション追加
@@ -288,12 +289,13 @@
     return Math.floor(cost);
   };
 
+  const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
   Game_BattlerBase.prototype.skillMpCost = function (skill) {
-    let cost = skill.mpCost;
+    let cost = _Game_BattlerBase_skillMpCost.call(this, skill);
     if (skill.additionalCost.mpRate) {
-      cost += (skill.additionalCost.mpRate * this.mmp) / 100;
+      cost += Math.floor(((skill.additionalCost.mpRate * this.mmp) / 100) * this.mcr);
     }
-    return Math.floor(cost);
+    return cost;
   };
 
   Game_BattlerBase.prototype.skillGoldCost = function (skill) {
