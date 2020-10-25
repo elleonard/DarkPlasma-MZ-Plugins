@@ -63,9 +63,9 @@ Game_Unit.prototype.selectAll = function () {
   this.aliveMembers().forEach((member) => member.requestSyncSelectionEffect());
 };
 
-const _Game_Battler_skillMpCost = Game_Battler.prototype.skillMpCost;
-Game_Battler.prototype.skillMpCost = function (skill) {
-  const value = _Game_Battler_skillMpCost.call(this, skill);
+const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
+Game_BattlerBase.prototype.skillMpCost = function (skill) {
+  const value = _Game_BattlerBase_skillMpCost.call(this, skill);
   const action = this.currentAction();
   if (action && action.isExpandedScope()) {
     return Math.floor((value * settings.mpCostRateForAll) / 100);
