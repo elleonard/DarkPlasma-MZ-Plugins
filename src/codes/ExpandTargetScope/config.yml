@@ -4,6 +4,9 @@ DarkPlasma_ExpandTargetScope:
   license: MIT
   histories:
     - date: '2020/10/26'
+      version: '1.0.5'
+      description: 'リファクタ'
+    - date: '2020/10/26'
       version: '1.0.4'
       description: 'SkillCostExtensionとの競合を修正'
     - date: '2020/10/17'
