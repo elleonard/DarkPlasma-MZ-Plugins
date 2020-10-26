@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 2.1.0
+// DarkPlasma_TestBase 2.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/26 2.2.0 0より大の整数値,要素を持つ配列のためのspecを作りやすくする機能追加
  * 2020/10/24 2.1.0 プラグインコマンド起因でテストする機能追加
  * 2020/10/23 2.0.0 Scene_BootのaddTestCaseを削除
  *                  テストケースウィンドウの表示が固定化される不具合を修正
@@ -637,6 +638,26 @@
      */
     static instance(tests, getValue, targetName, expected) {
       return new TestSpec(tests, getValue, targetName, expected);
+    }
+
+    /**
+     * IDのためのスペックを取得する（0より大の整数値）
+     * @param {Function} getValue テスト対象取得関数
+     * @param {string} targetName テスト対象名
+     * @return {TestSpec}
+     */
+    static id(getValue, targetName) {
+      return new TestSpec([TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero], getValue, targetName);
+    }
+
+    /**
+     * 要素を持つ配列のためのスペックを取得する
+     * @param {Function} getValue テスト対象取得関数
+     * @param {string} targetName テスト対象名
+     * @return {TestSpec}
+     */
+    static arrayWithElement(getValue, targetName) {
+      return new TestSpec([TestResult.mustBeArray, TestResult.mustBeWithAtLeastOneElement], getValue, targetName);
     }
 
     /**
