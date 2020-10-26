@@ -598,8 +598,18 @@ class TestSpec {
    * @param {string} targetName テスト対象名
    * @return {TestSpec}
    */
-  static idSpec(getValue, targetName) {
+  static id(getValue, targetName) {
     return new TestSpec([TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero], getValue, targetName);
+  }
+
+  /**
+   * 要素を持つ配列のためのスペックを取得する
+   * @param {Function} getValue テスト対象取得関数
+   * @param {string} targetName テスト対象名
+   * @return {TestSpec}
+   */
+  static arrayWithElement(getValue, targetName) {
+    return new TestSpec([TestResult.mustBeArray, TestResult.mustBeWithAtLeastOneElement], getValue, targetName);
   }
 
   /**

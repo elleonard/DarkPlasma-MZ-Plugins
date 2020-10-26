@@ -5,7 +5,7 @@ DarkPlasma_TestBase:
   histories:
     - date: '2020/10/26'
       version: '2.2.0'
-      description: '0より大の整数値specを作りやすくする機能追加'
+      description: '0より大の整数値,要素を持つ配列のためのspecを作りやすくする機能追加'
     - date: '2020/10/24'
       version: '2.1.0'
       description: 'プラグインコマンド起因でテストする機能追加'
