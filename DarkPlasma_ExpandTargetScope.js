@@ -1,10 +1,11 @@
-// DarkPlasma_ExpandTargetScope 1.0.4
+// DarkPlasma_ExpandTargetScope 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/10/26 1.0.4 SkillCostExtensionとの競合を修正
+ * 2020/10/26 1.0.5 リファクタ
+ *            1.0.4 SkillCostExtensionとの競合を修正
  * 2020/10/17 1.0.3 全体化スキル選択のカーソルが不自然になる不具合を修正
  *                  味方対象のスキルが全体化できない不具合を修正
  * 2020/09/18 1.0.2 全体化ボタンが効いていない不具合を修正
@@ -111,6 +112,15 @@
   const _Game_Action_makeDamageValue = Game_Action.prototype.makeDamageValue;
   Game_Action.prototype.makeDamageValue = function (target, critical) {
     const value = _Game_Action_makeDamageValue.call(this, target, critical);
+    return Math.floor(value * this.expandedScopeDamageRate());
+  };
+
+  /**
+   * 全体化している場合、全体化ダメージ倍率を返す
+   * 全体化していない場合、1を返す
+   * @return {number}
+   */
+  Game_Action.prototype.expandedScopeDamageRate = function () {
     /**
      * 全体化済み かつ 敵残数2以上なら全体化倍率を有効化
      * 単純に同条件で倍率をかけると、全体化攻撃で残り1体になった場合、最後の1体に倍率がかからない
@@ -118,10 +128,7 @@
     if (this._isExpandedScope && $gameTroop.aliveMembers().length > 1) {
       this._enableForAllRate = true;
     }
-    if (this._enableForAllRate) {
-      return Math.floor((value * settings.damageRateForAll) / 100);
-    }
-    return value;
+    return this._enableForAllRate ? settings.damageRateForAll / 100 : 1;
   };
 
   Game_Unit.prototype.selectAll = function () {
@@ -208,12 +215,23 @@
     _Sprite_Battler_updateSelectionEffect.call(this);
   };
 
+  Window_Selectable.prototype.processExpandScope = function () {
+    if (!$gameParty.inBattle() || (!this instanceof Window_BattleActor && !this instanceof Window_BattleEnemy)) {
+      return false;
+    }
+    const action = BattleManager.inputtingAction();
+    if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
+      this.setCursorAll(!this._cursorAll);
+      return true;
+    }
+    return false;
+  };
+
   const _Window_BattleActor_processHandling = Window_BattleActor.prototype.processHandling;
   Window_BattleActor.prototype.processHandling = function () {
     if (this.isOpenAndActive()) {
-      const action = BattleManager.inputtingAction();
-      if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
-        this.setCursorAll(!this._cursorAll);
+      if (this.processExpandScope()) {
+        return;
       }
     }
     return _Window_BattleActor_processHandling.call(this);
@@ -232,9 +250,8 @@
   const _Window_BattleEnemy_processHandling = Window_BattleEnemy.prototype.processHandling;
   Window_BattleEnemy.prototype.processHandling = function () {
     if (this.isOpenAndActive()) {
-      const action = BattleManager.inputtingAction();
-      if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
-        this.setCursorAll(!this._cursorAll);
+      if (this.processExpandScope()) {
+        return;
       }
     }
     return _Window_BattleEnemy_processHandling.call(this);
