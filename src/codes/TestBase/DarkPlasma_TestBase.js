@@ -593,6 +593,16 @@ class TestSpec {
   }
 
   /**
+   * IDのためのスペックを取得する（0より大の整数値）
+   * @param {Function} getValue テスト対象取得関数
+   * @param {string} targetName テスト対象名
+   * @return {TestSpec}
+   */
+  static idSpec(getValue, targetName) {
+    return new TestSpec([TestResult.mustBeInteger, TestResult.mustBeGreaterThanZero], getValue, targetName);
+  }
+
+  /**
    * @return {TestResult[]}
    */
   doTest() {
