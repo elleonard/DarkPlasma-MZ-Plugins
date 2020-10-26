@@ -1,0 +1,19 @@
+DarkPlasma_SkillCostExtension_Test:
+  name: DarkPlasma_SkillCostExtension_Test
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/26'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルコスト拡張プラグインのテスト'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      スキルコスト拡張プラグインのテストです。
