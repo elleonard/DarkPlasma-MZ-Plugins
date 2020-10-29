@@ -1,7 +1,6 @@
-import { settings } from './_build/DarkPlasma_ExpandTargetScope_Test_parameters';
+import { settings, targetPluginVersion } from './_build/DarkPlasma_ExpandTargetScope_Test_parameters';
 import { doTest } from '../../common/doTest';
 import { registerTestCase } from '../../common/registerTestCase';
-import { targetPluginVersion } from '../DisableRegenerateOnMap_Test/_build/DarkPlasma_DisableRegenerateOnMap_Test_parameters';
 
 const TESTCASE_NAME = {
   CAN_LOAD_SETTING: '設定値が正しくロードできている',
