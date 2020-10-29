@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 2.2.0
+// DarkPlasma_TestBase 2.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/10/30 2.3.0 mustBeTrueを追加
  * 2020/10/26 2.2.0 0より大の整数値,要素を持つ配列のためのspecを作りやすくする機能追加
  * 2020/10/24 2.1.0 プラグインコマンド起因でテストする機能追加
  * 2020/10/23 2.0.0 Scene_BootのaddTestCaseを削除
@@ -721,6 +722,10 @@
 
     static mustBeBoolean(value, name) {
       return new TestResult(typeof value === 'boolean', TestResultMessage.notBoolean(name));
+    }
+
+    static mustBeTrue(value, name) {
+      return new TestResult(value === true, TestResultMessage.notValue(name, true));
     }
 
     static mustBeFalse(value, name) {
