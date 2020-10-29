@@ -1,0 +1,19 @@
+DarkPlasma_ClearEquip_Test:
+  name: DarkPlasma_ClearEquip_Test
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/30'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '装備はずしプラグインのテスト'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      装備はずしプラグインのテストです。
