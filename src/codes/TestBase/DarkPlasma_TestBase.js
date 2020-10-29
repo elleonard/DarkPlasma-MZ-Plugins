@@ -675,6 +675,10 @@ class TestResult {
     return new TestResult(typeof value === 'boolean', TestResultMessage.notBoolean(name));
   }
 
+  static mustBeTrue(value, name) {
+    return new TestResult(value === true, TestResultMessage.notValue(name, true));
+  }
+
   static mustBeFalse(value, name) {
     return new TestResult(value === false, TestResultMessage.notValue(name, false));
   }
