@@ -1,0 +1,44 @@
+DarkPlasma_FixEquip:
+  name: DarkPlasma_FixEquip
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/10/30'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '装備固定モードを実現する'
+  parameters:
+    - param: fixEquips
+      text:
+        ja: 固定装備設定
+      desc:
+        ja: スイッチと装備タイプ一覧の組を設定します。
+      type: FixEquip[]
+      default: []
+  commands: []
+  structures:
+    FixEquip:
+      - param: switchId
+        text:
+          ja: スイッチ
+        desc:
+          ja: 装備固定モードを表すスイッチを設定します。
+        type: switch
+        default: 0
+      - param: equipTypes
+        text:
+          ja: 装備タイプ一覧
+        desc:
+          ja: 装備固定モードで固定する装備タイプ一覧を設定します。
+        type: number[]
+        default: []
+  help:
+    ja: |
+      装備固定モードを実現します。
+
+      プラグインパラメータにスイッチと装備タイプ一覧の組を登録し、
+      登録したスイッチをONにすると、対応する装備タイプが変更できなくなります。
