@@ -66,7 +66,7 @@ declare class Scene_Base extends Stage {
   public calcWindowHeight(numLines: number, selectable: boolean): number;
 
   public requestAutosave(): void;
-  public isAutosaveEnabled(): boolean
+  public isAutosaveEnabled(): boolean;
   public executeAutosave(): void;
   public onAutosaveSuccess(): void;
   public onAutosaveFailue(): void;
@@ -128,9 +128,10 @@ declare class Scene_Title extends Scene_Base {
   public createBackground(): void;
   public createForeground(): void;
   public drawGameTitle(): void;
-  public centerSprite(sprite: Sprite): void;
+  public adjustBackground(): void;
 
   public createCommandWindow(): void;
+  public commandWindowRect(): Rectangle;
   public commandNewGame(): void;
   public commandContinue(): void;
   public commandOptions(): void;
@@ -139,10 +140,42 @@ declare class Scene_Title extends Scene_Base {
 }
 
 //-----------------------------------------------------------------------------
+// Scene_Message
+//
+// The superclass of Scene_Map and Scene_Battle.
+declare class Scene_Message extends Scene_Base {
+  public constructor();
+
+  public _messageWindow: Window_Message;
+  public _scrollTextWindow: Window_ScrollText;
+  public _goldWindow: Window_Gold;
+  public _nameBoxWindow: Window_NameBox;
+  public _choiceListWindow: Window_ChoiceList;
+  public _numberInputWindow: Window_NumberInput;
+  public _eventItemWindow: Window_EventItem;
+
+  public initialize(): void;
+  public isMessageWindowClosing(): boolean;
+  public createAllWindows(): void;
+  public createMessageWindow(): void;
+  public messageWindowRect(): Rectangle;
+  public createScrollTextWindow(): void;
+  public scrollTextWindowRect(): Rectangle;
+  public createGoldWindow(): void;
+  public goldWindowRect(): Rectangle;
+  public createNameBoxWindow(): void;
+  public createChoiceListWindow(): void;
+  public createNumberInputWindow(): void;
+  public createEventItemWindow(): void;
+  public eventItemWindowRect(): Rectangle;
+  public associateWindows(): void;
+}
+
+//-----------------------------------------------------------------------------
 /**
  * The scene class of the map screen.
  */
-declare class Scene_Map extends Scene_Base {
+declare class Scene_Map extends Scene_Message {
   public constructor();
 
   public _waitCount: number;
@@ -152,8 +185,7 @@ declare class Scene_Map extends Scene_Base {
   public _transfer: boolean;
   public _spriteset: Spriteset_Map | undefined;
   public _mapNameWindow: Window_MapName | undefined;
-  public _messageWindow: Window_Message | undefined;
-  public _scrollTextWindow: Window_ScrollText | undefined;
+  public _menuButton: Sprite_Button;
   public menuCalling: boolean | undefined;
 
   public initialize(...args: any[]): void;
@@ -161,11 +193,15 @@ declare class Scene_Map extends Scene_Base {
   public create(): void;
   public isReady(): boolean;
   public onMapLoaded(): void;
+  public onTranfer(): void;
   public start(): void;
+  public onTransferEnd(): void;
+  public shouldAutosave(): boolean;
 
   public update(): void;
   public updateMainMultiply(): void;
   public updateMain(): void;
+  public isPlayerActive(): boolean;
   public isFastForward(): boolean;
 
   public stop(): void;
@@ -177,8 +213,16 @@ declare class Scene_Map extends Scene_Base {
 
   public updateWaitCount(): boolean;
   public updateDestination(): void;
+  public updateMenuButton(): void;
+  public hideMenuButton(): void;
+  public updateMapNameWindow(): void;
+
+  public isMenuEnabled(): boolean;
   public isMapTouchOk(): boolean;
   public processMapTouch(): void;
+
+  public isAnyButtonPressed(): boolean;
+  public onMapTouch(): void;
 
   public isSceneChangeOk(): boolean;
   public updateScene(): void;
@@ -187,13 +231,14 @@ declare class Scene_Map extends Scene_Base {
   public createSpriteset(): void;
   public createAllWindows(): void;
   public createMapNameWindow(): void;
-  public createMessageWindow(): void;
-  public createScrollTextWindow(): void;
+  public mapNameWindowRect(): Rectangle;
+
+  public createButtons(): void;
+  public createMenuButton(): void;
 
   public updateTransferPlayer(): void;
   public updateEncounter(): void;
   public updateCallMenu(): void;
-  public isMenuEnabled(): boolean;
   public isMenuCalled(): boolean;
   public callMenu(): void;
 
