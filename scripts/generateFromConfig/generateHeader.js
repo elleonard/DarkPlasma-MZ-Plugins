@@ -345,7 +345,12 @@ function generateHeader(config) {
         .concat(parametersText)
         .concat(noteText)
         .concat(commandsText)
-        .concat([[` * @help`].concat(generateHelp(config.help[language])).concat([' */']).join('\n')])
+        .concat([
+          [` * @help`]
+            .concat(generateHelp(config.help[language], config.histories[0].version))
+            .concat([' */'])
+            .join('\n'),
+        ])
         .filter((array) => array.length > 0)
         .join('\n *\n')}\n${structuresText}`;
     })
@@ -419,8 +424,14 @@ function generatePluginMetaText(config, language) {
   return result.join('\n');
 }
 
-function generateHelp(help) {
-  const helpLines = help.split('\n');
+/**
+ * ヘルプテキストを行ごとに配列にして返す
+ * @param {string} help ヘルプテキスト
+ * @param {string} version バージョン
+ * @return {string{}}
+ */
+function generateHelp(help, version) {
+  const helpLines = [`version: ${version}`].concat(help.split('\n'));
   return helpLines.slice(0, helpLines.length - 1).map((line) => ` *${line ? ' ' : ''}${line}`);
 }
 
