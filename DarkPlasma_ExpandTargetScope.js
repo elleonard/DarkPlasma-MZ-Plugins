@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.0.5
+// DarkPlasma_ExpandTargetScope 1.0.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/11/10 1.0.6 もともと全体対象のスキルに全体化倍率が乗る不具合を修正
  * 2020/10/26 1.0.5 リファクタ
  *            1.0.4 SkillCostExtensionとの競合を修正
  * 2020/10/17 1.0.3 全体化スキル選択のカーソルが不自然になる不具合を修正
@@ -44,7 +45,7 @@
  * @default 100
  *
  * @help
- * version: 1.0.5
+ * version: 1.0.6
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -76,7 +77,7 @@
   };
 
   Game_Action.prototype.expandScope = function () {
-    this._isExpandedScope = true;
+    this._isExpandedScope = !this.isForAllByDefault();
   };
 
   Game_Action.prototype.canExpandScope = function () {
