@@ -1,9 +1,11 @@
 DarkPlasma_AdditionalAttackAnimation:
   name: DarkPlasma_AdditionalAttackAnimation
-  version: '2.0.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/11/10'
+      version: '2.0.1'
+      description: '全体化プラグインとの順序を明記'
     - date: '2020/09/08'
       version: '2.0.0'
       description: 'パラメータ名変更'
@@ -60,6 +62,8 @@ DarkPlasma_AdditionalAttackAnimation:
           ja: 追加表示対象のステート
         type: state[]
         default: []
+  dependencies:
+    orderAfter: DarkPlasma_ExpandTargetScope
   help:
     ja: |
       攻撃アニメーションを特定条件で追加します。
