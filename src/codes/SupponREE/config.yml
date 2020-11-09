@@ -1,10 +1,12 @@
 DarkPlasma_SupponREE:
   name: DarkPlasma_SupponREE
-  version: '1.1.2'
   year: 2020
   license: MIT
   author: 'Suppon, DarkPlasma'
   histories:
+    - date: '2020/11/10'
+      version: '1.1.3'
+      description: 'PluginCommonBaseとの順序を明記'
     - date: '2020/10/10'
       version: '1.1.2'
       description: 'リファクタ'
@@ -88,6 +90,7 @@ DarkPlasma_SupponREE:
         type: number
   dependencies:
     base: PluginCommonBase
+    orderAfter: PluginCommonBase
   help:
     ja: |
       プラグインコマンド（非推奨）:
