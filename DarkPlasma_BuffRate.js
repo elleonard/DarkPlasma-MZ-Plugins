@@ -47,6 +47,7 @@
  * @default {"buffRate1":"25", "buffRate2":"50", "debuffRate1":"25", "debuffRate2":"50"}
  *
  * @help
+ * version: 2.0.0
  * バフ（強化状態）の能力強化/弱化倍率を個別に設定できるようにします。
  */
 /*~struct~BuffRate:

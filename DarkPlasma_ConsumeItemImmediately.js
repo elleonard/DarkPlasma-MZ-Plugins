@@ -16,6 +16,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.0
  * 戦闘でアイテムを選択した際、即座に消費しているように見せます。
  */
 

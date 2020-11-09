@@ -30,6 +30,7 @@
  * @desc プラグインコマンド起因のテストを実行します。
  *
  * @help
+ * version: 2.3.0
  * 本プラグインはプラグインの半自動テストをサポートします。
  *
  * Scene_Boot.prototype.defineTestCaseをフックしてテストケースを定義してください。

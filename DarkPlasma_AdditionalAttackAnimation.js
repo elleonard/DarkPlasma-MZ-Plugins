@@ -1,9 +1,10 @@
-// DarkPlasma_AdditionalAttackAnimation 2.0.0
+// DarkPlasma_AdditionalAttackAnimation 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/11/10 2.0.1 全体化プラグインとの順序を明記
  * 2020/09/08 2.0.0 パラメータ名変更
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -16,6 +17,8 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @orderAfter DarkPlasma_ExpandTargetScope
+ *
  * @param additionalAnimations
  * @desc 追加アニメーション
  * @text 追加アニメーション
@@ -23,6 +26,7 @@
  * @default []
  *
  * @help
+ * version: 2.0.1
  * 攻撃アニメーションを特定条件で追加します。
  *
  * 以下の条件でアニメーションを追加できます。

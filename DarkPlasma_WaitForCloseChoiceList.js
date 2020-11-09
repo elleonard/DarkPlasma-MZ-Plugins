@@ -17,6 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.1
  * RPGツクールMZでは選択肢ウィンドウの選択肢が多数ある場合、
  * 新しいシーンのウィンドウの背後に選択肢ウィンドウの残骸が残ります。
  *

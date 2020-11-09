@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.2
+// DarkPlasma_SupponREE 1.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/11/10 1.1.3 PluginCommonBaseとの順序を明記
  * 2020/10/10 1.1.2 リファクタ
  * 2020/10/04 1.1.1 戦闘時にエラーになる不具合を修正
  * 2020/10/02 1.1.0 自動配置横幅設定を追加
@@ -23,6 +24,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base PluginCommonBase
+ * @orderAfter PluginCommonBase
  *
  * @param autoPositionWidth
  * @desc 自動配置の際、前後に動かす際の横幅の閾値を設定します。敵キャラ画像の横幅合計がこれより大きい場合、敵配置を前後にバラけさせます。
@@ -38,6 +40,7 @@
  * @type struct<RandomEncounter>[]
  *
  * @help
+ * version: 1.1.3
  * プラグインコマンド（非推奨）:
  *   supponREE ratio times id id id・・・
  *   ratio : 出現確率％
@@ -97,6 +100,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base PluginCommonBase
+ * @orderAfter PluginCommonBase
  *
  * @param autoPositionWidth
  * @desc If sum of enemy image width is larger than this value, set enemy position front and back.
@@ -112,6 +116,7 @@
  * @type struct<RandomEncounterEn>[]
  *
  * @help
+ * version: 1.1.3
  * Plugin Command(Deprecated):
  *   supponREE ratio times id id id....
  *   ratio : Emergence probability numer

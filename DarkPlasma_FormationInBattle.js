@@ -45,6 +45,7 @@
  * @default true
  *
  * @help
+ * version: 1.1.1
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。

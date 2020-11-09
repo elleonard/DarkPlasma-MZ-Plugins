@@ -16,6 +16,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.0
  * マップ上におけるHP/MP/TP再生の処理を無効にします。
  *
  * 自動回復系やスリップダメージの特徴を

@@ -16,6 +16,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.0
  * バトルログウィンドウに縁をつけます。
  */
 

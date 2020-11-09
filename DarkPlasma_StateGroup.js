@@ -17,6 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.1
  * ステートをグルーピングして優先度付します。
  * 同じグループに属するステートは重ねがけできず、
  * 同じグループの優先度の高いステートで上書きされます。

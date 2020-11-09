@@ -18,6 +18,7 @@
  * @base DarkPlasma_Formation
  *
  * @help
+ * version: 1.0.0
  * メニューの並び替えを DarkPlasma_Formation の専用並び替えシーンにすり替えます。
  */
 

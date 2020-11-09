@@ -29,6 +29,7 @@
  * @default true
  *
  * @help
+ * version: 1.2.1
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
  *
  * <SkillCost:

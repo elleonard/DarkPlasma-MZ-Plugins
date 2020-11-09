@@ -31,6 +31,7 @@
  * @type number
  *
  * @help
+ * version: 1.0.1
  * ダッシュ速度を変更します。
  */
 

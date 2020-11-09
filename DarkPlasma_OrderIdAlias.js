@@ -17,6 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
+ * version: 1.0.1
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
  *

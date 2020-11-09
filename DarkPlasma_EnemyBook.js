@@ -178,6 +178,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
+ * version: 2.0.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -431,6 +432,7 @@
  * @desc Clear enemy book.
  *
  * @help
+ * version: 2.0.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *

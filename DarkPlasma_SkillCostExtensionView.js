@@ -44,6 +44,7 @@
  * @default 5
  *
  * @help
+ * version: 1.1.0
  * DarkPlasma_SkillCostExtensionで設定した拡張スキルコストを
  * スキルリスト上で表示します。
  *
