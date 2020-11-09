@@ -8,7 +8,7 @@ Game_Action.prototype.clear = function () {
 };
 
 Game_Action.prototype.expandScope = function () {
-  this._isExpandedScope = true;
+  this._isExpandedScope = !this.isForAllByDefault();
 };
 
 Game_Action.prototype.canExpandScope = function () {
