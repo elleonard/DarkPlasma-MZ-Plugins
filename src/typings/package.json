@@ -1,0 +1,9 @@
+{
+  "name": "rpgmakermz_typescript_dts",
+  "version": "1.0.0",
+  "description": "RPGツクールMZに標準搭載されているJavaScriptを、TypeScriptで扱うための型定義ファイルです。",
+  "main": "index.js",
+  "types": "rmmz/rmmz.d.ts",
+  "author": "DarkPlasma",
+  "license": "MIT"
+}
