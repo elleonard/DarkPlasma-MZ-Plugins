@@ -1,9 +1,10 @@
-// DarkPlasma_BattleItemVisibility 2.0.1
+// DarkPlasma_BattleItemVisibility 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/11/13 2.0.2 武器を表示する設定が効かない不具合を修正
  * 2020/09/11 2.0.1 戦闘中にアイテム欄を開くとエラーが出る不具合を修正
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
@@ -29,7 +30,7 @@
  * @type boolean
  * @default false
  *
- * @param showWeapon
+ * @param showWeapons
  * @desc 武器を表示します
  * @text 武器を表示
  * @type boolean
@@ -66,7 +67,7 @@
  * @default false
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * 戦闘中のアイテムコマンドで表示されるアイテム一覧に表示するアイテムを設定します。
  * プラグインパラメータで種別ごとに表示するものを設定できる他、
  * アイテムのメモ欄に以下のように入力したアイテムを表示します。
@@ -86,7 +87,7 @@
   const settings = {
     showOnlyMenuItems: String(pluginParameters.showOnlyMenuItems || false) === 'true',
     showUnusableItems: String(pluginParameters.showUnusableItems || false) === 'true',
-    showWeapon: String(pluginParameters.showWeapon || false) === 'true',
+    showWeapons: String(pluginParameters.showWeapons || false) === 'true',
     showArmors: String(pluginParameters.showArmors || false) === 'true',
     showImportantItems: String(pluginParameters.showImportantItems || false) === 'true',
     showUsableSecretItems: String(pluginParameters.showUsableSecretItems || false) === 'true',
@@ -120,7 +121,7 @@
         DataManager.isItem(item) &&
         item.itypeId === 4 &&
         (item.occasion === 2 || item.occasion === 3)) ||
-      settings.showWeapons ||
+      (settings.showWeapons && DataManager.isWeapon(item)) ||
       (settings.showArmors && DataManager.isArmor(item)) ||
       item.visibleInBattle
     );
