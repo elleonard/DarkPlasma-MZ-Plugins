@@ -1,9 +1,11 @@
 DarkPlasma_BattleItemVisibility:
   name: DarkPlasma_BattleItemVisibility
-  version: '2.0.1'
   year: 2020
   license: MIT
   histories:
+    - date: '2020/11/13'
+      version: '2.0.2'
+      description: '武器を表示する設定が効かない不具合を修正'
     - date: '2020/09/11'
       version: '2.0.1'
       description: '戦闘中にアイテム欄を開くとエラーが出る不具合を修正'
@@ -33,7 +35,7 @@ DarkPlasma_BattleItemVisibility:
         ja: 使用不可アイテムを表示します
       type: boolean
       default: false
-    - param: showWeapon
+    - param: showWeapons
       text:
         ja: 武器を表示
       desc:
