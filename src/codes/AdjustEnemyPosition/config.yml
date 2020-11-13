@@ -1,0 +1,19 @@
+DarkPlasma_AdjustEnemyPosition:
+  name: DarkPlasma_AdjustEnemyPosition
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/11/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '敵の座標をUIエリアサイズに合わせて移動する'
+  parameters: []
+  commands: []
+  structures:
+  help:
+    ja: |
+      敵の配置をUIエリアサイズに合わせて移動します。
