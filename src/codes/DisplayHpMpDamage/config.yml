@@ -1,0 +1,42 @@
+DarkPlasma_DisplayHpMpDamage:
+  name: DarkPlasma_DisplayHpMpDamage
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/11/17'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'HPとMP両方のダメージ/回復をポップアップ表示する'
+  parameters:
+    - param: delay
+      text:
+        ja: 表示時間差
+      desc:
+        ja: HPの表示からMPの表示を何フレーム遅らせるか
+      type: number
+      default: 10
+    - param: offsetX
+      text:
+        ja: 横オフセット
+      desc:
+        ja: HPの表示からMPの表示を横にどれだけずらすか
+      type: number
+      default: 8
+    - param: offsetY
+      text:
+        ja: 縦オフセット
+      desc:
+        ja: HPの表示からMPの表示を縦にどれだけずらすか
+      type: number
+      min: -300
+      default: -16
+  commands: []
+  structures:
+  help:
+    ja: |
+      HPとMP両方にダメージや回復がある場合、
+      その両方をポップアップ表示します。
