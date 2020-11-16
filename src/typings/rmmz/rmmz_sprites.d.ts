@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_sprites.js v1.3.4
+// rmmz_sprites.js v1.1.0
 //=============================================================================
 
 import { EffekseerEffect, EffekseerHandle } from 'effekseer';
@@ -153,6 +153,8 @@ declare class Sprite_Battler extends Sprite_Base {
 
   public setupAnimation(): void;
   public setupDamagePopup(): void;
+  public createDamageSprite(): void;
+  public destroyDamageSprite(sprite: Sprite_Damage): void;
   public damageOffsetX(): number;
   public damageOffsetY(): number;
 
