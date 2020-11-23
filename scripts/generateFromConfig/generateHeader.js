@@ -445,8 +445,7 @@ function generateHelp(help, version) {
  */
 function generateStructuresText(config, structureTypes, knownTypes, language) {
   const probablyNewTypes = [];
-  const result = structureTypes
-    .filter((x, i, self) => self.indexOf(x) === i)
+  const result = Array.from(new Set(structureTypes))
     .map((structureType) => {
       return generateStructureText(config, structureType, language, probablyNewTypes);
     })
