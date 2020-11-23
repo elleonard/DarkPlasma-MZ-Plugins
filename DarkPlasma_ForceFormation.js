@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.1.0
+// DarkPlasma_ForceFormation 2.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/11/23 2.1.1 リファクタ
  * 2020/10/13 2.1.0 戦闘中の入れ替えクールダウン用のコード追加
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/28 1.0.0 MZ版公開
@@ -36,7 +37,7 @@
  * @default false
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  */
 
@@ -101,22 +102,14 @@
    * 前衛が全滅しているかどうか
    */
   Game_Party.prototype.forwardMembersAreAllDead = function () {
-    return (
-      this.battleMembers().filter(function (member) {
-        return member.isAlive();
-      }, this).length === 0
-    );
+    return this.battleMembers().every((member) => !member.isAlive());
   };
 
   /**
    * 前衛後衛両方とも全滅しているかどうか
    */
   Game_Party.prototype.isAllDead = function () {
-    return (
-      this.allMembers().filter(function (member) {
-        return member.isAlive();
-      }, this).length === 0
-    );
+    return this.allMembers().every((member) => !member.isAlive());
   };
 
   /**
@@ -124,15 +117,16 @@
    * 後衛と強制的に入れ替える
    */
   Game_Party.prototype.forceFormation = function () {
-    this.battleMembers().forEach(function (deadMember) {
-      const aliveTarget = this.allMembers().find(function (member) {
-        return !member.isBattleMember() && member.isAlive();
-      }, this);
-      if (aliveTarget) {
-        this.swapOrder(deadMember.index(), this.allMembers().indexOf(aliveTarget));
-        $gameTemp.requestBattleRefresh();
+    const aliveMemberIndexes = this.allMembers().reduce((result, member) => {
+      return !member.isBattleMember() && member.isAlive() ? result.concat([this.allMembers().indexOf(member)]) : result;
+    }, []);
+    this.battleMembers().forEach((deadMember, index) => {
+      const swapTargetIndex = aliveMemberIndexes[index] ?? null;
+      if (swapTargetIndex) {
+        this.swapOrder(deadMember.index(), swapTargetIndex);
       }
-    }, this);
+    });
+    $gameTemp.requestBattleRefresh();
     this._forceFormationChanged = true;
   };
 
