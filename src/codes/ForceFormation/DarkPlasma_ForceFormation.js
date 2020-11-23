@@ -44,22 +44,14 @@ Game_Party.prototype.onBattleStart = function (advantageous) {
  * 前衛が全滅しているかどうか
  */
 Game_Party.prototype.forwardMembersAreAllDead = function () {
-  return (
-    this.battleMembers().filter(function (member) {
-      return member.isAlive();
-    }, this).length === 0
-  );
+  return this.battleMembers().every((member) => !member.isAlive());
 };
 
 /**
  * 前衛後衛両方とも全滅しているかどうか
  */
 Game_Party.prototype.isAllDead = function () {
-  return (
-    this.allMembers().filter(function (member) {
-      return member.isAlive();
-    }, this).length === 0
-  );
+  return this.allMembers().every((member) => !member.isAlive());
 };
 
 /**
@@ -67,15 +59,16 @@ Game_Party.prototype.isAllDead = function () {
  * 後衛と強制的に入れ替える
  */
 Game_Party.prototype.forceFormation = function () {
-  this.battleMembers().forEach(function (deadMember) {
-    const aliveTarget = this.allMembers().find(function (member) {
-      return !member.isBattleMember() && member.isAlive();
-    }, this);
-    if (aliveTarget) {
-      this.swapOrder(deadMember.index(), this.allMembers().indexOf(aliveTarget));
-      $gameTemp.requestBattleRefresh();
+  const aliveMemberIndexes = this.allMembers().reduce((result, member) => {
+    return !member.isBattleMember() && member.isAlive() ? result.concat([this.allMembers().indexOf(member)]) : result;
+  }, []);
+  this.battleMembers().forEach((deadMember, index) => {
+    const swapTargetIndex = aliveMemberIndexes[index] ?? null;
+    if (swapTargetIndex) {
+      this.swapOrder(deadMember.index(), swapTargetIndex);
     }
-  }, this);
+  });
+  $gameTemp.requestBattleRefresh();
   this._forceFormationChanged = true;
 };
 
