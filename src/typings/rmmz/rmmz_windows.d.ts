@@ -2,6 +2,8 @@
 // rpg_windows.js v1.3.4
 //=============================================================================
 
+import { Rectangle } from 'pixi.js';
+
 //-----------------------------------------------------------------------------
 /**
  * The superclass of all windows within the game.
@@ -81,6 +83,11 @@ declare class Window_Base extends Window {
   public drawText(text: string, x: number, y: number, maxWidth: number, align?: string): void;
   public textWidth(text: string): number;
   public drawTextEx(text: string, x: number, y: number): number;
+  public textSizeEx(text: string);
+  public createTextState(text: string, x: number, y: number, width: number): Window_Base.TextState;
+  public processAllText(textState: Window_Base.TextState): void;
+  public flushTextState(textState: Window_Base.TextState): void;
+
   public convertEscapeCharacters(text: string): string;
   public actorName(n: number): string;
   public partyMemberName(n: number): string;
@@ -111,7 +118,15 @@ declare class Window_Base extends Window {
   public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
   public drawActorIcons(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawCurrentAndMax(current: number, max: number, x: number, y: number, width: number, color1: string, color2: string): void;
+  public drawCurrentAndMax(
+    current: number,
+    max: number,
+    x: number,
+    y: number,
+    width: number,
+    color1: string,
+    color2: string
+  ): void;
   public drawActorHp(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorMp(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorTp(actor: Game_Actor, x: number, y: number, width?: number): void;
@@ -141,6 +156,7 @@ declare namespace Window_Base {
     y: number;
     left: number;
     height: number;
+    buffer: string;
   }
 }
 
@@ -884,14 +900,12 @@ declare class Window_ShopNumber extends Window_Selectable {
   public onButtonDown(): void;
   public onButtonDown2(): void;
   public onButtonOk(): void;
-}
+} // equipment on the shop screen.
 
 //-----------------------------------------------------------------------------
 /**
  * The window for displaying number of items in possession and the actor's
- */// equipment on the shop screen.
-
-declare class Window_ShopStatus extends Window_Base {
+ */ declare class Window_ShopStatus extends Window_Base {
   public constructor(x?: number, y?: number, width?: number, height?: number);
 
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
@@ -1245,19 +1259,17 @@ declare class Window_MapName extends Window_Base {
  * handled as a window for convenience.
  */
 
-declare class Window_BattleLog extends Window_Selectable {
+declare class Window_BattleLog extends Window_Base {
   public constructor();
 
   public _lines: string[];
-  public _methods: { name: string, params: any[] }[];
+  public _methods: { name: string; params: any[] }[];
   public _waitCount: number;
   public _waitMode: string;
   public _baseLineStack: number[];
   public _spriteset: Spriteset_Battle | null;
-  public _backBitmap: Bitmap;
-  public _backSprite: Sprite;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle): void;
 
   public setSpriteset(spriteset: Spriteset_Battle | null): void;
   public windowWidth(): number;
@@ -1309,12 +1321,11 @@ declare class Window_BattleLog extends Window_Selectable {
   public showActorAttackAnimation(subject: Game_Battler, targets: Game_Battler[]): void;
   public showEnemyAttackAnimation(subject: Game_Battler, targets: Game_Battler[]): void;
   public showNormalAnimation(targets: Game_Battler, animationId: number, mirror: boolean): void;
-  public animationBaseDelay(): number;
-  public animationNextDelay(): number;
 
   public refresh(): void;
   public drawBackground(): void;
-  public backRect(): Window_BattleLog.Rectangle;
+  public backRect(): Rectangle;
+  public lineRect(index: number): Rectangle;
   public backColor(): string;
   public backPaintOpacity(): number;
   public drawLineText(index: number): void;
