@@ -1,0 +1,55 @@
+DarkPlasma_AutoLineBreak:
+  name: DarkPlasma_AutoLineBreak
+  year: 2020
+  license: MIT
+  histories:
+    - date: '2020/12/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ウィンドウ幅を超える日本語文章を自動で折り返す'
+  parameters:
+    - param: prohibitLineBreakBefore
+      desc:
+        ja: 行頭に表示してはならない文字
+      text:
+        ja: 行頭禁則文字
+      type: string
+      default: ',)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.'
+    - param: prohibitLineBreakAfter
+      desc:
+        ja: 行末に表示してはならない文字
+      text:
+        ja: 行末禁則文字
+      type: string
+      default: ([｛〔〈《「『【〘〖〝‘“｟«
+    - param: ignoreAutoLineBreakWindows
+      desc:
+        ja: 自動改行しないウィンドウ一覧
+      text:
+        ja: 自動改行無効ウィンドウ
+      type: string[]
+      default: []
+    - param: lineWidthMargin
+      desc:
+        ja: 行幅のマージン。禁則文字用に余裕を持たせるための幅
+      text:
+        ja: 行幅のマージン
+      type: number
+      default: 4
+  commands: []
+  structures:
+  help:
+    ja: |
+      ウィンドウ幅を超えるような文字列を自動で改行します。
+
+      以下の法則でゆるふわ禁則処理します。
+      - 行頭禁則文字はぶら下げによる処理を行います。
+      - 行末禁則文字は追い出しによる処理を行います。
+      - 行末禁則文字が連続する場合をサポートしません。
+        （行末禁則文字が連続した場合、行末に対象の文字が表示されることがあります）
+      - 行頭行末揃えを行いません。（必ずしも各行の行頭と行末が一直線に揃いません）
+      - 分離禁則を適用しません。（英単語や連数字の途中で改行されることがあります）
