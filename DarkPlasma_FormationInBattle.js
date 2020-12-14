@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.1.1
+// DarkPlasma_FormationInBattle 1.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/14 1.1.2 強制入れ替え時にエラーで落ちる不具合を修正
  * 2020/10/19 1.1.1 戦闘開始時の不要な処理を削除
  * 2020/10/13 1.1.0 強制入れ替え時のクールダウン設定を追加
  * 2020/09/21 1.0.1 並び替え確定時にパーティウィンドウがリフレッシュされない不具合を修正
@@ -45,7 +46,7 @@
  * @default true
  *
  * @help
- * version: 1.1.1
+ * version: 1.1.2
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -107,7 +108,7 @@
         $gameParty.forceFormationChanged &&
         $gameParty.forceFormationChanged()
       ) {
-        $gameParty.resetForceFormationChangd();
+        $gameParty.resetForceFormationChanged();
         return false;
       }
       if (settings.cooldownOnlyWhenSwapForwardAndBenchwarmer) {
