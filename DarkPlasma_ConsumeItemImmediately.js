@@ -1,9 +1,10 @@
-// DarkPlasma_ConsumeItemImmediately 1.0.0
+// DarkPlasma_ConsumeItemImmediately 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/14 1.0.1 jsdocの型修正
  * 2020/09/11 1.0.0 MZ版公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 戦闘でアイテムを選択した際、即座に消費しているように見せます。
  */
 
@@ -45,7 +46,7 @@
 
   /**
    * このターンに既に入力済みの指定アイテムの数
-   * @param {MV.Item} item アイテムデータ
+   * @param {MZ.Item} item アイテムデータ
    * @return {number}
    */
   BattleManager.reservedItemCount = function (item) {
@@ -74,7 +75,7 @@
   /**
    * アイテムの表示上の個数を返す
    * numItemsはgainItemの挙動に影響してしまうため、類似の別メソッドが必要
-   * @param {MV.Item} item アイテムデータ
+   * @param {MZ.Item} item アイテムデータ
    * @return {number}
    */
   Game_Party.prototype.numItemsForDisplay = function (item) {
@@ -87,7 +88,7 @@
    * 戦闘中のアイテムの個数表示
    * 表示上の個数と実際の個数がズレる上、numItemsはgainItemの挙動に影響してしまうため、
    * まるごと上書きしてしまう。
-   * @param {MV.item} item アイテムデータ
+   * @param {MZ.item} item アイテムデータ
    */
   Window_BattleItem.prototype.drawItemNumber = function (item, x, y, width) {
     if (this.needsNumber()) {
