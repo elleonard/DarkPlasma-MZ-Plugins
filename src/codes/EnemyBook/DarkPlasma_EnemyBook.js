@@ -527,6 +527,9 @@ class Window_EnemyBookStatus extends Window_Base {
     return maxHeight - this.itemPadding() * 2;
   }
 
+  /**
+   * @param {MZ.Enemy} enemy 敵キャラ情報
+   */
   setEnemy(enemy) {
     if (this._enemy !== enemy) {
       this._enemy = enemy;
@@ -566,6 +569,7 @@ class Window_EnemyBookStatus extends Window_Base {
       bitmap = ImageManager.loadEnemy(name, hue);
     }
     this._enemySprite.bitmap = bitmap;
+    this._enemySprite.setHue(enemy.battlerHue);
 
     this.resetTextColor();
     this.drawText(enemy.name, 0, 0);
