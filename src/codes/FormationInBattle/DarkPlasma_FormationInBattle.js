@@ -39,7 +39,7 @@ class FormationCooldown {
       $gameParty.forceFormationChanged &&
       $gameParty.forceFormationChanged()
     ) {
-      $gameParty.resetForceFormationChangd();
+      $gameParty.resetForceFormationChanged();
       return false;
     }
     if (settings.cooldownOnlyWhenSwapForwardAndBenchwarmer) {
