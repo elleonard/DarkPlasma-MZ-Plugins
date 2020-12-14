@@ -25,6 +25,40 @@ SceneManager.isPreviousSceneExtendsMenuBase = function () {
   return new this._previousClass() instanceof Scene_MenuBase;
 };
 
+const _Game_Temp_initialize = Game_Temp.prototype.initialize;
+Game_Temp.prototype.initialize = function () {
+  _Game_Temp_initialize.call(this);
+  this._needsFormationBattleMemberWindowRefresh = false;
+  this._needsFormationWaitingMemberWindowRefresh = false;
+};
+
+const _Game_Temp_requestBattleRefresh = Game_Temp.prototype.requestBattleRefresh;
+Game_Temp.prototype.requestBattleRefresh = function () {
+  _Game_Temp_requestBattleRefresh.call(this);
+  this.requestFormationMemberWindowsRefresh();
+};
+
+Game_Temp.prototype.requestFormationMemberWindowsRefresh = function () {
+  this._needsFormationBattleMemberWindowRefresh = true;
+  this._needsFormationWaitingMemberWindowRefresh = true;
+};
+
+Game_Temp.prototype.clearFormationBattleMemberWindowRefreshRequest = function () {
+  this._needsFormationBattleMemberWindowRefresh = false;
+};
+
+Game_Temp.prototype.clearFormationWaitingMemberWindowRefreshRequest = function () {
+  this._needsFormationWaitingMemberWindowRefresh = false;
+};
+
+Game_Temp.prototype.isFormationBattleMemberWindowRefreshRequested = function () {
+  return this._needsFormationBattleMemberWindowRefresh;
+};
+
+Game_Temp.prototype.isFormationWaitingMemberWindowRefreshRequested = function () {
+  return this._needsFormationWaitingMemberWindowRefresh;
+};
+
 class Scene_Formation extends Scene_Base {
   create() {
     super.create();
@@ -221,8 +255,7 @@ class Scene_Formation extends Scene_Base {
     if (pendingIndex >= 0) {
       $gameParty.swapOrder(index, pendingIndex);
       this.formationSelectWindow().setPendingIndex(-1);
-      this.formationBattleMemberWindow().refresh();
-      this.formationWaitingMemberWindow().refresh();
+      $gameTemp.requestFormationMemberWindowsRefresh();
     } else {
       this.formationSelectWindow().setPendingIndex(index);
     }
@@ -278,6 +311,12 @@ class Window_FormationStatus extends Window_SkillStatus {
 }
 
 class Window_DrawActorCharacter extends Window_StatusBase {
+  initialize(rect) {
+    super.initialize(rect);
+    this._bitmapsMustBeRedraw = [];
+    this.refresh();
+  }
+
   drawActorCharacterLeft(actor, x, y) {
     const bitmap = ImageManager.loadCharacter(actor.characterName());
     const big = ImageManager.isBigCharacter(actor.characterName());
@@ -287,6 +326,9 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     const sx = ((n % 4) * 3 + 1) * pw;
     const sy = (Math.floor(n / 4) * 4 + 1) * ph;
     this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
+    if (!bitmap.isReady()) {
+      this._bitmapsMustBeRedraw.push(bitmap);
+    }
   }
 
   members() {
@@ -305,7 +347,29 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     return 0;
   }
 
+  itemHeight() {
+    return settings.characterHeight + 8;
+  }
+
+  itemRect(index) {
+    const x = this.x + 4 + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
+    const y = this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
+    return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
+  }
+
   update() {
+    super.update();
+    /**
+     * 初回のみロードが間に合わないケースがあるため、再描画
+     */
+    if (this._bitmapsMustBeRedraw.length > 0 && this._bitmapsMustBeRedraw.every((bitmap) => bitmap.isReady())) {
+      this.refresh();
+      this._bitmapsMustBeRedraw = [];
+    }
+  }
+
+  refresh() {
+    this.contents.clear();
     this.members().forEach((actor, index) => {
       const x =
         this.offsetX() +
@@ -322,24 +386,17 @@ class Window_DrawActorCharacter extends Window_StatusBase {
       }
     });
   }
-
-  itemHeight() {
-    return settings.characterHeight + 8;
-  }
-
-  itemRect(index) {
-    const x = this.x + 4 + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
-    const y = this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
-    return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
-  }
-
-  refresh() {
-    this.contents.clear();
-    this.update();
-  }
 }
 
 class Window_FormationBattleMember extends Window_DrawActorCharacter {
+  update() {
+    super.update();
+    if ($gameTemp.isFormationBattleMemberWindowRefreshRequested()) {
+      this.refresh();
+      $gameTemp.clearFormationBattleMemberWindowRefreshRequest();
+    }
+  }
+
   members() {
     return $gameParty.battleMembers();
   }
@@ -362,6 +419,14 @@ class Window_FormationBattleMember extends Window_DrawActorCharacter {
 }
 
 class Window_FormationWaitingMember extends Window_DrawActorCharacter {
+  update() {
+    super.update();
+    if ($gameTemp.isFormationWaitingMemberWindowRefreshRequested()) {
+      this.refresh();
+      $gameTemp.clearFormationWaitingMemberWindowRefreshRequest();
+    }
+  }
+
   members() {
     return $gameParty.allMembers().filter((actor) => !actor.isBattleMember());
   }
