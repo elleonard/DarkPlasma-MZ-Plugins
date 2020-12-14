@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.2
+// DarkPlasma_EnemyBook 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/14 2.0.3 敵キャラの色調変更が適用されない不具合を修正
  * 2020/10/10 2.0.2 リファクタ
  * 2020/09/29 2.0.1 プラグインコマンドに説明を追加
  * 2020/09/08 2.0.0 パラメータ名を変更
@@ -178,7 +179,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -432,7 +433,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1170,6 +1171,9 @@
       return maxHeight - this.itemPadding() * 2;
     }
 
+    /**
+     * @param {MZ.Enemy} enemy 敵キャラ情報
+     */
     setEnemy(enemy) {
       if (this._enemy !== enemy) {
         this._enemy = enemy;
@@ -1209,6 +1213,7 @@
         bitmap = ImageManager.loadEnemy(name, hue);
       }
       this._enemySprite.bitmap = bitmap;
+      this._enemySprite.setHue(enemy.battlerHue);
 
       this.resetTextColor();
       this.drawText(enemy.name, 0, 0);
