@@ -317,6 +317,14 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     this.refresh();
   }
 
+  drawActorCharacter(actor, x, y) {
+    super.drawActorCharacter(actor, x, y);
+    const bitmap = ImageManager.loadCharacter(actor.characterName());
+    if (!bitmap.isReady()) {
+      this._bitmapsMustBeRedraw.push(bitmap);
+    }
+  }
+
   drawActorCharacterLeft(actor, x, y) {
     const bitmap = ImageManager.loadCharacter(actor.characterName());
     const big = ImageManager.isBigCharacter(actor.characterName());

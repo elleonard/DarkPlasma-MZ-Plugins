@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/12/15'
+      version: '1.0.4'
+      description: 'キャラグラが正面向きの時、正しく表示されない不具合を修正'
     - date: '2020/12/14'
       version: '1.0.3'
       description: '強制入れ替え後に並び替えウィンドウが正しくリフレッシュされない不具合を修正'
