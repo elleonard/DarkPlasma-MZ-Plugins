@@ -186,9 +186,16 @@ class Scene_Formation extends Scene_Base {
     return new Rectangle(
       0,
       this.formationHelpWindow().height,
-      settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 288 : 152,
+      this.battleMemberWindowWidth(),
       this.waitingMemberWindowHeight()
     );
+  }
+
+  battleMemberWindowWidth() {
+    const characterSpacing = Window_FormationBattleMember.prototype.spacing();
+    return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+      ? (settings.characterWidth + characterSpacing) * $gameParty.maxBattleMembers()
+      : (settings.characterWidth + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
   }
 
   formationBattleMemberWindow() {
@@ -410,7 +417,9 @@ class Window_FormationBattleMember extends Window_DrawActorCharacter {
   }
 
   maxCols() {
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 4 : 2;
+    return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+      ? $gameParty.maxBattleMembers()
+      : $gameParty.maxBattleMembers() / 2;
   }
 
   offsetX() {
