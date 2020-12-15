@@ -1,10 +1,11 @@
-// DarkPlasma_Formation 1.0.4
+// DarkPlasma_Formation 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/12/15 1.0.4 キャラグラが正面向きの時、正しく表示されない不具合を修正
+ * 2020/12/15 1.0.5 戦闘メンバーの最大数に応じてウィンドウの表示サイズを変更する
+ *            1.0.4 キャラグラが正面向きの時、正しく表示されない不具合を修正
  * 2020/12/14 1.0.3 強制入れ替え後に並び替えウィンドウが正しくリフレッシュされない不具合を修正
  * 2020/10/10 1.0.2 リファクタ
  * 2020/09/23 1.0.1 ヘルプにメニューの並び替えについて追記
@@ -44,7 +45,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.0.4
+ * version: 1.0.5
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -259,9 +260,16 @@
       return new Rectangle(
         0,
         this.formationHelpWindow().height,
-        settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 288 : 152,
+        this.battleMemberWindowWidth(),
         this.waitingMemberWindowHeight()
       );
+    }
+
+    battleMemberWindowWidth() {
+      const characterSpacing = Window_FormationBattleMember.prototype.spacing();
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? (settings.characterWidth + characterSpacing) * $gameParty.maxBattleMembers()
+        : (settings.characterWidth + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
     }
 
     formationBattleMemberWindow() {
@@ -483,7 +491,9 @@
     }
 
     maxCols() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 4 : 2;
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? $gameParty.maxBattleMembers()
+        : $gameParty.maxBattleMembers() / 2;
     }
 
     offsetX() {
