@@ -1,9 +1,10 @@
-// DarkPlasma_FallImages 1.0.1
+// DarkPlasma_FallImages 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/16 1.0.2 ゲーム終了時に正しく状態を初期化しない不具合を修正
  * 2020/10/25 1.0.1 ヘルプ追記
  * 2020/10/24 1.0.0 公開
  */
@@ -39,11 +40,14 @@
  * @desc 振らせている画像をフェードアウトさせ、止ませます。
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 何らかの画像を降らせる画面演出を提供します。
  *
  * プラグインパラメータにIDと画像ファイルを設定し、
  * プラグインコマンドでそのIDを指定してください。
+ *
+ * 本プラグインはセーブデータを拡張します。
+ * 画像を降らせるための状態をセーブします。
  */
 /*~struct~FallImage:
  * @param id
@@ -163,12 +167,53 @@
   });
 
   class FallImageStatus {
-    constructor() {
-      this._startRequested = false;
-      this._requestedImageId = 0;
-      this._stopRequested = false;
-      this._fadeOutRequested = false;
-      this._isFalling = false;
+    /**
+     * @param {boolean} startRequested 開始リクエストされているか
+     * @param {number} requestedImageId リクエストされている画像ID
+     * @param {boolean} stopRequested 停止リクエストされているか
+     * @param {boolean} fadeOutRequested フェードアウトリクエストされているか
+     * @param {boolean} isFalling 降っている最中か
+     */
+    constructor(startRequested, requestedImageId, stopRequested, fadeOutRequested, isFalling) {
+      this._startRequested = startRequested;
+      this._requestedImageId = requestedImageId;
+      this._stopRequested = stopRequested;
+      this._fadeOutRequested = fadeOutRequested;
+      this._isFalling = isFalling;
+    }
+
+    /**
+     * @return {FallImageStatus}
+     */
+    static newInstance() {
+      return new FallImageStatus(false, 0, false, false, false);
+    }
+
+    /**
+     * @return {object}
+     */
+    toSave() {
+      return {
+        startRequested: this.startRequested,
+        requestedImageId: this.requestedImageId,
+        stopRequested: this.stopRequested,
+        fadeOutRequested: this.fadeOutRequested,
+        isFalling: this.isFalling,
+      };
+    }
+
+    /**
+     * @param {object} saveObject セーブデータから取得したオブジェクト
+     * @return {FallImageStatus}
+     */
+    static fromSave(saveObject) {
+      return new FallImageStatus(
+        saveObject.startRequested,
+        saveObject.requestedImageId,
+        saveObject.stopRequested,
+        saveObject.fadeOutRequested,
+        saveObject.isFalling
+      );
     }
 
     get startRequested() {
@@ -224,7 +269,29 @@
     }
   }
 
-  const fallImageStatus = new FallImageStatus();
+  let fallImageStatus = null;
+
+  const _Game_System_initialize = Game_System.prototype.initialize;
+  Game_System.prototype.initialize = function () {
+    _Game_System_initialize.call(this);
+    fallImageStatus = FallImageStatus.newInstance();
+  };
+
+  const _Game_System_onBeforeSave = Game_System.prototype.onBeforeSave;
+  Game_System.prototype.onBeforeSave = function () {
+    _Game_System_onBeforeSave.call(this);
+    this._fallImageStatus = fallImageStatus.toSave();
+  };
+
+  const _Game_System_onAfterLoad = Game_System.prototype.onAfterLoad;
+  Game_System.prototype.onAfterLoad = function () {
+    _Game_System_onAfterLoad.call(this);
+    if (this._fallImageStatus) {
+      fallImageStatus = FallImageStatus.fromSave(this._fallImageStatus);
+    } else {
+      fallImageStatus = FallImageStatus.newInstance();
+    }
+  };
 
   class Sprite_Falling extends Sprite {
     initialize(fallSettingId) {
