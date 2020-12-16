@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.1.2
+// DarkPlasma_FormationInBattle 1.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/16 1.1.3 DarkPlasma_Formation 1.0.5に対応
  * 2020/12/14 1.1.2 強制入れ替え時にエラーで落ちる不具合を修正
  * 2020/10/19 1.1.1 戦闘開始時の不要な処理を削除
  * 2020/10/13 1.1.0 強制入れ替え時のクールダウン設定を追加
@@ -46,7 +47,7 @@
  * @default true
  *
  * @help
- * version: 1.1.2
+ * version: 1.1.3
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -250,6 +251,10 @@
 
   Scene_Battle.prototype.formationBattleMemberWindowRect = function () {
     return Scene_Formation.prototype.battleMemberWindowRect.call(this);
+  };
+
+  Scene_Battle.prototype.battleMemberWindowWidth = function () {
+    return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
   };
 
   Scene_Battle.prototype.formationBattleMemberWindow = function () {
