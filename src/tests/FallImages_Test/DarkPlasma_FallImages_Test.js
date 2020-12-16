@@ -1,21 +1,24 @@
 import { settings } from './_build/DarkPlasma_FallImages_Test_parameters';
 import { targetPluginVersion } from './_build/DarkPlasma_FallImages_Test_parameters';
 import { doTest } from '../../common/doTest';
-import { registerTestCase } from '../../common/registerTestCase';
+import { registerManualTestCases, registerTestCase } from '../../common/registerTestCase';
 
 const TESTCASE_NAME = {
   CAN_LOAD_SETTING: '設定値が正しくロードできている',
+};
+const MANUAL_TESTCASE_NAME = {
   START_FALLING: '降らせることができる',
   STOP_FALLING: '止めることができる',
   FADE_OUT_FALLING: 'フェードアウトできる',
+  SAVE_FALL_STATUS: '降らせる状態をセーブできる',
+  NOT_TO_SUCCEED_NEW_GAME: '降らせる状態をニューゲームに引き継がない',
 };
+
 const _Scene_Boot_defineTestCase = Scene_Boot.prototype.defineTestCase;
 Scene_Boot.prototype.defineTestCase = function () {
   _Scene_Boot_defineTestCase.call(this);
   registerTestCase(targetPluginVersion, TESTCASE_NAME.CAN_LOAD_SETTING, true);
-  registerTestCase(targetPluginVersion, TESTCASE_NAME.START_FALLING, false);
-  registerTestCase(targetPluginVersion, TESTCASE_NAME.STOP_FALLING, false);
-  registerTestCase(targetPluginVersion, TESTCASE_NAME.FADE_OUT_FALLING, false);
+  registerManualTestCases(targetPluginVersion, Object.values(MANUAL_TESTCASE_NAME));
 };
 
 const _Scene_Boot_doTestOnBoot = Scene_Boot.prototype.doTestOnBoot;

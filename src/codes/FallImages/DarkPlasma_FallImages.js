@@ -22,12 +22,53 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.FADEOUT_FALL, func
 });
 
 class FallImageStatus {
-  constructor() {
-    this._startRequested = false;
-    this._requestedImageId = 0;
-    this._stopRequested = false;
-    this._fadeOutRequested = false;
-    this._isFalling = false;
+  /**
+   * @param {boolean} startRequested 開始リクエストされているか
+   * @param {number} requestedImageId リクエストされている画像ID
+   * @param {boolean} stopRequested 停止リクエストされているか
+   * @param {boolean} fadeOutRequested フェードアウトリクエストされているか
+   * @param {boolean} isFalling 降っている最中か
+   */
+  constructor(startRequested, requestedImageId, stopRequested, fadeOutRequested, isFalling) {
+    this._startRequested = startRequested;
+    this._requestedImageId = requestedImageId;
+    this._stopRequested = stopRequested;
+    this._fadeOutRequested = fadeOutRequested;
+    this._isFalling = isFalling;
+  }
+
+  /**
+   * @return {FallImageStatus}
+   */
+  static newInstance() {
+    return new FallImageStatus(false, 0, false, false, false);
+  }
+
+  /**
+   * @return {object}
+   */
+  toSave() {
+    return {
+      startRequested: this.startRequested,
+      requestedImageId: this.requestedImageId,
+      stopRequested: this.stopRequested,
+      fadeOutRequested: this.fadeOutRequested,
+      isFalling: this.isFalling,
+    };
+  }
+
+  /**
+   * @param {object} saveObject セーブデータから取得したオブジェクト
+   * @return {FallImageStatus}
+   */
+  static fromSave(saveObject) {
+    return new FallImageStatus(
+      saveObject.startRequested,
+      saveObject.requestedImageId,
+      saveObject.stopRequested,
+      saveObject.fadeOutRequested,
+      saveObject.isFalling
+    );
   }
 
   get startRequested() {
@@ -83,7 +124,29 @@ class FallImageStatus {
   }
 }
 
-const fallImageStatus = new FallImageStatus();
+let fallImageStatus = null;
+
+const _Game_System_initialize = Game_System.prototype.initialize;
+Game_System.prototype.initialize = function () {
+  _Game_System_initialize.call(this);
+  fallImageStatus = FallImageStatus.newInstance();
+};
+
+const _Game_System_onBeforeSave = Game_System.prototype.onBeforeSave;
+Game_System.prototype.onBeforeSave = function () {
+  _Game_System_onBeforeSave.call(this);
+  this._fallImageStatus = fallImageStatus.toSave();
+};
+
+const _Game_System_onAfterLoad = Game_System.prototype.onAfterLoad;
+Game_System.prototype.onAfterLoad = function () {
+  _Game_System_onAfterLoad.call(this);
+  if (this._fallImageStatus) {
+    fallImageStatus = FallImageStatus.fromSave(this._fallImageStatus);
+  } else {
+    fallImageStatus = FallImageStatus.newInstance();
+  }
+};
 
 class Sprite_Falling extends Sprite {
   initialize(fallSettingId) {

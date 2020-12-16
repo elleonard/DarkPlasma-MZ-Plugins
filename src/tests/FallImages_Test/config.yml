@@ -3,6 +3,9 @@ DarkPlasma_FallImages_Test:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/12/16'
+      version: '1.0.1'
+      description: 'セーブ・ロード、ニューゲームの引き継ぎ関連追加'
     - date: '2020/10/24'
       version: '1.0.0'
       description: '公開'
