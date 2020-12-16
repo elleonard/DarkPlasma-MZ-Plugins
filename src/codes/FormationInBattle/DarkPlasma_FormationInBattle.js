@@ -183,6 +183,10 @@ Scene_Battle.prototype.formationBattleMemberWindowRect = function () {
   return Scene_Formation.prototype.battleMemberWindowRect.call(this);
 };
 
+Scene_Battle.prototype.battleMemberWindowWidth = function () {
+  return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
+};
+
 Scene_Battle.prototype.formationBattleMemberWindow = function () {
   return this._formationBattleMemberWindow;
 };
