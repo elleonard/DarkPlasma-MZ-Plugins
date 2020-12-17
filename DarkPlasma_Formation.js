@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.0.5
+// DarkPlasma_Formation 1.0.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/17 1.0.6 戦闘メンバーの最大数が奇数の場合に上下キーを押した際の挙動を修正
  * 2020/12/15 1.0.5 戦闘メンバーの最大数に応じてウィンドウの表示サイズを変更する
  *            1.0.4 キャラグラが正面向きの時、正しく表示されない不具合を修正
  * 2020/12/14 1.0.3 強制入れ替え後に並び替えウィンドウが正しくリフレッシュされない不具合を修正
@@ -45,7 +46,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.0.5
+ * version: 1.0.6
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -590,10 +591,13 @@
     }
 
     isSelectRightLineBattleMember() {
+      const maxCols = this.isSelectUpperLineBattleMember()
+        ? Math.ceil(this._battleMemberWindow.maxCols())
+        : Math.floor(this._battleMemberWindow.maxCols());
       return (
         !this.useTallCharacter() &&
         this.index() < $gameParty.battleMembers().length &&
-        this.index() % this._battleMemberWindow.maxCols() === this._battleMemberWindow.maxCols() - 1
+        this.index() % maxCols === maxCols - 1
       );
     }
 
@@ -630,7 +634,11 @@
 
     cursorDown() {
       if (this.isSelectUpperLineBattleMember()) {
-        this.select(this.index() + this._battleMemberWindow.maxCols());
+        if (this.index() + Math.ceil(this._battleMemberWindow.maxCols()) < $gameParty.battleMembers().length) {
+          this.select(this.index() + Math.ceil(this._battleMemberWindow.maxCols()));
+        } else if ($gameParty.battleMembers().length > Math.ceil(this._battleMemberWindow.maxCols())) {
+          this.select($gameParty.battleMembers().length - 1);
+        }
       } else if (
         this.isSelectUpperLineWaitingMember() &&
         this.index() + this._waitingMemberWindow.maxCols() < this.maxItems()
@@ -641,9 +649,9 @@
 
     cursorUp() {
       if (this.isSelectLowerLineBattleMember()) {
-        this.select(this.index() - this._battleMemberWindow.maxCols());
+        this.select(this.index() - Math.floor(this._battleMemberWindow.maxCols()));
       } else if (this.isSelectLowerLineWaitingMember()) {
-        this.select(this.index() - this._waitingMemberWindow().maxCols());
+        this.select(this.index() - this._waitingMemberWindow.maxCols());
       }
     }
 
@@ -665,7 +673,7 @@
     cursorLeft(wrap) {
       if (this.isSelectLeftLineWaitingMember()) {
         if (this.isSelectUpperLineWaitingMember()) {
-          this.select(this._battleMemberWindow.maxCols() - 1);
+          this.select(Math.ceil(this._battleMemberWindow.maxCols()) - 1);
         } else {
           this.select($gameParty.battleMembers().length - 1);
         }
