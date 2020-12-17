@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: '2020/12/17'
+      version: '1.0.6'
+      description: '戦闘メンバーの最大数が奇数の場合に上下キーを押した際の挙動を修正'
     - date: '2020/12/15'
       version: '1.0.5'
       description: '戦闘メンバーの最大数に応じてウィンドウの表示サイズを変更する'

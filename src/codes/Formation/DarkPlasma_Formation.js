@@ -516,10 +516,13 @@ class Window_FormationSelect extends Window_Selectable {
   }
 
   isSelectRightLineBattleMember() {
+    const maxCols = this.isSelectUpperLineBattleMember()
+      ? Math.ceil(this._battleMemberWindow.maxCols())
+      : Math.floor(this._battleMemberWindow.maxCols());
     return (
       !this.useTallCharacter() &&
       this.index() < $gameParty.battleMembers().length &&
-      this.index() % this._battleMemberWindow.maxCols() === this._battleMemberWindow.maxCols() - 1
+      this.index() % maxCols === maxCols - 1
     );
   }
 
@@ -556,7 +559,11 @@ class Window_FormationSelect extends Window_Selectable {
 
   cursorDown() {
     if (this.isSelectUpperLineBattleMember()) {
-      this.select(this.index() + this._battleMemberWindow.maxCols());
+      if (this.index() + Math.ceil(this._battleMemberWindow.maxCols()) < $gameParty.battleMembers().length) {
+        this.select(this.index() + Math.ceil(this._battleMemberWindow.maxCols()));
+      } else if ($gameParty.battleMembers().length > Math.ceil(this._battleMemberWindow.maxCols())) {
+        this.select($gameParty.battleMembers().length - 1);
+      }
     } else if (
       this.isSelectUpperLineWaitingMember() &&
       this.index() + this._waitingMemberWindow.maxCols() < this.maxItems()
@@ -567,9 +574,9 @@ class Window_FormationSelect extends Window_Selectable {
 
   cursorUp() {
     if (this.isSelectLowerLineBattleMember()) {
-      this.select(this.index() - this._battleMemberWindow.maxCols());
+      this.select(this.index() - Math.floor(this._battleMemberWindow.maxCols()));
     } else if (this.isSelectLowerLineWaitingMember()) {
-      this.select(this.index() - this._waitingMemberWindow().maxCols());
+      this.select(this.index() - this._waitingMemberWindow.maxCols());
     }
   }
 
@@ -591,7 +598,7 @@ class Window_FormationSelect extends Window_Selectable {
   cursorLeft(wrap) {
     if (this.isSelectLeftLineWaitingMember()) {
       if (this.isSelectUpperLineWaitingMember()) {
-        this.select(this._battleMemberWindow.maxCols() - 1);
+        this.select(Math.ceil(this._battleMemberWindow.maxCols()) - 1);
       } else {
         this.select($gameParty.battleMembers().length - 1);
       }
