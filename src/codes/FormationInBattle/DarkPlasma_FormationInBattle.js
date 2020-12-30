@@ -157,6 +157,15 @@ Scene_Battle.prototype.formationHelpWindow = function () {
   return this._formationHelpWindow;
 };
 
+Scene_Battle.prototype.cancelButtonWidth = function () {
+  /**
+   * 戦闘シーンではウィンドウ生成後にキャンセルボタンが生成されるため、
+   * サイズ計算のために一時的にインスタンスを作る
+   */
+  const cancelButton = new Sprite_Button('cancel');
+  return cancelButton.width;
+};
+
 Scene_Battle.prototype.createFormationStatusWindow = function () {
   this._formationStatusWindow = new Window_FormationStatus(this.formationStatusWindowRect());
   this.addWindow(this._formationStatusWindow);
@@ -233,6 +242,18 @@ Scene_Battle.prototype.formationEquipStatusWindow = function () {
   return null;
 };
 
+Scene_Battle.prototype.moveCancelButtonToEdge = function () {
+  if (this._cancelButton) {
+    this._cancelButton.y = Math.floor((this.buttonAreaHeight() - 48) / 2);
+  }
+};
+
+Scene_Battle.prototype.returnCancelButton = function () {
+  if (this._cancelButton) {
+    this._cancelButton.y = this.buttonY();
+  }
+};
+
 Scene_Battle.prototype.showFormationWindows = function () {
   this._formationHelpWindow.show();
   this._formationStatusWindow.show();
@@ -241,6 +262,7 @@ Scene_Battle.prototype.showFormationWindows = function () {
   this._formationSelectWindow.show();
   this._formationSelectWindow.select(0);
   this._formationSelectWindow.activate();
+  this.moveCancelButtonToEdge();
 };
 
 Scene_Battle.prototype.hideFormationWindows = function () {
@@ -272,6 +294,17 @@ Scene_Battle.prototype.quitFromFormation = function () {
    * コマンド入力情報初期化
    */
   $gameParty.makeActions();
+};
+
+const _Scene_Battle_updateCancelButton = Scene_Battle.prototype.updateCancelButton;
+Scene_Battle.prototype.updateCancelButton = function () {
+  _Scene_Battle_updateCancelButton.call(this);
+  if (this._cancelButton && !this._cancelButton.visible) {
+    /**
+     * 非表示になってから元の位置に戻す
+     */
+    this.returnCancelButton();
+  }
 };
 
 Window_PartyCommand.prototype.addCommandAt = function (index, name, symbol, enabled = true, ext = null) {
