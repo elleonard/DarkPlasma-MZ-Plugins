@@ -88,9 +88,9 @@ class Scene_Formation extends Scene_Base {
     }
   }
 
-  setBackgroundOpacity = function (opacity) {
+  setBackgroundOpacity(opacity) {
     this._backgroundSprite.opacity = opacity;
-  };
+  }
 
   createHelpWindow() {
     this._helpWindow = new Window_Help(this.helpWindowRect());
