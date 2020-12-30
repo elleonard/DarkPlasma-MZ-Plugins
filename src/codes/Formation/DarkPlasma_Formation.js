@@ -100,7 +100,12 @@ class Scene_Formation extends Scene_Base {
   }
 
   helpWindowRect() {
-    const width = ConfigManager.touchUI ? Graphics.boxWidth - this._cancelButton.width - 4 : Graphics.boxWidth;
+    const width = ConfigManager.touchUI
+      ? Graphics.boxWidth -
+        this.cancelButtonWidth() -
+        settings.cancelButtonRightMergin -
+        settings.cancelButtonLeftMergin
+      : Graphics.boxWidth;
     return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
   }
 
@@ -111,10 +116,14 @@ class Scene_Formation extends Scene_Base {
   createButtons() {
     if (ConfigManager.touchUI) {
       this._cancelButton = new Sprite_Button('cancel');
-      this._cancelButton.x = Graphics.boxWidth - this._cancelButton.width - 4;
+      this._cancelButton.x = Graphics.boxWidth - this.cancelButtonWidth() - settings.cancelButtonRightMergin;
       this._cancelButton.y = this.buttonY();
       this.addWindow(this._cancelButton);
     }
+  }
+
+  cancelButtonWidth() {
+    return this._cancelButton ? this._cancelButton.width : 0;
   }
 
   formationHelpWindow() {

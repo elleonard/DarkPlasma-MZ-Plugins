@@ -4,6 +4,9 @@ DarkPlasma_Formation:
   license: MIT
   histories:
     - date: '2020/12/30'
+      version: '1.2.0'
+      description: '戻るボタン左右のスペース設定を追加'
+    - date: '2020/12/30'
       version: '1.1.0'
       description: 'タッチUIで戻るボタン表示を追加'
     - date: '2020/12/30'
@@ -39,16 +42,22 @@ DarkPlasma_Formation:
     - param: characterWidth
       text:
         ja: キャラグラの横サイズ
+      desc:
+        ja: キャラクター歩行グラフィックの横サイズ
       type: number
       default: 48
     - param: characterHeight
       text:
         ja: キャラグラの縦サイズ
+      desc:
+        ja: キャラクター歩行グラフィックの縦サイズ
       type: number
       default: 48
     - param: characterDirectionToLeft
       text:
         ja: キャラグラ左向き
+      desc:
+        ja: キャラクターグラフィックを左向きで表示するかどうか
       type: boolean
       default: true
     - param: inheritMenuBackground
@@ -58,6 +67,20 @@ DarkPlasma_Formation:
         ja: メニュー系の画面から遷移した場合に背景を引き継ぐかどうか
       type: boolean
       default: true
+    - param: cancelButtonLeftMergin
+      text:
+        ja: キャンセル左スペース
+      desc:
+        ja: キャンセルボタンとヘルプウィンドウの間の幅
+      type: number
+      default: 4
+    - param: cancelButtonRightMergin
+      text:
+        ja: キャンセル右スペース
+      desc:
+        ja: キャンセルボタンと画面端の間の幅
+      type: number
+      default: 4
   commands:
     - command: openFormationScene
       text:
