@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.1.3
+// DarkPlasma_FormationInBattle 1.1.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/30 1.1.4 DarkPlasma_Formation 1.2.0に対応
  * 2020/12/16 1.1.3 DarkPlasma_Formation 1.0.5に対応
  * 2020/12/14 1.1.2 強制入れ替え時にエラーで落ちる不具合を修正
  * 2020/10/19 1.1.1 戦闘開始時の不要な処理を削除
@@ -47,7 +48,7 @@
  * @default true
  *
  * @help
- * version: 1.1.3
+ * version: 1.1.4
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -227,6 +228,15 @@
     return this._formationHelpWindow;
   };
 
+  Scene_Battle.prototype.cancelButtonWidth = function () {
+    /**
+     * 戦闘シーンではウィンドウ生成後にキャンセルボタンが生成されるため、
+     * サイズ計算のために一時的にインスタンスを作る
+     */
+    const cancelButton = new Sprite_Button('cancel');
+    return cancelButton.width;
+  };
+
   Scene_Battle.prototype.createFormationStatusWindow = function () {
     this._formationStatusWindow = new Window_FormationStatus(this.formationStatusWindowRect());
     this.addWindow(this._formationStatusWindow);
@@ -303,6 +313,18 @@
     return null;
   };
 
+  Scene_Battle.prototype.moveCancelButtonToEdge = function () {
+    if (this._cancelButton) {
+      this._cancelButton.y = Math.floor((this.buttonAreaHeight() - 48) / 2);
+    }
+  };
+
+  Scene_Battle.prototype.returnCancelButton = function () {
+    if (this._cancelButton) {
+      this._cancelButton.y = this.buttonY();
+    }
+  };
+
   Scene_Battle.prototype.showFormationWindows = function () {
     this._formationHelpWindow.show();
     this._formationStatusWindow.show();
@@ -311,6 +333,7 @@
     this._formationSelectWindow.show();
     this._formationSelectWindow.select(0);
     this._formationSelectWindow.activate();
+    this.moveCancelButtonToEdge();
   };
 
   Scene_Battle.prototype.hideFormationWindows = function () {
@@ -342,6 +365,17 @@
      * コマンド入力情報初期化
      */
     $gameParty.makeActions();
+  };
+
+  const _Scene_Battle_updateCancelButton = Scene_Battle.prototype.updateCancelButton;
+  Scene_Battle.prototype.updateCancelButton = function () {
+    _Scene_Battle_updateCancelButton.call(this);
+    if (this._cancelButton && !this._cancelButton.visible) {
+      /**
+       * 非表示になってから元の位置に戻す
+       */
+      this.returnCancelButton();
+    }
   };
 
   Window_PartyCommand.prototype.addCommandAt = function (index, name, symbol, enabled = true, ext = null) {

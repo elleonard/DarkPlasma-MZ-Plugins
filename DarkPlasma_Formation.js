@@ -1,10 +1,11 @@
-// DarkPlasma_Formation 1.1.0
+// DarkPlasma_Formation 1.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2020/12/30 1.1.0 タッチUIで戻るボタン表示を追加
+ * 2020/12/30 1.2.0 戻るボタン左右のスペース設定を追加
+ *            1.1.0 タッチUIで戻るボタン表示を追加
  *            1.0.7 webブラウザ向けにデプロイした場合に正常に動作しない不具合を修正
  * 2020/12/17 1.0.6 戦闘メンバーの最大数が奇数の場合に上下キーを押した際の挙動を修正
  * 2020/12/15 1.0.5 戦闘メンバーの最大数に応じてウィンドウの表示サイズを変更する
@@ -24,16 +25,19 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param characterWidth
+ * @desc キャラクター歩行グラフィックの横サイズ
  * @text キャラグラの横サイズ
  * @type number
  * @default 48
  *
  * @param characterHeight
+ * @desc キャラクター歩行グラフィックの縦サイズ
  * @text キャラグラの縦サイズ
  * @type number
  * @default 48
  *
  * @param characterDirectionToLeft
+ * @desc キャラクターグラフィックを左向きで表示するかどうか
  * @text キャラグラ左向き
  * @type boolean
  * @default true
@@ -44,11 +48,23 @@
  * @type boolean
  * @default true
  *
+ * @param cancelButtonLeftMergin
+ * @desc キャンセルボタンとヘルプウィンドウの間の幅
+ * @text キャンセル左スペース
+ * @type number
+ * @default 4
+ *
+ * @param cancelButtonRightMergin
+ * @desc キャンセルボタンと画面端の間の幅
+ * @text キャンセル右スペース
+ * @type number
+ * @default 4
+ *
  * @command openFormationScene
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -76,6 +92,8 @@
     characterHeight: Number(pluginParameters.characterHeight || 48),
     characterDirectionToLeft: String(pluginParameters.characterDirectionToLeft || true) === 'true',
     inheritMenuBackground: String(pluginParameters.inheritMenuBackground || true) === 'true',
+    cancelButtonLeftMergin: Number(pluginParameters.cancelButtonLeftMergin || 4),
+    cancelButtonRightMergin: Number(pluginParameters.cancelButtonRightMergin || 4),
   };
 
   /**
@@ -177,7 +195,12 @@
     }
 
     helpWindowRect() {
-      const width = ConfigManager.touchUI ? Graphics.boxWidth - this._cancelButton.width - 4 : Graphics.boxWidth;
+      const width = ConfigManager.touchUI
+        ? Graphics.boxWidth -
+          this.cancelButtonWidth() -
+          settings.cancelButtonRightMergin -
+          settings.cancelButtonLeftMergin
+        : Graphics.boxWidth;
       return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
     }
 
@@ -188,10 +211,14 @@
     createButtons() {
       if (ConfigManager.touchUI) {
         this._cancelButton = new Sprite_Button('cancel');
-        this._cancelButton.x = Graphics.boxWidth - this._cancelButton.width - 4;
+        this._cancelButton.x = Graphics.boxWidth - this.cancelButtonWidth() - settings.cancelButtonRightMergin;
         this._cancelButton.y = this.buttonY();
         this.addWindow(this._cancelButton);
       }
+    }
+
+    cancelButtonWidth() {
+      return this._cancelButton ? this._cancelButton.width : 0;
     }
 
     formationHelpWindow() {
