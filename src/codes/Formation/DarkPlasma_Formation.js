@@ -64,6 +64,7 @@ class Scene_Formation extends Scene_Base {
     super.create();
     this.createBackground();
     this.createWindowLayer();
+    this.createButtons();
     this.createHelpWindow();
     this.createBattleMemberWindow();
     this.createWaitingMemberWindow();
@@ -99,11 +100,21 @@ class Scene_Formation extends Scene_Base {
   }
 
   helpWindowRect() {
-    return new Rectangle(0, 0, Graphics.boxWidth, this.calcWindowHeight(1, false));
+    const width = ConfigManager.touchUI ? Graphics.boxWidth - this._cancelButton.width - 4 : Graphics.boxWidth;
+    return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
   }
 
   helpWindowText() {
     return TextManager.formation;
+  }
+
+  createButtons() {
+    if (ConfigManager.touchUI) {
+      this._cancelButton = new Sprite_Button('cancel');
+      this._cancelButton.x = Graphics.boxWidth - this._cancelButton.width - 4;
+      this._cancelButton.y = this.buttonY();
+      this.addWindow(this._cancelButton);
+    }
   }
 
   formationHelpWindow() {
