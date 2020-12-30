@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.0.6
+// DarkPlasma_Formation 1.0.7
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/30 1.0.7 webブラウザ向けにデプロイした場合に正常に動作しない不具合を修正
  * 2020/12/17 1.0.6 戦闘メンバーの最大数が奇数の場合に上下キーを押した際の挙動を修正
  * 2020/12/15 1.0.5 戦闘メンバーの最大数に応じてウィンドウの表示サイズを変更する
  *            1.0.4 キャラグラが正面向きの時、正しく表示されない不具合を修正
@@ -46,7 +47,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.0.6
+ * version: 1.0.7
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -163,9 +164,9 @@
       }
     }
 
-    setBackgroundOpacity = function (opacity) {
+    setBackgroundOpacity(opacity) {
       this._backgroundSprite.opacity = opacity;
-    };
+    }
 
     createHelpWindow() {
       this._helpWindow = new Window_Help(this.helpWindowRect());
