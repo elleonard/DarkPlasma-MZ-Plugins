@@ -394,7 +394,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
   }
 
   /**
-   * @param {WIndow_EnemyBookStatus} statusWindow ステータスウィンドウ
+   * @param {Window_EnemyBookStatus} statusWindow ステータスウィンドウ
    */
   setStatusWindow(statusWindow) {
     this._statusWindow = statusWindow;
@@ -609,13 +609,12 @@ class Window_EnemyBookStatus extends Window_Base {
       );
     }
 
-    const descX = settings.devideResistAndNoEffect ? this.contentsWidth() / 2 + this.itemPadding() / 2 : 0;
     const descWidth = 480;
     if (enemy.meta.desc1) {
-      this.drawTextEx(enemy.meta.desc1, descX, this.itemPadding() + lineHeight * 14, descWidth);
+      this.drawTextEx(enemy.meta.desc1, this.descriptionX(), this.descriptionY(), descWidth);
     }
     if (enemy.meta.desc2) {
-      this.drawTextEx(enemy.meta.desc2, descX, this.itemPadding() + lineHeight * 15, descWidth);
+      this.drawTextEx(enemy.meta.desc2, this.descriptionX(), this.descriptionY() + lineHeight, descWidth);
     }
   }
 
@@ -654,21 +653,31 @@ class Window_EnemyBookStatus extends Window_Base {
 
     const descWidth = 480;
     if (enemy.meta.desc1) {
-      this.drawTextEx(
-        enemy.meta.desc1,
-        this.contentsWidth() - descWidth,
-        this.itemPadding() + lineHeight * 10,
-        descWidth
-      );
+      this.drawTextEx(enemy.meta.desc1, this.descriptionX(), this.descriptionY(), descWidth);
     }
     if (enemy.meta.desc2) {
-      this.drawTextEx(
-        enemy.meta.desc2,
-        this.contentsWidth() - descWidth,
-        this.itemPadding() + lineHeight * 11,
-        descWidth
-      );
+      this.drawTextEx(enemy.meta.desc2, this.descriptionX(), this.descriptionY() + lineHeight, descWidth);
     }
+  }
+
+  /**
+   * @return {number}
+   */
+  descriptionX() {
+    return settings.verticalLayout
+      ? settings.devideResistAndNoEffect
+        ? this.contentsWidth() / 2 + this.itemPadding() / 2
+        : 0
+      : this.contentsWidth() - descWidth;
+  }
+
+  /**
+   * @return {number}
+   */
+  descriptionY() {
+    return settings.verticalLayout
+      ? this.itemPadding() + this.lineHeight() * 14
+      : this.itemPadding() + this.lineHeight() * 10;
   }
 
   drawPage() {
@@ -892,7 +901,7 @@ class Window_EnemyBookStatus extends Window_Base {
         }).map((statusName) => settings.debuffStatusIcons[statusName].small)
       );
     this.changeTextColor(this.systemColor());
-    this.drawText(settings.weakLabel, x, y, width);
+    this.drawText(settings.weakElementAndStateLabel, x, y, width);
 
     const iconBaseY = y + this.lineHeight();
     targetIcons.forEach((icon, index) => {
@@ -963,7 +972,7 @@ class Window_EnemyBookStatus extends Window_Base {
         }).map((statusName) => settings.debuffStatusIcons[statusName].small)
       );
     this.changeTextColor(this.systemColor());
-    this.drawText(settings.resistLabel, x, y, width);
+    this.drawText(settings.resistElementAndStateLabel, x, y, width);
 
     const iconBaseY = y + this.lineHeight();
     targetIcons.forEach((icon, index) => {
@@ -997,7 +1006,7 @@ class Window_EnemyBookStatus extends Window_Base {
         }).map((statusName) => settings.debuffStatusIcons[statusName].large)
       );
     this.changeTextColor(this.systemColor());
-    this.drawText(settings.noEffectLabel, x, y, width);
+    this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
 
     const iconBaseY = y + this.lineHeight();
     targetIcons.forEach((icon, index) => {
@@ -1026,6 +1035,8 @@ class Window_EnemyBookStatus extends Window_Base {
     this.refresh();
   }
 }
+
+window[Window_EnemyBookStatus.name] = Window_EnemyBookStatus;
 
 const _Game_System_initialize = Game_System.prototype.initialize;
 Game_System.prototype.initialize = function () {
