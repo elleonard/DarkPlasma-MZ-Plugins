@@ -51,7 +51,13 @@ Game_Party.prototype.forwardMembersAreAllDead = function () {
  * 前衛後衛両方とも全滅しているかどうか
  */
 Game_Party.prototype.isAllDead = function () {
-  return this.allMembers().every((member) => !member.isAlive());
+  return this.isForceFormationEnabled()
+    ? this.allMembers().every((member) => !member.isAlive())
+    : this.forwardMembersAreAllDead();
+};
+
+Game_Party.prototype.isForceFormationEnabled = function () {
+  return settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId);
 };
 
 /**
