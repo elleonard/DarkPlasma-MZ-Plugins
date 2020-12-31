@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.1.1
+// DarkPlasma_ForceFormation 2.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2020/12/31 2.2.0 強制入れ替え無効スイッチ設定を追加
  * 2020/11/23 2.1.1 リファクタ
  * 2020/10/13 2.1.0 戦闘中の入れ替えクールダウン用のコード追加
  * 2020/09/08 2.0.0 パラメータ名を変更
@@ -36,8 +37,14 @@
  * @type boolean
  * @default false
  *
+ * @param disableSwitchId
+ * @desc ONにすると強制入れ替えを無効にするスイッチ
+ * @text 無効スイッチ
+ * @type switch
+ * @default 0
+ *
  * @help
- * version: 2.1.1
+ * version: 2.2.0
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  */
 
@@ -56,6 +63,7 @@
     ),
     forceFormationCommonEvent: Number(pluginParameters.forceFormationCommonEvent || 0),
     forceTurnChange: String(pluginParameters.forceTurnChange || false) === 'true',
+    disableSwitchId: Number(pluginParameters.disableSwitchId || 0),
   };
 
   // Window_BattleLog
@@ -109,7 +117,13 @@
    * 前衛後衛両方とも全滅しているかどうか
    */
   Game_Party.prototype.isAllDead = function () {
-    return this.allMembers().every((member) => !member.isAlive());
+    return this.isForceFormationEnabled()
+      ? this.allMembers().every((member) => !member.isAlive())
+      : this.forwardMembersAreAllDead();
+  };
+
+  Game_Party.prototype.isForceFormationEnabled = function () {
+    return settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId);
   };
 
   /**
