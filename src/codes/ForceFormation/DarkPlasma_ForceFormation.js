@@ -44,15 +44,22 @@ Game_Party.prototype.onBattleStart = function (advantageous) {
  * 前衛が全滅しているかどうか
  */
 Game_Party.prototype.forwardMembersAreAllDead = function () {
-  return this.battleMembers().every((member) => !member.isAlive());
+  return this.battleMembers().every((member) => member.isDead());
 };
 
 /**
- * 前衛後衛両方とも全滅しているかどうか
+ * 全滅判定
+ * - 戦闘外は元々の処理
+ * - 強制入れ替えが有効の場合は、前衛後衛両方が全滅している
+ * - 戦闘中かつ強制入れ替えが無効の場合は、前衛のみ全滅している
  */
+const _Game_Party_isAllDead = Game_Party.prototype.isAllDead;
 Game_Party.prototype.isAllDead = function () {
+  if (!this.inBattle()) {
+    return _Game_Party_isAllDead.call(this);
+  }
   return this.isForceFormationEnabled()
-    ? this.allMembers().every((member) => !member.isAlive())
+    ? this.allMembers().every((actor) => actor.isDead())
     : this.forwardMembersAreAllDead();
 };
 
