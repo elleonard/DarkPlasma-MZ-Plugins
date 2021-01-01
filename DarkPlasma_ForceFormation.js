@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.2.0
+// DarkPlasma_ForceFormation 2.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/01/01 2.2.1 戦闘外の全滅判定に影響していた不具合を修正
  * 2020/12/31 2.2.0 強制入れ替え無効スイッチ設定を追加
  * 2020/11/23 2.1.1 リファクタ
  * 2020/10/13 2.1.0 戦闘中の入れ替えクールダウン用のコード追加
@@ -44,7 +45,7 @@
  * @default 0
  *
  * @help
- * version: 2.2.0
+ * version: 2.2.1
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  */
 
@@ -110,15 +111,22 @@
    * 前衛が全滅しているかどうか
    */
   Game_Party.prototype.forwardMembersAreAllDead = function () {
-    return this.battleMembers().every((member) => !member.isAlive());
+    return this.battleMembers().every((member) => member.isDead());
   };
 
   /**
-   * 前衛後衛両方とも全滅しているかどうか
+   * 全滅判定
+   * - 戦闘外は元々の処理
+   * - 強制入れ替えが有効の場合は、前衛後衛両方が全滅している
+   * - 戦闘中かつ強制入れ替えが無効の場合は、前衛のみ全滅している
    */
+  const _Game_Party_isAllDead = Game_Party.prototype.isAllDead;
   Game_Party.prototype.isAllDead = function () {
+    if (!this.inBattle()) {
+      return _Game_Party_isAllDead.call(this);
+    }
     return this.isForceFormationEnabled()
-      ? this.allMembers().every((member) => !member.isAlive())
+      ? this.allMembers().every((actor) => actor.isDead())
       : this.forwardMembersAreAllDead();
   };
 
