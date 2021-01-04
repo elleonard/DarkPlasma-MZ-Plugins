@@ -1,9 +1,11 @@
 DarkPlasma_EnemyBook:
   name: DarkPlasma_EnemyBook
-  version: '2.0.2'
   year: 2020
   license: MIT
   histories:
+    - date: '2021/01/04'
+      version: '2.0.5'
+      description: '登録不可エネミーがコンプリート率計算に含まれる不具合を修正'
     - date: '2020/12/31'
       version: '2.0.4'
       description: 'レイアウト調整用インターフェース公開 ラベルが正しく表示されない不具合を修正'

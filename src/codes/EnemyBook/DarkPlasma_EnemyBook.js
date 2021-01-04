@@ -11,6 +11,23 @@ const PLUGIN_COMMAND_NAME = {
   CLEAR: 'clear enemyBook',
 };
 
+/**
+ * 図鑑登録可能かどうか
+ * @param {MZ.Enemy} enemy エネミーデータ
+ * @return {boolean}
+ */
+function isRegisterableEnemy(enemy) {
+  return enemy && enemy.name && enemy.meta.book !== 'no';
+}
+
+/**
+ * 図鑑登録可能なエネミー一覧
+ * @return {MZ.Enemy[]}
+ */
+function registerableEnemies() {
+  return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy));
+}
+
 PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
   SceneManager.push(Scene_EnemyBook);
 });
@@ -46,7 +63,7 @@ class EnemyBook {
   static initialBook() {
     return new EnemyBook(
       $dataEnemies.map((enemy) => {
-        return enemy && enemy.meta.book !== 'no'
+        return isRegisterableEnemy(enemy)
           ? new EnemyBookPage(
               false,
               enemy.dropItems.map((_) => false)
@@ -61,7 +78,7 @@ class EnemyBook {
    * @return {number}
    */
   percentRegisteredEnemy() {
-    const registerableEnemyCount = $dataEnemies.filter((enemy) => enemy && enemy.meta.book !== 'no').length;
+    const registerableEnemyCount = registerableEnemies().length;
     if (registerableEnemyCount === 0) {
       return 0;
     }
@@ -74,9 +91,10 @@ class EnemyBook {
    * @return {number}
    */
   percentRegisteredDropItem() {
-    const registerableDropItemCount = $dataEnemies
-      .filter((enemy) => enemy && enemy.meta.book !== 'no')
-      .reduce((previous, current) => previous + current.dropItems.length, 0);
+    const registerableDropItemCount = registerableEnemies().reduce(
+      (previous, current) => previous + current.dropItems.length,
+      0
+    );
     if (registerableDropItemCount === 0) {
       return 0;
     }
@@ -146,12 +164,10 @@ class EnemyBook {
    * 図鑑を完成させる
    */
   complete() {
-    $dataEnemies
-      .filter((enemy) => enemy && enemy.meta.book !== 'no')
-      .forEach((enemy) => {
-        this.register(enemy.id);
-        enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
-      });
+    registerableEnemies().forEach((enemy) => {
+      this.register(enemy.id);
+      enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
+    });
   }
 
   /**
@@ -417,9 +433,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
     if (this._list) {
       return;
     }
-    this._list = $dataEnemies.filter((enemy) => {
-      return enemy && enemy.name && enemy.meta.book !== 'no';
-    });
+    this._list = registerableEnemies();
   }
 
   refresh() {
