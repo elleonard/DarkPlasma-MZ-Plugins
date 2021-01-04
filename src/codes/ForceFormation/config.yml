@@ -4,6 +4,9 @@ DarkPlasma_ForceFormation:
   license: MIT
   histories:
     - date: '2021/01/04'
+      version: '2.2.4'
+      description: '正しく動作しない不具合を修正'
+    - date: '2021/01/04'
       version: '2.2.3'
       description: 'null合体演算子が動作しないブラウザに対応'
     - date: '2021/01/04'
