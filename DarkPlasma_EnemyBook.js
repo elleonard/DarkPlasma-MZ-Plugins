@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 2.0.5
+// DarkPlasma_EnemyBook 2.0.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/01/04 2.0.5 登録不可エネミーがコンプリート率計算に含まれる不具合を修正
+ * 2021/01/04 2.0.6 セーブデータ作成後のゲームアップデートによるエネミーの増減に対応
+ *            2.0.5 登録不可エネミーがコンプリート率計算に含まれる不具合を修正
  * 2020/12/31 2.0.4 レイアウト調整用インターフェース公開 ラベルが正しく表示されない不具合を修正
  * 2020/12/14 2.0.3 敵キャラの色調変更が適用されない不具合を修正
  * 2020/10/10 2.0.2 リファクタ
@@ -181,7 +182,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.0.5
+ * version: 2.0.6
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -435,7 +436,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.0.5
+ * version: 2.0.6
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -715,6 +716,28 @@
             : null;
         })
       );
+    }
+
+    /**
+     * セーブデータからロードした際、ゲームアップデートによって
+     * エネミーが増減していた場合に図鑑を合わせる
+     * （減った場合、溢れたデータは捨てられることに注意）
+     */
+    flexPage() {
+      if (this._pages.length < $dataEnemies.length) {
+        this._pages = this._pages.concat(
+          $dataEnemies.slice(this._pages.length).map((enemy) => {
+            return isRegisterableEnemy(enemy)
+              ? new EnemyBookPage(
+                  false,
+                  enemy.dropItems.map((_) => false)
+                )
+              : null;
+          })
+        );
+      } else if (this._pages.length > $dataEnemies.length) {
+        this._pages = this._pages.slice(0, $dataEnemies.length - 1);
+      }
     }
 
     /**
@@ -1715,6 +1738,9 @@
     _Game_System_onAfterLoad.call(this);
     if (this._enemyBook) {
       enemyBook = this._enemyBook;
+      if ($gameSystem.versionId() !== $dataSystem.versionId) {
+        enemyBook.flexPage();
+      }
     } else {
       enemyBook = EnemyBook.initialBook();
     }
