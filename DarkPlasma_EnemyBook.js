@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.4
+// DarkPlasma_EnemyBook 2.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/01/04 2.0.5 登録不可エネミーがコンプリート率計算に含まれる不具合を修正
  * 2020/12/31 2.0.4 レイアウト調整用インターフェース公開 ラベルが正しく表示されない不具合を修正
  * 2020/12/14 2.0.3 敵キャラの色調変更が適用されない不具合を修正
  * 2020/10/10 2.0.2 リファクタ
@@ -180,7 +181,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.0.4
+ * version: 2.0.5
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -434,7 +435,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.0.4
+ * version: 2.0.5
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -654,6 +655,23 @@
     CLEAR: 'clear enemyBook',
   };
 
+  /**
+   * 図鑑登録可能かどうか
+   * @param {MZ.Enemy} enemy エネミーデータ
+   * @return {boolean}
+   */
+  function isRegisterableEnemy(enemy) {
+    return enemy && enemy.name && enemy.meta.book !== 'no';
+  }
+
+  /**
+   * 図鑑登録可能なエネミー一覧
+   * @return {MZ.Enemy[]}
+   */
+  function registerableEnemies() {
+    return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy));
+  }
+
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
     SceneManager.push(Scene_EnemyBook);
   });
@@ -689,7 +707,7 @@
     static initialBook() {
       return new EnemyBook(
         $dataEnemies.map((enemy) => {
-          return enemy && enemy.meta.book !== 'no'
+          return isRegisterableEnemy(enemy)
             ? new EnemyBookPage(
                 false,
                 enemy.dropItems.map((_) => false)
@@ -704,7 +722,7 @@
      * @return {number}
      */
     percentRegisteredEnemy() {
-      const registerableEnemyCount = $dataEnemies.filter((enemy) => enemy && enemy.meta.book !== 'no').length;
+      const registerableEnemyCount = registerableEnemies().length;
       if (registerableEnemyCount === 0) {
         return 0;
       }
@@ -717,9 +735,10 @@
      * @return {number}
      */
     percentRegisteredDropItem() {
-      const registerableDropItemCount = $dataEnemies
-        .filter((enemy) => enemy && enemy.meta.book !== 'no')
-        .reduce((previous, current) => previous + current.dropItems.length, 0);
+      const registerableDropItemCount = registerableEnemies().reduce(
+        (previous, current) => previous + current.dropItems.length,
+        0
+      );
       if (registerableDropItemCount === 0) {
         return 0;
       }
@@ -789,12 +808,10 @@
      * 図鑑を完成させる
      */
     complete() {
-      $dataEnemies
-        .filter((enemy) => enemy && enemy.meta.book !== 'no')
-        .forEach((enemy) => {
-          this.register(enemy.id);
-          enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
-        });
+      registerableEnemies().forEach((enemy) => {
+        this.register(enemy.id);
+        enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
+      });
     }
 
     /**
@@ -1060,9 +1077,7 @@
       if (this._list) {
         return;
       }
-      this._list = $dataEnemies.filter((enemy) => {
-        return enemy && enemy.name && enemy.meta.book !== 'no';
-      });
+      this._list = registerableEnemies();
     }
 
     refresh() {
