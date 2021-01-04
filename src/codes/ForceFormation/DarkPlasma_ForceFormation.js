@@ -18,7 +18,7 @@ BattleManager.checkBattleEnd = function () {
   }
   if (this._phase) {
     // 前衛が全滅していたら後衛と交代して戦闘続行
-    if ($gameParty.forwardMembersAreAllDead()) {
+    if ($gameParty.forwardMembersAreAllDead() && this.isForceFormationEnabled()) {
       $gameParty.forceFormation();
       this._logWindow.displayForceChangedFormation();
       if (settings.forceFormationCommonEvent > 0) {
