@@ -74,6 +74,28 @@ class EnemyBook {
   }
 
   /**
+   * セーブデータからロードした際、ゲームアップデートによって
+   * エネミーが増減していた場合に図鑑を合わせる
+   * （減った場合、溢れたデータは捨てられることに注意）
+   */
+  flexPage() {
+    if (this._pages.length < $dataEnemies.length) {
+      this._pages = this._pages.concat(
+        $dataEnemies.slice(this._pages.length).map((enemy) => {
+          return isRegisterableEnemy(enemy)
+            ? new EnemyBookPage(
+                false,
+                enemy.dropItems.map((_) => false)
+              )
+            : null;
+        })
+      );
+    } else if (this._pages.length > $dataEnemies.length) {
+      this._pages = this._pages.slice(0, $dataEnemies.length - 1);
+    }
+  }
+
+  /**
    * エネミー登録率を百分率で返す
    * @return {number}
    */
@@ -1069,6 +1091,9 @@ Game_System.prototype.onAfterLoad = function () {
   _Game_System_onAfterLoad.call(this);
   if (this._enemyBook) {
     enemyBook = this._enemyBook;
+    if ($gameSystem.versionId() !== $dataSystem.versionId) {
+      enemyBook.flexPage();
+    }
   } else {
     enemyBook = EnemyBook.initialBook();
   }

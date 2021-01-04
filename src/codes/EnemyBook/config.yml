@@ -4,6 +4,9 @@ DarkPlasma_EnemyBook:
   license: MIT
   histories:
     - date: '2021/01/04'
+      version: '2.0.6'
+      description: 'セーブデータ作成後のゲームアップデートによるエネミーの増減に対応'
+    - date: '2021/01/04'
       version: '2.0.5'
       description: '登録不可エネミーがコンプリート率計算に含まれる不具合を修正'
     - date: '2020/12/31'
