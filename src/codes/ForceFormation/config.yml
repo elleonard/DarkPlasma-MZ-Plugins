@@ -4,6 +4,9 @@ DarkPlasma_ForceFormation:
   license: MIT
   histories:
     - date: '2021/01/04'
+      version: '2.2.3'
+      description: 'null合体演算子が動作しないブラウザに対応'
+    - date: '2021/01/04'
       version: '2.2.2'
       description: '全滅判定を飛ばした場合にも入れ替え無効スイッチを判定するよう修正'
     - date: '2021/01/01'

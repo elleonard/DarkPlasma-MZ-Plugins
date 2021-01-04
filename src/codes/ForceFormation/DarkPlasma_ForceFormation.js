@@ -76,7 +76,7 @@ Game_Party.prototype.forceFormation = function () {
     return !member.isBattleMember() && member.isAlive() ? result.concat([this.allMembers().indexOf(member)]) : result;
   }, []);
   this.battleMembers().forEach((deadMember, index) => {
-    const swapTargetIndex = aliveMemberIndexes[index] ?? null;
+    const swapTargetIndex = aliveMemberIndexes[index] ? aliveMemberIndexes[index] : null;
     if (swapTargetIndex) {
       this.swapOrder(deadMember.index(), swapTargetIndex);
     }
