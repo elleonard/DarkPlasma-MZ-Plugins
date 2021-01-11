@@ -3,6 +3,9 @@ DarkPlasma_TestBase:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/01/11'
+      version: '2.4.0'
+      description: 'テストケースプラグインの手動読み込みを許可する'
     - date: '2020/10/30'
       version: '2.3.0'
       description: 'mustBeTrueを追加'

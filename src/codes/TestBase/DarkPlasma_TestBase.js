@@ -32,6 +32,7 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.DO_TEST, function 
 PluginManager.setupTestPlugins = function (plugins) {
   if (Utils.isNwjs()) {
     const fs = require('fs');
+    const loadedPluginNames = plugins.filter((plugin) => plugin.status).map((plugin) => plugin.name);
     plugins
       .filter((plugin) => plugin.status)
       .map((plugin) => {
@@ -39,7 +40,7 @@ PluginManager.setupTestPlugins = function (plugins) {
           name: `${plugin.name}_Test`,
         };
       })
-      .filter((plugin) => fs.existsSync(this.makeUrl(plugin.name)))
+      .filter((plugin) => !loadedPluginNames.includes(plugin.name) && fs.existsSync(this.makeUrl(plugin.name)))
       .forEach((plugin) => {
         this.setParameters(plugin.name, {});
         this.loadTestScript(plugin.name);
