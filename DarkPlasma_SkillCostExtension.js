@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.2.1
+// DarkPlasma_SkillCostExtension 1.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/01/11 1.3.0 HP消費率設定に対応
  * 2020/10/26 1.2.1 特徴のMP消費率が正しく反映されない不具合を修正
  * 2020/10/06 1.2.0 変数をコストに設定する機能を追加
  * 2020/10/03 1.1.1 コメント修正, ヘルプにコスト表示を追記
@@ -29,7 +30,7 @@
  * @default true
  *
  * @help
- * version: 1.2.1
+ * version: 1.3.0
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
  *
  * <SkillCost:
@@ -279,6 +280,11 @@
       .forEach((skill) => ($dataSkills[skill.id].additionalCost = {}));
   };
 
+  /**
+   * スキル使用時の消費HP量を返す
+   * @param {MZ.Skill} skill スキルデータ
+   * @return {number}
+   */
   Game_BattlerBase.prototype.skillHpCost = function (skill) {
     let cost = 0;
     if (skill.additionalCost.hp) {
@@ -287,7 +293,15 @@
     if (skill.additionalCost.hpRate) {
       cost += (skill.additionalCost.hpRate * this.mhp) / 100;
     }
-    return Math.floor(cost);
+    return Math.floor(cost * this.hpCostRate());
+  };
+
+  /**
+   * HP消費率を返す
+   * @return {number}
+   */
+  Game_BattlerBase.prototype.hpCostRate = function () {
+    return 1;
   };
 
   const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;

@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 2.3.0
+// DarkPlasma_TestBase 2.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/01/11 2.4.0 テストケースプラグインの手動読み込みを許可する
  * 2020/10/30 2.3.0 mustBeTrueを追加
  * 2020/10/26 2.2.0 0より大の整数値,要素を持つ配列のためのspecを作りやすくする機能追加
  * 2020/10/24 2.1.0 プラグインコマンド起因でテストする機能追加
@@ -30,7 +31,7 @@
  * @desc プラグインコマンド起因のテストを実行します。
  *
  * @help
- * version: 2.3.0
+ * version: 2.4.0
  * 本プラグインはプラグインの半自動テストをサポートします。
  *
  * Scene_Boot.prototype.defineTestCaseをフックしてテストケースを定義してください。
@@ -80,6 +81,7 @@
   PluginManager.setupTestPlugins = function (plugins) {
     if (Utils.isNwjs()) {
       const fs = require('fs');
+      const loadedPluginNames = plugins.filter((plugin) => plugin.status).map((plugin) => plugin.name);
       plugins
         .filter((plugin) => plugin.status)
         .map((plugin) => {
@@ -87,7 +89,7 @@
             name: `${plugin.name}_Test`,
           };
         })
-        .filter((plugin) => fs.existsSync(this.makeUrl(plugin.name)))
+        .filter((plugin) => !loadedPluginNames.includes(plugin.name) && fs.existsSync(this.makeUrl(plugin.name)))
         .forEach((plugin) => {
           this.setParameters(plugin.name, {});
           this.loadTestScript(plugin.name);
