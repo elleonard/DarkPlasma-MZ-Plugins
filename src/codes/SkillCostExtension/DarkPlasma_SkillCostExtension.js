@@ -196,6 +196,11 @@ Scene_Boot.prototype.start = function () {
     .forEach((skill) => ($dataSkills[skill.id].additionalCost = {}));
 };
 
+/**
+ * スキル使用時の消費HP量を返す
+ * @param {MZ.Skill} skill スキルデータ
+ * @return {number}
+ */
 Game_BattlerBase.prototype.skillHpCost = function (skill) {
   let cost = 0;
   if (skill.additionalCost.hp) {
@@ -204,7 +209,15 @@ Game_BattlerBase.prototype.skillHpCost = function (skill) {
   if (skill.additionalCost.hpRate) {
     cost += (skill.additionalCost.hpRate * this.mhp) / 100;
   }
-  return Math.floor(cost);
+  return Math.floor(cost * this.hpCostRate());
+};
+
+/**
+ * HP消費率を返す
+ * @return {number}
+ */
+Game_BattlerBase.prototype.hpCostRate = function () {
+  return 1;
 };
 
 const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
