@@ -4,43 +4,59 @@ const { PluginParameter } = require('./generateHeader');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-function generateParameterReader(config, isTest) {
-  const parameters = config.parameters
-    ? config.parameters
-        .filter((parameter) => !parameter.dummy)
-        .map((parameter) => {
-          return {
-            name: parameter.param,
-            parser: generateParser(config, parameter),
-          };
-        })
-    : [];
+function generateParameterReader(config, isTest, testConfig) {
+  const parameters = configToParameters(config, false);
+  const testParameters = configToParameters(testConfig, true);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
     const pluginParameterPath = isTest ? '../../../common/testPluginParameters' : '../../../common/pluginParameters';
-    const code = `import { pluginParameters } from '${pluginParameterPath}';
+    const code = `import { ${isTest ? `testPluginParameters,` : ``}pluginParameters } from '${pluginParameterPath}';
     
     export const settings = {
       ${parameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
-    };`;
+    };
+    
+    ${testParametersToCode(testParameters)}
+    `;
 
     return prettier.format(isTest ? code + targetVersionCode(config) : code, options);
   });
+}
+
+function configToParameters(config, forTest) {
+  return config && config.parameters
+    ? config.parameters
+        .filter((parameter) => !parameter.dummy)
+        .map((parameter) => {
+          return {
+            name: parameter.param,
+            parser: generateParser(config, parameter, forTest),
+          };
+        })
+    : [];
+}
+
+function testParametersToCode(testParameters) {
+  return testParameters.length > 0
+    ? `export const testSettings = {
+    ${testParameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
+  };`
+    : '';
 }
 
 function targetVersionCode(config) {
   return `export const targetPluginVersion = "${config.histories[0].version}";`;
 }
 
-function generateParser(config, parameter) {
+function generateParser(config, parameter, forTest) {
   let parser = 'TODO';
   switch (parameter.type) {
     case 'string':
     case 'multiline_string':
     case 'file':
-      parser = stringParser(parameter);
+      parser = stringParser(parameter, forTest);
       break;
     case 'number':
     case 'actor':
@@ -54,44 +70,44 @@ function generateParser(config, parameter) {
     case 'switch':
     case 'variable':
     case 'common_event':
-      parser = numberParser(parameter);
+      parser = numberParser(parameter, forTest);
       break;
     case 'boolean':
-      parser = booleanParser(parameter);
+      parser = booleanParser(parameter, forTest);
       break;
     case 'select':
       if (parameter.options[0].value || Number.isFinite(parameter.options[0].value)) {
-        parser = numberParser(parameter);
+        parser = numberParser(parameter, forTest);
       } else {
-        parser = stringParser(parameter);
+        parser = stringParser(parameter, forTest);
       }
       break;
     default:
       // structure or array
       if (parameter.type.endsWith('[]')) {
-        parser = arrayParser(config, parameter);
+        parser = arrayParser(config, parameter, forTest);
         break;
       }
-      parser = structParser(config, parameter);
+      parser = structParser(config, parameter, forTest);
       break;
   }
   return parser;
 }
 
-function stringParser(parameter) {
+function stringParser(parameter, forTest) {
   const default_ = parameter.default ? (parameter.default.ja ? parameter.default.ja : parameter.default) : '';
-  return `String(${parameterSymbol(parameter)} || '${default_}')`;
+  return `String(${parameterSymbol(parameter, forTest)} || '${default_}')`;
 }
 
-function numberParser(parameter) {
-  return `Number(${parameterSymbol(parameter)} || ${parameter.default ? parameter.default : 0})`;
+function numberParser(parameter, forTest) {
+  return `Number(${parameterSymbol(parameter, forTest)} || ${parameter.default ? parameter.default : 0})`;
 }
 
-function booleanParser(parameter) {
-  return `String(${parameterSymbol(parameter)} || ${parameter.default}) === 'true'`;
+function booleanParser(parameter, forTest) {
+  return `String(${parameterSymbol(parameter, forTest)} || ${parameter.default}) === 'true'`;
 }
 
-function arrayParser(config, parameter) {
+function arrayParser(config, parameter, forTest) {
   const parameterObject = new PluginParameter(parameter);
   const subParameter = {
     type: parameterObject.baseType(),
@@ -101,12 +117,12 @@ function arrayParser(config, parameter) {
     subParameter.options = parameter.options;
   }
   const default_ = parameter.default ? parameterObject.defaultText('ja', true).replace(/\\/g, '') : '[]';
-  return `JSON.parse(${parameterSymbol(parameter)} || '${default_}').map(${subParameter.symbol} => {
-    return ${generateParser(config, subParameter)};
+  return `JSON.parse(${parameterSymbol(parameter, forTest)} || '${default_}').map(${subParameter.symbol} => {
+    return ${generateParser(config, subParameter, forTest)};
   })`;
 }
 
-function structParser(config, parameter) {
+function structParser(config, parameter, forTest) {
   const structure = config.structures[parameter.type];
   if (!structure) throw `unknown structure: ${parameter.type}`;
   const parameterObject = new PluginParameter(parameter);
@@ -117,14 +133,14 @@ function structParser(config, parameter) {
       ${structure
         .map((subParameter) => {
           subParameter.symbol = `parsed.${subParameter.param}`;
-          return `${subParameter.param}: ${generateParser(config, subParameter)}`;
+          return `${subParameter.param}: ${generateParser(config, subParameter, forTest)}`;
         })
         .join(',\n')}};
-  })(${parameterSymbol(parameter)} || '${default_}')`;
+  })(${parameterSymbol(parameter, forTest)} || '${default_}')`;
 }
 
-function parameterSymbol(parameter) {
-  return parameter.symbol ? parameter.symbol : `pluginParameters.${parameter.param}`;
+function parameterSymbol(parameter, forTest) {
+  return parameter.symbol ? parameter.symbol : `${forTest ? `testPlugin` : `plugin`}Parameters.${parameter.param}`;
 }
 
 module.exports = {

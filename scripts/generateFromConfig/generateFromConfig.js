@@ -15,7 +15,6 @@ async function generateFromConfig(file) {
     fs.writeFileSync(path.resolve(distDir, `${key}_header.js`), generateHeader(currentConfig));
     if (!key.endsWith('_Test')) {
       const parameterReader = await generateParameterReader(currentConfig);
-      const testParameterReader = await generateParameterReader(currentConfig, true);
       fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
       /**
        * テストプラグインがいる場合、パラメータをコピーする
@@ -23,6 +22,8 @@ async function generateFromConfig(file) {
       const testDir = path.resolve(file, '..', '..', '..', 'tests', `${key.slice(key.indexOf('_') + 1)}_Test`);
       const testDistDir = path.resolve(testDir, '_build');
       if (fs.existsSync(testDir)) {
+        const testConfig = loadConfig(path.resolve(testDir, 'config.yml'))[`${key}_Test`];
+        const testParameterReader = await generateParameterReader(currentConfig, true, testConfig);
         mkdirp.sync(testDistDir);
         fs.writeFileSync(path.resolve(testDistDir, `${key}_Test_parameters.js`), testParameterReader);
       }
