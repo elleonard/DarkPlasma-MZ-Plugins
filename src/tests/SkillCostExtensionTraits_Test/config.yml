@@ -1,0 +1,41 @@
+DarkPlasma_SkillCostExtensionTraits_Test:
+  name: DarkPlasma_SkillCostExtensionTraits_Test
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/01/11'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'DarkPlasma_SkillCostExtensionのテストプラグイン'
+  parameters:
+    - param: hpCostRateZero
+      text:
+        ja: HP消費率0
+      desc:
+        ja: HP消費率0の防具
+      type: armor
+      default: 0
+    - param: hpCostRateThree
+      text:
+        ja: HP消費率3
+      desc:
+        ja: HP消費率3の防具
+      type: armor
+      default: 0
+    - param: hpCostRateHalf
+      text:
+        ja: HP消費率0.5
+      desc:
+        ja: HP消費率0.5の防具
+      type: armor
+      default: 0
+  commands:
+    - command: HP消費率テスト
+  structures:
+  help:
+    ja: |
+      DarkPlasma_SkillCostExtensionのテストプラグイン

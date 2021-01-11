@@ -1,0 +1,29 @@
+DarkPlasma_SkillCostExtensionTraits:
+  name: DarkPlasma_SkillCostExtensionTraits
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/01/11'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルコスト拡張プラグインに関する特徴設定'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: DarkPlasma_SkillCostExtension
+    orderAfter: DarkPlasma_SkillCostExtension
+    orderBefore:
+  help:
+    ja: |
+      スキルコスト拡張プラグインに関する特徴設定を追加します。
+
+      アクター、職業、装備のメモ欄に下記の記法で設定を追加します。
+
+      <hpCostRate:n>
+       HP消費率
+       スキルで消費するHP量に割合をかけます。デフォルトはn=1です。
