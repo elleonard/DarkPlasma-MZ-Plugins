@@ -18,6 +18,7 @@ async function generateConfig(destDir) {
       {
         pluginName: `DarkPlasma_${path.basename(destDir)}`,
         license: /excludes/.test(destDir) ? 'No License' : 'MIT',
+        year: new Date().getFullYear(),
       },
       {},
       (err, str) => {
