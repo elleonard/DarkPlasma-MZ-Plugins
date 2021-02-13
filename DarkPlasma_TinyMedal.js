@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.1.2
+// DarkPlasma_TinyMedal 2.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/02/13 2.2.0 報酬メッセージ複数行対応
  * 2020/10/10 2.1.2 リファクタ
  * 2020/09/29 2.1.1 プラグインコマンドに説明を追加
  * 2020/09/18 2.1.0 入手順を必要メダルの少ない順に変更
@@ -72,7 +73,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 2.1.2
+ * version: 2.2.0
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  */
 /*~struct~RewardItems:
@@ -118,7 +119,7 @@
  * @param message
  * @desc 報酬をもらった際のメッセージ
  * @text 報酬メッセージ
- * @type string
+ * @type multiline_string
  * @default ${itemName} を手に入れた！
  *
  * @param faceFile
