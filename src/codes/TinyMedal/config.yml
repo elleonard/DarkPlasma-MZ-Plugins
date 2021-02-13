@@ -4,6 +4,9 @@ DarkPlasma_TinyMedal:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/02/13'
+      version: '2.2.0'
+      description: '報酬メッセージ複数行対応'
     - date: '2020/10/10'
       version: '2.1.2'
       description: 'リファクタ'
@@ -144,7 +147,7 @@ DarkPlasma_TinyMedal:
           ja: 報酬をもらった際のメッセージ
         text:
           ja: 報酬メッセージ
-        type: string
+        type: multiline_string
         default: ${itemName} を手に入れた！
       - param: faceFile
         desc:
