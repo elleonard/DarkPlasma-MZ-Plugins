@@ -2,8 +2,6 @@
 // rpg_windows.js v1.3.4
 //=============================================================================
 
-import { Rectangle } from 'pixi.js';
-
 //-----------------------------------------------------------------------------
 /**
  * The superclass of all windows within the game.
@@ -170,14 +168,12 @@ declare class Window_Selectable extends Window_Base {
   public _index: number;
   public _cursorFixed: boolean;
   public _cursorAll: boolean;
-  public _stayCount: number;
   public _helpWindow: Window_Help | null;
   public _handlers: { [symbol: string]: () => void };
-  public _touching: boolean;
-  public _scrollX: number;
-  public _scrollY: number;
+  public _doubleTouch: boolean;
+  public _canRepeat: boolean;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle): void;
 
   public index(): number;
   public cursorFixed(): boolean;
@@ -186,15 +182,20 @@ declare class Window_Selectable extends Window_Base {
   public setCursorAll(cursorAll: boolean): void;
   public maxCols(): number;
   public maxItems(): number;
-  public spacing(): number;
+  public colSpacing(): number;
+  public rowSpacing(): number;
   public itemWidth(): number;
   public itemHeight(): number;
+  public contentsHeight(): number;
   public maxRows(): number;
+  public overallHeight(): number;
 
   public activate(): void;
   public deactivate(): void;
 
   public select(index: number): void;
+  public forceSelect(index: number): void;
+  public smoothSelect(index: number): void;
   public deselect(): void;
   public reselect(): void;
 
@@ -202,16 +203,15 @@ declare class Window_Selectable extends Window_Base {
   public topRow(): number;
   public maxTopRow(): number;
   public setTopRow(row: number): void;
-  public resetScroll(): void;
   public maxPageRows(): number;
   public maxPageItems(): number;
+  public maxVisibleItems(): number;
   public isHorizontal(): boolean;
-  public bottomRow(): number;
-  public setBottomRow(row: number): void;
   public topIndex(): number;
 
   public itemRect(index: number): Rectangle;
-  public itemRectForText(index: number): Rectangle;
+  public itemRectWithPadding(index: number): Rectangle;
+  public itemLineRect(index: number): Rectangle;
 
   public setHelpWindow(helpWindow: Window_Help | null): void;
   public showHelpWindow(): void;
@@ -230,28 +230,25 @@ declare class Window_Selectable extends Window_Base {
   public cursorLeft(wrap: boolean): void;
   public cursorPagedown(): void;
   public cursorPageup(): void;
-  public scrollDown(): void;
-  public scrollUp(): void;
+  public isScrollEnabled(): boolean;
 
   public update(): void;
-  public updateArrows(): void;
   public processCursorMove(): void;
   public processHandling(): void;
-  public processWheel(): void;
 
   public processTouch(): void;
-  public isTouchedInsideFrame(): boolean;
-  public onTouch(triggered: boolean): void;
+  public isHoverEnabled(): boolean;
+  public onTouchSelect(trigger: boolean): void;
+  public onTouchOk(): void;
+  public onTouchCancel(): void;
+  public hitIndex(): number;
   public hitTest(x: number, y: number): number;
-  public isContentsArea(x: number, y: number): boolean;
   public isTouchOkEnabled(): boolean;
   public isOkEnabled(): boolean;
   public isCancelEnabled(): boolean;
   public isOkTriggered(): boolean;
   public isCancelTriggered(): boolean;
   public processOk(): void;
-  public playOkSound(): void;
-  public playBuzzerSound(): void;
   public callOkHandler(): void;
   public processCancel(): void;
   public callCancelHandler(): void;
@@ -260,8 +257,6 @@ declare class Window_Selectable extends Window_Base {
   public processPagedown(): void;
 
   public updateInputData(): void;
-  public updateCursor(): void;
-  public isCursorVisible(): boolean;
   public ensureCursorVisible(): void;
 
   public callUpdateHelp(): void;
@@ -272,10 +267,16 @@ declare class Window_Selectable extends Window_Base {
   public drawAllItems(): void;
   public drawItem(index: number): void;
   public clearItem(index: number): void;
+  public drawItemBackground(index: number): void;
+  public drawBackgroundRect(rect: Rectangle): void;
   public redrawItem(index: number): void;
   public redrawCurrentItem(): void;
 
   public refresh(): void;
+  public paint(): void;
+
+  public refreshCursor(): void;
+  public refreshCursorForAll(): void;
 }
 
 //-----------------------------------------------------------------------------
