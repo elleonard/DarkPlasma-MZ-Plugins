@@ -1,0 +1,23 @@
+DarkPlasma_MapNameOnSave:
+  name: DarkPlasma_MapNameOnSave
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/03/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'セーブ・ロード画面にマップ名を表示する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      セーブ・ロード画面にマップ名を表示します。
