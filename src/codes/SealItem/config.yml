@@ -1,0 +1,34 @@
+DarkPlasma_SealItem:
+  name: DarkPlasma_SealItem
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/03/13'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテムを封印する特徴'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      メモ欄に特定の書式で記述することにより、特定のアイテムを使用不能にします。
+      <sealItems:1,2>
+       アイテムID1及び2のアイテムが使用できなくなります。
+      <sealHealItem>
+       HPまたはMP回復アイテムが使用不能になります。
+      <sealResurrectionItem>
+       戦闘不能解除の効果を持つアイテムが使用不能になります。
+
+      アクターのメモ欄: 対象のアクターは使用不能
+      職業のメモ欄: 対象の職業のアクターは使用不能
+      武器・防具のメモ欄: 対象を装備したアクターは使用不能
+      ステート: 対象ステートにかかったアクターは使用不能
