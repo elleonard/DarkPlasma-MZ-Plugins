@@ -38,6 +38,7 @@ class TypedParameter {
         'boolean',
         'select',
         'actor',
+        'class',
         'enemy',
         'skill',
         'item',
