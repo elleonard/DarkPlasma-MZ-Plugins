@@ -250,6 +250,13 @@ class PluginCommandArgument extends TypedParameter {
     if (this.type()) {
       result.push(` * @type ${this.typeText(language)}`);
     }
+    ['min', 'max']
+      .filter((annotation) => {
+        return !!this._argument[annotation];
+      })
+      .forEach((annotation) => {
+        result.push(` * @${annotation} ${this._argument[annotation]}`);
+      });
     return result.join('\n');
   }
 }
