@@ -1,0 +1,26 @@
+DarkPlasma_NPCKeepOutRegion_Test:
+  name: DarkPlasma_NPCKeepOutRegion_Test
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/04/20'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '自律移動NPC通行禁止リージョンプラグインのテスト'
+  parameters: []
+  commands:
+    - command: doTest
+      text:
+        ja: テスト実行
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      自律移動NPC通行禁止リージョンプラグインのテスト
