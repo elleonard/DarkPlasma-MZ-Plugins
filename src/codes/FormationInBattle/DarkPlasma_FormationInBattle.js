@@ -99,6 +99,10 @@ Game_Party.prototype.onBattleStart = function () {
   formationCooldown.initCooldown();
 };
 
+Game_Map.prototype.isFormationInBattleEnabled = function () {
+  return !$dataMap.meta.disableFormationInBattle;
+};
+
 const _BattleManager_startTurn = BattleManager.startTurn;
 BattleManager.startTurn = function () {
   _BattleManager_startTurn.call(this);
@@ -327,5 +331,10 @@ Window_PartyCommand.prototype.makeCommandList = function () {
 };
 
 Window_PartyCommand.prototype.isFormationEnabled = function () {
-  return $gameParty.size() >= 2 && $gameSystem.isFormationEnabled() && !formationCooldown.isDuringCooldown();
+  return (
+    $gameParty.size() >= 2 &&
+    $gameSystem.isFormationEnabled() &&
+    !formationCooldown.isDuringCooldown() &&
+    $gameMap.isFormationInBattleEnabled()
+  );
 };

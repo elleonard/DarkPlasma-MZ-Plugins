@@ -3,6 +3,9 @@ DarkPlasma_FormationInBattle:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/05/05'
+      version: '1.2.0'
+      description: '特定マップで戦闘中の並び替えを禁止する機能追加'
     - date: '2020/12/30'
       version: '1.1.4'
       description: 'DarkPlasma_Formation 1.2.0に対応'
@@ -67,3 +70,6 @@ DarkPlasma_FormationInBattle:
       戦闘シーンで並び替えできるようになります。
 
       DarkPlasma_Formationが必要です。
+
+      マップのメモ欄に<disableFormationInBattle>と記述することで、
+      対象マップでの戦闘中に並び替えを選択できなくなります。
