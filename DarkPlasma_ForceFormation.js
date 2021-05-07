@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.2.4
+// DarkPlasma_ForceFormation 2.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/05/07 2.3.0 特定マップで強制入れ替えを無効化する機能を追加
  * 2021/01/04 2.2.4 正しく動作しない不具合を修正
  *            2.2.3 null合体演算子が動作しないブラウザに対応
  *            2.2.2 全滅判定を飛ばした場合にも入れ替え無効スイッチを判定するよう修正
@@ -48,8 +49,11 @@
  * @default 0
  *
  * @help
- * version: 2.2.4
+ * version: 2.3.0
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
+ *
+ * マップのメモ欄に<disableForceFormation>と書くことで、
+ * そのマップでの戦闘時に強制入れ替えしなくなります。
  */
 
 (() => {
@@ -103,6 +107,10 @@
     return false;
   };
 
+  Game_Map.prototype.isForceFormationEnabled = function () {
+    return !$dataMap.meta.disableForceFormation;
+  };
+
   // GameParty
   const _Game_Party_onBattleStart = Game_Party.prototype.onBattleStart;
   Game_Party.prototype.onBattleStart = function (advantageous) {
@@ -134,7 +142,10 @@
   };
 
   Game_Party.prototype.isForceFormationEnabled = function () {
-    return settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId);
+    return (
+      (settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId)) &&
+      $gameMap.isForceFormationEnabled()
+    );
   };
 
   /**
