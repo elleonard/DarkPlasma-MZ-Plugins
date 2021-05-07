@@ -33,6 +33,10 @@ BattleManager.checkBattleEnd = function () {
   return false;
 };
 
+Game_Map.prototype.isForceFormationEnabled = function () {
+  return !$dataMap.meta.disableForceFormation;
+};
+
 // GameParty
 const _Game_Party_onBattleStart = Game_Party.prototype.onBattleStart;
 Game_Party.prototype.onBattleStart = function (advantageous) {
@@ -64,7 +68,10 @@ Game_Party.prototype.isAllDead = function () {
 };
 
 Game_Party.prototype.isForceFormationEnabled = function () {
-  return settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId);
+  return (
+    (settings.disableSwitchId === 0 || !$gameSwitches.value(settings.disableSwitchId)) &&
+    $gameMap.isForceFormationEnabled()
+  );
 };
 
 /**

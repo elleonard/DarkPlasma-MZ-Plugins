@@ -3,6 +3,9 @@ DarkPlasma_ForceFormation:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/05/07'
+      version: '2.3.0'
+      description: '特定マップで強制入れ替えを無効化する機能を追加'
     - date: '2021/01/04'
       version: '2.2.4'
       description: '正しく動作しない不具合を修正'
@@ -69,3 +72,6 @@ DarkPlasma_ForceFormation:
   help:
     ja: |
       戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
+
+      マップのメモ欄に<disableForceFormation>と書くことで、
+      そのマップでの戦闘時に強制入れ替えしなくなります。
