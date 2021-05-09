@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.3.0
+// DarkPlasma_ForceFormation 2.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/05/09 2.3.1 undefined
  * 2021/05/07 2.3.0 特定マップで強制入れ替えを無効化する機能を追加
  * 2021/01/04 2.2.4 正しく動作しない不具合を修正
  *            2.2.3 null合体演算子が動作しないブラウザに対応
@@ -49,7 +50,7 @@
  * @default 0
  *
  * @help
- * version: 2.3.0
+ * version: 2.3.1
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  *
  * マップのメモ欄に<disableForceFormation>と書くことで、
@@ -108,7 +109,7 @@
   };
 
   Game_Map.prototype.isForceFormationEnabled = function () {
-    return !$dataMap.meta.disableForceFormation;
+    return !$dataMap || !$dataMap.meta.disableForceFormation;
   };
 
   // GameParty

@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.2.0
+// DarkPlasma_FormationInBattle 1.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/05/09 1.2.1 戦闘テスト開始時にエラーが発生する不具合を修正
  * 2021/05/05 1.2.0 特定マップで戦闘中の並び替えを禁止する機能追加
  * 2020/12/30 1.1.4 DarkPlasma_Formation 1.2.0に対応
  * 2020/12/16 1.1.3 DarkPlasma_Formation 1.0.5に対応
@@ -49,7 +50,7 @@
  * @default true
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -175,7 +176,7 @@
   };
 
   Game_Map.prototype.isFormationInBattleEnabled = function () {
-    return !$dataMap.meta.disableFormationInBattle;
+    return !$dataMap || !$dataMap.meta.disableFormationInBattle;
   };
 
   const _BattleManager_startTurn = BattleManager.startTurn;
