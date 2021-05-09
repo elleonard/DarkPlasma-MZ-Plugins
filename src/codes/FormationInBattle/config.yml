@@ -3,6 +3,9 @@ DarkPlasma_FormationInBattle:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/05/09'
+      version: '1.2.1'
+      description: '戦闘テスト開始時にエラーが発生する不具合を修正'
     - date: '2021/05/05'
       version: '1.2.0'
       description: '特定マップで戦闘中の並び替えを禁止する機能追加'

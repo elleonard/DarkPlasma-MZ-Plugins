@@ -100,7 +100,7 @@ Game_Party.prototype.onBattleStart = function () {
 };
 
 Game_Map.prototype.isFormationInBattleEnabled = function () {
-  return !$dataMap.meta.disableFormationInBattle;
+  return !$dataMap || !$dataMap.meta.disableFormationInBattle;
 };
 
 const _BattleManager_startTurn = BattleManager.startTurn;
