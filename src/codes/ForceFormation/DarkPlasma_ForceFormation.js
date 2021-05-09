@@ -34,7 +34,7 @@ BattleManager.checkBattleEnd = function () {
 };
 
 Game_Map.prototype.isForceFormationEnabled = function () {
-  return !$dataMap.meta.disableForceFormation;
+  return !$dataMap || !$dataMap.meta.disableForceFormation;
 };
 
 // GameParty

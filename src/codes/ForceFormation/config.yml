@@ -3,6 +3,9 @@ DarkPlasma_ForceFormation:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/05/09'
+      version: '2.3.1'
+      desription: '戦闘テスト開始時にエラーが発生する不具合を修正'
     - date: '2021/05/07'
       version: '2.3.0'
       description: '特定マップで強制入れ替えを無効化する機能を追加'
