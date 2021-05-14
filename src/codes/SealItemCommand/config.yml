@@ -1,0 +1,24 @@
+DarkPlasma_SealItemCommand:
+  name: DarkPlasma_SealItemCommand
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/05/14'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテムコマンドを封印する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      メモ欄に<sealItemCommand>と入力したマップにおいて、
+      アイテムコマンドを戦闘/メニュー共に使用不可にします。
