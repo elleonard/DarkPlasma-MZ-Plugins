@@ -1,0 +1,31 @@
+DarkPlasma_SellingPriceRate:
+  name: DarkPlasma_SellingPriceRate
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/05/16'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテム売却額倍率を設定する'
+  parameters:
+    - param: sellingPriceRate
+      text:
+        ja: 売却額倍率（％）
+      desc:
+        ja: アイテム売却時の倍率を％で設定します。
+      type: number
+      default: 50
+      min: 1
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      アイテム売却時の倍率を設定します。

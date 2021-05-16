@@ -1,0 +1,23 @@
+DarkPlasma_SellingPriceRate_Test:
+  name: DarkPlasma_SellingPriceRate_Test
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/05/16'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '売却額倍率設定プラグインのテスト'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      売却額設定プラグインのテスト
