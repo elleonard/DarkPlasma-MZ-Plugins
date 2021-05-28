@@ -1,0 +1,75 @@
+DarkPlasma_SharedSwitchVariable:
+  name: DarkPlasma_SharedSwitchVariable
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/05/29'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '全てのセーブデータで共有するスイッチ・変数を指定する'
+  parameters:
+    - param: switchRangeList
+      desc:
+        ja: 共有セーブに保存するスイッチの範囲リストを指定します。
+      text:
+        ja: スイッチ範囲リスト
+      type: SwitchRange[]
+      default: []
+    - param: variableRangeList
+      desc:
+        ja: 共有セーブに保存する変数の範囲リストを指定します。
+      text:
+        ja: 変数範囲リスト
+      type: VariableRange[]
+      default: []
+  commands:
+    - command: saveSharedInfo
+      text:
+        ja: 共有セーブに保存する
+      desc:
+        ja: 共有セーブデータにスイッチ・変数を保存します。
+  structures:
+    SwitchRange:
+      - param: from
+        desc:
+          ja: このスイッチ以降、終端で指定したスイッチまでを共有セーブに保存します。
+        text:
+          ja: 閉区間開始
+        type: switch
+        default: 1
+      - param: to
+        desc:
+          ja: 開始で指定したスイッチからこのスイッチまでを共有セーブに保存します。
+        text:
+          ja: 閉区間終端
+        type: switch
+        default: 1
+    VariableRange:
+      - param: from
+        desc:
+          ja: この変数以降、終端で指定した変数までを共有セーブに保存します。
+        text:
+          ja: 閉区間開始
+        type: variable
+        default: 1
+      - param: to
+        desc:
+          ja: 開始で指定した変数からこの変数までを共有セーブに保存します。
+        text:
+          ja: 閉区間終端
+        type: variable
+        default: 1
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      全てのセーブデータで共有するスイッチ・変数を指定します。
+      指定したスイッチ・変数の値は共有セーブデータ(save/shared.rmmzsave)に保存します。
+
+      プラグインコマンドで共有セーブデータを更新できます。
