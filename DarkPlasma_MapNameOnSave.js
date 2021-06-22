@@ -1,9 +1,10 @@
-// DarkPlasma_MapNameOnSave 1.0.0
+// DarkPlasma_MapNameOnSave 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/03/13 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * セーブ・ロード画面にマップ名を表示します。
  */
 

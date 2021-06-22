@@ -1,9 +1,10 @@
-// DarkPlasma_SellingPriceRate 1.0.0
+// DarkPlasma_SellingPriceRate 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/05/16 1.0.0 公開
  */
 
@@ -23,16 +24,14 @@
  * @min 1
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アイテム売却時の倍率を設定します。
  */
 
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

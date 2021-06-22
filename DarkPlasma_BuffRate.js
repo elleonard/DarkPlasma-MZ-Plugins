@@ -1,9 +1,10 @@
-// DarkPlasma_BuffRate 2.0.0
+// DarkPlasma_BuffRate 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.0.1 サブフォルダからの読み込みに対応
  * 2020/09/08 2.0.0 パラメータ名変更
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -47,7 +48,7 @@
  * @default {"buffRate1":"25", "buffRate2":"50", "debuffRate1":"25", "debuffRate2":"50"}
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * バフ（強化状態）の能力強化/弱化倍率を個別に設定できるようにします。
  */
 /*~struct~BuffRate:
@@ -74,9 +75,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

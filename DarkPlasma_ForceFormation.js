@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.3.1
+// DarkPlasma_ForceFormation 2.3.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.3.2 サブフォルダからの読み込みに対応
  * 2021/05/09 2.3.1 undefined
  * 2021/05/07 2.3.0 特定マップで強制入れ替えを無効化する機能を追加
  * 2021/01/04 2.2.4 正しく動作しない不具合を修正
@@ -50,7 +51,7 @@
  * @default 0
  *
  * @help
- * version: 2.3.1
+ * version: 2.3.2
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  *
  * マップのメモ欄に<disableForceFormation>と書くことで、
@@ -60,9 +61,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

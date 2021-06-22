@@ -1,9 +1,10 @@
-// DarkPlasma_ChoiceHelp 1.0.4
+// DarkPlasma_ChoiceHelp 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.5 サブフォルダからの読み込みに対応
  * 2020/10/10 1.0.4 リファクタ
  * 2020/09/29 1.0.3 プラグインコマンドに説明を追加
  * 2020/09/23 1.0.2 場所移動時に一瞬ヘルプウィンドウが表示される不具合を修正
@@ -29,7 +30,7 @@
  * @type multiline_string[]
  *
  * @help
- * version: 1.0.4
+ * version: 1.0.5
  * 選択肢にヘルプテキストを表示できます。
  *
  * 選択肢イベントコマンドの前にプラグインコマンドで
@@ -39,9 +40,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const COMMANDS = {
     SET_CHOICE_HELP: 'setChoiceHelp',

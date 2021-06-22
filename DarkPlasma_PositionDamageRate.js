@@ -1,9 +1,10 @@
-// DarkPlasma_PositionDamageRate 1.0.1
+// DarkPlasma_PositionDamageRate 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.2 サブフォルダからの読み込みに対応
  * 2020/10/24 1.0.1 まともに動かない不具合を修正
  * 2020/10/23 1.0.0 公開
  */
@@ -29,7 +30,7 @@
  * @default ["100"]
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 前衛アクターの立ち位置（先頭から何番目か）で
  * 受けるダメージの倍率を変更します。
  */
@@ -37,9 +38,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

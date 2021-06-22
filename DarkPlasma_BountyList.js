@@ -1,9 +1,10 @@
-// DarkPlasma_BountyList 2.0.2
+// DarkPlasma_BountyList 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.0.3 サブフォルダからの読み込みに対応
  * 2020/10/10 2.0.2 リファクタ
  * 2020/09/29 2.0.1 プラグインコマンドの説明を追加
  * 2020/09/08 2.0.0 パラメータ名変更
@@ -88,7 +89,7 @@
  * @desc 賞金首リストを初期化します。
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * 賞金首に指定したいエネミーのメモ欄に以下の記述をしてください。
  *
  * <isBounty>
@@ -128,9 +129,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

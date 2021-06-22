@@ -1,9 +1,10 @@
-// DarkPlasma_SealItem 1.0.0
+// DarkPlasma_SealItem 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/03/13 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * メモ欄に特定の書式で記述することにより、特定のアイテムを使用不能にします。
  * <sealItems:1,2>
  *  アイテムID1及び2のアイテムが使用できなくなります。

@@ -1,9 +1,10 @@
-// DarkPlasma_FallImages 1.0.2
+// DarkPlasma_FallImages 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.3 サブフォルダからの読み込みに対応
  * 2020/12/16 1.0.2 ゲーム終了時に正しく状態を初期化しない不具合を修正
  * 2020/10/25 1.0.1 ヘルプ追記
  * 2020/10/24 1.0.0 公開
@@ -40,7 +41,7 @@
  * @desc 振らせている画像をフェードアウトさせ、止ませます。
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * 何らかの画像を降らせる画面演出を提供します。
  *
  * プラグインパラメータにIDと画像ファイルを設定し、
@@ -119,9 +120,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

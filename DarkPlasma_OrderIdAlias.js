@@ -1,9 +1,10 @@
-// DarkPlasma_OrderIdAlias 1.0.1
+// DarkPlasma_OrderIdAlias 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.2 サブフォルダからの読み込みに対応
  * 2020/09/08 1.0.1 rollup構成へ移行
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
  *

@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.2.0
+// DarkPlasma_Formation 1.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.2.1 サブフォルダからの読み込みに対応
  * 2020/12/30 1.2.0 戻るボタン左右のスペース設定を追加
  *            1.1.0 タッチUIで戻るボタン表示を追加
  *            1.0.7 webブラウザ向けにデプロイした場合に正常に動作しない不具合を修正
@@ -64,7 +65,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -81,9 +82,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

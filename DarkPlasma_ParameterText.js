@@ -1,9 +1,10 @@
-// DarkPlasma_ParameterText 1.0.2
+// DarkPlasma_ParameterText 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.3 サブフォルダからの読み込みに対応
  * 2020/09/08 1.0.2 rollup構成へ移行
  * 2020/09/01 1.0.1 ゲームが起動できなくなる不具合を修正
  *            1.0.0 公開
@@ -108,7 +109,7 @@
  * @default 経験獲得率
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * 本プラグインは他のプラグインから参照されることを前提としたベースプラグインです。
  * 追加能力値及び特殊能力値の表記テキストを返す関数を提供します。
  *
@@ -120,9 +121,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

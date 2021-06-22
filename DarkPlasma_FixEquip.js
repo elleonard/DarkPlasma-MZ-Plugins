@@ -1,9 +1,10 @@
-// DarkPlasma_FixEquip 1.0.0
+// DarkPlasma_FixEquip 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2020/10/30 1.0.0 公開
  */
 
@@ -22,7 +23,7 @@
  * @default []
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 装備固定モードを実現します。
  *
  * プラグインパラメータにスイッチと装備タイプ一覧の組を登録し、
@@ -44,9 +45,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

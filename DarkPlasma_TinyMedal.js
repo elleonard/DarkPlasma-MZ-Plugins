@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.2.0
+// DarkPlasma_TinyMedal 2.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.2.1 サブフォルダからの読み込みに対応
  * 2021/02/13 2.2.0 報酬メッセージ複数行対応
  * 2020/10/10 2.1.2 リファクタ
  * 2020/09/29 2.1.1 プラグインコマンドに説明を追加
@@ -73,7 +74,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 2.2.0
+ * version: 2.2.1
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  */
 /*~struct~RewardItems:
@@ -138,9 +139,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

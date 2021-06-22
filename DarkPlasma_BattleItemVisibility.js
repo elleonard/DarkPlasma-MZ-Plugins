@@ -1,9 +1,10 @@
-// DarkPlasma_BattleItemVisibility 2.0.2
+// DarkPlasma_BattleItemVisibility 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.0.3 サブフォルダからの読み込みに対応
  * 2020/11/13 2.0.2 武器を表示する設定が効かない不具合を修正
  * 2020/09/11 2.0.1 戦闘中にアイテム欄を開くとエラーが出る不具合を修正
  * 2020/09/08 2.0.0 パラメータ名を変更
@@ -67,7 +68,7 @@
  * @default false
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * 戦闘中のアイテムコマンドで表示されるアイテム一覧に表示するアイテムを設定します。
  * プラグインパラメータで種別ごとに表示するものを設定できる他、
  * アイテムのメモ欄に以下のように入力したアイテムを表示します。
@@ -78,9 +79,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

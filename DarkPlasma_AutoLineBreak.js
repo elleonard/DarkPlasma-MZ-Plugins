@@ -1,9 +1,10 @@
-// DarkPlasma_AutoLineBreak 1.0.0
+// DarkPlasma_AutoLineBreak 1.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2020/12/13 1.0.0 公開
  */
 
@@ -40,7 +41,7 @@
  * @default 4
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -55,9 +56,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

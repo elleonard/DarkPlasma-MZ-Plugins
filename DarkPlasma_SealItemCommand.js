@@ -1,9 +1,10 @@
-// DarkPlasma_SealItemCommand 1.0.0
+// DarkPlasma_SealItemCommand 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/05/14 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * メモ欄に<sealItemCommand>と入力したマップにおいて、
  * アイテムコマンドを戦闘/メニュー共に使用不可にします。
  */

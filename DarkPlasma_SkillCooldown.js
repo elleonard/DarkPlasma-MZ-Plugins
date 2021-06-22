@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.0.1
+// DarkPlasma_SkillCooldown 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.0.2 サブフォルダからの読み込みに対応
  * 2020/10/20 2.0.1 設定値が正常に読み込まれない不具合を修正
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/09/01 1.0.1 クールダウンターン数が1少ない不具合を修正
@@ -54,7 +55,7 @@
  * @default true
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * スキルにクールタイムを指定します。
  * スキルX使用後、スキルYの使用を一定ターン数制限することができます。
  */
@@ -87,9 +88,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

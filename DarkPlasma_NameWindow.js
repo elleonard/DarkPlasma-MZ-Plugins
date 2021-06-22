@@ -1,9 +1,10 @@
-// DarkPlasma_NameWindow 2.0.0
+// DarkPlasma_NameWindow 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/22 2.0.1 サブフォルダからの読み込みに対応
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
  */
@@ -41,7 +42,7 @@
  * @default true
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * メッセージテキストに以下のように記述すると名前ウィンドウを表示します。
  *
  * \n<***>
@@ -64,9 +65,7 @@
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
+  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
 
   const pluginParameters = PluginManager.parameters(pluginName);
 
