@@ -260,7 +260,14 @@ class Scene_Formation extends Scene_Base {
     this.formationSelectWindow().setHandler('ok', this.onFormationOk.bind(this));
     this.formationSelectWindow().setHandler('cancel', this.onFormationCancel.bind(this));
     this.formationSelectWindow().select(0);
-    this.addChild(this.formationSelectWindow());
+    /**
+     * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
+     */
+    this._selectWindowLayer = new WindowLayer();
+    this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+    this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+    this.addChild(this._selectWindowLayer);
+    this._selectWindowLayer.addChild(this.formationSelectWindow());
   }
 
   selectWindowRect() {
@@ -387,8 +394,8 @@ class Window_DrawActorCharacter extends Window_StatusBase {
   }
 
   itemRect(index) {
-    const x = this.x + 4 + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
-    const y = this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
+    const x = this.x + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
+    const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
     return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
   }
 

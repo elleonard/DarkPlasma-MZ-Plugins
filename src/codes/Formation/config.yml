@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/23'
+      version: '1.2.2'
+      description: '画面サイズとUIエリアのサイズが異なる場合にカーソルがズレて表示される不具合の修正'
     - date: '2021/06/22'
       version: '1.2.1'
       description: 'サブフォルダからの読み込みに対応'
