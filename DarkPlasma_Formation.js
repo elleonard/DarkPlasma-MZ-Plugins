@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.2.1
+// DarkPlasma_Formation 1.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/06/23 1.2.2 画面サイズとUIエリアのサイズが異なる場合にカーソルがズレて表示される不具合の修正
  * 2021/06/22 1.2.1 サブフォルダからの読み込みに対応
  * 2020/12/30 1.2.0 戻るボタン左右のスペース設定を追加
  *            1.1.0 タッチUIで戻るボタン表示を追加
@@ -65,7 +66,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -354,7 +355,14 @@
       this.formationSelectWindow().setHandler('ok', this.onFormationOk.bind(this));
       this.formationSelectWindow().setHandler('cancel', this.onFormationCancel.bind(this));
       this.formationSelectWindow().select(0);
-      this.addChild(this.formationSelectWindow());
+      /**
+       * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
+       */
+      this._selectWindowLayer = new WindowLayer();
+      this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+      this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+      this.addChild(this._selectWindowLayer);
+      this._selectWindowLayer.addChild(this.formationSelectWindow());
     }
 
     selectWindowRect() {
@@ -481,8 +489,8 @@
     }
 
     itemRect(index) {
-      const x = this.x + 4 + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
-      const y = this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
+      const x = this.x + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
+      const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
       return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
     }
 
