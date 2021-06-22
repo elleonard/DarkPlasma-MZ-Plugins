@@ -4,6 +4,9 @@ DarkPlasma_Formation:
   license: MIT
   histories:
     - date: '2021/06/23'
+      version: '1.2.3'
+      description: '$つき画像を歩行グラとするアクターを左向きに表示できない不具合を修正'
+    - date: '2021/06/23'
       version: '1.2.2'
       description: '画面サイズとUIエリアのサイズが異なる場合にカーソルがズレて表示される不具合の修正'
     - date: '2021/06/22'

@@ -364,7 +364,7 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     const big = ImageManager.isBigCharacter(actor.characterName());
     const pw = bitmap.width / (big ? 3 : 12);
     const ph = bitmap.height / (big ? 4 : 8);
-    const n = actor.characterIndex();
+    const n = big ? 0 : actor.characterIndex();
     const sx = ((n % 4) * 3 + 1) * pw;
     const sy = (Math.floor(n / 4) * 4 + 1) * ph;
     this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
