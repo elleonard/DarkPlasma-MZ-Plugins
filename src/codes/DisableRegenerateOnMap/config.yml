@@ -3,6 +3,9 @@ DarkPlasma_DisableRegenerateOnMap:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '1.0.1'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/10/23'
       version: '1.0.0'
       description: '公開'

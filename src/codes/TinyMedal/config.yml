@@ -1,9 +1,11 @@
 DarkPlasma_TinyMedal:
   name: DarkPlasma_TinyMedal
-  version: '2.1.2'
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '2.2.1'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2021/02/13'
       version: '2.2.0'
       description: '報酬メッセージ複数行対応'

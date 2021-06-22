@@ -3,6 +3,9 @@ DarkPlasma_TestBase:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '2.4.1'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2021/01/11'
       version: '2.4.0'
       description: 'テストケースプラグインの手動読み込みを許可する'

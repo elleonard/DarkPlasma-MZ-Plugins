@@ -4,6 +4,9 @@ DarkPlasma_BuffRate:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '2.0.1'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/09/08'
       version: '2.0.0'
       description: 'パラメータ名変更'

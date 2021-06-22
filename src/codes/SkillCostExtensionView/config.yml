@@ -1,9 +1,11 @@
 DarkPlasma_SkillCostExtensionView:
   name: DarkPlasma_SkillCostExtensionView
-  version: '1.1.0'
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '1.1.1'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/10/06'
       version: '1.1.0'
       description: '変数コストの色設定を追加'

@@ -3,6 +3,9 @@ DarkPlasma_AdditionalAttackAnimation:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '2.0.2'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/11/10'
       version: '2.0.1'
       description: '全体化プラグインとの順序を明記'

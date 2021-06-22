@@ -4,6 +4,9 @@ DarkPlasma_ChoiceHelp:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '1.0.5'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/10/10'
       version: '1.0.4'
       description: 'リファクタ'

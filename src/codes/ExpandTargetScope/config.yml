@@ -3,6 +3,9 @@ DarkPlasma_ExpandTargetScope:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/06/22'
+      version: '1.0.7'
+      description: 'サブフォルダからの読み込みに対応'
     - date: '2020/11/10'
       version: '1.0.6'
       description: 'もともと全体対象のスキルに全体化倍率が乗る不具合を修正'
