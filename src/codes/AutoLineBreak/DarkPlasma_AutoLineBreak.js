@@ -126,6 +126,15 @@ Window_ChoiceList.prototype.isAutoLineBreakEnabled = function () {
   return false;
 };
 
+/**
+ * Window_NameBox は名前の幅によってウィンドウサイズが変わる
+ * そのため、自動折返しの対象外とする
+ * @return {boolean}
+ */
+Window_NameBox.prototype.isAutoLineBreakEnabled = function () {
+  return false;
+};
+
 const _Window_BattleLog_initialize = Window_BattleLog.prototype.initialize;
 Window_BattleLog.prototype.initialize = function () {
   /**
