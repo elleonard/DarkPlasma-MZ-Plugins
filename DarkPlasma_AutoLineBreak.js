@@ -1,10 +1,11 @@
-// DarkPlasma_AutoLineBreak 1.0.1
+// DarkPlasma_AutoLineBreak 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
+ * 2021/06/22 1.0.2 名前ウィンドウの表示が崩れる不具合を修正
+ *            1.0.1 サブフォルダからの読み込みに対応
  * 2020/12/13 1.0.0 公開
  */
 
@@ -41,7 +42,7 @@
  * @default 4
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -195,6 +196,15 @@
    * @return {boolean}
    */
   Window_ChoiceList.prototype.isAutoLineBreakEnabled = function () {
+    return false;
+  };
+
+  /**
+   * Window_NameBox は名前の幅によってウィンドウサイズが変わる
+   * そのため、自動折返しの対象外とする
+   * @return {boolean}
+   */
+  Window_NameBox.prototype.isAutoLineBreakEnabled = function () {
     return false;
   };
 
