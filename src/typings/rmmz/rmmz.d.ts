@@ -2,7 +2,6 @@
 /// <reference path="./lib/fpsmeter.d.ts" />
 /// <reference path="./lib/localforage.d.ts" />
 /// <reference path="./lib/lz-string.d.ts" />
-/// <reference path="./lib/pixi.d.ts" />
 /// <reference path="./lib/vorbisdecoder.d.ts" />
 
 /// <reference path="./data.d.ts" />

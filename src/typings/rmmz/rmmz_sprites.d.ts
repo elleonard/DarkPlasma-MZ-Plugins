@@ -2,8 +2,6 @@
 // rmmz_sprites.js v1.1.0
 //=============================================================================
 
-import { EffekseerEffect, EffekseerHandle } from 'effekseer';
-
 //-----------------------------------------------------------------------------
 /**
  * The sprite class with a feature which displays animations.
@@ -306,8 +304,6 @@ declare class Sprite_Animation extends Sprite {
   public initialize(...args: any[]): void;
   public initMembers(): void;
 
-  public destroy(options: object): void;
-
   public setup(
     targets: Sprite[],
     animation: MZ.Animation | null,
@@ -596,8 +592,6 @@ declare class Spriteset_Base extends Sprite {
   public _tone: number[];
   public _baseSprite: Sprite;
   public _blackScreen: ScreenSprite;
-  public _toneFilter: ToneFilter | undefined;
-  public _toneSprite: ToneSprite | undefined;
   public _pictureContainer: Sprite;
   public _timerSprite: Sprite_Timer;
   public _flashSprite: ScreenSprite;
@@ -633,7 +627,7 @@ declare class Spriteset_Map extends Spriteset_Base {
   public constructor();
 
   public _parallax: TilingSprite;
-  public _tilemap: Tilemap | ShaderTilemap;
+  public _tilemap: Tilemap;
   public _tileset: MZ.Tileset;
   public _characterSprites: Sprite_Character[];
   public _shadowSprite: Sprite;

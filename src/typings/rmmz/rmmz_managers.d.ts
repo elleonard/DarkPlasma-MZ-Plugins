@@ -42,7 +42,7 @@ declare class DataManager {
   public static _globalInfo: DataManager.SaveFileInfo[] | null;
   public static _errors: DataManager.Error[];
 
-  public static _databaseFiles: { name: string, src: string }[];
+  public static _databaseFiles: { name: string; src: string }[];
 
   public static loadGlobalInfo(): void;
   public static removeInvalidGlobalInfo(): void;
@@ -224,8 +224,8 @@ declare class StorageManager {
 declare class FontManager {
   private constructor();
 
-  public static _urls: {[family: string]: string};
-  public static _states: {[family: string]: string};
+  public static _urls: { [family: string]: string };
+  public static _states: { [family: string]: string };
 
   public static load(family: string, filename: string): void;
   public static isReady(): boolean;
@@ -246,8 +246,8 @@ declare class ImageManager {
   public static faceWidth: number;
   public static faceHeight: number;
 
-  public static _cache: {[url: string]: Bitmap};
-  public static _system: {[url: string]: Bitmap};
+  public static _cache: { [url: string]: Bitmap };
+  public static _system: { [url: string]: Bitmap };
   public static _emptyBitmap: Bitmap;
 
   public static loadAnimation(filename: string): Bitmap;
@@ -282,7 +282,7 @@ declare class ImageManager {
 declare class EffectManager {
   private constructor();
 
-  public static _cache: {[url: string]: effekseer.EffekseerEffect};
+  public static _cache: { [url: string]: effekseer.EffekseerEffect };
   public static _errorUrls: string[];
 
   public static load(filename: string): effekseer.EffekseerEffect | null;
@@ -310,7 +310,7 @@ declare class AudioManager {
   public static _seVolume: number;
   public static _currentBgm: AudioManager.AudioState | null;
   public static _currentBgs: AudioManager.AudioState | null;
-  public static _bgmBuffer: AudioManager.AudioBuffer | null;
+  public static _bgmBuffer: WebAudio | null;
   public static _bgsBuffer: WebAudio | null;
   public static _meBuffer: WebAudio | null;
   public static _seBuffers: WebAudio[];
@@ -561,7 +561,7 @@ declare class ColorManager {
  * The static class that manages scene transitions.
  */
 declare const SceneManager: SceneManager;
-declare interface SceneManager extends GenericSceneManager<Scene_Base> { }
+declare interface SceneManager extends GenericSceneManager<Scene_Base> {}
 
 declare interface GenericSceneManager<T extends Stage> {
   /*
@@ -594,14 +594,14 @@ declare interface GenericSceneManager<T extends Stage> {
   determineRepeatNumber(deltaTime: number): number;
   terminate(): void;
   onError(e: Error): void;
-  onReject(event: PromiseRejectionEvent): void
+  onReject(event: PromiseRejectionEvent): void;
   onUnload(): void;
   onKeyDown(event: KeyboardEvent): void;
   reloadGame(): void;
   showDevTools(): void;
   catchException(e: Error): void;
   catchNormalError(e: Error): void;
-  catchLoadError(e: LoadError): void;
+  catchLoadError(e: Error): void;
   catcuUnknownError(e: any): void;
 
   updateMain(): void;
@@ -640,7 +640,7 @@ declare interface GenericSceneManager<T extends Stage> {
 declare namespace SceneManager {
   interface SceneConstructor<T> {
     prototype: Stage;
-    new(): T;
+    new (): T;
   }
 }
 
@@ -649,7 +649,7 @@ declare namespace SceneManager {
  * The static class that manages battle progress.
  */
 declare const BattleManager: BattleManager;
-declare interface BattleManager extends GenericBattleManager<Game_Battler, Game_Actor, Game_Action, Game_Item> { }
+declare interface BattleManager extends GenericBattleManager<Game_Battler, Game_Actor, Game_Action, Game_Item> {}
 
 declare interface GenericBattleManager<Battler, Actor extends Battler, Action, Item> {
   _phase: number;
@@ -834,7 +834,7 @@ declare class PluginManager {
   public static _scripts: string[];
   public static _errorUrls: string[];
   public static _parameters: { [name: string]: string };
-  public static _commands: { [key: string]: function };
+  public static _commands: { [key: string]: Function };
 
   public static setup(plugins: MZ.Plugin[]): void;
   public static parameters(name: string): { [name: string]: string };
@@ -844,6 +844,6 @@ declare class PluginManager {
   public static makeUrl(filename: string): string;
   public static checkErrors(): void;
   public static throwLoadError(): void;
-  public static registerCommand(pluginName: string, commandName: string, func: function): void;
+  public static registerCommand(pluginName: string, commandName: string, func: Function): void;
   public static callCommand(self: Game_Interpreter, pluginName: string, commandName: string, args: any): void;
 }

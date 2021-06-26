@@ -595,5 +595,3 @@ declare namespace MZ {
 
   type Metadata = { [name: string]: string | true };
 }
-
-declare var $plugins: MZ.Plugin[];

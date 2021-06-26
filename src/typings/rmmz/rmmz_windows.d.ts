@@ -1034,6 +1034,20 @@ declare class Window_NameInput extends Window_Selectable {
   public onNameOk(): void;
 }
 
+declare class Window_NameBox extends Window_Base {
+  public initialize(): void;
+
+  public setMessageWindow(messageWindow: Window_Message): void;
+  public setName(name: string): void;
+  public clear(): void;
+  public start(): void;
+  public updatePlacement(): void;
+  public updateBackground(): void;
+  public windowWidth(): number;
+  public windowHeight(): number;
+  public refresh(): void;
+}
+
 //-----------------------------------------------------------------------------
 /**
  * The window used for the event command [Show Choices].

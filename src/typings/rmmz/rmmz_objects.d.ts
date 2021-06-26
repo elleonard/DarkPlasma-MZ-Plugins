@@ -57,7 +57,7 @@ declare class Game_Temp {
   public setLastTargetEnemyIndex(enemyIndex: number): void;
 }
 
-namespace Game_Temp {
+declare namespace Game_Temp {
   interface AnimationRequest {
     targets: Game_Character[];
     animationId: number;
@@ -100,7 +100,7 @@ declare class Game_System {
   public initialize(...args: any[]): void;
   public isJapanese(): boolean;
   public isChinese(): boolean;
-  public isKorean(): boolean
+  public isKorean(): boolean;
   public isCJK(): boolean;
   public isRussian(): boolean;
   public isSideView(): boolean;
@@ -229,9 +229,9 @@ declare class Game_Message {
   public scrollNoFast(): boolean;
 
   public add(text: string): void;
-  public setSpeakerName(speakerName: string): void
+  public setSpeakerName(speakerName: string): void;
   public setFaceImage(faceName: string, faceIndex: number): void;
-  public setBackground(background: number): void
+  public setBackground(background: number): void;
   public setPositionType(positionType: number): void;
   public setChoices(choices: string[], defaultType: number, cancelType: number): void;
   public setChoiceBackground(background: number): void;
@@ -384,8 +384,28 @@ declare class Game_Screen {
   public updatePictures(): void;
 
   public startFlashForDamage(): void;
-  public showPicture(pictureId: number, name: string, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number): void;
-  public movePicture(pictureId: number, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number): void;
+  public showPicture(
+    pictureId: number,
+    name: string,
+    origin: number,
+    x: number,
+    y: number,
+    scaleX: number,
+    scaleY: number,
+    opacity: number,
+    blendMode: number
+  ): void;
+  public movePicture(
+    pictureId: number,
+    origin: number,
+    x: number,
+    y: number,
+    scaleX: number,
+    scaleY: number,
+    opacity: number,
+    blendMode: number,
+    duration: number
+  ): void;
   public rotatePicture(pictureId: number, speed: number): void;
   public tintPicture(pictureId: number, tone: number[], duration: number): void;
   public erasePicture(pictureId: number): void;
@@ -442,8 +462,27 @@ declare class Game_Picture {
   public initTone(): void;
   public initRotation(): void;
 
-  public show(name: string, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number): void;
-  public move(origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number, easingType: number): void;
+  public show(
+    name: string,
+    origin: number,
+    x: number,
+    y: number,
+    scaleX: number,
+    scaleY: number,
+    opacity: number,
+    blendMode: number
+  ): void;
+  public move(
+    origin: number,
+    x: number,
+    y: number,
+    scaleX: number,
+    scaleY: number,
+    opacity: number,
+    blendMode: number,
+    duration: number,
+    easingType: number
+  ): void;
   public rotate(speed: number): void;
   public tint(tone: number[], duration: number): void;
 
@@ -2535,7 +2574,7 @@ declare class Game_Interpreter {
   /** Move Picture */
   public command232(params: any[]): boolean;
 
-  public picturePoint(params: any[]): PIXI.Point;
+  public picturePoint(params: any[]): Point;
 
   /** Rotate Picture */
   public command233(params: any[]): boolean;

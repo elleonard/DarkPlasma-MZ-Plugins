@@ -2,8 +2,6 @@
 // rmmz_core.js v1.0.0
 //=============================================================================
 
-import { EffekseerContext } from 'effekseer';
-
 //-----------------------------------------------------------------------------
 /**
  * This is not a class, but contains some methods that will be added to the
@@ -750,7 +748,6 @@ declare class Graphics {
 
   public static _width: number;
   public static _height: number;
-  public static _rendererType: RendererType;
 
   public static _defaultScale: number;
   public static _realScale: number;
@@ -780,7 +777,7 @@ declare class Graphics {
    *
    * @param {Function} handler The listener function to be added for updates.
    */
-  public static setTickHandler(handler: function): void;
+  public static setTickHandler(handler: Function): void;
 
   /**
    * Starts the game loop.
@@ -832,7 +829,7 @@ declare class Graphics {
    *
    * @param {Function} retry The callback function to be called when the button is pressed.
    */
-  public static showRetryButtln(retry: function): void;
+  public static showRetryButtln(retry: Function): void;
 
   /**
    * Erases the loading error text.
@@ -969,8 +966,8 @@ declare class Graphics {
   public static _createEffekseerContext(): void;
 }
 
-namespace Graphics {
-  declare class FPSCounter {
+declare namespace Graphics {
+  class FPSCounter {
     initialize(): void;
     startTick(): void;
     endTick(): void;
@@ -1359,7 +1356,7 @@ declare class TouchInput {
   public static _onRelease(x: number, y: number): void;
 }
 
-namespace TouchInput {
+declare namespace TouchInput {
   interface State {
     triggered: boolean;
     cancelled: boolean;
@@ -1760,8 +1757,8 @@ declare class Tilemap extends PIXI.Container {
   public static readonly WATERFALL_AUTOTILE_TABLE: number[][][];
 }
 
-namespace Tilemap {
-  declare class Layer extends PIXI.Container {
+declare namespace Tilemap {
+  class Layer extends PIXI.Container {
     public constructor();
 
     public _elements: number[][];
@@ -1791,7 +1788,7 @@ namespace Tilemap {
     public _updateVertexBuffer(): void;
   }
 
-  declare class Renderer extends PIXI.ObjectRenderer {
+  class Renderer extends PIXI.ObjectRenderer {
     public constructor();
     public initialize(renderer: PIXI.Renderer): void;
     public _shader: PIXI.Shader | null;
