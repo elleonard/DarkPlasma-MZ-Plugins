@@ -886,6 +886,7 @@ declare class Game_BattlerBase {
 
   public paramBase(paramId: number): number;
   public paramPlus(paramId: number): number;
+  public paramBasePlus(paramId: number): number;
   public paramMin(paramId: number): number;
   public paramMax(paramId: number): number;
   public paramRate(paramId: number): number;
