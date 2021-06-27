@@ -1,0 +1,82 @@
+DarkPlasma_CGGallery:
+  name: DarkPlasma_CGGallery
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/06/27'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'CGギャラリーシーンを提供する'
+  parameters:
+    - param: cgs
+      text:
+        ja: CG一覧
+      desc:
+        ja: CGの情報を登録します。
+      type: CG[]
+      default: []
+    - param: selectWindowWidth
+      text:
+        ja: ウィンドウ幅
+      desc:
+        ja: CG一覧ウィンドウの横幅を指定します。
+      type: number
+      default: 300
+    - param: selectWindowHeight
+      text:
+        ja: ウィンドウ高さ
+      desc:
+        ja: CG一覧ウィンドウの高さを指定します。
+      type: number
+      default: 300
+    - param: secretTitle
+      text:
+        ja: 未開放タイトル
+      desc:
+        ja: 閲覧条件を満たさないCGのタイトル表示
+      type: string
+      default: '？？？？'
+    - param: backgroundImage
+      text:
+        ja: 背景画像
+      desc:
+        ja: CGギャラリーシーンの背景画像を指定します。
+      type: file
+      dir: img
+  commands: []
+  structures:
+    CG:
+      - param: file
+        text:
+          ja: ファイル
+        desc:
+          ja: 表示するCGの画像ファイルを指定します。
+        type: file
+        dir: img/pictures
+      - param: switchId
+        text:
+          ja: スイッチ
+        desc:
+          ja: CGが閲覧可能になる条件のスイッチを指定します。
+        type: switch
+        default: 0
+      - param: title
+        text:
+          ja: タイトル
+        desc:
+          ja: CGのタイトルを指定します。
+        type: string
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      CGギャラリーシーンを提供します。
+
+      下記スクリプトによってシーンを開くことができます。
+      SceneManager.push(Scene_CGGallery);
