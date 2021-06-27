@@ -1,0 +1,68 @@
+DarkPlasma_TitleCommand:
+  name: DarkPlasma_TitleCommand
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/06/27'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'タイトルコマンドを設定する'
+  parameters:
+    - param: additionalCommands
+      text:
+        ja: 追加コマンド
+      desc:
+        ja: 追加のタイトルコマンド一覧を設定します。
+      type: TitleCommand[]
+      default: []
+  commands: []
+  structures:
+    TitleCommand:
+      - param: commandType
+        text:
+          ja: コマンド種別
+        desc:
+          ja: コマンドの種別を設定します。
+        type: select
+        options:
+          - name: シーン遷移
+            value: 1
+          - name: シャットダウン
+            value: 2
+      - param: position
+        text:
+          ja: 追加位置
+        desc:
+          ja: 追加位置を数値インデックスで指定します。0で最上部（ニューゲームの上）、3でオプションの下に追加されます。
+        type: number
+        default: 3
+        min: 0
+      - param: text
+        text:
+          ja: テキスト
+        desc:
+          ja: タイトルコマンドのテキストを指定します。
+        type: string
+      - param: symbol
+        text:
+          ja: 識別子
+        desc:
+          ja: コマンドを一意に識別する文字列を指定します。
+        type: string
+      - param: scene
+        text:
+          ja: シーン名
+        desc:
+          ja: 遷移先のシーン名を指定します。コマンド種別がシーン遷移の場合のみ有効です。
+        type: string
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      タイトルコマンドを設定します。
