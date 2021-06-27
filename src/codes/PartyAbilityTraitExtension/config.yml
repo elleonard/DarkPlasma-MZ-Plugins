@@ -1,0 +1,56 @@
+DarkPlasma_PartyAbilityTraitExtension:
+  name: DarkPlasma_PartyAbilityTraitExtension
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/06/27'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'パーティ能力特徴を追加する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+    orderAfter:
+    orderBefore:
+  help:
+    ja: |
+      パーティ能力特徴を追加します。
+      アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
+      パーティ全体に効果を及ぼす特徴を付与できます。
+
+      基本構文:
+      <partyAbility:[effect]:[value]>
+      パーティ全体に[effect]で指定した効果を、効果量[value]で付与します。
+
+      [effect]:
+        mhp: 最大HP加算
+        mmp: 最大MP加算
+        atk: 攻撃力加算
+        def: 防御力加算
+        mat: 魔法攻撃力加算
+        mdf: 魔法防御力加算
+        agi: 敏捷性加算
+        luk: 運加算
+        tgr: 狙われ率乗算
+        grd: 防御効果率乗算
+        rec: 回復効果率乗算
+        pha: 薬の知識乗算
+        mcr: MP消費率乗算
+        tcr: TPチャージ率乗算
+        phr: 物理ダメージ率乗算
+        mdr: 魔法ダメージ率乗算
+        fdr: 床ダメージ率乗算
+        exr: 経験値獲得率乗算
+
+      設定例
+      最大HP+10:
+      <partyAbility:mhp:10>
+
+      床ダメージ率*0:
+      <partyAbility:fdr:0>
