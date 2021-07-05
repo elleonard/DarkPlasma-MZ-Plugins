@@ -3,6 +3,9 @@ DarkPlasma_ExpandTargetScope:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/07/05'
+      version: '1.0.8'
+      description: 'MZ 1.3.2に対応'
     - date: '2021/06/22'
       version: '1.0.7'
       description: 'サブフォルダからの読み込みに対応'

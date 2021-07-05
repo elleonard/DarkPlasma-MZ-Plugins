@@ -3,6 +3,9 @@ DarkPlasma_CGGallery:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/07/05'
+      version: '2.0.1'
+      description: 'MZ 1.3.2に対応'
     - date: '2021/06/27'
       version: '1.0.0'
       description: '公開'
