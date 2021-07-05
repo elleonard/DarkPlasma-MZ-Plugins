@@ -1,9 +1,10 @@
-// DarkPlasma_DashSpeed 1.0.2
+// DarkPlasma_DashSpeed 1.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.3 MZ 1.3.2に対応
  * 2021/06/22 1.0.2 サブフォルダからの読み込みに対応
  * 2020/10/10 1.0.1 リファクタ
  * 2020/10/02 1.0.0 公開
@@ -32,14 +33,16 @@
  * @type number
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * ダッシュ速度を変更します。
  */
 
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

@@ -1,9 +1,10 @@
-// DarkPlasma_AdditionalAttackAnimation 2.0.2
+// DarkPlasma_AdditionalAttackAnimation 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 2.0.3 MZ 1.3.2に対応
  * 2021/06/22 2.0.2 サブフォルダからの読み込みに対応
  * 2020/11/10 2.0.1 全体化プラグインとの順序を明記
  * 2020/09/08 2.0.0 パラメータ名変更
@@ -27,7 +28,7 @@
  * @default []
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * 攻撃アニメーションを特定条件で追加します。
  *
  * 以下の条件でアニメーションを追加できます。
@@ -68,7 +69,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

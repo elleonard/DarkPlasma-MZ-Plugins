@@ -1,9 +1,10 @@
-// DarkPlasma_ClearEquip 2.1.1
+// DarkPlasma_ClearEquip 2.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 2.1.2 MZ 1.3.2に対応
  * 2021/06/22 2.1.1 サブフォルダからの読み込みに対応
  * 2020/10/30 2.1.0 プラグインコマンドを追加
  * 2020/10/10 2.0.2 リファクタ
@@ -57,7 +58,7 @@
  * @desc パーティメンバー全員の装備をすべてはずします。
  *
  * @help
- * version: 2.1.1
+ * version: 2.1.2
  * プラグインパラメータの設定をONにしておくと、
  * パーティからメンバーが脱退したとき、
  * そのメンバーの装備を固定装備を除いてすべてはずします。
@@ -69,7 +70,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

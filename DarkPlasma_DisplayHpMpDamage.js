@@ -1,9 +1,10 @@
-// DarkPlasma_DisplayHpMpDamage 1.0.1
+// DarkPlasma_DisplayHpMpDamage 1.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.2 MZ 1.3.2に対応
  * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2020/11/17 1.0.0 公開
  */
@@ -36,7 +37,7 @@
  * @min -300
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * HPとMP両方にダメージや回復がある場合、
  * その両方をポップアップ表示します。
  */
@@ -44,7 +45,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

@@ -1,9 +1,10 @@
-// DarkPlasma_CGGallery 1.0.0
+// DarkPlasma_CGGallery 2.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 2.0.1 MZ 1.3.2に対応
  * 2021/06/27 1.0.0 公開
  */
 
@@ -46,7 +47,7 @@
  * @dir img
  *
  * @help
- * version: 1.0.0
+ * version: 2.0.1
  * CGギャラリーシーンを提供します。
  *
  * 下記スクリプトによってシーンを開くことができます。
@@ -73,7 +74,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

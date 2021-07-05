@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.4
+// DarkPlasma_SupponREE 1.1.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.1.5 MZ 1.3.2に対応
  * 2021/06/22 1.1.4 サブフォルダからの読み込みに対応
  * 2020/11/10 1.1.3 PluginCommonBaseとの順序を明記
  * 2020/10/10 1.1.2 リファクタ
@@ -41,7 +42,7 @@
  * @type struct<RandomEncounter>[]
  *
  * @help
- * version: 1.1.4
+ * version: 1.1.5
  * プラグインコマンド（非推奨）:
  *   supponREE ratio times id id id・・・
  *   ratio : 出現確率％
@@ -117,7 +118,7 @@
  * @type struct<RandomEncounterEn>[]
  *
  * @help
- * version: 1.1.4
+ * version: 1.1.5
  * Plugin Command(Deprecated):
  *   supponREE ratio times id id id....
  *   ratio : Emergence probability numer
@@ -164,7 +165,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

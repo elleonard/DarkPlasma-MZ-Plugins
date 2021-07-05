@@ -1,9 +1,10 @@
-// DarkPlasma_TestBase 2.4.1
+// DarkPlasma_TestBase 2.4.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 2.4.2 MZ 1.3.2に対応
  * 2021/06/22 2.4.1 サブフォルダからの読み込みに対応
  * 2021/01/11 2.4.0 テストケースプラグインの手動読み込みを許可する
  * 2020/10/30 2.3.0 mustBeTrueを追加
@@ -32,7 +33,7 @@
  * @desc プラグインコマンド起因のテストを実行します。
  *
  * @help
- * version: 2.4.1
+ * version: 2.4.2
  * 本プラグインはプラグインの半自動テストをサポートします。
  *
  * Scene_Boot.prototype.defineTestCaseをフックしてテストケースを定義してください。
@@ -46,7 +47,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const PLUGIN_COMMAND_NAME = {
     OPEN_TEST_CASE: 'openTestCase',

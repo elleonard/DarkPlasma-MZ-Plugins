@@ -1,9 +1,10 @@
-// DarkPlasma_SeverImmortality 1.0.1
+// DarkPlasma_SeverImmortality 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.2 MZ 1.3.2に対応
  * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/04/16 1.0.0 公開
  */
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 下記のメモタグが設定されたスキルやアイテムで敵を倒すと、対象が復活不能になります。
  *
  * <severImmortality>

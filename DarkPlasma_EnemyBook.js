@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.7
+// DarkPlasma_EnemyBook 2.0.8
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 2.0.8 MZ 1.3.2に対応
  * 2021/06/22 2.0.7 サブフォルダからの読み込みに対応
  * 2021/01/04 2.0.6 セーブデータ作成後のゲームアップデートによるエネミーの増減に対応
  *            2.0.5 登録不可エネミーがコンプリート率計算に含まれる不具合を修正
@@ -183,7 +184,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.0.7
+ * version: 2.0.8
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -437,7 +438,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.0.7
+ * version: 2.0.8
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -526,7 +527,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

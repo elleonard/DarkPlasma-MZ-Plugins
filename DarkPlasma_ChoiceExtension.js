@@ -1,9 +1,10 @@
-// DarkPlasma_ChoiceExtension 1.1.2
+// DarkPlasma_ChoiceExtension 1.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.1.3 MZ 1.3.2に対応
  * 2021/06/22 1.1.2 サブフォルダからの読み込みに対応
  * 2020/09/16 1.1.1 入れ子選択肢を正しく処理できない不具合を修正
  *            1.1.0 外部プラグイン向けインターフェースを公開
@@ -24,7 +25,7 @@
  * @default 6
  *
  * @help
- * version: 1.1.2
+ * version: 1.1.3
  * 選択肢を拡張します。
  *
  * 注意:
@@ -62,7 +63,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

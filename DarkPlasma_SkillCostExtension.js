@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.3.1
+// DarkPlasma_SkillCostExtension 1.3.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.3.2 MZ 1.3.2に対応
  * 2021/06/22 1.3.1 サブフォルダからの読み込みに対応
  * 2021/01/11 1.3.0 HP消費率設定に対応
  * 2020/10/26 1.2.1 特徴のMP消費率が正しく反映されない不具合を修正
@@ -31,7 +32,7 @@
  * @default true
  *
  * @help
- * version: 1.3.1
+ * version: 1.3.2
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
  *
  * <SkillCost:
@@ -75,7 +76,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

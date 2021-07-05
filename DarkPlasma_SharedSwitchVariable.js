@@ -1,9 +1,10 @@
-// DarkPlasma_SharedSwitchVariable 1.0.1
+// DarkPlasma_SharedSwitchVariable 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.2 MZ 1.3.2に対応
  * 2021/06/22 1.0.1 サブフォルダからの読み込みに対応
  * 2021/05/29 1.0.0 公開
  */
@@ -33,7 +34,7 @@
  * @desc 共有セーブデータにスイッチ・変数を保存します。
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 全てのセーブデータで共有するスイッチ・変数を指定します。
  * 指定したスイッチ・変数の値は共有セーブデータ(save/shared.rmmzsave)に保存します。
  *
@@ -68,7 +69,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.2.2
+// DarkPlasma_FormationInBattle 1.2.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.2.3 MZ 1.3.2に対応
  * 2021/06/22 1.2.2 サブフォルダからの読み込みに対応
  * 2021/05/09 1.2.1 戦闘テスト開始時にエラーが発生する不具合を修正
  * 2021/05/05 1.2.0 特定マップで戦闘中の並び替えを禁止する機能追加
@@ -51,7 +52,7 @@
  * @default true
  *
  * @help
- * version: 1.2.2
+ * version: 1.2.3
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -63,7 +64,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

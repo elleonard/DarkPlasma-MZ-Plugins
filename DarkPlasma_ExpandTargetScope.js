@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.0.7
+// DarkPlasma_ExpandTargetScope 1.0.8
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.8 MZ 1.3.2に対応
  * 2021/06/22 1.0.7 サブフォルダからの読み込みに対応
  * 2020/11/10 1.0.6 もともと全体対象のスキルに全体化倍率が乗る不具合を修正
  * 2020/10/26 1.0.5 リファクタ
@@ -46,7 +47,7 @@
  * @default 100
  *
  * @help
- * version: 1.0.7
+ * version: 1.0.8
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -58,7 +59,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

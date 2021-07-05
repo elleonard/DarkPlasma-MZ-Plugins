@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtensionView 1.1.1
+// DarkPlasma_SkillCostExtensionView 1.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.1.2 MZ 1.3.2に対応
  * 2021/06/22 1.1.1 サブフォルダからの読み込みに対応
  * 2020/10/06 1.1.0 変数コストの色設定を追加
  * 2020/10/04 1.0.1 アイテムコストが正しく表示されない不具合を修正
@@ -45,7 +46,7 @@
  * @default 5
  *
  * @help
- * version: 1.1.1
+ * version: 1.1.2
  * DarkPlasma_SkillCostExtensionで設定した拡張スキルコストを
  * スキルリスト上で表示します。
  *
@@ -56,7 +57,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 

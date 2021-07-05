@@ -1,9 +1,10 @@
-// DarkPlasma_MaxItemCount 1.0.4
+// DarkPlasma_MaxItemCount 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/05 1.0.5 MZ 1.3.2に対応
  * 2021/06/22 1.0.4 サブフォルダからの読み込みに対応
  * 2020/10/10 1.0.3 リファクタ
  * 2020/09/29 1.0.2 プラグインコマンドに説明を追加
@@ -63,7 +64,7 @@
  * @type armor
  *
  * @help
- * version: 1.0.4
+ * version: 1.0.5
  * アイテムごとに最大所持数を設定できます。
  *
  * アイテムのメモ欄に以下のように記述してください。
@@ -85,7 +86,9 @@
 (() => {
   'use strict';
 
-  const pluginName = decodeURIComponent(document.currentScript.src.match(/^.*\/plugins\/(.*)\.js$/)[1]);
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const pluginParameters = PluginManager.parameters(pluginName);
 
