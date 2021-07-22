@@ -4,7 +4,7 @@ import { settings } from './_build/DarkPlasma_BountyList_parameters';
 const _extractMetadata = DataManager.extractMetadata;
 DataManager.extractMetadata = function (data) {
   _extractMetadata.call(this, data);
-  if (data.meta.isBounty) {
+  if ($dataEnemies && $dataEnemies.includes(data) && data.meta.isBounty) {
     data.isBounty = true;
     if (data.meta.bountyShowSwitch) {
       data.bountyShowSwitch = Number(data.meta.bountyShowSwitch);
@@ -14,6 +14,7 @@ DataManager.extractMetadata = function (data) {
         data[info.tag] = String(data.meta[info.tag]);
       }
     });
+    data.bountyOrderId = Number(data.meta.bountyOrderId || data.id);
   }
 };
 
@@ -120,7 +121,6 @@ class Scene_BountyList extends Scene_MenuBase {
     super.create();
     this._indexWindow = new Window_BountyListIndex(this.bountyListIndexWindowRect());
     this._indexWindow.setHandler('cancel', this.popScene.bind(this));
-    const detailsWindowY = this._indexWindow.height;
     this._detailsWindow = new Window_BountyListDetails(this.bountyListDetailsWindowRect());
     this.addWindow(this._indexWindow);
     this.addWindow(this._detailsWindow);
@@ -156,10 +156,17 @@ class Window_BountyListIndex extends Window_Selectable {
 
   initialize(rect) {
     super.initialize(rect);
+    this.makeItemList();
     this.refresh();
     this.setTopRow(Window_BountyListIndex.lastTopRow);
     this.select(Window_BountyListIndex.lastIndex);
     this.activate();
+  }
+
+  makeItemList() {
+    this._list = $dataEnemies
+      .filter((enemy) => enemy && enemy.isBounty)
+      .sort((a, b) => a.bountyOrderId - b.bountyOrderId);
   }
 
   maxCols() {
@@ -191,7 +198,6 @@ class Window_BountyListIndex extends Window_Selectable {
   }
 
   refresh() {
-    this._list = $dataEnemies.filter((enemy) => enemy && enemy.isBounty);
     this.createContents();
     this.drawAllItems();
   }

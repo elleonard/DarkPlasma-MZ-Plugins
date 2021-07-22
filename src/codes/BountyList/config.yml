@@ -4,6 +4,9 @@ DarkPlasma_BountyList:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/07/22'
+      version: '2.1.0'
+      description: '表示順序指定タグを追加'
     - date: '2021/07/05'
       version: '2.0.4'
       description: 'MZ 1.3.2に対応'
@@ -147,6 +150,7 @@ DarkPlasma_BountyList:
 
       <isBounty>
       <bountyShowSwitch:xx> スイッチxx番がONなら表示する
+      <bountyOrderId:xx> 表示順を指定（省略した場合、エネミーIDを使用する）
 
       賞金首リストには、<isBounty>が設定されており、
       なおかつ以下のいずれかを満たす敵キャラが表示されます。

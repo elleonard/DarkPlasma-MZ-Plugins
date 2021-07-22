@@ -26,6 +26,7 @@ const config = targetJsList.map((input) => {
         template: path.resolve(__dirname, 'src', 'templates', 'plugin.ejs'),
       }),
     ],
+    external: ['fs'],
   };
 });
 
