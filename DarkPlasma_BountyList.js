@@ -1,9 +1,10 @@
-// DarkPlasma_BountyList 2.0.4
+// DarkPlasma_BountyList 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/22 2.1.0 表示順序指定タグを追加
  * 2021/07/05 2.0.4 MZ 1.3.2に対応
  * 2021/06/22 2.0.3 サブフォルダからの読み込みに対応
  * 2020/10/10 2.0.2 リファクタ
@@ -90,11 +91,12 @@
  * @desc 賞金首リストを初期化します。
  *
  * @help
- * version: 2.0.4
+ * version: 2.1.0
  * 賞金首に指定したいエネミーのメモ欄に以下の記述をしてください。
  *
  * <isBounty>
  * <bountyShowSwitch:xx> スイッチxx番がONなら表示する
+ * <bountyOrderId:xx> 表示順を指定（省略した場合、エネミーIDを使用する）
  *
  * 賞金首リストには、<isBounty>が設定されており、
  * なおかつ以下のいずれかを満たす敵キャラが表示されます。
@@ -160,7 +162,7 @@
   const _extractMetadata = DataManager.extractMetadata;
   DataManager.extractMetadata = function (data) {
     _extractMetadata.call(this, data);
-    if (data.meta.isBounty) {
+    if ($dataEnemies && $dataEnemies.includes(data) && data.meta.isBounty) {
       data.isBounty = true;
       if (data.meta.bountyShowSwitch) {
         data.bountyShowSwitch = Number(data.meta.bountyShowSwitch);
@@ -170,6 +172,7 @@
           data[info.tag] = String(data.meta[info.tag]);
         }
       });
+      data.bountyOrderId = Number(data.meta.bountyOrderId || data.id);
     }
   };
 
@@ -276,7 +279,6 @@
       super.create();
       this._indexWindow = new Window_BountyListIndex(this.bountyListIndexWindowRect());
       this._indexWindow.setHandler('cancel', this.popScene.bind(this));
-      const detailsWindowY = this._indexWindow.height;
       this._detailsWindow = new Window_BountyListDetails(this.bountyListDetailsWindowRect());
       this.addWindow(this._indexWindow);
       this.addWindow(this._detailsWindow);
@@ -312,10 +314,17 @@
 
     initialize(rect) {
       super.initialize(rect);
+      this.makeItemList();
       this.refresh();
       this.setTopRow(Window_BountyListIndex.lastTopRow);
       this.select(Window_BountyListIndex.lastIndex);
       this.activate();
+    }
+
+    makeItemList() {
+      this._list = $dataEnemies
+        .filter((enemy) => enemy && enemy.isBounty)
+        .sort((a, b) => a.bountyOrderId - b.bountyOrderId);
     }
 
     maxCols() {
@@ -347,7 +356,6 @@
     }
 
     refresh() {
-      this._list = $dataEnemies.filter((enemy) => enemy && enemy.isBounty);
       this.createContents();
       this.drawAllItems();
     }
