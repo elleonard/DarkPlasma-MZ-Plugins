@@ -1,9 +1,10 @@
-// DarkPlasma_OrderIdAlias 1.0.3
+// DarkPlasma_OrderIdAlias 1.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/27 1.1.0 スキルの並び順設定をデフォルトのままにする設定を追加
  * 2021/07/05 1.0.3 MZ 1.3.2に対応
  * 2021/06/22 1.0.2 サブフォルダからの読み込みに対応
  * 2020/09/08 1.0.1 rollup構成へ移行
@@ -18,16 +19,35 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @param sortSkillById
+ * @desc スキルの表示順をID順にします。
+ * @text スキルID順
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.0.3
+ * version: 1.1.0
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
+ *
+ * スキルについてはプラグインパラメータでID順になっている場合のみ、
+ * OrderIdタグが有効になります。
  *
  * <OrderId:xxx> xxxは整数値
  */
 
 (() => {
   'use strict';
+
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
+
+  const pluginParameters = PluginManager.parameters(pluginName);
+
+  const settings = {
+    sortSkillById: String(pluginParameters.sortSkillById || false) === 'true',
+  };
 
   const _DataManager_extractMetadata = DataManager.extractMetadata;
   DataManager.extractMetadata = function (data) {
@@ -54,6 +74,8 @@
   const _Window_SkillList_makeItemList = Window_SkillList.prototype.makeItemList;
   Window_SkillList.prototype.makeItemList = function () {
     _Window_SkillList_makeItemList.call(this);
-    this._data.sort((a, b) => a.orderId - b.orderId);
+    if (settings.sortSkillById) {
+      this._data.sort((a, b) => a.orderId - b.orderId);
+    }
   };
 })();
