@@ -1,3 +1,5 @@
+import { settings } from './_build/DarkPlasma_OrderIdAlias_parameters';
+
 const _DataManager_extractMetadata = DataManager.extractMetadata;
 DataManager.extractMetadata = function (data) {
   _DataManager_extractMetadata.call(this, data);
@@ -23,5 +25,7 @@ Window_ItemList.prototype.makeItemList = function () {
 const _Window_SkillList_makeItemList = Window_SkillList.prototype.makeItemList;
 Window_SkillList.prototype.makeItemList = function () {
   _Window_SkillList_makeItemList.call(this);
-  this._data.sort((a, b) => a.orderId - b.orderId);
+  if (settings.sortSkillById) {
+    this._data.sort((a, b) => a.orderId - b.orderId);
+  }
 };
