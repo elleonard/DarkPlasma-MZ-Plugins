@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.5
+// DarkPlasma_SupponREE 1.1.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/07/31 1.1.6 MV形式のプラグインコマンドを使うと敵IDが文字列型になってしまう不具合を修正
  * 2021/07/05 1.1.5 MZ 1.3.2に対応
  * 2021/06/22 1.1.4 サブフォルダからの読み込みに対応
  * 2020/11/10 1.1.3 PluginCommonBaseとの順序を明記
@@ -42,7 +43,7 @@
  * @type struct<RandomEncounter>[]
  *
  * @help
- * version: 1.1.5
+ * version: 1.1.6
  * プラグインコマンド（非推奨）:
  *   supponREE ratio times id id id・・・
  *   ratio : 出現確率％
@@ -118,7 +119,7 @@
  * @type struct<RandomEncounterEn>[]
  *
  * @help
- * version: 1.1.5
+ * version: 1.1.6
  * Plugin Command(Deprecated):
  *   supponREE ratio times id id id....
  *   ratio : Emergence probability numer
@@ -268,7 +269,10 @@
       );
     });
     if (fixedEnemyCommand && fixedEnemyCommand.parameters[0].split(' ').length > 1) {
-      const enemyIds = fixedEnemyCommand.parameters[0].split(' ').slice(1);
+      const enemyIds = fixedEnemyCommand.parameters[0]
+        .split(' ')
+        .slice(1)
+        .map((enemyId) => Number(enemyId));
       enemyIds.forEach((enemyId) => this._enemies.push(new Game_Enemy(enemyId, 0, 0))); // 暫定で0, 0にセット
       enemyCount += enemyIds.length;
     }
@@ -283,7 +287,7 @@
       const commandArgs = randomEnemyCommand.parameters[0].split(' ').slice(1);
       const ratio = commandArgs[0];
       const times = commandArgs[1];
-      const enemyIds = commandArgs.slice(2);
+      const enemyIds = commandArgs.slice(2).map((enemyId) => Number(enemyId));
       for (let i = 0; i < times; i++) {
         if (ratio > Math.randomInt(100) || enemyCount === 0) {
           const enemyId = enemyIds[Math.randomInt(enemyIds.length)];
