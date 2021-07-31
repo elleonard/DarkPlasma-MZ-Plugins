@@ -94,7 +94,10 @@ Game_Troop.prototype.processLegacySupponREE = function () {
     );
   });
   if (fixedEnemyCommand && fixedEnemyCommand.parameters[0].split(' ').length > 1) {
-    const enemyIds = fixedEnemyCommand.parameters[0].split(' ').slice(1);
+    const enemyIds = fixedEnemyCommand.parameters[0]
+      .split(' ')
+      .slice(1)
+      .map((enemyId) => Number(enemyId));
     enemyIds.forEach((enemyId) => this._enemies.push(new Game_Enemy(enemyId, 0, 0))); // 暫定で0, 0にセット
     enemyCount += enemyIds.length;
   }
@@ -109,7 +112,7 @@ Game_Troop.prototype.processLegacySupponREE = function () {
     const commandArgs = randomEnemyCommand.parameters[0].split(' ').slice(1);
     const ratio = commandArgs[0];
     const times = commandArgs[1];
-    const enemyIds = commandArgs.slice(2);
+    const enemyIds = commandArgs.slice(2).map((enemyId) => Number(enemyId));
     for (let i = 0; i < times; i++) {
       if (ratio > Math.randomInt(100) || enemyCount === 0) {
         const enemyId = enemyIds[Math.randomInt(enemyIds.length)];
