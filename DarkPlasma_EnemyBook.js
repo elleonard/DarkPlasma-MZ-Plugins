@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.0.8
+// DarkPlasma_EnemyBook 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/08/22 2.1.0 戦闘中に出現している敵をリストで強調する機能を追加
  * 2021/07/05 2.0.8 MZ 1.3.2に対応
  * 2021/06/22 2.0.7 サブフォルダからの読み込みに対応
  * 2021/01/04 2.0.6 セーブデータ作成後のゲームアップデートによるエネミーの増減に対応
@@ -157,6 +158,12 @@
  * @option tab
  * @default shift
  *
+ * @param highlightColor
+ * @desc 戦闘中に図鑑を開いた場合のリスト中の出現モンスターの名前につける色
+ * @text 出現モンスター色
+ * @type number
+ * @default 2
+ *
  * @command open enemyBook
  * @text 図鑑を開く
  * @desc 図鑑シーンを開きます。
@@ -184,7 +191,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.0.8
+ * version: 2.1.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -411,6 +418,11 @@
  * @option tab
  * @default shift
  *
+ * @param highlightColor
+ * @desc Highlight color for enemy in troop.
+ * @type number
+ * @default 2
+ *
  * @command open enemyBook
  * @text open enemy book
  * @desc Open enemy book.
@@ -438,7 +450,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.0.8
+ * version: 2.1.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -646,6 +658,7 @@
     verticalLayout: String(pluginParameters.verticalLayout || false) === 'true',
     enableInBattle: String(pluginParameters.enableInBattle || true) === 'true',
     openKeyInBattle: String(pluginParameters.openKeyInBattle || 'shift'),
+    highlightColor: Number(pluginParameters.highlightColor || 2),
   };
 
   const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
@@ -909,7 +922,8 @@
         this._windowLayer,
         this.percentWindowRect(),
         this.indexWindowRect(),
-        this.statusWindowRect()
+        this.statusWindowRect(),
+        false
       );
     }
 
@@ -970,11 +984,16 @@
      *
      * @param {function} cancelHandler キャンセル時の挙動
      * @param {WindowLayer} parentLayer 親レイヤー
+     * @param {Rectangle} percentWindowRect
+     * @param {Rectangle} indexWindowRect
+     * @param {Rectangle} statusWindowRect
+     * @param {boolean} isInBattle
      */
-    constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect) {
+    constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect, isInBattle) {
       this._detailMode = false;
+      this._isInBattle = isInBattle;
       this._percentWindow = new Window_EnemyBookPercent(percentWindowRect);
-      this._indexWindow = new Window_EnemyBookIndex(indexWindowRect);
+      this._indexWindow = new Window_EnemyBookIndex(indexWindowRect, isInBattle);
       this._indexWindow.setHandler('ok', this.toggleDetailMode.bind(this));
       this._indexWindow.setHandler('cancel', cancelHandler);
       this._statusWindow = new Window_EnemyBookStatus(statusWindowRect);
@@ -1056,8 +1075,9 @@
    * エネミー図鑑目次
    */
   class Window_EnemyBookIndex extends Window_Selectable {
-    initialize(rect) {
+    initialize(rect, isInBattle) {
       super.initialize(rect);
+      this._isInBattle = isInBattle;
       this.refresh();
       this.setTopRow(Window_EnemyBookIndex.lastTopRow);
       this.select(Window_EnemyBookIndex.lastIndex);
@@ -1135,6 +1155,9 @@
       const rect = this.itemRect(index);
       let name;
       if ($gameSystem.isInEnemyBook(enemy)) {
+        if (this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id)) {
+          this.changeTextColor(ColorManager.textColor(settings.highlightColor));
+        }
         name = enemy.name;
       } else {
         this.changePaintOpacity(!settings.grayOutUnknown);
@@ -1142,6 +1165,7 @@
       }
       this.drawText(name, rect.x, rect.y, rect.width);
       this.changePaintOpacity(true);
+      this.resetTextColor();
     }
 
     processHandling() {
@@ -1886,7 +1910,8 @@
       this._enemyBookLayer,
       Scene_EnemyBook.prototype.percentWindowRect.call(this),
       Scene_EnemyBook.prototype.indexWindowRect.call(this),
-      Scene_EnemyBook.prototype.statusWindowRect.call(this)
+      Scene_EnemyBook.prototype.statusWindowRect.call(this),
+      true
     );
     this.closeEnemyBook();
   };
