@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/08/22'
+      version: '2.1.0'
+      description: '戦闘中に出現している敵をリストで強調する機能を追加'
     - date: '2021/07/05'
       version: '2.0.8'
       description: 'MZ 1.3.2に対応'
@@ -269,6 +272,15 @@ DarkPlasma_EnemyBook:
         - name: shift
         - name: control
         - name: tab
+    - param: highlightColor
+      text:
+        ja: 出現モンスター色
+        ex: Battler Enemy Highlight Color
+      desc:
+        ja: 戦闘中に図鑑を開いた場合のリスト中の出現モンスターの名前につける色
+        en: Highlight color for enemy in troop.
+      type: number
+      default: 2
   commands:
     - command: open enemyBook
       text:

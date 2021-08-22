@@ -262,7 +262,8 @@ class Scene_EnemyBook extends Scene_MenuBase {
       this._windowLayer,
       this.percentWindowRect(),
       this.indexWindowRect(),
-      this.statusWindowRect()
+      this.statusWindowRect(),
+      false
     );
   }
 
@@ -323,11 +324,16 @@ class EnemyBookWindows {
    *
    * @param {function} cancelHandler キャンセル時の挙動
    * @param {WindowLayer} parentLayer 親レイヤー
+   * @param {Rectangle} percentWindowRect
+   * @param {Rectangle} indexWindowRect
+   * @param {Rectangle} statusWindowRect
+   * @param {boolean} isInBattle
    */
-  constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect) {
+  constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect, isInBattle) {
     this._detailMode = false;
+    this._isInBattle = isInBattle;
     this._percentWindow = new Window_EnemyBookPercent(percentWindowRect);
-    this._indexWindow = new Window_EnemyBookIndex(indexWindowRect);
+    this._indexWindow = new Window_EnemyBookIndex(indexWindowRect, isInBattle);
     this._indexWindow.setHandler('ok', this.toggleDetailMode.bind(this));
     this._indexWindow.setHandler('cancel', cancelHandler);
     this._statusWindow = new Window_EnemyBookStatus(statusWindowRect);
@@ -409,8 +415,9 @@ class Window_EnemyBookPercent extends Window_Base {
  * エネミー図鑑目次
  */
 class Window_EnemyBookIndex extends Window_Selectable {
-  initialize(rect) {
+  initialize(rect, isInBattle) {
     super.initialize(rect);
+    this._isInBattle = isInBattle;
     this.refresh();
     this.setTopRow(Window_EnemyBookIndex.lastTopRow);
     this.select(Window_EnemyBookIndex.lastIndex);
@@ -488,6 +495,9 @@ class Window_EnemyBookIndex extends Window_Selectable {
     const rect = this.itemRect(index);
     let name;
     if ($gameSystem.isInEnemyBook(enemy)) {
+      if (this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id)) {
+        this.changeTextColor(ColorManager.textColor(settings.highlightColor));
+      }
       name = enemy.name;
     } else {
       this.changePaintOpacity(!settings.grayOutUnknown);
@@ -495,6 +505,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
     }
     this.drawText(name, rect.x, rect.y, rect.width);
     this.changePaintOpacity(true);
+    this.resetTextColor();
   }
 
   processHandling() {
@@ -1237,7 +1248,8 @@ Scene_Battle.prototype.createEnemyBookWindows = function () {
     this._enemyBookLayer,
     Scene_EnemyBook.prototype.percentWindowRect.call(this),
     Scene_EnemyBook.prototype.indexWindowRect.call(this),
-    Scene_EnemyBook.prototype.statusWindowRect.call(this)
+    Scene_EnemyBook.prototype.statusWindowRect.call(this),
+    true
   );
   this.closeEnemyBook();
 };
