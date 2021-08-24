@@ -190,7 +190,9 @@ DarkPlasma_FilterEquip:
         type: string
         default: パーティ能力
   dependencies:
-    base: []
+    base:
+      - name: DarkPlasma_ParameterText
+        version: 1.0.4
     orderAfter: []
     orderBefore:
       - name: DarkPlasma_PartyAbilityTraitExtension
