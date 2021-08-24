@@ -1,9 +1,10 @@
-// DarkPlasma_PartyAbilityTraitExtension 1.0.1
+// DarkPlasma_PartyAbilityTraitExtension 1.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/08/24 1.1.0 装備絞り込みプラグインに対応
  * 2021/07/05 1.0.1 MZ 1.3.2に対応
  * 2021/06/27 1.0.0 公開
  */
@@ -16,8 +17,12 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+
+* @orderAfter DarkPlasma_FilterEquip
+
+ *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -52,10 +57,17 @@
  *
  * 床ダメージ率*0:
  * <partyAbility:fdr:0>
+ *
+ * 本プラグインを下記プラグインと共に利用できます。
+ * DarkPlasma_FilterEquip version:0.0.1
  */
 
 (() => {
   'use strict';
+
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
 
   const _Game_Actor_paramBasePlus = Game_Actor.prototype.paramBasePlus;
   Game_Actor.prototype.paramBasePlus = function (paramId) {
@@ -177,5 +189,50 @@
    */
   function sparamKey(paramId) {
     return SPARAM_KEYS[paramId];
+  }
+
+  /**
+   * 装備絞り込みプラグイン用
+   */
+  if (Scene_Equip.prototype.equipFilterBuilder) {
+    const partyAbilitySParamDataIds = {};
+
+    const _Scene_Equip_equipFilterBuilder = Scene_Equip.prototype.equipFilterBuilder;
+    Scene_Equip.prototype.equipFilterBuilder = function (equips) {
+      const builder = _Scene_Equip_equipFilterBuilder.call(this, equips);
+      return builder
+        .withEquipToTraitsRule((equip) => {
+          const validSParamKeys = SPARAM_KEYS.filter((key) => equip && partyAbilityTraitMulti(equip, key) !== 1);
+          return validSParamKeys
+            .map((key) => {
+              return {
+                code: Game_BattlerBase.TRAIT_SPARAM,
+                dataId: SPARAM_KEYS.indexOf(key),
+                value: partyAbilityTraitMulti(equip, key),
+              };
+            })
+            .concat(
+              validSParamKeys.map((key) => {
+                const dataId = EquipFilterBuilder.allocateUniqueDataId(
+                  pluginName,
+                  Game_BattlerBase.TRAIT_PARTY_ABILITY,
+                  SPARAM_KEYS.indexOf(key)
+                );
+                partyAbilitySParamDataIds[dataId] = SPARAM_KEYS.indexOf(key);
+                return {
+                  code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
+                  dataId: dataId,
+                  value: partyAbilityTraitMulti(equip, key),
+                };
+              })
+            );
+        })
+        .withTraitToEffectNameRule((traitId, dataId) => {
+          if (traitId === Game_BattlerBase.TRAIT_PARTY_ABILITY) {
+            return TextManager.sparam(partyAbilitySParamDataIds[dataId]);
+          }
+          return null;
+        });
+    };
   }
 })();

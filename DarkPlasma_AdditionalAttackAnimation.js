@@ -34,6 +34,9 @@
  * 以下の条件でアニメーションを追加できます。
  * - 特定ステートにかかっている対象
  * - 特定の敵
+ *
+ * 本プラグインを下記プラグインと共に利用できます。
+ * DarkPlasma_ExpandTargetScope version:1.0.8
  */
 /*~struct~AdditionalAnimation:
  * @param animation

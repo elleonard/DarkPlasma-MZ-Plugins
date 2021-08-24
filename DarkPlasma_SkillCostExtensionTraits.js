@@ -29,6 +29,11 @@
  * <hpCostRate:n>
  *  HP消費率
  *  スキルで消費するHP量に割合をかけます。デフォルトはn=1です。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_SkillCostExtension
+ * 本プラグインを下記プラグインと共に利用できます。
+ * DarkPlasma_SkillCostExtension
  */
 
 (() => {

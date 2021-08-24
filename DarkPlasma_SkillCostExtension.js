@@ -71,6 +71,9 @@
  * DarkPlasma_ConsumeItemImmediately をご利用ください。
  * 本プラグインと併用する場合、DarkPlasma_ConsumeItemImmediatelyよりも
  * 本プラグインを下に配置してください。
+ *
+ * 本プラグインを下記プラグインと共に利用できます。
+ * DarkPlasma_ConsumeItemImmediately
  */
 
 (() => {

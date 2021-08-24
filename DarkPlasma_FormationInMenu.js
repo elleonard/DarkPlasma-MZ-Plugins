@@ -22,6 +22,9 @@
  * @help
  * version: 1.0.2
  * メニューの並び替えを DarkPlasma_Formation の専用並び替えシーンにすり替えます。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_Formation
  */
 
 (() => {

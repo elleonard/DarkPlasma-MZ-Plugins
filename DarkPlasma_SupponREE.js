@@ -77,6 +77,11 @@
  *   <EnemyType:スライム族LV1>
  *
  *   敵キャラの種類を指定できます。種類はスペース区切りで複数指定できます。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * PluginCommonBase
+ * 本プラグインを下記プラグインと共に利用できます。
+ * PluginCommonBase
  */
 /*~struct~RandomEncounter:
  * @param id
@@ -146,6 +151,11 @@
  *   <EnemyType:slime1>
  *
  *   You can Enter the enemy types.
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * PluginCommonBase
+ * 本プラグインを下記プラグインと共に利用できます。
+ * PluginCommonBase
  */
 /*~struct~RandomEncounterEn:
  * @param id
