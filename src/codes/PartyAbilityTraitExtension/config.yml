@@ -3,6 +3,9 @@ DarkPlasma_PartyAbilityTraitExtension:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/08/24'
+      version: '1.1.0'
+      description: '装備絞り込みプラグインに対応'
     - date: '2021/07/05'
       version: '1.0.1'
       description: 'MZ 1.3.2に対応'
@@ -18,9 +21,11 @@ DarkPlasma_PartyAbilityTraitExtension:
   commands: []
   structures:
   dependencies:
-    base:
+    base: []
     orderAfter:
-    orderBefore:
+      - name: DarkPlasma_FilterEquip
+        version: 0.0.1
+    orderBefore: []
   help:
     ja: |
       パーティ能力特徴を追加します。

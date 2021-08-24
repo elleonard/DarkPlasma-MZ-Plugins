@@ -1,3 +1,5 @@
+import { pluginName } from '../../common/pluginName';
+
 const _Game_Actor_paramBasePlus = Game_Actor.prototype.paramBasePlus;
 Game_Actor.prototype.paramBasePlus = function (paramId) {
   return Math.max(0, _Game_Actor_paramBasePlus.call(this, paramId) + this.paramPlusByPartyAbility(paramId));
@@ -100,10 +102,6 @@ function partyAbilityTraitMulti(object, key) {
   return match && match.length > 1 ? Number(match[1]) : 1;
 }
 
-const PARTY_ABILITY_TRAIT_ID = {
-  PARAM_PLUS: 0,
-};
-
 const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
 const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'];
@@ -122,4 +120,49 @@ function paramKey(paramId) {
  */
 function sparamKey(paramId) {
   return SPARAM_KEYS[paramId];
+}
+
+/**
+ * 装備絞り込みプラグイン用
+ */
+if (Scene_Equip.prototype.equipFilterBuilder) {
+  const partyAbilitySParamDataIds = {};
+
+  const _Scene_Equip_equipFilterBuilder = Scene_Equip.prototype.equipFilterBuilder;
+  Scene_Equip.prototype.equipFilterBuilder = function (equips) {
+    const builder = _Scene_Equip_equipFilterBuilder.call(this, equips);
+    return builder
+      .withEquipToTraitsRule((equip) => {
+        const validSParamKeys = SPARAM_KEYS.filter((key) => equip && partyAbilityTraitMulti(equip, key) !== 1);
+        return validSParamKeys
+          .map((key) => {
+            return {
+              code: Game_BattlerBase.TRAIT_SPARAM,
+              dataId: SPARAM_KEYS.indexOf(key),
+              value: partyAbilityTraitMulti(equip, key),
+            };
+          })
+          .concat(
+            validSParamKeys.map((key) => {
+              const dataId = EquipFilterBuilder.allocateUniqueDataId(
+                pluginName,
+                Game_BattlerBase.TRAIT_PARTY_ABILITY,
+                SPARAM_KEYS.indexOf(key)
+              );
+              partyAbilitySParamDataIds[dataId] = SPARAM_KEYS.indexOf(key);
+              return {
+                code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
+                dataId: dataId,
+                value: partyAbilityTraitMulti(equip, key),
+              };
+            })
+          );
+      })
+      .withTraitToEffectNameRule((traitId, dataId) => {
+        if (traitId === Game_BattlerBase.TRAIT_PARTY_ABILITY) {
+          return TextManager.sparam(partyAbilitySParamDataIds[dataId]);
+        }
+        return null;
+      });
+  };
 }
