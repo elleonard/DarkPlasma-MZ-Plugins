@@ -1,5 +1,4 @@
 const path = require('path');
-const glob = require('glob');
 
 const { generateDirectory } = require('./generateDirectory');
 
@@ -18,9 +17,14 @@ const testDirectoryPath = path.resolve(__dirname, '..', '..', 'src', 'tests', `$
 
 (async () => {
   try {
-    await generateDirectory(directoryPath);
-    if (codeType === 'codes') {
-      await generateDirectory(testDirectoryPath);
+    switch (codeType) {
+      case 'codes':
+      case 'excludes':
+        await generateDirectory(directoryPath);
+        break;
+      case 'tests':
+        await generateDirectory(testDirectoryPath);
+        break;
     }
   } catch (e) {
     console.error(`[ERROR] ${directoryPath}`);
