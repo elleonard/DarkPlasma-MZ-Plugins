@@ -69,7 +69,9 @@ DarkPlasma_AdditionalAttackAnimation:
         type: state[]
         default: []
   dependencies:
-    orderAfter: DarkPlasma_ExpandTargetScope
+    orderAfter:
+      - name: DarkPlasma_ExpandTargetScope
+        version: 1.0.8
   help:
     ja: |
       攻撃アニメーションを特定条件で追加します。

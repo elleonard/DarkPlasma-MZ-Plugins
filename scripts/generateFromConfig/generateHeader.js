@@ -307,6 +307,9 @@ function generateHeader(config) {
         ? ['base', 'orderAfter', 'orderBefore']
             .filter((key) => config.dependencies[key])
             .map((key) => {
+              if (Array.isArray(config.dependencies[key])) {
+                return config.dependencies[key].map((plugin) => `* @${key} ${plugin.name}`).join('\n');
+              }
               return ` * @${key} ${config.dependencies[key]}`;
             })
             .join('\n')
@@ -355,7 +358,7 @@ function generateHeader(config) {
         .concat(commandsText)
         .concat([
           [` * @help`]
-            .concat(generateHelp(config.help[language], config.histories[0].version))
+            .concat(generateHelp(config.help[language], config.histories[0].version, config.dependencies))
             .concat([' */'])
             .join('\n'),
         ])
@@ -436,11 +439,34 @@ function generatePluginMetaText(config, language) {
  * ヘルプテキストを行ごとに配列にして返す
  * @param {string} help ヘルプテキスト
  * @param {string} version バージョン
+ * @param {{base: string|{ name: string, version: string}[], orderAfter: string|{ name: string, version: string}[], orderBefore: string|{name: string, version: string}[]}} dependencies
  * @return {string{}}
  */
-function generateHelp(help, version) {
-  const helpLines = [`version: ${version}`].concat(help.split('\n'));
-  return helpLines.slice(0, helpLines.length - 1).map((line) => ` *${line ? ' ' : ''}${line}`);
+function generateHelp(help, version, dependencies) {
+  const helpLines = [`version: ${version}`].concat(help.split('\n')).concat(
+    ['base', 'orderAfter', 'orderBefore']
+      .map((key) => {
+        if (!dependencies || !dependencies[key]) {
+          return [];
+        }
+        const result = [
+          key === 'base'
+            ? `本プラグインの利用には下記プラグインを必要とします。`
+            : `本プラグインを下記プラグインと共に利用できます。`,
+        ];
+        if (Array.isArray(dependencies[key])) {
+          dependencies[key]
+            .map((plugin) => `${plugin.name} version:${plugin.version}`)
+            .forEach((line) => result.push(line));
+        } else {
+          result.push(dependencies[key]);
+        }
+        return result;
+      })
+      .flat()
+  );
+  const length = !dependencies ? helpLines.length - 1 : helpLines.length;
+  return helpLines.slice(0, length).map((line) => ` *${line ? ' ' : ''}${line}`);
 }
 
 /**
