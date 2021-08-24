@@ -443,29 +443,28 @@ function generatePluginMetaText(config, language) {
  * @return {string{}}
  */
 function generateHelp(help, version, dependencies) {
-  const helpLines = [`version: ${version}`].concat(help.split('\n')).concat(
-    ['base', 'orderAfter', 'orderBefore']
-      .map((key) => {
-        if (!dependencies || !dependencies[key]) {
-          return [];
-        }
-        const result = [
-          key === 'base'
-            ? `本プラグインの利用には下記プラグインを必要とします。`
-            : `本プラグインを下記プラグインと共に利用できます。`,
-        ];
-        if (Array.isArray(dependencies[key])) {
-          dependencies[key]
-            .map((plugin) => `${plugin.name} version:${plugin.version}`)
-            .forEach((line) => result.push(line));
-        } else {
-          result.push(dependencies[key]);
-        }
-        return result;
-      })
-      .flat()
-  );
-  const length = !dependencies ? helpLines.length - 1 : helpLines.length;
+  const dependencyLines = ['base', 'orderAfter', 'orderBefore']
+    .map((key) => {
+      if (!dependencies || !dependencies[key] || dependencies[key].length === 0) {
+        return [];
+      }
+      const result = [
+        key === 'base'
+          ? `本プラグインの利用には下記プラグインを必要とします。`
+          : `本プラグインを下記プラグインと共に利用できます。`,
+      ];
+      if (Array.isArray(dependencies[key])) {
+        dependencies[key]
+          .map((plugin) => `${plugin.name} version:${plugin.version}`)
+          .forEach((line) => result.push(line));
+      } else {
+        result.push(dependencies[key]);
+      }
+      return result;
+    })
+    .flat();
+  const helpLines = [`version: ${version}`].concat(help.split('\n')).concat(dependencyLines);
+  const length = dependencyLines.length === 0 ? helpLines.length - 1 : helpLines.length;
   return helpLines.slice(0, length).map((line) => ` *${line ? ' ' : ''}${line}`);
 }
 
