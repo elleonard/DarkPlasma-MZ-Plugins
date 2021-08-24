@@ -1,0 +1,227 @@
+DarkPlasma_FilterEquip:
+  name: DarkPlasma_FilterEquip
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/08/24'
+      version: '0.0.1'
+      description: '試作公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '装備絞り込み機能'
+  parameters:
+    - param: traitName
+      text:
+        ja: 特徴名
+      desc:
+        ja: 絞り込み画面で表示する特殊能力値の特徴名を設定します。
+      type: TraitName
+    - param: selectedItemColor
+      text:
+        ja: 絞り込み色
+      desc:
+        ja: 絞り込みONの項目の色
+      type: number
+      default: 2
+  commands: []
+  structures:
+    TraitName:
+      - param: elementRate
+        text:
+          ja: 属性有効度の特徴名
+        desc:
+          ja: 絞り込み画面で表示する属性有効度の特徴名を設定します。
+        type: string
+        default: 属性耐性
+      - param: debuffRate
+        text:
+          ja: 弱体有効度の特徴名
+        desc:
+          ja: 絞り込み画面で表示する弱体有効度の特徴名を設定します。
+        type: string
+        default: 弱体耐性
+      - param: stateRate
+        text:
+          ja: ステート有効度の特徴名
+        desc:
+          ja: 絞り込み画面で表示するステート有効度の特徴名を設定します。
+        type: string
+        default: ステート耐性
+      - param: stateResist
+        text:
+          ja: ステート無効の特徴名
+        desc:
+          ja: 絞り込み画面で表示するステート無効の特徴名を設定します。
+        type: string
+        default: ステート無効
+      - param: xparam
+        text:
+          ja: 追加能力値の特徴名
+        desc:
+          ja: 絞り込み画面で表示する追加能力値の特徴名を設定します。
+        type: string
+        default: 追加能力値
+      - param: sparam
+        text:
+          ja: 特殊能力値の特徴名
+        desc:
+          ja: 絞り込み画面で表示する特殊能力値の特徴名を設定します。
+        type: string
+        default: 特殊能力値
+      - param: attackElement
+        text:
+          ja: 攻撃時属性の特徴名
+        desc:
+          ja: 絞り込み画面で表示する攻撃時属性の特徴名を設定します。
+        type: string
+        default: 攻撃時属性
+      - param: attackState
+        text:
+          ja: 攻撃時ステートの特徴名
+        desc:
+          ja: 絞り込み画面で表示する攻撃時ステートの特徴名を設定します。
+        type: string
+        default: 攻撃時ステート
+      - param: attackSpeed
+        text:
+          ja: 攻撃速度補正の特徴名
+        desc:
+          ja: 絞り込み画面で表示する攻撃速度補正の特徴名を設定します。
+        type: string
+        default: 攻撃速度補正
+      - param: attackTimes
+        text:
+          ja: 攻撃追加回数の特徴名
+        desc:
+          ja: 絞り込み画面で表示する攻撃追加回数の特徴名を設定します。
+        type: string
+        default: 攻撃追加回数
+      - param: attackSkill
+        text:
+          ja: 攻撃スキルの特徴名
+        desc:
+          ja: 絞り込み画面で表示する攻撃スキルの特徴名を設定します。
+        type: string
+        default: 攻撃スキル
+      - param: stypeAdd
+        text:
+          ja: スキルタイプ追加の特徴名
+        desc:
+          ja: 絞り込み画面で表示するスキルタイプ追加の特徴名を設定します。
+        type: string
+        default: スキルタイプ追加
+      - param: stypeSeal
+        text:
+          ja: スキルタイプ封印の特徴名
+        desc:
+          ja: 絞り込み画面で表示するスキルタイプ封印の特徴名を設定します。
+        type: string
+        default: スキルタイプ封印
+      - param: skillAdd
+        text:
+          ja: スキル追加の特徴名
+        desc:
+          ja: 絞り込み画面で表示するスキル追加の特徴名を設定します。
+        type: string
+        default: スキル追加
+      - param: skillSeal
+        text:
+          ja: スキル封印の特徴名
+        desc:
+          ja: 絞り込み画面で表示するスキル封印の特徴名を設定します。
+        type: string
+        default: スキル封印
+      - param: equipWtype
+        text:
+          ja: 武器タイプ装備の特徴名
+        desc:
+          ja: 絞り込み画面で表示する武器タイプ装備の特徴名を設定します。
+        type: string
+        default: 武器タイプ装備
+      - param: equipAtype
+        text:
+          ja: 防具タイプ装備の特徴名
+        desc:
+          ja: 絞り込み画面で表示する防具タイプ装備の特徴名を設定します。
+        type: string
+        default: 防具タイプ装備
+      - param: equipLock
+        text:
+          ja: 装備固定の特徴名
+        desc:
+          ja: 絞り込み画面で表示する装備固定の特徴名を設定します。
+        type: string
+        default: 装備固定
+      - param: equipSeal
+        text:
+          ja: 装備封印の特徴名
+        desc:
+          ja: 絞り込み画面で表示する装備封印の特徴名を設定します。
+        type: string
+        default: 装備封印
+      - param: slotType
+        text:
+          ja: スロットタイプの特徴名
+        desc:
+          ja: 絞り込み画面で表示するスロットタイプの特徴名を設定します。
+        type: string
+        default: スロットタイプ
+      - param: actionPlus
+        text:
+          ja: 行動回数追加の特徴名
+        desc:
+          ja: 絞り込み画面で表示する行動回数追加の特徴名を設定します。
+        type: string
+        default: 行動回数追加
+      - param: specialFlag
+        text:
+          ja: 特殊フラグの特徴名
+        desc:
+          ja: 絞り込み画面で表示する特殊フラグの特徴名を設定します。
+        type: string
+        default: 特殊フラグ
+      - param: partyAbility
+        text:
+          ja: パーティ能力の特徴名
+        desc:
+          ja: 絞り込み画面で表示するパーティ能力の特徴名を設定します。
+        type: string
+        default: パーティ能力
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore:
+      - name: DarkPlasma_PartyAbilityTraitExtension
+        version: 1.1.0
+  help:
+    ja: |
+      装備の特徴による絞り込み機能を提供します。
+
+      装備選択中にshiftキーを押すことで絞り込みモードを開始します。
+
+      外部プラグイン用インターフェース
+      Scene_Equip.prototype.equipFilterTraitWindowRect: () => Rectangle
+        絞り込み用の特徴表示ウィンドウの矩形
+
+      Scene_Equip.prototype.equipFilterEffectWindowRect: () => Rectangle
+        絞り込み用の効果表示ウィンドウの矩形
+
+      Scene_Equip.prototype.equipFilterBuilder: () => EquipFilterBuilder
+        絞り込み用データビルダー
+        後述の絞り込み用データ生成のためのルール追加を行えます
+        具体的な利用例はDarkPlasma_PartyAbilityTraitExtensionをご覧ください
+
+      EquipFilterBuilder.withEquipToTraitsRule
+        : ((MZ.Weapon|MZ.Armor) => MZ.Trait[]) => void
+        装備から絞り込み用の特徴データを抽出するルールを追加する
+        独自に定義した特徴を絞り込み対応したい場合に利用してください
+
+      EquipFilterBuilder.withTraitToEffectNameRule
+        : ((traitId: number, dataId: number) => string|null) => void
+        指定特徴ID,効果IDから効果名を返すルールを追加する
+        同時に定義した効果を絞り込み対応したい場合に利用してください
+
+      EquipFilterBuilder.withoutTrait: (number) => void
+        表示対象外とする特徴IDを指定する
