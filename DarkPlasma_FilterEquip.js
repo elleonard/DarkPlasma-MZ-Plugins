@@ -15,7 +15,7 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
-
+* @base DarkPlasma_ParameterText
 
 * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  *
@@ -61,6 +61,8 @@
  * EquipFilterBuilder.withoutTrait: (number) => void
  *   表示対象外とする特徴IDを指定する
  *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_ParameterText version:1.0.4
  * 本プラグインを下記プラグインと共に利用できます。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  */
