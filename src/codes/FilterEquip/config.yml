@@ -3,6 +3,9 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/08/25'
+      version: '0.0.2'
+      description: '絞り込み有効化時に装備リストウィンドウを最上部までスクロール'
     - date: '2021/08/24'
       version: '0.0.1'
       description: '試作公開'

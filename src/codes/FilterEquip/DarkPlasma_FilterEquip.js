@@ -783,6 +783,7 @@ class Window_EquipFilter extends Window_Selectable {
     this._data = this.filterNameList().concat(['すべて表示', '閉じる']);
     if (this._itemWindow) {
       this._itemWindow.refresh();
+      this._itemWindow.select(0);
     }
     super.refresh();
   }
