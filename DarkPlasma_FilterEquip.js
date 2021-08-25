@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 0.0.2
+// DarkPlasma_FilterEquip 0.0.3
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/08/26 0.0.3 スクロールできていない不具合を修正
  * 2021/08/25 0.0.2 絞り込み有効化時に装備リストウィンドウを最上部までスクロール
  * 2021/08/24 0.0.1 試作公開
  */
@@ -32,7 +33,7 @@
  * @default 2
  *
  * @help
- * version: 0.0.2
+ * version: 0.0.3
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -1018,7 +1019,10 @@
       return false;
     }
 
-    toggleFilter() {}
+    toggleFilter() {
+      this._itemWindow.select(0);
+      this._itemWindow.scrollTo(0, 0);
+    }
 
     allOff() {}
 
@@ -1030,7 +1034,6 @@
       this._data = this.filterNameList().concat(['すべて表示', '閉じる']);
       if (this._itemWindow) {
         this._itemWindow.refresh();
-        this._itemWindow.select(0);
       }
       super.refresh();
     }
@@ -1046,6 +1049,7 @@
     }
 
     toggleFilter() {
+      super.toggleFilter();
       this._filter.toggleTrait(this.index());
     }
 
@@ -1075,6 +1079,7 @@
     }
 
     toggleFilter() {
+      super.toggleFilter();
       this._filter.toggleEffect(this._filterTraitWindow.index(), this.index());
     }
 
