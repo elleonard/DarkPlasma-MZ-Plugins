@@ -771,7 +771,10 @@ class Window_EquipFilter extends Window_Selectable {
     return false;
   }
 
-  toggleFilter() {}
+  toggleFilter() {
+    this._itemWindow.select(0);
+    this._itemWindow.scrollTo(0, 0);
+  }
 
   allOff() {}
 
@@ -783,7 +786,6 @@ class Window_EquipFilter extends Window_Selectable {
     this._data = this.filterNameList().concat(['すべて表示', '閉じる']);
     if (this._itemWindow) {
       this._itemWindow.refresh();
-      this._itemWindow.select(0);
     }
     super.refresh();
   }
@@ -799,6 +801,7 @@ class Window_EquipFilterTrait extends Window_EquipFilter {
   }
 
   toggleFilter() {
+    super.toggleFilter();
     this._filter.toggleTrait(this.index());
   }
 
@@ -828,6 +831,7 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
   }
 
   toggleFilter() {
+    super.toggleFilter();
     this._filter.toggleEffect(this._filterTraitWindow.index(), this.index());
   }
 
