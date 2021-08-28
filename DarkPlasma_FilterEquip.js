@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 0.0.3
+// DarkPlasma_FilterEquip 0.0.4
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/08/28 0.0.4 装備選択キャンセル時に絞り込みを解除する, 効果選択時にshiftで絞り込みウィンドウを閉じる
  * 2021/08/26 0.0.3 スクロールできていない不具合を修正
  * 2021/08/25 0.0.2 絞り込み有効化時に装備リストウィンドウを最上部までスクロール
  * 2021/08/24 0.0.1 試作公開
@@ -33,7 +34,7 @@
  * @default 2
  *
  * @help
- * version: 0.0.3
+ * version: 0.0.4
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -278,6 +279,7 @@
     this._filterWindowLayer.addChild(this._filterTraitWindow);
 
     this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
+    this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
     this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
     this._filterEffectWindow.setItemWindow(this._itemWindow);
     this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
@@ -354,6 +356,7 @@
    */
   Scene_Equip.prototype.onFilterClose = function () {
     this._filterTraitWindow.hide();
+    this._filterEffectWindow.hide();
     this._itemWindow.activate();
     this._itemWindow.select(0);
     this._itemWindow.scrollTo(0, 0);
@@ -378,6 +381,12 @@
   Scene_Equip.prototype.onSlotOk = function () {
     this._itemWindow.setFilter(this._filters[this._slotWindow.index()]);
     _Scene_Equip_onSlotOk.call(this);
+  };
+
+  const _Scene_Equip_onItemCancel = Scene_Equip.prototype.onItemCancel;
+  Scene_Equip.prototype.onItemCancel = function () {
+    _Scene_Equip_onItemCancel.call(this);
+    this._filters[this._slotWindow.index()].allOff();
   };
 
   /**
@@ -772,6 +781,16 @@
      */
     toggleTrait(index) {
       this._traits[index].toggle();
+    }
+
+    /**
+     * 全ての特徴・効果の絞り込みをOFFにする（すべて表示する）
+     */
+    allOff() {
+      this._traits.forEach((trait) => {
+        trait.off();
+        trait.allOff();
+      });
     }
 
     /**
