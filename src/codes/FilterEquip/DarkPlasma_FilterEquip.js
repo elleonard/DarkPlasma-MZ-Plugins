@@ -30,6 +30,7 @@ Scene_Equip.prototype.createFilterWindows = function () {
   this._filterWindowLayer.addChild(this._filterTraitWindow);
 
   this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
+  this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
   this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
   this._filterEffectWindow.setItemWindow(this._itemWindow);
   this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
@@ -106,6 +107,7 @@ Scene_Equip.prototype.onFilterOpen = function () {
  */
 Scene_Equip.prototype.onFilterClose = function () {
   this._filterTraitWindow.hide();
+  this._filterEffectWindow.hide();
   this._itemWindow.activate();
   this._itemWindow.select(0);
   this._itemWindow.scrollTo(0, 0);
@@ -130,6 +132,12 @@ const _Scene_Equip_onSlotOk = Scene_Equip.prototype.onSlotOk;
 Scene_Equip.prototype.onSlotOk = function () {
   this._itemWindow.setFilter(this._filters[this._slotWindow.index()]);
   _Scene_Equip_onSlotOk.call(this);
+};
+
+const _Scene_Equip_onItemCancel = Scene_Equip.prototype.onItemCancel;
+Scene_Equip.prototype.onItemCancel = function () {
+  _Scene_Equip_onItemCancel.call(this);
+  this._filters[this._slotWindow.index()].allOff();
 };
 
 /**
@@ -524,6 +532,16 @@ class EquipFilter {
    */
   toggleTrait(index) {
     this._traits[index].toggle();
+  }
+
+  /**
+   * 全ての特徴・効果の絞り込みをOFFにする（すべて表示する）
+   */
+  allOff() {
+    this._traits.forEach((trait) => {
+      trait.off();
+      trait.allOff();
+    });
   }
 
   /**

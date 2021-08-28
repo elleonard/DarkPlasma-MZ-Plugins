@@ -3,6 +3,9 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/08/28'
+      version: '0.0.4'
+      description: '装備選択キャンセル時に絞り込みを解除する, 効果選択時にshiftで絞り込みウィンドウを閉じる'
     - date: '2021/08/26'
       version: '0.0.3'
       description: 'スクロールできていない不具合を修正'
