@@ -308,10 +308,14 @@ function generateHeader(config) {
             .filter((key) => config.dependencies[key])
             .map((key) => {
               if (Array.isArray(config.dependencies[key])) {
+                if (config.dependencies[key].length === 0) {
+                  return '';
+                }
                 return config.dependencies[key].map((plugin) => `* @${key} ${plugin.name}`).join('\n');
               }
               return ` * @${key} ${config.dependencies[key]}`;
             })
+            .filter((line) => line !== '')
             .join('\n')
         : '';
       const structureTypes = [];
