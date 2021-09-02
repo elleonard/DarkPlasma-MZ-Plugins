@@ -419,8 +419,19 @@ class Window_EnemyBookIndex extends Window_Selectable {
     super.initialize(rect);
     this._isInBattle = isInBattle;
     this.refresh();
-    this.setTopRow(Window_EnemyBookIndex.lastTopRow);
-    this.select(Window_EnemyBookIndex.lastIndex);
+    if (this._isInBattle) {
+      this._battlerEnemyIndexes = Array.from(
+        new Set($gameTroop.members().map((gameEnemy) => this._list.indexOf(gameEnemy.enemy())))
+      ).sort((a, b) => a - b);
+      const firstIndex = this._battlerEnemyIndexes.find((index) => index > 0);
+      if (firstIndex) {
+        this.setTopRow(firstIndex);
+        this.select(firstIndex);
+      }
+    } else {
+      this.setTopRow(Window_EnemyBookIndex.lastTopRow);
+      this.select(Window_EnemyBookIndex.lastIndex);
+    }
     this.activate();
   }
 
@@ -531,6 +542,33 @@ class Window_EnemyBookIndex extends Window_Selectable {
     super.processCancel();
     Window_EnemyBookIndex.lastTopRow = this.topRow();
     Window_EnemyBookIndex.lastIndex = this.index();
+  }
+
+  cursorPagedown() {
+    if (this._battlerEnemyIndexes) {
+      this.selectNextBattlerEnemy();
+    } else {
+      super.cursorPagedown();
+    }
+  }
+
+  cursorPageup() {
+    if (this._battlerEnemyIndexes) {
+      this.selectPreviousBattlerEnemy();
+    } else {
+      super.cursorPageup();
+    }
+  }
+
+  selectNextBattlerEnemy() {
+    const nextIndex = this._battlerEnemyIndexes.find((index) => index > this.index()) || this._battlerEnemyIndexes[0];
+    this.smoothSelect(nextIndex);
+  }
+
+  selectPreviousBattlerEnemy() {
+    const candidates = this._battlerEnemyIndexes.filter((index) => index < this.index());
+    const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
+    this.smoothSelect(prevIndex);
   }
 
   /**

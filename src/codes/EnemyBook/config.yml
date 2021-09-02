@@ -3,6 +3,11 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/09/03'
+      version: '2.2.0'
+      description: '戦闘中最初に開いた時、出現している敵にカーソルを合わせる'
+    - description: '戦闘中、ページ切り替え操作で出現している敵を行き来する'
+    - description: '横型レイアウトを非推奨化（次回更新で削除予定）'
     - date: '2021/08/22'
       version: '2.1.0'
       description: '戦闘中に出現している敵をリストで強調する機能を追加'

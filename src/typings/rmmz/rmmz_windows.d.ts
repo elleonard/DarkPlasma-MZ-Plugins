@@ -225,8 +225,8 @@ declare class Window_Selectable extends Window_Base {
   public isCursorMovable(): boolean;
 
   public cursorDown(wrap: boolean): void;
-  public cursorUp(wrap: boolean): void;
-  public cursorRight(wrap: boolean): void;
+  public cursorUp(): void;
+  public cursorRight(): void;
   public cursorLeft(wrap: boolean): void;
   public cursorPagedown(): void;
   public cursorPageup(): void;
