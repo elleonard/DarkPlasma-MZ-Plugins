@@ -17,9 +17,7 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
-
-* @orderAfter DarkPlasma_FilterEquip
-
+ * @orderAfter DarkPlasma_FilterEquip
  *
  * @help
  * version: 1.1.0

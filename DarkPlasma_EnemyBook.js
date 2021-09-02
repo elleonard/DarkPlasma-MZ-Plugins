@@ -1,9 +1,12 @@
-// DarkPlasma_EnemyBook 2.1.0
+// DarkPlasma_EnemyBook 2.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/09/03 2.2.0 戦闘中最初に開いた時、出現している敵にカーソルを合わせる
+ *                  戦闘中、ページ切り替え操作で出現している敵を行き来する
+ *                  横型レイアウトを非推奨化（次回更新で削除予定）
  * 2021/08/22 2.1.0 戦闘中に出現している敵をリストで強調する機能を追加
  * 2021/07/05 2.0.8 MZ 1.3.2に対応
  * 2021/06/22 2.0.7 サブフォルダからの読み込みに対応
@@ -191,7 +194,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.1.0
+ * version: 2.2.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -450,7 +453,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.1.0
+ * version: 2.2.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1079,8 +1082,19 @@
       super.initialize(rect);
       this._isInBattle = isInBattle;
       this.refresh();
-      this.setTopRow(Window_EnemyBookIndex.lastTopRow);
-      this.select(Window_EnemyBookIndex.lastIndex);
+      if (this._isInBattle) {
+        this._battlerEnemyIndexes = Array.from(
+          new Set($gameTroop.members().map((gameEnemy) => this._list.indexOf(gameEnemy.enemy())))
+        ).sort((a, b) => a - b);
+        const firstIndex = this._battlerEnemyIndexes.find((index) => index > 0);
+        if (firstIndex) {
+          this.setTopRow(firstIndex);
+          this.select(firstIndex);
+        }
+      } else {
+        this.setTopRow(Window_EnemyBookIndex.lastTopRow);
+        this.select(Window_EnemyBookIndex.lastIndex);
+      }
       this.activate();
     }
 
@@ -1191,6 +1205,33 @@
       super.processCancel();
       Window_EnemyBookIndex.lastTopRow = this.topRow();
       Window_EnemyBookIndex.lastIndex = this.index();
+    }
+
+    cursorPagedown() {
+      if (this._battlerEnemyIndexes) {
+        this.selectNextBattlerEnemy();
+      } else {
+        super.cursorPagedown();
+      }
+    }
+
+    cursorPageup() {
+      if (this._battlerEnemyIndexes) {
+        this.selectPreviousBattlerEnemy();
+      } else {
+        super.cursorPageup();
+      }
+    }
+
+    selectNextBattlerEnemy() {
+      const nextIndex = this._battlerEnemyIndexes.find((index) => index > this.index()) || this._battlerEnemyIndexes[0];
+      this.smoothSelect(nextIndex);
+    }
+
+    selectPreviousBattlerEnemy() {
+      const candidates = this._battlerEnemyIndexes.filter((index) => index < this.index());
+      const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
+      this.smoothSelect(prevIndex);
     }
 
     /**

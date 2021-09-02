@@ -18,9 +18,8 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
-* @base DarkPlasma_ParameterText
-
-* @orderBefore DarkPlasma_PartyAbilityTraitExtension
+ * @base DarkPlasma_ParameterText
+ * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  *
  * @param traitName
  * @desc 絞り込み画面で表示する特殊能力値の特徴名を設定します。
