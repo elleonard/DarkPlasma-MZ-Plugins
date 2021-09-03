@@ -421,9 +421,14 @@ class Window_EnemyBookIndex extends Window_Selectable {
     this.refresh();
     if (this._isInBattle) {
       this._battlerEnemyIndexes = Array.from(
-        new Set($gameTroop.members().map((gameEnemy) => this._list.indexOf(gameEnemy.enemy())))
+        new Set(
+          $gameTroop
+            .members()
+            .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
+            .filter((index) => index > 0)
+        )
       ).sort((a, b) => a - b);
-      const firstIndex = this._battlerEnemyIndexes.find((index) => index > 0);
+      const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : null;
       if (firstIndex) {
         this.setTopRow(firstIndex);
         this.select(firstIndex);
@@ -544,8 +549,12 @@ class Window_EnemyBookIndex extends Window_Selectable {
     Window_EnemyBookIndex.lastIndex = this.index();
   }
 
+  battlerEnemyIsInBook() {
+    return this._battlerEnemyIndexes && this._battlerEnemyIndexes.length > 0;
+  }
+
   cursorPagedown() {
-    if (this._battlerEnemyIndexes) {
+    if (this.battlerEnemyIsInBook()) {
       this.selectNextBattlerEnemy();
     } else {
       super.cursorPagedown();
@@ -553,7 +562,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
   }
 
   cursorPageup() {
-    if (this._battlerEnemyIndexes) {
+    if (this.battlerEnemyIsInBook()) {
       this.selectPreviousBattlerEnemy();
     } else {
       super.cursorPageup();

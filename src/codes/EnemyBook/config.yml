@@ -4,6 +4,9 @@ DarkPlasma_EnemyBook:
   license: MIT
   histories:
     - date: '2021/09/03'
+      version: '2.2.1'
+      description: '図鑑に載らない敵のみの場合、ページ切り替え操作が効かなくなる不具合を修正'
+    - date: '2021/09/03'
       version: '2.2.0'
       description: '戦闘中最初に開いた時、出現している敵にカーソルを合わせる'
     - description: '戦闘中、ページ切り替え操作で出現している敵を行き来する'
