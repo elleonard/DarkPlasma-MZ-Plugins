@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 2.2.0
+// DarkPlasma_EnemyBook 2.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/09/03 2.2.0 戦闘中最初に開いた時、出現している敵にカーソルを合わせる
+ * 2021/09/03 2.2.1 図鑑に載らない敵のみの場合、ページ切り替え操作が効かなくなる不具合を修正
+ *            2.2.0 戦闘中最初に開いた時、出現している敵にカーソルを合わせる
  *                  戦闘中、ページ切り替え操作で出現している敵を行き来する
  *                  横型レイアウトを非推奨化（次回更新で削除予定）
  * 2021/08/22 2.1.0 戦闘中に出現している敵をリストで強調する機能を追加
@@ -194,7 +195,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.2.0
+ * version: 2.2.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -453,7 +454,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.2.0
+ * version: 2.2.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1084,9 +1085,14 @@
       this.refresh();
       if (this._isInBattle) {
         this._battlerEnemyIndexes = Array.from(
-          new Set($gameTroop.members().map((gameEnemy) => this._list.indexOf(gameEnemy.enemy())))
+          new Set(
+            $gameTroop
+              .members()
+              .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
+              .filter((index) => index > 0)
+          )
         ).sort((a, b) => a - b);
-        const firstIndex = this._battlerEnemyIndexes.find((index) => index > 0);
+        const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : null;
         if (firstIndex) {
           this.setTopRow(firstIndex);
           this.select(firstIndex);
@@ -1207,8 +1213,12 @@
       Window_EnemyBookIndex.lastIndex = this.index();
     }
 
+    battlerEnemyIsInBook() {
+      return this._battlerEnemyIndexes && this._battlerEnemyIndexes.length > 0;
+    }
+
     cursorPagedown() {
-      if (this._battlerEnemyIndexes) {
+      if (this.battlerEnemyIsInBook()) {
         this.selectNextBattlerEnemy();
       } else {
         super.cursorPagedown();
@@ -1216,7 +1226,7 @@
     }
 
     cursorPageup() {
-      if (this._battlerEnemyIndexes) {
+      if (this.battlerEnemyIsInBook()) {
         this.selectPreviousBattlerEnemy();
       } else {
         super.cursorPageup();
