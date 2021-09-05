@@ -4,6 +4,9 @@ DarkPlasma_HighlightNewItem:
   license: MIT
   histories:
     - date: '2021/09/05'
+      version: '1.0.1'
+      description: '売却時に入手した扱いになってしまう不具合を修正'
+    - date: '2021/09/05'
       version: '1.0.0'
       description: '公開'
 

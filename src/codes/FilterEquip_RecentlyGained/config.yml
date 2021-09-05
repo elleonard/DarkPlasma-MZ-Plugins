@@ -1,0 +1,33 @@
+DarkPlasma_FilterEquip_RecentlyGained:
+  name: DarkPlasma_FilterEquip_RecentlyGained
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '最近入手した装備を絞り込む'
+  parameters:
+    - param: threshold
+      text:
+        ja: 装備入手記録数
+      desc:
+        ja: この件数だけ装備の入手履歴を記録し、この履歴に含まれる装備を最近入手した装備として扱います。
+      type: number
+      default: 5
+      min: 1
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_FilterEquip
+        version: 0.0.4
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      DarkPlasma_FilterEquipによる装備絞り込みに「最近入手した装備」を追加します。

@@ -3,8 +3,7 @@ import { settings } from './_build/DarkPlasma_HighlightNewItem_parameters';
 Game_Party = class extends Game_Party {
   gainItem(item, amount, includeEquip) {
     super.gainItem(item, amount, includeEquip);
-    const container = this.itemContainer(item);
-    if (container) {
+    if (amount > 0) {
       this.addNewItems(item);
     } else {
       this.touchItem(item);
