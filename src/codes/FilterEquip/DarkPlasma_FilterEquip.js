@@ -171,6 +171,16 @@ function Window_ShiftMixIn(windowClass) {
 }
 
 /**
+ * @type {number}
+ */
+let uniqueTraitId = settings.startIdOfUniqueTraitId;
+
+/**
+ * 独自traitIdのキャッシュ
+ */
+const uniqueTraitIdCache = {};
+
+/**
  * 独自dataIdの定義用
  */
 const uniqueDataIds = {
@@ -273,6 +283,7 @@ class EquipFilterBuilder {
    */
   withTrait(traitId) {
     this._traitList.push(traitId);
+    return this;
   }
 
   /**
@@ -281,6 +292,7 @@ class EquipFilterBuilder {
    */
   withoutTrait(traitId) {
     this._traitList = this._traitList.filter((trait) => trait.id !== traitId);
+    return this;
   }
 
   /**
@@ -461,6 +473,23 @@ class EquipFilterBuilder {
         return null;
     }
     return null;
+  }
+
+  /**
+   * 独自のtraitIdを確保する
+   * @param {string} pluginName プラグイン名
+   * @param {string} traitName 特徴名
+   * @param {number} id ID
+   * @return {number}
+   */
+  static allocateUniqueTraitId(pluginName, traitName, id) {
+    const cacheKey = `${pluginName}_${id}`;
+    if (!uniqueTraitIdCache[cacheKey]) {
+      uniqueTraitIdCache[cacheKey] = uniqueTraitId;
+      TRAIT_NAMES[uniqueTraitIdCache[cacheKey]] = traitName;
+      uniqueTraitId++;
+    }
+    return uniqueTraitIdCache[cacheKey];
   }
 
   /**
