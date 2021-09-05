@@ -1,0 +1,32 @@
+DarkPlasma_HighlightNewItem:
+  name: DarkPlasma_HighlightNewItem
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/09/05'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '新しく入手したアイテムをメニューのアイテム一覧で強調表示する'
+  parameters:
+    - param: newItemColor
+      text:
+        ja: アイテム色
+      desc:
+        ja: 新しく入手したアイテムの色番号
+      type: number
+      default: 2
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
+
+      強調表示は一度カーソルを合わせると元の色に戻ります。
