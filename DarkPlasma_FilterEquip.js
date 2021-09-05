@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 0.0.4
+// DarkPlasma_FilterEquip 0.0.5
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/09/05 0.0.5 独自特徴を定義する機能を追加
  * 2021/08/28 0.0.4 装備選択キャンセル時に絞り込みを解除する, 効果選択時にshiftで絞り込みウィンドウを閉じる
  * 2021/08/26 0.0.3 スクロールできていない不具合を修正
  * 2021/08/25 0.0.2 絞り込み有効化時に装備リストウィンドウを最上部までスクロール
@@ -20,6 +21,7 @@
  *
  * @base DarkPlasma_ParameterText
  * @orderBefore DarkPlasma_PartyAbilityTraitExtension
+ * @orderBefore DarkPlasma_FilterEquip_RecentlyGained
  *
  * @param traitName
  * @desc 絞り込み画面で表示する特殊能力値の特徴名を設定します。
@@ -32,8 +34,14 @@
  * @type number
  * @default 2
  *
+ * @param startIdOfUniqueTraitId
+ * @desc 独自に特徴IDを確保する際の始点ID。わからない場合はそのままにしてください
+ * @text 独自特徴ID始点
+ * @type number
+ * @default 71
+ *
  * @help
- * version: 0.0.4
+ * version: 0.0.5
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -48,25 +56,40 @@
  * Scene_Equip.prototype.equipFilterBuilder: () => EquipFilterBuilder
  *   絞り込み用データビルダー
  *   後述の絞り込み用データ生成のためのルール追加を行えます
- *   具体的な利用例はDarkPlasma_PartyAbilityTraitExtensionをご覧ください
+ *   具体的な利用例は下記プラグインをご覧ください
+ *    - DarkPlasma_PartyAbilityTraitExtension
+ *    - DarkPlasma_FilterEquip_RecentlyGained
  *
- * EquipFilterBuilder.withEquipToTraitsRule
- *   : ((MZ.Weapon|MZ.Armor) => MZ.Trait[]) => void
+ * EquipFilterBuilder.allocateUniqueTraitId
+ *   : (stirng, number) => number
+ *   独自の特徴IDを確保する
+ *
+ * EquipFilterBuilder.allocateUniqueDataId
+ *   : (string, number, number) => number
+ *   独自の効果IDを確保する
+ *
+ * EquipFilterBuilder.prototype.withEquipToTraitsRule
+ *   : ((MZ.Weapon|MZ.Armor) => MZ.Trait[]) => EquipFilterBuilder
  *   装備から絞り込み用の特徴データを抽出するルールを追加する
  *   独自に定義した特徴を絞り込み対応したい場合に利用してください
  *
- * EquipFilterBuilder.withTraitToEffectNameRule
- *   : ((traitId: number, dataId: number) => string|null) => void
+ * EquipFilterBuilder.prototype.withTraitToEffectNameRule
+ *   : ((traitId: number, dataId: number) => string|null) => EquipFilterBuilder
  *   指定特徴ID,効果IDから効果名を返すルールを追加する
- *   同時に定義した効果を絞り込み対応したい場合に利用してください
+ *   独自に定義した効果を絞り込み対応したい場合に利用してください
  *
- * EquipFilterBuilder.withoutTrait: (number) => void
+ * EquipFilterBuilder.prototype.withoutTrait: (number) => EquipFilterBuilder
  *   表示対象外とする特徴IDを指定する
+ *
+ * EquipFilterBuilder.prototype.withTrait: (number) => EquipFilterBuilder
+ *   表示対象とする特徴IDを追加する
+ *   独自に定義した特徴を絞り込み対応したい倍に利用してください
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_ParameterText version:1.0.4
  * 本プラグインを下記プラグインと共に利用できます。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
+ * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
  */
 /*~struct~TraitName:
  * @param elementRate
@@ -246,6 +269,7 @@
       };
     })(pluginParameters.traitName || '{}'),
     selectedItemColor: Number(pluginParameters.selectedItemColor || 2),
+    startIdOfUniqueTraitId: Number(pluginParameters.startIdOfUniqueTraitId || 71),
   };
 
   const _Scene_Equip_create = Scene_Equip.prototype.create;
@@ -419,6 +443,16 @@
   }
 
   /**
+   * @type {number}
+   */
+  let uniqueTraitId = settings.startIdOfUniqueTraitId;
+
+  /**
+   * 独自traitIdのキャッシュ
+   */
+  const uniqueTraitIdCache = {};
+
+  /**
    * 独自dataIdの定義用
    */
   const uniqueDataIds = {
@@ -521,6 +555,7 @@
      */
     withTrait(traitId) {
       this._traitList.push(traitId);
+      return this;
     }
 
     /**
@@ -529,6 +564,7 @@
      */
     withoutTrait(traitId) {
       this._traitList = this._traitList.filter((trait) => trait.id !== traitId);
+      return this;
     }
 
     /**
@@ -709,6 +745,23 @@
           return null;
       }
       return null;
+    }
+
+    /**
+     * 独自のtraitIdを確保する
+     * @param {string} pluginName プラグイン名
+     * @param {string} traitName 特徴名
+     * @param {number} id ID
+     * @return {number}
+     */
+    static allocateUniqueTraitId(pluginName, traitName, id) {
+      const cacheKey = `${pluginName}_${id}`;
+      if (!uniqueTraitIdCache[cacheKey]) {
+        uniqueTraitIdCache[cacheKey] = uniqueTraitId;
+        TRAIT_NAMES[uniqueTraitIdCache[cacheKey]] = traitName;
+        uniqueTraitId++;
+      }
+      return uniqueTraitIdCache[cacheKey];
     }
 
     /**
