@@ -4,6 +4,9 @@ DarkPlasma_HighlightNewItem:
   license: MIT
   histories:
     - date: '2021/09/06'
+      version: '1.0.3'
+      description: '外した装備が新しく入手した扱いになる不具合を修正'
+    - date: '2021/09/06'
       version: '1.0.2'
       description: '装備のつけ外しでエラーになる不具合を修正'
     - date: '2021/09/05'

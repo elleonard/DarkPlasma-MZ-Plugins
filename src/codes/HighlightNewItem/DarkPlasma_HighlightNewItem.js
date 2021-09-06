@@ -1,5 +1,18 @@
 import { settings } from './_build/DarkPlasma_HighlightNewItem_parameters';
 
+Game_Actor = class extends Game_Actor {
+  tradeItemWithParty(newItem, oldItem) {
+    const result = super.tradeItemWithParty(newItem, oldItem);
+    if (result && oldItem) {
+      /**
+       * 装備変更後に新アイテムとしてマークされてしまうので強引に触る
+       */
+      $gameParty.touchItem(oldItem);
+    }
+    return result;
+  }
+};
+
 Game_Party = class extends Game_Party {
   gainItem(item, amount, includeEquip) {
     super.gainItem(item, amount, includeEquip);
