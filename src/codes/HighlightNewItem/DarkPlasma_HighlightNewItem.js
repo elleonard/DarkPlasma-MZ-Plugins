@@ -3,10 +3,12 @@ import { settings } from './_build/DarkPlasma_HighlightNewItem_parameters';
 Game_Party = class extends Game_Party {
   gainItem(item, amount, includeEquip) {
     super.gainItem(item, amount, includeEquip);
-    if (amount > 0) {
-      this.addNewItems(item);
-    } else {
-      this.touchItem(item);
+    if (item) {
+      if (amount > 0) {
+        this.addNewItems(item);
+      } else {
+        this.touchItem(item);
+      }
     }
   }
 
@@ -18,7 +20,7 @@ Game_Party = class extends Game_Party {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
-    this._newItemIds = this._newItemIds.filter((id) => id !== item.id);
+    this._newItemIds = this._newItemIds.filter((id) => id && id !== item.id);
   }
 
   /**
