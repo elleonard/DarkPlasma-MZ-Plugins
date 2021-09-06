@@ -1,9 +1,10 @@
-// DarkPlasma_HighlightNewItem 1.0.1
+// DarkPlasma_HighlightNewItem 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/09/06 1.0.2 装備のつけ外しでエラーになる不具合を修正
  * 2021/09/05 1.0.1 売却時に入手した扱いになってしまう不具合を修正
  *            1.0.0 公開
  */
@@ -23,7 +24,7 @@
  * @default 2
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
@@ -45,10 +46,12 @@
   Game_Party = class extends Game_Party {
     gainItem(item, amount, includeEquip) {
       super.gainItem(item, amount, includeEquip);
-      if (amount > 0) {
-        this.addNewItems(item);
-      } else {
-        this.touchItem(item);
+      if (item) {
+        if (amount > 0) {
+          this.addNewItems(item);
+        } else {
+          this.touchItem(item);
+        }
       }
     }
 
@@ -60,7 +63,7 @@
       if (!this._newItemIds) {
         this._newItemIds = [];
       }
-      this._newItemIds = this._newItemIds.filter((id) => id !== item.id);
+      this._newItemIds = this._newItemIds.filter((id) => id && id !== item.id);
     }
 
     /**
