@@ -1,10 +1,11 @@
-// DarkPlasma_HighlightNewItem 1.0.2
+// DarkPlasma_HighlightNewItem 1.0.3
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/09/06 1.0.2 装備のつけ外しでエラーになる不具合を修正
+ * 2021/09/06 1.0.3 外した装備が新しく入手した扱いになる不具合を修正
+ *            1.0.2 装備のつけ外しでエラーになる不具合を修正
  * 2021/09/05 1.0.1 売却時に入手した扱いになってしまう不具合を修正
  *            1.0.0 公開
  */
@@ -24,7 +25,7 @@
  * @default 2
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
@@ -41,6 +42,19 @@
 
   const settings = {
     newItemColor: Number(pluginParameters.newItemColor || 2),
+  };
+
+  Game_Actor = class extends Game_Actor {
+    tradeItemWithParty(newItem, oldItem) {
+      const result = super.tradeItemWithParty(newItem, oldItem);
+      if (result && oldItem) {
+        /**
+         * 装備変更後に新アイテムとしてマークされてしまうので強引に触る
+         */
+        $gameParty.touchItem(oldItem);
+      }
+      return result;
+    }
   };
 
   Game_Party = class extends Game_Party {
