@@ -647,6 +647,24 @@ class Window_FormationSelect extends Window_Selectable {
     }
   }
 
+  processCancel() {
+    if (this.processCancelEnabled()) {
+      super.processCancel();
+    } else {
+      this.playBuzzerSound();
+    }
+  }
+
+  processCancelEnabled() {
+    if (this.pendingIndex() >= 0) {
+      return true;
+    }
+    if ($gameParty.forwardMembersAreAllDead) {
+      return !$gameParty.forwardMembersAreAllDead();
+    }
+    return !$gameParty.isAllDead();
+  }
+
   itemRect(index) {
     if (index < $gameParty.battleMembers().length) {
       return this._battleMemberWindow.itemRect(index);
