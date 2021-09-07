@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.2.4
+// DarkPlasma_Formation 1.2.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/09/08 1.2.5 並び替えで全滅できる不具合を修正
  * 2021/07/05 1.2.4 MZ 1.3.2に対応
  * 2021/06/23 1.2.3 $つき画像を歩行グラとするアクターを左向きに表示できない不具合を修正
  *            1.2.2 画面サイズとUIエリアのサイズが異なる場合にカーソルがズレて表示される不具合の修正
@@ -68,7 +69,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.2.4
+ * version: 1.2.5
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -744,6 +745,24 @@
       if (this._equipWindow) {
         this._equipWindow.setActor($gameParty.allMembers()[this.index()]);
       }
+    }
+
+    processCancel() {
+      if (this.processCancelEnabled()) {
+        super.processCancel();
+      } else {
+        this.playBuzzerSound();
+      }
+    }
+
+    processCancelEnabled() {
+      if (this.pendingIndex() >= 0) {
+        return true;
+      }
+      if ($gameParty.forwardMembersAreAllDead) {
+        return !$gameParty.forwardMembersAreAllDead();
+      }
+      return !$gameParty.isAllDead();
     }
 
     itemRect(index) {
