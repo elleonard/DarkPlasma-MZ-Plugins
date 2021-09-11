@@ -1,0 +1,37 @@
+DarkPlasma_ChangeBattlebackInBattle:
+  name: DarkPlasma_ChangeBattlebackInBattle
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/09/11'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '戦闘中に戦闘背景を変更する'
+  parameters: []
+  commands:
+    - command: changeBattleback
+      text:
+        ja: 戦闘背景を変更する
+      args:
+        - arg: back1
+          text:
+            ja: 背景1
+          type: file
+          dir: img/battlebacks1/
+        - arg: back2
+          text:
+            ja: 背景2
+          type: file
+          dir: img/battlebacks2/
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      戦闘中に戦闘背景を変更するプラグインコマンドを提供します。
