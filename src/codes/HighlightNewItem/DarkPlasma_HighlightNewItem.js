@@ -1,8 +1,12 @@
 import { settings } from './_build/DarkPlasma_HighlightNewItem_parameters';
 
-Game_Actor = class extends Game_Actor {
-  tradeItemWithParty(newItem, oldItem) {
-    const result = super.tradeItemWithParty(newItem, oldItem);
+/**
+ * @param {Game_Actor.prototype} gameActor
+ */
+function Game_Actor_HighlightNewItemMixIn(gameActor) {
+  const _tradeItemWithParty = gameActor.tradeItemWithParty;
+  gameActor.tradeItemWithParty = function (newItem, oldItem) {
+    const result = _tradeItemWithParty.call(this, newItem, oldItem);
     if (result && oldItem) {
       /**
        * 装備変更後に新アイテムとしてマークされてしまうので強引に触る
@@ -10,12 +14,18 @@ Game_Actor = class extends Game_Actor {
       $gameParty.touchItem(oldItem);
     }
     return result;
-  }
-};
+  };
+}
 
-Game_Party = class extends Game_Party {
-  gainItem(item, amount, includeEquip) {
-    super.gainItem(item, amount, includeEquip);
+Game_Actor_HighlightNewItemMixIn(Game_Actor.prototype);
+
+/**
+ * @param {Game_Party.prototype} gameParty
+ */
+function Game_Party_HighlightNewItemMixIn(gameParty) {
+  const _gainItem = gameParty.gainItem;
+  gameParty.gainItem = function (item, amount, includeEquip) {
+    _gainItem.call(this, item, amount, includeEquip);
     if (item) {
       if (amount > 0) {
         this.addNewItems(item);
@@ -23,51 +33,53 @@ Game_Party = class extends Game_Party {
         this.touchItem(item);
       }
     }
-  }
+  };
 
-  /**
-   * アイテムを新しいアイテム扱いではなくする
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
-   */
-  touchItem(item) {
+  gameParty.touchItem = function (item) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
     this._newItemIds = this._newItemIds.filter((id) => id && id !== item.id);
-  }
+  };
 
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
-  addNewItems(item) {
+  gameParty.addNewItems = function (item) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
     if (!this.hasItemAsNew(item)) {
       this._newItemIds.push(item.id);
     }
-  }
+  };
 
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    * @return {boolean}
    */
-  hasItemAsNew(item) {
+  gameParty.hasItemAsNew = function (item) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
     return this.hasItem(item, false) && this._newItemIds.includes(item.id);
-  }
-};
+  };
+}
 
-Window_ItemList = class extends Window_ItemList {
-  drawItemName(item, x, y, width) {
+Game_Party_HighlightNewItemMixIn(Game_Party.prototype);
+
+/**
+ * @param {Window_ItemList.prototype} windowClass
+ */
+function Window_ItemList_HighlightNewItemMixIn(windowClass) {
+  const _drawItemName = windowClass.drawItemName;
+  windowClass.drawItemName = function (item, x, y, width) {
     if (this.isNewItem(item)) {
       this.drawNewItemName(item, x, y, width);
     } else {
-      super.drawItemName(item, x, y, width);
+      _drawItemName.call(this, item, x, y, width);
     }
-  }
+  };
 
   /**
    * 新しいアイテムを描画する
@@ -77,29 +89,32 @@ Window_ItemList = class extends Window_ItemList {
    * @param {number} y Y座標
    * @param {number} width 幅
    */
-  drawNewItemName(item, x, y, width) {
+  windowClass.drawNewItemName = function (item, x, y, width) {
     const resetTextColor = this.resetTextColor;
     this.resetTextColor = () => {};
     this.changeTextColor(ColorManager.textColor(settings.newItemColor));
-    super.drawItemName(item, x, y, width);
+    _drawItemName.call(this, item, x, y, width);
     this.resetTextColor = resetTextColor;
     this.resetTextColor();
-  }
+  };
 
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
    * @return {boolean}
    */
-  isNewItem(item) {
+  windowClass.isNewItem = function (item) {
     return $gameParty.hasItemAsNew(item);
-  }
+  };
 
-  select(index) {
-    super.select(index);
+  const _select = windowClass.select;
+  windowClass.select = function (index) {
+    _select.call(this, index);
     const item = this.item();
     if (item && this.isNewItem(item)) {
       $gameParty.touchItem(item);
       this.refresh();
     }
-  }
-};
+  };
+}
+
+Window_ItemList_HighlightNewItemMixIn(Window_ItemList.prototype);
