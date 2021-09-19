@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/09/19'
+      version: '2.2.2'
+      description: 'ゲームデータ更新で登録可否のみを更新したケースに対応'
     - date: '2021/09/03'
       version: '2.2.1'
       description: '図鑑に載らない敵のみの場合、ページ切り替え操作が効かなくなる不具合を修正'

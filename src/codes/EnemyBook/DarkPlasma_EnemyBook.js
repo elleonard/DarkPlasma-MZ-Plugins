@@ -93,6 +93,18 @@ class EnemyBook {
     } else if (this._pages.length > $dataEnemies.length) {
       this._pages = this._pages.slice(0, $dataEnemies.length - 1);
     }
+    /**
+     * 数は変わらず、登録可否だけ変わったケースの補助
+     */
+    $dataEnemies
+      .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
+      .forEach(
+        (enemy) =>
+          (this._pages[enemy.id] = new EnemyBookPage(
+            false,
+            enemy.dropItems.map((_) => false)
+          ))
+      );
   }
 
   /**
