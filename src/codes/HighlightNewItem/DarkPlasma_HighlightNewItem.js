@@ -23,6 +23,18 @@ Game_Actor_HighlightNewItemMixIn(Game_Actor.prototype);
  * @param {Game_Party.prototype} gameParty
  */
 function Game_Party_HighlightNewItemMixIn(gameParty) {
+  const _initAllItems = gameParty.initAllItems;
+  gameParty.initAllItems = function () {
+    _initAllItems.call(this);
+    this.initializeNewItems();
+  };
+
+  gameParty.initializeNewItems = function () {
+    this._newItemIds = [];
+    this._newWeaponIds = [];
+    this._newArmorIds = [];
+  };
+
   const _gainItem = gameParty.gainItem;
   gameParty.gainItem = function (item, amount, includeEquip) {
     _gainItem.call(this, item, amount, includeEquip);
@@ -35,22 +47,41 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
     }
   };
 
+  /**
+   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
+   */
   gameParty.touchItem = function (item) {
-    if (!this._newItemIds) {
-      this._newItemIds = [];
+    if (DataManager.isItem(item)) {
+      if (!this._newItemIds) {
+        this._newItemIds = [];
+      }
+      this._newItemIds = this._newItemIds.filter((id) => id && id !== item.id);
+    } else if (DataManager.isWeapon(item)) {
+      if (!this._newWeaponIds) {
+        this._newWeaponIds = [];
+      }
+      this._newWeaponIds = this._newWeaponIds.filter((id) => id && id !== item.id);
+    } else if (DataManager.isArmor(item)) {
+      if (!this._newArmorIds) {
+        this._newArmorIds = [];
+      }
+      this._newArmorIds = this._newArmorIds.filter((id) => id && id !== item.id);
     }
-    this._newItemIds = this._newItemIds.filter((id) => id && id !== item.id);
   };
 
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
   gameParty.addNewItems = function (item) {
-    if (!this._newItemIds) {
-      this._newItemIds = [];
+    if (this.hasItemAsNew(item)) {
+      return;
     }
-    if (!this.hasItemAsNew(item)) {
+    if (DataManager.isItem(item)) {
       this._newItemIds.push(item.id);
+    } else if (DataManager.isWeapon(item)) {
+      this._newWeaponIds.push(item.id);
+    } else if (DataManager.isArmor(item)) {
+      this._newArmorIds.push(item.id);
     }
   };
 
@@ -62,7 +93,33 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
-    return this.hasItem(item, false) && this._newItemIds.includes(item.id);
+    const newItemIds = DataManager.isItem(item)
+      ? this.newItemIds()
+      : DataManager.isWeapon(item)
+      ? this.newWeaponIds()
+      : this.newArmorIds();
+    return this.hasItem(item, false) && newItemIds.includes(item.id);
+  };
+
+  gameParty.newItemIds = function () {
+    if (!this._newItemIds) {
+      this._newItemIds = [];
+    }
+    return this._newItemIds;
+  };
+
+  gameParty.newWeaponIds = function () {
+    if (!this._newWeaponIds) {
+      this._newWeaponIds = [];
+    }
+    return this._newWeaponIds;
+  };
+
+  gameParty.newArmorIds = function () {
+    if (!this._newArmorIds) {
+      this._newArmorIds = [];
+    }
+    return this._newArmorIds;
   };
 }
 

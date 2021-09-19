@@ -3,6 +3,9 @@ DarkPlasma_HighlightNewItem:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/09/19'
+      version: '1.0.5'
+      description: '同じIDの別種別のアイテムが新しく入手した扱いになる不具合を修正'
     - date: '2021/09/11'
       version: '1.0.4'
       description: '特定のクラスを操作するプラグインとの競合を修正'
