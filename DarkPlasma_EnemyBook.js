@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 2.2.1
+// DarkPlasma_EnemyBook 2.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/09/19 2.2.2 ゲームデータ更新で登録可否のみを更新したケースに対応
  * 2021/09/03 2.2.1 図鑑に載らない敵のみの場合、ページ切り替え操作が効かなくなる不具合を修正
  *            2.2.0 戦闘中最初に開いた時、出現している敵にカーソルを合わせる
  *                  戦闘中、ページ切り替え操作で出現している敵を行き来する
@@ -195,7 +196,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 2.2.1
+ * version: 2.2.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -454,7 +455,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 2.2.1
+ * version: 2.2.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -757,6 +758,18 @@
       } else if (this._pages.length > $dataEnemies.length) {
         this._pages = this._pages.slice(0, $dataEnemies.length - 1);
       }
+      /**
+       * 数は変わらず、登録可否だけ変わったケースの補助
+       */
+      $dataEnemies
+        .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
+        .forEach(
+          (enemy) =>
+            (this._pages[enemy.id] = new EnemyBookPage(
+              false,
+              enemy.dropItems.map((_) => false)
+            ))
+        );
     }
 
     /**
