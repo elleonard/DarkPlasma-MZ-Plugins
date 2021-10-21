@@ -1,0 +1,70 @@
+DarkPlasma_NoseForTreasure:
+  name: DarkPlasma_NoseForTreasure
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/10/21'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップ上にある特定のイベントの数を取得する'
+  parameters: []
+  commands:
+    - command: noseForTreasure
+      args:
+        - arg: tag
+          text:
+            ja: タグ
+          desc:
+            ja: 探すイベント種別を表すタグを指定します。
+          type: string
+        - arg: variableId
+          text:
+            ja: 変数
+          desc:
+            ja: 探した種類のイベントの数を取得する変数を指定します。
+          type: variable
+        - arg: selfSwitches
+          text:
+            ja: セルフスイッチ
+          desc:
+            ja: 特定セルフスイッチの状態で探すイベントを絞り込みます。
+          type: SelfSwitch[]
+          default:
+            - name: A
+              state: false
+  structures:
+    SelfSwitch:
+      - param: name
+        text:
+          ja: セルフスイッチ名
+        desc:
+          ja: セルフスイッチの名前を指定します。
+        type: select
+        default: A
+        options:
+          - name: A
+            value: A
+          - name: B
+            value: B
+          - name: C
+            value: C
+          - name: D
+            value: D
+      - param: state
+        text:
+          ja: ON/OFF
+        type: boolean
+        default: false
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      イベントのメモ欄にイベントの種類を表すタグを記入した上で
+      プラグインコマンドを実行すると、
+      指定した変数にその種類のイベントの数を取得します。
