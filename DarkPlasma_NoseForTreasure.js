@@ -1,9 +1,10 @@
-// DarkPlasma_NoseForTreasure 1.0.1
+// DarkPlasma_NoseForTreasure 1.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/10/23 1.1.0 特定イベントの上にバルーンを表示する機能を追加
  * 2021/10/22 1.0.1 プラグインコマンドの日本語名を追加
  * 2021/10/21 1.0.0 公開
  */
@@ -30,9 +31,45 @@
  * @text セルフスイッチ
  * @desc 特定セルフスイッチの状態で探すイベントを絞り込みます。
  * @type struct<SelfSwitch>[]
+ * @arg balloon
+ * @text フキダシ
+ * @desc 探した種類のイベントに表示するフキダシ
+ * @type select
+ * @option なし
+ * @value 0
+ * @option びっくり
+ * @value 1
+ * @option はてな
+ * @value 2
+ * @option 音符
+ * @value 3
+ * @option ハート
+ * @value 4
+ * @option 怒り
+ * @value 5
+ * @option 汗
+ * @value 6
+ * @option くしゃくしゃ
+ * @value 7
+ * @option 沈黙
+ * @value 8
+ * @option 電球
+ * @value 9
+ * @option Zzz
+ * @value 10
+ * @option ユーザー定義1
+ * @value 11
+ * @option ユーザー定義2
+ * @value 12
+ * @option ユーザー定義3
+ * @value 13
+ * @option ユーザー定義4
+ * @value 14
+ * @option ユーザー定義5
+ * @value 15
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * イベントのメモ欄にイベントの種類を表すタグを記入した上で
  * プラグインコマンドを実行すると、
  * 指定した変数にその種類のイベントの数を取得します。
@@ -78,18 +115,20 @@
         state: String(parsed.state) === 'true',
       };
     });
-    $gameVariables.setValue(
-      variableId,
-      $gameMap
-        .events()
-        .filter(
-          (gameEvent) =>
-            gameEvent.event().meta[tag] &&
-            selfSwitches.every(
-              (selfSwitch) => $gameSelfSwitches.value(gameEvent.selfSwitchKey(selfSwitch.name)) === selfSwitch.state
-            )
-        ).length
-    );
+    const targetEvents = $gameMap
+      .events()
+      .filter(
+        (gameEvent) =>
+          gameEvent.event().meta[tag] &&
+          selfSwitches.every(
+            (selfSwitch) => $gameSelfSwitches.value(gameEvent.selfSwitchKey(selfSwitch.name)) === selfSwitch.state
+          )
+      );
+    $gameVariables.setValue(variableId, targetEvents.length);
+    const balloon = Number(args.balloon);
+    if (balloon) {
+      targetEvents.forEach((event) => $gameTemp.requestBalloon(event, balloon));
+    }
   });
 
   Game_Event.prototype.selfSwitchKey = function (selfSwitchCh) {
