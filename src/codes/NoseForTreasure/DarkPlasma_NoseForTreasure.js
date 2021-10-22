@@ -14,18 +14,20 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.NOSE_FOR_TREASURE, fun
       state: String(parsed.state) === 'true',
     };
   });
-  $gameVariables.setValue(
-    variableId,
-    $gameMap
-      .events()
-      .filter(
-        (gameEvent) =>
-          gameEvent.event().meta[tag] &&
-          selfSwitches.every(
-            (selfSwitch) => $gameSelfSwitches.value(gameEvent.selfSwitchKey(selfSwitch.name)) === selfSwitch.state
-          )
-      ).length
-  );
+  const targetEvents = $gameMap
+    .events()
+    .filter(
+      (gameEvent) =>
+        gameEvent.event().meta[tag] &&
+        selfSwitches.every(
+          (selfSwitch) => $gameSelfSwitches.value(gameEvent.selfSwitchKey(selfSwitch.name)) === selfSwitch.state
+        )
+    );
+  $gameVariables.setValue(variableId, targetEvents.length);
+  const balloon = Number(args.balloon);
+  if (balloon) {
+    targetEvents.forEach((event) => $gameTemp.requestBalloon(event, balloon));
+  }
 });
 
 Game_Event.prototype.selfSwitchKey = function (selfSwitchCh) {

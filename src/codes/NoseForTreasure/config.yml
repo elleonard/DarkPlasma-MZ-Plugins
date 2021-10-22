@@ -3,6 +3,9 @@ DarkPlasma_NoseForTreasure:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/10/23'
+      version: '1.1.0'
+      description: '特定イベントの上にバルーンを表示する機能を追加'
     - date: '2021/10/22'
       version: '1.0.1'
       description: 'プラグインコマンドの日本語名を追加'
@@ -41,6 +44,46 @@ DarkPlasma_NoseForTreasure:
           default:
             - name: A
               state: false
+        - arg: balloon
+          text:
+            ja: フキダシ
+          desc:
+            ja: 探した種類のイベントに表示するフキダシ
+          type: select
+          default: 0
+          options:
+            - name: なし
+              value: 0
+            - name: びっくり
+              value: 1
+            - name: はてな
+              value: 2
+            - name: 音符
+              value: 3
+            - name: ハート
+              value: 4
+            - name: 怒り
+              value: 5
+            - name: 汗
+              value: 6
+            - name: くしゃくしゃ
+              value: 7
+            - name: 沈黙
+              value: 8
+            - name: 電球
+              value: 9
+            - name: Zzz
+              value: 10
+            - name: ユーザー定義1
+              value: 11
+            - name: ユーザー定義2
+              value: 12
+            - name: ユーザー定義3
+              value: 13
+            - name: ユーザー定義4
+              value: 14
+            - name: ユーザー定義5
+              value: 15
   structures:
     SelfSwitch:
       - param: name
