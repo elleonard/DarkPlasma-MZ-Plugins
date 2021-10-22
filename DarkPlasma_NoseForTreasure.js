@@ -1,9 +1,10 @@
-// DarkPlasma_NoseForTreasure 1.0.0
+// DarkPlasma_NoseForTreasure 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/10/22 1.0.1 プラグインコマンドの日本語名を追加
  * 2021/10/21 1.0.0 公開
  */
 
@@ -16,6 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @command noseForTreasure
+ * @text マップ内特定イベントの数取得
  * @arg tag
  * @text タグ
  * @desc 探すイベント種別を表すタグを指定します。
@@ -30,7 +32,7 @@
  * @type struct<SelfSwitch>[]
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * イベントのメモ欄にイベントの種類を表すタグを記入した上で
  * プラグインコマンドを実行すると、
  * 指定した変数にその種類のイベントの数を取得します。
