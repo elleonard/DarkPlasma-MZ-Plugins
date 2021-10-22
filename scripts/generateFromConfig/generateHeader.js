@@ -249,6 +249,14 @@ class PluginCommandArgument extends TypedParameter {
     }
     if (this.type()) {
       result.push(` * @type ${this.typeText(language)}`);
+      if (this.typeText(language) === 'select' && this._argument.options) {
+        this._argument.options.forEach((option) => {
+          result.push(` * @option ${option.name}`);
+          if (option.value || Number.isFinite(option.value)) {
+            result.push(` * @value ${option.value}`);
+          }
+        });
+      }
     }
     ['min', 'max', 'dir']
       .filter((annotation) => {
