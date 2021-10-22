@@ -3,6 +3,9 @@ DarkPlasma_NoseForTreasure:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/10/22'
+      version: '1.0.1'
+      description: 'プラグインコマンドの日本語名を追加'
     - date: '2021/10/21'
       version: '1.0.0'
       description: '公開'
@@ -14,6 +17,8 @@ DarkPlasma_NoseForTreasure:
   parameters: []
   commands:
     - command: noseForTreasure
+      text:
+        ja: マップ内特定イベントの数取得
       args:
         - arg: tag
           text:
