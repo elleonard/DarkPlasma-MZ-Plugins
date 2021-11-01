@@ -1,0 +1,73 @@
+DarkPlasma_ItemCommandCooldown:
+  name: DarkPlasma_ItemCommandCooldown
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/11/01'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテムコマンドにクールタイムを設定する'
+  parameters:
+    - param: defaultCooldownTurn
+      text:
+        ja: デフォルトターン数
+      desc:
+        ja: デフォルトのクールタイムターン数を設定します。
+      type: number
+      default: 3
+    - param: display
+      text:
+        ja: 表示設定
+      desc:
+        ja: コマンドの後ろにクールタイムターン数を表示する設定をします。
+      type: DisplaySetting
+      default:
+        enabled: true
+        format: CT:{turn}
+        color: 2
+  commands: []
+  structures:
+    DisplaySetting:
+      - param: enabled
+        text:
+          ja: 表示する
+        desc:
+          ja: ONの場合表示します。OFFの場合表示しません。
+        type: boolean
+        default: true
+      - param: format
+        text:
+          ja: 表示形式
+        desc:
+          ja: 表示形式を設定します。{turn}がターン数に置き換えられます。
+        type: string
+        default: CT:{turn}
+      - param: color
+        text:
+          ja: 色
+        desc:
+          ja: 表示色を設定します。
+        type: number
+        default: 2
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      アイテムコマンドにクールタイムを設定します。
+      アイテムコマンドを使用した後、
+      一定ターン数アイテムコマンドを使用不能にできます。
+
+      アクター、装備、ステート、職業のメモ欄に以下のように記述することで
+      アイテムコマンドのクールタイムをデフォルトから増減できます。
+
+      <itemCommandCooldownTurnPlus:1>
+       クールタイムターン数を1増やす
+
+      <itemCommandCooldownTurnPlus:-1>
+       クールタイムターン数を1減らす

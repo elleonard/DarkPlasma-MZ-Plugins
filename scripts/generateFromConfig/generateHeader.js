@@ -319,7 +319,7 @@ function generateHeader(config) {
                 if (config.dependencies[key].length === 0) {
                   return '';
                 }
-                return config.dependencies[key].map((plugin) => `* @${key} ${plugin.name}`).join('\n');
+                return config.dependencies[key].map((plugin) => ` * @${key} ${plugin.name}`).join('\n');
               }
               return ` * @${key} ${config.dependencies[key]}`;
             })
