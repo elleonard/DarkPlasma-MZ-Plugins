@@ -11,6 +11,11 @@ const PLUGIN_COMMAND_NAME = {
   CLEAR: 'clear enemyBook',
 };
 
+const DROP_RATE_FORMAT = {
+  PERCENT: 0,
+  FRACTION: 1,
+};
+
 /**
  * 図鑑登録可能かどうか
  * @param {MZ.Enemy} enemy エネミーデータ
@@ -283,19 +288,14 @@ class Scene_EnemyBook extends Scene_MenuBase {
    * @return {Rectangle}
    */
   percentWindowRect() {
-    return new Rectangle(
-      0,
-      0,
-      settings.verticalLayout ? Graphics.boxWidth / 3 : Graphics.boxWidth,
-      this.percentWindowHeight()
-    );
+    return new Rectangle(0, 0, Graphics.boxWidth / 3, this.percentWindowHeight());
   }
 
   /**
    * @return {number}
    */
   percentWindowHeight() {
-    return this.calcWindowHeight(settings.verticalLayout ? 2 : 1, false);
+    return this.calcWindowHeight(2, false);
   }
 
   /**
@@ -309,22 +309,22 @@ class Scene_EnemyBook extends Scene_MenuBase {
    * @return {number}
    */
   indexWindowWidth() {
-    return settings.verticalLayout ? Math.floor(Graphics.boxWidth / 3) : Graphics.boxWidth;
+    return Math.floor(Graphics.boxWidth / 3);
   }
 
   /**
    * @return {number}
    */
   indexWindowHeight() {
-    return settings.verticalLayout ? Graphics.boxHeight - this.percentWindowHeight() : this.calcWindowHeight(4, true);
+    return Graphics.boxHeight - this.percentWindowHeight();
   }
 
   /**
    * @return {Rectangle}
    */
   statusWindowRect() {
-    const x = settings.verticalLayout ? this.indexWindowWidth() : 0;
-    const y = settings.verticalLayout ? 0 : this.indexWindowHeight() + this.percentWindowHeight();
+    const x = this.indexWindowWidth();
+    const y = 0;
     return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
   }
 }
@@ -342,26 +342,15 @@ class EnemyBookWindows {
    * @param {boolean} isInBattle
    */
   constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect, isInBattle) {
-    this._detailMode = false;
     this._isInBattle = isInBattle;
     this._percentWindow = new Window_EnemyBookPercent(percentWindowRect);
     this._indexWindow = new Window_EnemyBookIndex(indexWindowRect, isInBattle);
-    this._indexWindow.setHandler('ok', this.toggleDetailMode.bind(this));
     this._indexWindow.setHandler('cancel', cancelHandler);
     this._statusWindow = new Window_EnemyBookStatus(statusWindowRect);
     parentLayer.addChild(this._percentWindow);
     parentLayer.addChild(this._indexWindow);
     parentLayer.addChild(this._statusWindow);
     this._indexWindow.setStatusWindow(this._statusWindow);
-  }
-
-  toggleDetailMode() {
-    if (settings.verticalLayout) {
-      return;
-    }
-    this._detailMode = !this._detailMode;
-    this._indexWindow.setDetailMode(this._detailMode);
-    this._statusWindow.setDetailMode(this._detailMode);
   }
 
   close() {
@@ -398,23 +387,12 @@ class Window_EnemyBookPercent extends Window_Base {
 
   drawPercent() {
     const offset = 50;
-    const width = settings.verticalLayout ? this.contentsWidth() : (Graphics.boxWidth >> 1) - offset;
+    const width = this.contentsWidth();
     const percentWidth = this.textWidth('0000000');
     this.drawText(`${settings.enemyPercentLabel}:`, 0, 0, width - percentWidth);
     this.drawText(`${Number($gameSystem.percentCompleteEnemy()).toFixed(1)}％`, 0, 0, width, 'right');
-    this.drawText(
-      `${settings.dropItemPercentLabel}:`,
-      settings.verticalLayout ? 0 : width + offset,
-      settings.verticalLayout ? this.lineHeight() : 0,
-      width - percentWidth
-    );
-    this.drawText(
-      `${Number($gameSystem.percentCompleteDrop()).toFixed(1)}％`,
-      settings.verticalLayout ? 0 : width + offset,
-      settings.verticalLayout ? this.lineHeight() : 0,
-      width,
-      'right'
-    );
+    this.drawText(`${settings.dropItemPercentLabel}:`, 0, this.lineHeight(), width - percentWidth);
+    this.drawText(`${Number($gameSystem.percentCompleteDrop()).toFixed(1)}％`, 0, this.lineHeight(), width, 'right');
   }
 
   refresh() {
@@ -456,7 +434,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
    * @return {number}
    */
   maxCols() {
-    return settings.verticalLayout ? 1 : 3;
+    return 1;
   }
 
   /**
@@ -543,17 +521,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
     }
   }
 
-  processOk() {
-    if (!settings.enableDetailMode || settings.verticalLayout) {
-      return;
-    }
-    if (this.isCurrentItemEnabled()) {
-      this.playOkSound();
-      this.callOkHandler();
-    } else {
-      this.playBuzzerSound();
-    }
-  }
+  processOk() {}
 
   processCancel() {
     super.processCancel();
@@ -591,16 +559,6 @@ class Window_EnemyBookIndex extends Window_Selectable {
     const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
     this.smoothSelect(prevIndex);
   }
-
-  /**
-   * 詳細モードを切り替える
-   * @param {boolean} mode 詳細モードONかOFFか
-   */
-  setDetailMode(mode) {
-    this.height = this.fittingHeight(mode ? 1 : 4);
-    this.setTopRow(this.row());
-    this.refresh();
-  }
 }
 
 Window_EnemyBookIndex.lastTopRow = 0;
@@ -614,7 +572,6 @@ class Window_EnemyBookStatus extends Window_Base {
     super.initialize(rect);
     this._enemy = null;
     this.setupEnemySprite(this.width, this.height);
-    this._detailMode = false;
     this.refresh();
   }
 
@@ -622,14 +579,13 @@ class Window_EnemyBookStatus extends Window_Base {
     this._enemySprite = new Sprite();
     this._enemySprite.anchor.x = 0.5;
     this._enemySprite.anchor.y = 0.5;
-    this._enemySprite.x = settings.verticalLayout ? width / 4 : width / 2 - 20;
-    this._enemySprite.y = settings.verticalLayout ? height / 4 + this.lineHeight() : height / 2;
+    this._enemySprite.x = width / 4;
+    this._enemySprite.y = height / 4 + this.lineHeight();
     this.addChildToBack(this._enemySprite);
   }
 
   contentsHeight() {
-    const maxHeight =
-      settings.enableDetailMode && !settings.verticalLayout ? Graphics.boxHeight - this.lineHeight(1) * 2 : this.height;
+    const maxHeight = this.height;
     return maxHeight - this.itemPadding() * 2;
   }
 
@@ -680,13 +636,7 @@ class Window_EnemyBookStatus extends Window_Base {
     this.resetTextColor();
     this.drawText(enemy.name, 0, 0);
 
-    if (settings.verticalLayout) {
-      this.drawPageWithVerticalLayout();
-    } else if (this._detailMode) {
-      this.drawPageWithDetailMode();
-    } else {
-      this.drawPage();
-    }
+    this.drawPageWithVerticalLayout();
   }
 
   drawPageWithVerticalLayout() {
@@ -724,97 +674,18 @@ class Window_EnemyBookStatus extends Window_Base {
     }
   }
 
-  drawPageWithDetailMode() {
-    const enemy = this._enemy;
-    const lineHeight = this.lineHeight();
-    this.drawLevel(this.itemPadding(), lineHeight + this.itemPadding());
-    this.drawStatus(this.itemPadding(), lineHeight * 2 + this.itemPadding());
-
-    this.drawExpAndGold(this.itemPadding(), lineHeight * 10 + this.itemPadding());
-
-    const dropItemWidth = 480;
-
-    this.drawDropItems(this.contentsWidth() - dropItemWidth, lineHeight * 7 + this.itemPadding(), dropItemWidth);
-
-    const weakAndResistWidth = 280;
-    this._weakLines = 1;
-    this._resistLines = 1;
-    this.drawWeakElementsAndStates(
-      this.contentsWidth() - weakAndResistWidth,
-      lineHeight + this.itemPadding(),
-      weakAndResistWidth
-    );
-    this.drawResistElementsAndStates(
-      this.contentsWidth() - weakAndResistWidth,
-      lineHeight * (2 + this._weakLines),
-      weakAndResistWidth
-    );
-    if (settings.devideResistAndNoEffect) {
-      this.drawNoEffectElementsAndStates(
-        this.contentsWidth() - weakAndResistWidth,
-        lineHeight * (4 + this._weakLines + this._resistLines),
-        weakAndResistWidth
-      );
-    }
-
-    const descWidth = 480;
-    if (enemy.meta.desc1) {
-      this.drawTextEx(enemy.meta.desc1, this.descriptionX(), this.descriptionY(), descWidth);
-    }
-    if (enemy.meta.desc2) {
-      this.drawTextEx(enemy.meta.desc2, this.descriptionX(), this.descriptionY() + lineHeight, descWidth);
-    }
-  }
-
   /**
    * @return {number}
    */
   descriptionX() {
-    return settings.verticalLayout
-      ? settings.devideResistAndNoEffect
-        ? this.contentsWidth() / 2 + this.itemPadding() / 2
-        : 0
-      : this.contentsWidth() - descWidth;
+    return settings.devideResistAndNoEffect ? this.contentsWidth() / 2 + this.itemPadding() / 2 : 0;
   }
 
   /**
    * @return {number}
    */
   descriptionY() {
-    return settings.verticalLayout
-      ? this.itemPadding() + this.lineHeight() * 14
-      : this.itemPadding() + this.lineHeight() * 10;
-  }
-
-  drawPage() {
-    const enemy = this._enemy;
-    const lineHeight = this.lineHeight();
-    this.drawLevel(this.contentsWidth() - 280, this.itemPadding());
-    this.drawStatus(this.itemPadding(), lineHeight + this.itemPadding());
-
-    const rewardsWidth = 280;
-    this.drawExpAndGold(this.contentsWidth() - rewardsWidth, lineHeight + this.itemPadding());
-
-    const dropItemWidth = rewardsWidth;
-    this.drawDropItems(this.contentsWidth() - dropItemWidth, lineHeight * 3 + this.itemPadding(), dropItemWidth);
-
-    const descWidth = 480;
-    if (enemy.meta.desc1) {
-      this.drawTextEx(
-        enemy.meta.desc1,
-        this.contentsWidth() - descWidth,
-        this.itemPadding() + lineHeight * 7,
-        descWidth
-      );
-    }
-    if (enemy.meta.desc2) {
-      this.drawTextEx(
-        enemy.meta.desc2,
-        this.contentsWidth() - descWidth,
-        this.itemPadding() + lineHeight * 8,
-        descWidth
-      );
-    }
+    return this.itemPadding() + this.lineHeight() * 14;
   }
 
   /**
@@ -840,13 +711,13 @@ class Window_EnemyBookStatus extends Window_Base {
   drawStatus(x, y) {
     const lineHeight = this.lineHeight();
     const enemy = this._enemy;
-    for (var i = 0; i < 8; i++) {
+    [...Array(8).keys()].forEach((i) => {
       this.changeTextColor(this.systemColor());
       this.drawText(TextManager.param(i), x, y, 160);
       this.resetTextColor();
       this.drawText(enemy.params[i], x + 160, y, 60, 'right');
       y += lineHeight;
-    }
+    });
   }
 
   /**
@@ -856,30 +727,18 @@ class Window_EnemyBookStatus extends Window_Base {
    */
   drawExpAndGold(x, y) {
     const enemy = this._enemy;
-    if (!settings.verticalLayout) {
-      this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.exp, x, y, 160);
-      this.resetTextColor();
-      this.drawText(enemy.exp, x + 160, y, 60, 'right');
+    this.resetTextColor();
+    this.drawText(enemy.exp, x, y);
+    x += this.textWidth(enemy.exp) + 6;
+    this.changeTextColor(this.systemColor());
+    this.drawText(TextManager.expA, x, y);
+    x += this.textWidth(TextManager.expA + '  ');
 
-      this.changeTextColor(this.systemColor());
-      this.drawText('お金', x, y + this.lineHeight(), 160);
-      this.resetTextColor();
-      this.drawText(enemy.gold, x + 160, y + this.lineHeight(), 60, 'right');
-    } else {
-      this.resetTextColor();
-      this.drawText(enemy.exp, x, y);
-      x += this.textWidth(enemy.exp) + 6;
-      this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.expA, x, y);
-      x += this.textWidth(TextManager.expA + '  ');
-
-      this.resetTextColor();
-      this.drawText(enemy.gold, x, y);
-      x += this.textWidth(enemy.gold) + 6;
-      this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.currencyUnit, x, y);
-    }
+    this.resetTextColor();
+    this.drawText(enemy.gold, x, y);
+    x += this.textWidth(enemy.gold) + 6;
+    this.changeTextColor(this.systemColor());
+    this.drawText(TextManager.currencyUnit, x, y);
   }
 
   /**
@@ -891,7 +750,7 @@ class Window_EnemyBookStatus extends Window_Base {
   drawDropItems(x, y, rewardsWidth) {
     const enemy = this._enemy;
     const lineHeight = this.lineHeight();
-    const displayDropRate = settings.displayDropRate || this._detailMode;
+    const displayDropRate = settings.displayDropRate;
     enemy.dropItems.forEach((dropItems, index) => {
       if (dropItems.kind > 0) {
         const dropRateWidth = this.textWidth('0000000');
@@ -924,11 +783,18 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} width 横幅
    */
   drawDropRate(denominator, x, y, width) {
-    if ((!settings.displayDropRate && !this._detailMode) || !denominator) {
+    if (!settings.displayDropRate || !denominator) {
       return;
     }
     const dropRate = Number(100 / denominator).toFixed(1);
-    this.drawText(`${dropRate}％`, x, y, width, 'right');
+    switch (settings.dropRateFormat) {
+      case DROP_RATE_FORMAT.PERCENT:
+        this.drawText(`${dropRate}％`, x, y, width, 'right');
+        break;
+      case DROP_RATE_FORMAT.FRACTION:
+        this.drawText(`1/${denominator}`, x, y, width, 'right');
+        break;
+    }
   }
 
   /**
@@ -973,7 +839,7 @@ class Window_EnemyBookStatus extends Window_Base {
   }
 
   maxIconsPerLine() {
-    return settings.verticalLayout ? 16 : 8;
+    return 16;
   }
 
   /**
@@ -1131,14 +997,6 @@ class Window_EnemyBookStatus extends Window_Base {
    */
   isExcludedResistState(stateId) {
     return settings.excludeResistStates.includes(stateId);
-  }
-
-  setDetailMode(mode) {
-    const y = mode ? this.fittingHeight(1) * 2 : this.fittingHeight(1) + this.fittingHeight(4);
-    this.y = y;
-    this.height = Graphics.boxHeight - y;
-    this._detailMode = mode;
-    this.refresh();
   }
 }
 
@@ -1366,3 +1224,7 @@ Window_Command.prototype.processEnemyBook = function () {
   this.updateInputData();
   this.callHandler('enemyBook');
 };
+
+/**
+ * TODO: ドロップ率表示を百分率ではなく分数表示にできる設定追加
+ */

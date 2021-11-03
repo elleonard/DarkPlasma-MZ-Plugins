@@ -3,6 +3,10 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/11/03'
+      version: '3.0.0'
+      description: 'ドロップ率分数表示に対応'
+    - description: '横型レイアウトを削除'
     - date: '2021/09/19'
       version: '2.2.2'
       description: 'ゲームデータ更新で登録可否のみを更新したケースに対応'
@@ -93,21 +97,17 @@ DarkPlasma_EnemyBook:
         en: Display Drop Rate
       type: boolean
       default: false
-    - param: detailMode
+    - param: dropRateFormat
       text:
-        ja: 詳細モード設定
-        en: Detail Mode
-      dummy: true
-    - param: enableDetailMode
-      text:
-        ja: 詳細モード有効
-        en: Enable Detail Mode
-      desc:
-        ja: 詳細モードを有効にします。決定キーで詳細モードON/OFFを切り替えます。縦型デザイン時は無効になります
-        en: Enable Ok button for display enemy detail.
-      parent: detailMode
-      type: boolean
-      default: false
+        ja: ドロップ率表示形式
+        en: Drop Rate Format
+      type: select
+      default: 0
+      options:
+        - name: XX％
+          value: 0
+        - name: 1/X
+          value: 1
     - param: elementIcons
       text:
         ja: 属性アイコンリスト
@@ -115,7 +115,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 属性アイコンリストを設定します（順序はデータベースのタイプ設定に対応します）
         en: Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
-      parent: detailMode
       type: number[]
       default:
         - 0
@@ -135,7 +134,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 弱点属性/ステート/弱体のラベルを設定します
         en: Label for weak elements and states.
-      parent: detailMode
       type: string
       default:
         ja: 弱点属性/ステート/弱体
@@ -147,7 +145,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 耐性属性/ステート/弱体のラベルを設定します
         en: Label for resist elements and states.
-      parent: detailMode
       type: string
       default:
         ja: 耐性属性/ステート/弱体
@@ -159,7 +156,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 耐性属性/ステート/弱体と無効属性/ステート/弱体を分けて表示します
         en: Display no effect elements and states apart from the resists.
-      parent: detailMode
       type: boolean
       default: false
     - param: noEffectElementAndStateLabel
@@ -169,7 +165,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 無効属性/ステート/弱体のラベルを設定します
         en: Label for no effect elements and states.
-      parent: detailMode
       type: string
       default:
         ja: 無効属性/ステート/弱体
@@ -181,7 +176,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 弱点ステートに表示しないステートを設定します
         en: List for states not to display as weak states.
-      parent: detailMode
       type: state[]
       default: []
     - param: excludeResistStates
@@ -191,7 +185,6 @@ DarkPlasma_EnemyBook:
       desc:
         ja: 耐性/無効ステートに表示しないステートを設定します
         en: List for states not to display as resist states.
-      parent: detailMode
       type: state[]
       default: []
     - param: debuffStatus
@@ -250,15 +243,6 @@ DarkPlasma_EnemyBook:
         resist:
           small: 100
           large: 50
-    - param: verticalLayout
-      text:
-        ja: 縦型レイアウト
-        en: Vertical Layout
-      desc:
-        ja: ウィンドウ配置を縦型に変更する
-        en: Window layout to vertical
-      type: boolean
-      default: false
     - param: enableInBattle
       text:
         ja: 戦闘中に開く
