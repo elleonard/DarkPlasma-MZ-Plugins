@@ -78,14 +78,14 @@ function Game_Actor_ItemCommandCooldownMixIn(gameActor) {
   };
 
   gameActor.itemCommandCooldownTurn = function () {
-    /**
-     * ターン終了時に減算されるため、+1しておく
-     */
-    return itemCommandCooldownTurns.cooldownTurn(this.actorId()) + 1;
+    return itemCommandCooldownTurns.cooldownTurn(this.actorId());
   };
 
   gameActor.initialItemCommandCooldownTurn = function () {
-    return settings.defaultCooldownTurn + this.itemCommandCooldownTurnPlus();
+    /**
+     * ターン終了時に減算されるため、+1しておく
+     */
+    return settings.defaultCooldownTurn + this.itemCommandCooldownTurnPlus() + 1;
   };
 
   gameActor.itemCommandCooldownTurnPlus = function () {
@@ -114,14 +114,54 @@ function Window_ActorCommand_ItemCommandCooldownMixIn(windowClass) {
     _addItemCommand.call(this);
     const itemCommand = this._list.find((command) => command.symbol === 'item');
     if (itemCommand) {
-      if (settings.display.enabled && this._actor.isInItemCommandCooldown()) {
-        itemCommand.name = `${itemCommand.name} ${settings.display.format.replace(
-          /\{turn\}/gi,
-          this._actor.itemCommandCooldownTurn()
-        )}`;
-      }
       itemCommand.enabled = this._actor.canItemCommand();
     }
+  };
+
+  const _drawItem = windowClass.drawItem;
+  windowClass.drawItem = function (index) {
+    if (settings.display.enabled && this._actor.isInItemCommandCooldown() && this.commandSymbol(index) === 'item') {
+      const rect = this.itemLineRect(index);
+      const align = this.itemTextAlign();
+      const cooldownText = settings.display.format.replace(/\{turn\}/gi, this._actor.itemCommandCooldownTurn());
+      /**
+       * 中央寄せでいい感じにクールタイムの色だけ変えるため、詰め用文字列を作る
+       */
+      const cooldownWidth = this.textWidth(cooldownText);
+      const commandWidth = this.textWidth(this.commandName(index));
+      this.resetTextColor();
+      this.changePaintOpacity(this.isCommandEnabled(index));
+      this.drawText(
+        `${this.commandName(index)} ${this.paddingText(cooldownWidth, cooldownText.length)}`,
+        rect.x,
+        rect.y,
+        rect.width,
+        align
+      );
+      this.changeTextColor(ColorManager.textColor(settings.display.color));
+      this.drawText(
+        `${this.paddingText(commandWidth, this.commandName(index).length)} ${cooldownText}`,
+        rect.x,
+        rect.y,
+        rect.width,
+        align
+      );
+    } else {
+      _drawItem.call(this, index);
+    }
+  };
+
+  /**
+   * @param {number} width
+   * @param {number} minLength
+   * @return {string}
+   */
+  windowClass.paddingText = function (width, minLength) {
+    let result = ''.padStart(minLength, ' ');
+    while (this.textWidth(result) < width) {
+      result += ' ';
+    }
+    return result;
   };
 }
 
