@@ -958,6 +958,16 @@ class Window_EnemyBookStatus extends Window_Base {
   }
 
   /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   */
+  drawNoEffectsLabel(x, y, width) {
+    this.changeTextColor(this.systemColor());
+    this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
+  }
+
+  /**
    * @param {number} x X座標
    * @param {number} y Y座標
    * @param {number} width 横幅
@@ -977,8 +987,7 @@ class Window_EnemyBookStatus extends Window_Base {
           return settings.displayDebuffStatus && this.debuffRate(index) <= 0;
         }).map((statusName) => settings.debuffStatusIcons[statusName].large)
       );
-    this.changeTextColor(this.systemColor());
-    this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
+    this.drawNoEffectsLabel(x, y, width);
 
     const iconBaseY = y + this.lineHeight();
     targetIcons.forEach((icon, index) => {

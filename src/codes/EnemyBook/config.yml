@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/11/06'
+      version: '3.0.1'
+      description: 'リファクタ'
     - date: '2021/11/03'
       version: '3.0.0'
       description: 'ドロップ率分数表示に対応'

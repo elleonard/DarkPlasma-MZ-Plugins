@@ -460,14 +460,10 @@ function generateHelp(help, version, dependencies) {
       if (!dependencies || !dependencies[key] || dependencies[key].length === 0) {
         return [];
       }
-      const result = [
-        key === 'base'
-          ? `本プラグインの利用には下記プラグインを必要とします。`
-          : `本プラグインを下記プラグインと共に利用できます。`,
-      ];
+      const result = [dependencyText(key)];
       if (Array.isArray(dependencies[key])) {
         dependencies[key]
-          .map((plugin) => `${plugin.name} version:${plugin.version}`)
+          .map((plugin) => `${plugin.name}${plugin.version ? ` version:${plugin.version}` : ''}`)
           .forEach((line) => result.push(line));
       } else {
         result.push(dependencies[key]);
@@ -478,6 +474,19 @@ function generateHelp(help, version, dependencies) {
   const helpLines = [`version: ${version}`].concat(help.split('\n')).concat(dependencyLines);
   const length = dependencyLines.length === 0 ? helpLines.length - 1 : helpLines.length;
   return helpLines.slice(0, length).map((line) => ` *${line ? ' ' : ''}${line}`);
+}
+
+function dependencyText(key) {
+  switch (key) {
+    case 'base':
+      return '本プラグインの利用には下記プラグインを必要とします。';
+    case 'orderAfter':
+      return '本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。';
+    case 'orderBefore':
+      return '本プラグインを下記プラグインと共に利用する場合、それよりも上に追加してください。';
+    default:
+      return '';
+  }
 }
 
 /**
