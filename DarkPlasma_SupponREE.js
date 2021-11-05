@@ -80,7 +80,7 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * PluginCommonBase
- * 本プラグインを下記プラグインと共に利用できます。
+ * 本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。
  * PluginCommonBase
  */
 /*~struct~RandomEncounter:
@@ -154,7 +154,7 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * PluginCommonBase
- * 本プラグインを下記プラグインと共に利用できます。
+ * 本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。
  * PluginCommonBase
  */
 /*~struct~RandomEncounterEn:

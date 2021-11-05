@@ -35,7 +35,7 @@
  * - 特定ステートにかかっている対象
  * - 特定の敵
  *
- * 本プラグインを下記プラグインと共に利用できます。
+ * 本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_ExpandTargetScope version:1.0.8
  */
 /*~struct~AdditionalAnimation:

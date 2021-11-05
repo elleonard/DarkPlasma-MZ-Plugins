@@ -72,7 +72,7 @@
  * 本プラグインと併用する場合、DarkPlasma_ConsumeItemImmediatelyよりも
  * 本プラグインを下に配置してください。
  *
- * 本プラグインを下記プラグインと共に利用できます。
+ * 本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_ConsumeItemImmediately
  */
 

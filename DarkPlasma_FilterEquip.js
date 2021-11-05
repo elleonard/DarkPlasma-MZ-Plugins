@@ -87,7 +87,7 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_ParameterText version:1.0.4
- * 本プラグインを下記プラグインと共に利用できます。
+ * 本プラグインを下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
  */

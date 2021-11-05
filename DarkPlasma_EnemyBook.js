@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 3.0.0
+// DarkPlasma_EnemyBook 3.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/11/06 3.0.1 リファクタ
  * 2021/11/03 3.0.0 ドロップ率分数表示に対応
  *                  横型レイアウトを削除
  * 2021/09/19 2.2.2 ゲームデータ更新で登録可否のみを更新したケースに対応
@@ -184,7 +185,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.0.0
+ * version: 3.0.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -429,7 +430,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.0.0
+ * version: 3.0.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1595,6 +1596,16 @@
     }
 
     /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     */
+    drawNoEffectsLabel(x, y, width) {
+      this.changeTextColor(this.systemColor());
+      this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
+    }
+
+    /**
      * @param {number} x X座標
      * @param {number} y Y座標
      * @param {number} width 横幅
@@ -1614,8 +1625,7 @@
             return settings.displayDebuffStatus && this.debuffRate(index) <= 0;
           }).map((statusName) => settings.debuffStatusIcons[statusName].large)
         );
-      this.changeTextColor(this.systemColor());
-      this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
+      this.drawNoEffectsLabel(x, y, width);
 
       const iconBaseY = y + this.lineHeight();
       targetIcons.forEach((icon, index) => {
