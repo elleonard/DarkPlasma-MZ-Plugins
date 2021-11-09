@@ -3,6 +3,9 @@ DarkPlasma_NPCKeepOutRegion:
   year: 2021
   license: MIT
   histories:
+    - date: '2021/11/09'
+      version: '1.1.0'
+      description: '移動制限無視をメモ欄で制御するように変更'
     - date: '2021/07/05'
       version: '1.0.2'
       description: 'MZ 1.3.2に対応'
@@ -16,13 +19,13 @@ DarkPlasma_NPCKeepOutRegion:
   locates:
     - ja
   plugindesc:
-    ja: 'ランダム移動やプレイヤーへ近づくNPCが通れないリージョンを指定する'
+    ja: 'イベントが通れないリージョンを指定する'
   parameters:
     - param: regions
       text:
         ja: リージョン一覧
       desc:
-        ja: NPCがカスタム以外の自律移動で通行できないリージョン一覧
+        ja: イベントが通行できないリージョン一覧を設定します。
       type: number[]
       default: []
   commands: []
@@ -34,6 +37,13 @@ DarkPlasma_NPCKeepOutRegion:
   help:
     ja: |
       プラグインパラメータで指定したリージョンのマスについて、
-      イベントがランダムまたは近づく自律移動で通行できなくなります。
+      イベントが通行できなくなります。
 
-      カスタム移動や移動ルートの指定では通行できます。
+      イベントのメモ欄に特定の記述をすることで、この通行制限を無視できます。
+
+      <ignoreKeepOut>
+      このメモタグが記述されたイベントは無条件で通行制限を無視する
+
+      <ignoreKeepOut:A>
+      このメモタグが記述されたイベントは、
+      セルフスイッチAがONの場合に通行制限を無視する
