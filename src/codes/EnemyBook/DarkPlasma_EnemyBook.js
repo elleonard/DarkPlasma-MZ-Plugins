@@ -333,7 +333,6 @@ window[Scene_EnemyBook.name] = Scene_EnemyBook;
 
 class EnemyBookWindows {
   /**
-   *
    * @param {function} cancelHandler キャンセル時の挙動
    * @param {WindowLayer} parentLayer 親レイヤー
    * @param {Rectangle} percentWindowRect
@@ -374,6 +373,10 @@ class EnemyBookWindows {
   get indexWindow() {
     return this._indexWindow;
   }
+
+  get statusWindow() {
+    return this._statusWindow;
+  }
 }
 
 /**
@@ -386,7 +389,6 @@ class Window_EnemyBookPercent extends Window_Base {
   }
 
   drawPercent() {
-    const offset = 50;
     const width = this.contentsWidth();
     const percentWidth = this.textWidth('0000000');
     this.drawText(`${settings.enemyPercentLabel}:`, 0, 0, width - percentWidth);
@@ -1233,7 +1235,3 @@ Window_Command.prototype.processEnemyBook = function () {
   this.updateInputData();
   this.callHandler('enemyBook');
 };
-
-/**
- * TODO: ドロップ率表示を百分率ではなく分数表示にできる設定追加
- */
