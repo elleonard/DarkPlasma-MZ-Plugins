@@ -274,6 +274,10 @@ class Scene_EnemyBook extends Scene_MenuBase {
 
   create() {
     super.create();
+    this.createEnemyBookWindows();
+  }
+
+  createEnemyBookWindows() {
     this._enemyBookWindows = new EnemyBookWindows(
       this.popScene.bind(this),
       this._windowLayer,

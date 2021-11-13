@@ -4,7 +4,9 @@ DarkPlasma_EnemyBook:
   license: MIT
   histories:
     - date: '2021/11/13'
-      version: '3.1.0'
+      version: '3.2.0'
+      description: 'Scene_EnemyBookとScene_Battleでウィンドウ生成メソッドのインターフェースを統一'
+    - version: '3.1.0'
       description: '拡張用インターフェース追加'
     - date: '2021/11/06'
       version: '3.0.1'
