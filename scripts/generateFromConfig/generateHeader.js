@@ -481,9 +481,9 @@ function dependencyText(key) {
     case 'base':
       return '本プラグインの利用には下記プラグインを必要とします。';
     case 'orderAfter':
-      return '本プラグインを下記プラグインと共に利用する場合、それよりも下に追加してください。';
+      return '下記プラグインと共に利用する場合、それよりも下に追加してください。';
     case 'orderBefore':
-      return '本プラグインを下記プラグインと共に利用する場合、それよりも上に追加してください。';
+      return '下記プラグインと共に利用する場合、それよりも上に追加してください。';
     default:
       return '';
   }

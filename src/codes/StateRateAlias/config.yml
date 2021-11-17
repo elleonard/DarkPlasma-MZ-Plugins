@@ -1,0 +1,28 @@
+DarkPlasma_StateRateAlias:
+  name: DarkPlasma_StateRateAlias
+  year: 2021
+  license: MIT
+  histories:
+    - date: '2021/11/17'
+      version: '1.0.0'
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '別ステートの有効度及び無効フラグを参照するステート'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      異なるステートの有効度及び無効フラグを参照するステートを作成できます。
+      メモ欄に stateRateAlias タグを記述してください。
+
+      記述例:
+      <stateRateAlias:4>
+      ステートID4のステートの有効度及び無効フラグを参照します。
