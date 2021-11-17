@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 3.2.0
+// DarkPlasma_EnemyBook 3.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/11/17 3.3.0 Window_EnemyBookIndexをグローバルに公開
  * 2021/11/13 3.2.0 Scene_EnemyBookとScene_Battleでウィンドウ生成メソッドのインターフェースを統一
  *            3.1.0 拡張用インターフェース追加
  * 2021/11/06 3.0.1 リファクタ
@@ -187,7 +188,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.2.0
+ * version: 3.3.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -432,7 +433,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.2.0
+ * version: 3.3.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1211,6 +1212,8 @@
   Window_EnemyBookIndex.lastTopRow = 0;
   Window_EnemyBookIndex.lastIndex = 0;
 
+  window.Window_EnemyBookIndex = Window_EnemyBookIndex;
+
   /**
    * 図鑑ステータスウィンドウ
    */
@@ -1283,10 +1286,10 @@
       this.resetTextColor();
       this.drawText(enemy.name, 0, 0);
 
-      this.drawPageWithVerticalLayout();
+      this.drawPage();
     }
 
-    drawPageWithVerticalLayout() {
+    drawPage() {
       const enemy = this._enemy;
       const lineHeight = this.lineHeight();
       this.drawLevel(this.contentsWidth() / 2 + this.itemPadding() / 2, 0);
