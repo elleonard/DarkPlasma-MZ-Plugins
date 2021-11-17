@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/11/17'
+      version: '3.3.0'
+      description: 'Window_EnemyBookIndexをグローバルに公開'
     - date: '2021/11/13'
       version: '3.2.0'
       description: 'Scene_EnemyBookとScene_Battleでウィンドウ生成メソッドのインターフェースを統一'

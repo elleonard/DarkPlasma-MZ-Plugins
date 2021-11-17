@@ -570,6 +570,8 @@ class Window_EnemyBookIndex extends Window_Selectable {
 Window_EnemyBookIndex.lastTopRow = 0;
 Window_EnemyBookIndex.lastIndex = 0;
 
+window.Window_EnemyBookIndex = Window_EnemyBookIndex;
+
 /**
  * 図鑑ステータスウィンドウ
  */
@@ -642,10 +644,10 @@ class Window_EnemyBookStatus extends Window_Base {
     this.resetTextColor();
     this.drawText(enemy.name, 0, 0);
 
-    this.drawPageWithVerticalLayout();
+    this.drawPage();
   }
 
-  drawPageWithVerticalLayout() {
+  drawPage() {
     const enemy = this._enemy;
     const lineHeight = this.lineHeight();
     this.drawLevel(this.contentsWidth() / 2 + this.itemPadding() / 2, 0);
