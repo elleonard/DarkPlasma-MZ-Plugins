@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: '2021/11/21'
+      version: '3.4.0'
+      description: '出現モンスターを最上部に表示する設定を追加'
     - date: '2021/11/17'
       version: '3.3.0'
       description: 'Window_EnemyBookIndexをグローバルに公開'
@@ -287,6 +290,24 @@ DarkPlasma_EnemyBook:
         en: Highlight color for enemy in troop.
       type: number
       default: 2
+    - param: skipToBattlerEnemy
+      text:
+        ja: 出現モンスターフォーカス
+        en: Skip To Battle Enemy
+      desc:
+        ja: pageup,pagedownキーで出現モンスターにフォーカスします。
+        en: Skip to battle enemy when pageup or pagedown key pressed.
+      type: boolean
+      default: false
+    - param: battlerEnemyToTop
+      text:
+        ja: 出現モンスター最上部表示
+        en: Battler Enemy to Top
+      desc:
+        ja: ONの場合、出現モンスターを最上部に表示する
+        en: Display battler enemy to top of the list.
+      type: boolean
+      default: true
   commands:
     - command: open enemyBook
       text:
