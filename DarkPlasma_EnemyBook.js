@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 3.3.0
+// DarkPlasma_EnemyBook 3.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/11/21 3.4.0 出現モンスターを最上部に表示する設定を追加
  * 2021/11/17 3.3.0 Window_EnemyBookIndexをグローバルに公開
  * 2021/11/13 3.2.0 Scene_EnemyBookとScene_Battleでウィンドウ生成メソッドのインターフェースを統一
  *            3.1.0 拡張用インターフェース追加
@@ -161,6 +162,18 @@
  * @type number
  * @default 2
  *
+ * @param skipToBattlerEnemy
+ * @desc pageup,pagedownキーで出現モンスターにフォーカスします。
+ * @text 出現モンスターフォーカス
+ * @type boolean
+ * @default false
+ *
+ * @param battlerEnemyToTop
+ * @desc ONの場合、出現モンスターを最上部に表示する
+ * @text 出現モンスター最上部表示
+ * @type boolean
+ * @default true
+ *
  * @command open enemyBook
  * @text 図鑑を開く
  * @desc 図鑑シーンを開きます。
@@ -188,7 +201,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.3.0
+ * version: 3.4.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -406,6 +419,18 @@
  * @type number
  * @default 2
  *
+ * @param skipToBattlerEnemy
+ * @desc Skip to battle enemy when pageup or pagedown key pressed.
+ * @text Skip To Battle Enemy
+ * @type boolean
+ * @default false
+ *
+ * @param battlerEnemyToTop
+ * @desc Display battler enemy to top of the list.
+ * @text Battler Enemy to Top
+ * @type boolean
+ * @default true
+ *
  * @command open enemyBook
  * @text open enemy book
  * @desc Open enemy book.
@@ -433,7 +458,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.3.0
+ * version: 3.4.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -641,6 +666,8 @@
     enableInBattle: String(pluginParameters.enableInBattle || true) === 'true',
     openKeyInBattle: String(pluginParameters.openKeyInBattle || 'shift'),
     highlightColor: Number(pluginParameters.highlightColor || 2),
+    skipToBattlerEnemy: String(pluginParameters.skipToBattlerEnemy || false) === 'true',
+    battlerEnemyToTop: String(pluginParameters.battlerEnemyToTop || true) === 'true',
   };
 
   const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
@@ -1063,11 +1090,11 @@
             $gameTroop
               .members()
               .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
-              .filter((index) => index > 0)
+              .filter((index) => index >= 0)
           )
         ).sort((a, b) => a - b);
         const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : null;
-        if (firstIndex) {
+        if (firstIndex >= 0) {
           this.setTopRow(firstIndex);
           this.select(firstIndex);
         }
@@ -1117,6 +1144,11 @@
         return;
       }
       this._list = registerableEnemies();
+      if (this._isInBattle && settings.battlerEnemyToTop) {
+        this._list = this._list
+          .filter((enemy) => $gameTroop.members().some((gameEnemy) => gameEnemy.enemy() === enemy))
+          .concat(this._list.filter((enemy) => $gameTroop.members().every((gameEnemy) => gameEnemy.enemy() !== enemy)));
+      }
     }
 
     refresh() {
@@ -1182,7 +1214,7 @@
     }
 
     cursorPagedown() {
-      if (this.battlerEnemyIsInBook()) {
+      if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
         this.selectNextBattlerEnemy();
       } else {
         super.cursorPagedown();
@@ -1190,7 +1222,7 @@
     }
 
     cursorPageup() {
-      if (this.battlerEnemyIsInBook()) {
+      if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
         this.selectPreviousBattlerEnemy();
       } else {
         super.cursorPageup();
