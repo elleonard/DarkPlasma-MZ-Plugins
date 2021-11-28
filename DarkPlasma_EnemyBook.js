@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 3.4.0
+// DarkPlasma_EnemyBook 3.4.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/11/29 3.4.1 ドロップアイテム収集率が正常に計算されない不具合を修正
  * 2021/11/21 3.4.0 出現モンスターを最上部に表示する設定を追加
  * 2021/11/17 3.3.0 Window_EnemyBookIndexをグローバルに公開
  * 2021/11/13 3.2.0 Scene_EnemyBookとScene_Battleでウィンドウ生成メソッドのインターフェースを統一
@@ -201,7 +202,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.4.0
+ * version: 3.4.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -458,7 +459,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.4.0
+ * version: 3.4.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -800,7 +801,7 @@
      */
     percentRegisteredDropItem() {
       const registerableDropItemCount = registerableEnemies().reduce(
-        (previous, current) => previous + current.dropItems.length,
+        (previous, current) => previous + current.dropItems.filter((dropItem) => dropItem.kind > 0).length,
         0
       );
       if (registerableDropItemCount === 0) {
