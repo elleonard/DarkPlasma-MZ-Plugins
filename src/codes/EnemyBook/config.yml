@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2021/12/01
+      version: 3.4.2
+      description: '登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正'
     - date: 2021/11/29
       version: 3.4.1
       description: 'ドロップアイテム収集率が正常に計算されない不具合を修正'

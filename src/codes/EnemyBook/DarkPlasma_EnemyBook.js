@@ -121,7 +121,9 @@ class EnemyBook {
     if (registerableEnemyCount === 0) {
       return 0;
     }
-    const registeredEnemyCount = this._pages.filter((page) => page && page.isRegistered).length;
+    const registeredEnemyCount = this._pages.filter((page, enemyId) => {
+      return page && $dataEnemies[enemyId] && isRegisterableEnemy($dataEnemies[enemyId]) && page.isRegistered;
+    }).length;
     return (100 * registeredEnemyCount) / registerableEnemyCount;
   }
 
@@ -139,8 +141,11 @@ class EnemyBook {
     }
     const registeredDropItemCount = this._pages
       .filter((page) => page && page.isRegistered)
-      .reduce((previous, current) => {
-        return previous + current.registeredDropItemCount();
+      .reduce((previous, page, enemyId) => {
+        if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
+          return previous;
+        }
+        return previous + page.registeredDropItemCount();
       }, 0);
     return (100 * registeredDropItemCount) / registerableDropItemCount;
   }
