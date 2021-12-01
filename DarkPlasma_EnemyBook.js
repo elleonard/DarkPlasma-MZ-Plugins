@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 3.4.2
+// DarkPlasma_EnemyBook 3.4.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/12/01 3.4.2 登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正
+ * 2021/12/01 3.4.3 図鑑を完成させるコマンドを使うとドロップアイテム収集率が正常に計算されない不具合を修正
+ *            3.4.2 登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正
  * 2021/11/29 3.4.1 ドロップアイテム収集率が正常に計算されない不具合を修正
  * 2021/11/21 3.4.0 出現モンスターを最上部に表示する設定を追加
  * 2021/11/17 3.3.0 Window_EnemyBookIndexをグローバルに公開
@@ -203,7 +204,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.4.2
+ * version: 3.4.3
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -460,7 +461,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.4.2
+ * version: 3.4.3
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -816,7 +817,7 @@
           if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
             return previous;
           }
-          return previous + page.registeredDropItemCount();
+          return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
         }, 0);
       return (100 * registeredDropItemCount) / registerableDropItemCount;
     }
@@ -881,7 +882,11 @@
     complete() {
       registerableEnemies().forEach((enemy) => {
         this.register(enemy.id);
-        enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
+        enemy.dropItems.forEach((dropItem, index) => {
+          if (dropItem.kind > 0) {
+            this.registerDropItem(enemy.id, index);
+          }
+        });
       });
     }
 
@@ -911,8 +916,12 @@
       return this._dropItems[index];
     }
 
-    registeredDropItemCount() {
-      return this._dropItems.filter((dropItem) => dropItem).length;
+    /**
+     * @param {MZ.Enemy} enemy
+     * @return {boolean}
+     */
+    registeredDropItemCount(enemy) {
+      return this._dropItems.filter((dropItem, index) => dropItem && enemy.dropItems[index].kind > 0).length;
     }
 
     register() {
