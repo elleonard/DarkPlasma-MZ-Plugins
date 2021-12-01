@@ -145,7 +145,7 @@ class EnemyBook {
         if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
           return previous;
         }
-        return previous + page.registeredDropItemCount();
+        return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
       }, 0);
     return (100 * registeredDropItemCount) / registerableDropItemCount;
   }
@@ -210,7 +210,11 @@ class EnemyBook {
   complete() {
     registerableEnemies().forEach((enemy) => {
       this.register(enemy.id);
-      enemy.dropItems.forEach((_, index) => this.registerDropItem(enemy.id, index));
+      enemy.dropItems.forEach((dropItem, index) => {
+        if (dropItem.kind > 0) {
+          this.registerDropItem(enemy.id, index);
+        }
+      });
     });
   }
 
@@ -240,8 +244,12 @@ class EnemyBookPage {
     return this._dropItems[index];
   }
 
-  registeredDropItemCount() {
-    return this._dropItems.filter((dropItem) => dropItem).length;
+  /**
+   * @param {MZ.Enemy} enemy
+   * @return {boolean}
+   */
+  registeredDropItemCount(enemy) {
+    return this._dropItems.filter((dropItem, index) => dropItem && enemy.dropItems[index].kind > 0).length;
   }
 
   register() {
