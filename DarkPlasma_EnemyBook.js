@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 3.4.1
+// DarkPlasma_EnemyBook 3.4.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/12/01 3.4.2 登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正
  * 2021/11/29 3.4.1 ドロップアイテム収集率が正常に計算されない不具合を修正
  * 2021/11/21 3.4.0 出現モンスターを最上部に表示する設定を追加
  * 2021/11/17 3.3.0 Window_EnemyBookIndexをグローバルに公開
@@ -202,7 +203,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.4.1
+ * version: 3.4.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -459,7 +460,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.4.1
+ * version: 3.4.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -791,7 +792,9 @@
       if (registerableEnemyCount === 0) {
         return 0;
       }
-      const registeredEnemyCount = this._pages.filter((page) => page && page.isRegistered).length;
+      const registeredEnemyCount = this._pages.filter((page, enemyId) => {
+        return page && $dataEnemies[enemyId] && isRegisterableEnemy($dataEnemies[enemyId]) && page.isRegistered;
+      }).length;
       return (100 * registeredEnemyCount) / registerableEnemyCount;
     }
 
@@ -809,8 +812,11 @@
       }
       const registeredDropItemCount = this._pages
         .filter((page) => page && page.isRegistered)
-        .reduce((previous, current) => {
-          return previous + current.registeredDropItemCount();
+        .reduce((previous, page, enemyId) => {
+          if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
+            return previous;
+          }
+          return previous + page.registeredDropItemCount();
         }, 0);
       return (100 * registeredDropItemCount) / registerableDropItemCount;
     }
