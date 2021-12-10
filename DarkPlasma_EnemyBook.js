@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 4.0.0
+// DarkPlasma_EnemyBook 4.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2021/12/11 4.0.0 レイアウトをMixInに切り出す
+ * 2021/12/11 4.0.1 ドロップ収集率が正常に表示されない不具合を修正
+ *            4.0.0 レイアウトをMixInに切り出す
  *                  Scene_EnemyBookのインターフェース一部変更（拡張プラグインに影響あり）
  * 2021/12/01 3.4.3 図鑑を完成させるコマンドを使うとドロップアイテム収集率が正常に計算されない不具合を修正
  *            3.4.2 登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正
@@ -206,7 +207,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.0.0
+ * version: 4.0.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -463,7 +464,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.0.0
+ * version: 4.0.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -924,14 +925,12 @@
       if (registerableDropItemCount === 0) {
         return 0;
       }
-      const registeredDropItemCount = this._pages
-        .filter((page) => page && page.isRegistered)
-        .reduce((previous, page, enemyId) => {
-          if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
-            return previous;
-          }
-          return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
-        }, 0);
+      const registeredDropItemCount = this._pages.reduce((previous, page, enemyId) => {
+        if (!page || !page.isRegistered || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
+          return previous;
+        }
+        return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
+      }, 0);
       return (100 * registeredDropItemCount) / registerableDropItemCount;
     }
 
@@ -1139,7 +1138,7 @@
     labelAndValueTexts() {
       return [
         new LabelAndValueText(settings.enemyPercentLabel, `${$gameSystem.percentCompleteEnemy().toFixed(1)}％`),
-        new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop()}％`),
+        new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop().toFixed(1)}％`),
       ];
     }
   }
@@ -1536,9 +1535,9 @@
       if (!settings.displayDropRate || !denominator) {
         return;
       }
-      const dropRate = Number(100 / denominator).toFixed(1);
       switch (settings.dropRateFormat) {
         case DROP_RATE_FORMAT.PERCENT:
+          const dropRate = Number(100 / denominator).toFixed(1);
           this.drawText(`${dropRate}％`, x, y, width, 'right');
           break;
         case DROP_RATE_FORMAT.FRACTION:
