@@ -1,9 +1,11 @@
-// DarkPlasma_EnemyBook 3.4.3
+// DarkPlasma_EnemyBook 4.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/12/11 4.0.0 レイアウトをMixInに切り出す
+ *                  Scene_EnemyBookのインターフェース一部変更（拡張プラグインに影響あり）
  * 2021/12/01 3.4.3 図鑑を完成させるコマンドを使うとドロップアイテム収集率が正常に計算されない不具合を修正
  *            3.4.2 登録可能モンスターの数が変わると図鑑コンプリート率が正常に計算されない不具合を修正
  * 2021/11/29 3.4.1 ドロップアイテム収集率が正常に計算されない不具合を修正
@@ -204,7 +206,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 3.4.3
+ * version: 4.0.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -461,7 +463,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 3.4.3
+ * version: 4.0.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -549,6 +551,84 @@
  */
 (() => {
   'use strict';
+
+  /**
+   * @template TScene
+   * @param {TScene} SceneClass
+   * @return {TScene}
+   * @mixin
+   */
+  const Scene_BookLayoutMixIn = (SceneClass) =>
+    class extends SceneClass {
+      /**
+       * @return {Rectangle}
+       */
+      percentWindowRect() {
+        return new Rectangle(0, 0, Graphics.boxWidth / 3, this.percentWindowHeight());
+      }
+
+      /**
+       * @return {number}
+       */
+      percentWindowHeight() {
+        return this.calcWindowHeight(2, false);
+      }
+
+      /**
+       * @return {Rectangle}
+       */
+      indexWindowRect() {
+        return new Rectangle(0, this.percentWindowHeight(), this.indexWindowWidth(), this.indexWindowHeight());
+      }
+
+      /**
+       * @return {number}
+       */
+      indexWindowWidth() {
+        return Math.floor(Graphics.boxWidth / 3);
+      }
+
+      /**
+       * @return {number}
+       */
+      indexWindowHeight() {
+        return Graphics.boxHeight - this.percentWindowHeight();
+      }
+
+      /**
+       * @return {Rectangle}
+       */
+      mainWindowRect() {
+        const x = this.indexWindowWidth();
+        const y = 0;
+        return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
+      }
+    };
+
+  class LabelAndValueText {
+    /**
+     * @param {string} label
+     * @param {?string} valueText
+     */
+    constructor(label, valueText) {
+      this._label = label;
+      this._valueText = valueText;
+    }
+
+    /**
+     * @return {string}
+     */
+    get label() {
+      return this._label;
+    }
+
+    /**
+     * @return {string}
+     */
+    get valueText() {
+      return this._valueText || '';
+    }
+  }
 
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
@@ -673,6 +753,38 @@
     battlerEnemyToTop: String(pluginParameters.battlerEnemyToTop || true) === 'true',
   };
 
+  class Window_LabelAndValueTexts extends Window_Base {
+    initialize(rect) {
+      super.initialize(rect);
+      this.refresh();
+    }
+
+    drawPercent() {
+      const width = this.contentsWidth();
+      const valueWidth = this.valueWidth();
+      this.labelAndValueTexts().forEach((labelAndValueText, index) => {
+        this.drawText(labelAndValueText.label, 0, this.lineHeight() * index, width - valueWidth);
+        this.drawText(labelAndValueText.valueText, 0, this.lineHeight() * index, width, 'right');
+      });
+    }
+
+    valueWidth() {
+      return this.textWidth('100.0％');
+    }
+
+    /**
+     * @return {LabelAndValueText[]}
+     */
+    labelAndValueTexts() {
+      return [];
+    }
+
+    refresh() {
+      this.contents.clear();
+      this.drawPercent();
+    }
+  }
+
   const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
   const PLUGIN_COMMAND_NAME = {
@@ -750,12 +862,11 @@
       );
     }
 
-    /**
-     * セーブデータからロードした際、ゲームアップデートによって
-     * エネミーが増減していた場合に図鑑を合わせる
-     * （減った場合、溢れたデータは捨てられることに注意）
-     */
     flexPage() {
+      /**
+       * エネミーが増減していた場合、ページ数をあわせる
+       * 減った場合、溢れたデータは捨てられる
+       */
       if (this._pages.length < $dataEnemies.length) {
         this._pages = this._pages.concat(
           $dataEnemies.slice(this._pages.length).map((enemy) => {
@@ -771,7 +882,9 @@
         this._pages = this._pages.slice(0, $dataEnemies.length - 1);
       }
       /**
-       * 数は変わらず、登録可否だけ変わったケースの補助
+       * 登録不可から登録可能に変更された場合
+       * 計算量的に微妙だが、セーブデータロード時に一度だけ実行されるところなので許容する
+       * 逆パターンはどうせ表示されないので放置する
        */
       $dataEnemies
         .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
@@ -951,12 +1064,7 @@
   /**
    * エネミー図鑑シーン
    */
-  class Scene_EnemyBook extends Scene_MenuBase {
-    constructor() {
-      super();
-      this.initialize.apply(this, arguments);
-    }
-
+  class Scene_EnemyBook extends Scene_BookLayoutMixIn(Scene_MenuBase) {
     create() {
       super.create();
       this.createEnemyBookWindows();
@@ -968,53 +1076,9 @@
         this._windowLayer,
         this.percentWindowRect(),
         this.indexWindowRect(),
-        this.statusWindowRect(),
+        this.mainWindowRect(),
         false
       );
-    }
-
-    /**
-     * @return {Rectangle}
-     */
-    percentWindowRect() {
-      return new Rectangle(0, 0, Graphics.boxWidth / 3, this.percentWindowHeight());
-    }
-
-    /**
-     * @return {number}
-     */
-    percentWindowHeight() {
-      return this.calcWindowHeight(2, false);
-    }
-
-    /**
-     * @return {Rectangle}
-     */
-    indexWindowRect() {
-      return new Rectangle(0, this.percentWindowHeight(), this.indexWindowWidth(), this.indexWindowHeight());
-    }
-
-    /**
-     * @return {number}
-     */
-    indexWindowWidth() {
-      return Math.floor(Graphics.boxWidth / 3);
-    }
-
-    /**
-     * @return {number}
-     */
-    indexWindowHeight() {
-      return Graphics.boxHeight - this.percentWindowHeight();
-    }
-
-    /**
-     * @return {Rectangle}
-     */
-    statusWindowRect() {
-      const x = this.indexWindowWidth();
-      const y = 0;
-      return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
     }
   }
 
@@ -1071,24 +1135,12 @@
   /**
    * 登録率表示ウィンドウ
    */
-  class Window_EnemyBookPercent extends Window_Base {
-    initialize(rect) {
-      super.initialize(rect);
-      this.refresh();
-    }
-
-    drawPercent() {
-      const width = this.contentsWidth();
-      const percentWidth = this.textWidth('0000000');
-      this.drawText(`${settings.enemyPercentLabel}:`, 0, 0, width - percentWidth);
-      this.drawText(`${Number($gameSystem.percentCompleteEnemy()).toFixed(1)}％`, 0, 0, width, 'right');
-      this.drawText(`${settings.dropItemPercentLabel}:`, 0, this.lineHeight(), width - percentWidth);
-      this.drawText(`${Number($gameSystem.percentCompleteDrop()).toFixed(1)}％`, 0, this.lineHeight(), width, 'right');
-    }
-
-    refresh() {
-      this.contents.clear();
-      this.drawPercent();
+  class Window_EnemyBookPercent extends Window_LabelAndValueTexts {
+    labelAndValueTexts() {
+      return [
+        new LabelAndValueText(settings.enemyPercentLabel, `${$gameSystem.percentCompleteEnemy().toFixed(1)}％`),
+        new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop()}％`),
+      ];
     }
   }
 
@@ -1872,7 +1924,7 @@
       this._enemyBookLayer,
       Scene_EnemyBook.prototype.percentWindowRect.call(this),
       Scene_EnemyBook.prototype.indexWindowRect.call(this),
-      Scene_EnemyBook.prototype.statusWindowRect.call(this),
+      Scene_EnemyBook.prototype.mainWindowRect.call(this),
       true
     );
     this.closeEnemyBook();
