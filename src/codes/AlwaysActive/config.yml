@@ -1,0 +1,23 @@
+DarkPlasma_AlwaysActive:
+  name: DarkPlasma_AlwaysActive
+  year: 2021
+  license: MIT
+  histories:
+    - date: 2021/12/11
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ウィンドウが非アクティブの時にもゲームを止めなくする'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      ウィンドウが非アクティブの場合にもゲームを止めません。
