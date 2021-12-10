@@ -1,5 +1,8 @@
+import { Scene_BookLayoutMixIn } from '../../common/scene/bookLayoutMixIn';
+import { LabelAndValueText } from '../../common/object/labelAndValueText';
 import { pluginName } from './../../common/pluginName';
 import { settings } from './_build/DarkPlasma_EnemyBook_parameters';
+import { Window_LabelAndValueTexts } from '../../common/window/labelAndValueTextsWindow';
 
 const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
@@ -78,12 +81,11 @@ class EnemyBook {
     );
   }
 
-  /**
-   * セーブデータからロードした際、ゲームアップデートによって
-   * エネミーが増減していた場合に図鑑を合わせる
-   * （減った場合、溢れたデータは捨てられることに注意）
-   */
   flexPage() {
+    /**
+     * エネミーが増減していた場合、ページ数をあわせる
+     * 減った場合、溢れたデータは捨てられる
+     */
     if (this._pages.length < $dataEnemies.length) {
       this._pages = this._pages.concat(
         $dataEnemies.slice(this._pages.length).map((enemy) => {
@@ -99,7 +101,9 @@ class EnemyBook {
       this._pages = this._pages.slice(0, $dataEnemies.length - 1);
     }
     /**
-     * 数は変わらず、登録可否だけ変わったケースの補助
+     * 登録不可から登録可能に変更された場合
+     * 計算量的に微妙だが、セーブデータロード時に一度だけ実行されるところなので許容する
+     * 逆パターンはどうせ表示されないので放置する
      */
     $dataEnemies
       .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
@@ -279,12 +283,7 @@ let enemyBook = null;
 /**
  * エネミー図鑑シーン
  */
-class Scene_EnemyBook extends Scene_MenuBase {
-  constructor() {
-    super();
-    this.initialize.apply(this, arguments);
-  }
-
+class Scene_EnemyBook extends Scene_BookLayoutMixIn(Scene_MenuBase) {
   create() {
     super.create();
     this.createEnemyBookWindows();
@@ -296,53 +295,9 @@ class Scene_EnemyBook extends Scene_MenuBase {
       this._windowLayer,
       this.percentWindowRect(),
       this.indexWindowRect(),
-      this.statusWindowRect(),
+      this.mainWindowRect(),
       false
     );
-  }
-
-  /**
-   * @return {Rectangle}
-   */
-  percentWindowRect() {
-    return new Rectangle(0, 0, Graphics.boxWidth / 3, this.percentWindowHeight());
-  }
-
-  /**
-   * @return {number}
-   */
-  percentWindowHeight() {
-    return this.calcWindowHeight(2, false);
-  }
-
-  /**
-   * @return {Rectangle}
-   */
-  indexWindowRect() {
-    return new Rectangle(0, this.percentWindowHeight(), this.indexWindowWidth(), this.indexWindowHeight());
-  }
-
-  /**
-   * @return {number}
-   */
-  indexWindowWidth() {
-    return Math.floor(Graphics.boxWidth / 3);
-  }
-
-  /**
-   * @return {number}
-   */
-  indexWindowHeight() {
-    return Graphics.boxHeight - this.percentWindowHeight();
-  }
-
-  /**
-   * @return {Rectangle}
-   */
-  statusWindowRect() {
-    const x = this.indexWindowWidth();
-    const y = 0;
-    return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
   }
 }
 
@@ -399,24 +354,12 @@ class EnemyBookWindows {
 /**
  * 登録率表示ウィンドウ
  */
-class Window_EnemyBookPercent extends Window_Base {
-  initialize(rect) {
-    super.initialize(rect);
-    this.refresh();
-  }
-
-  drawPercent() {
-    const width = this.contentsWidth();
-    const percentWidth = this.textWidth('0000000');
-    this.drawText(`${settings.enemyPercentLabel}:`, 0, 0, width - percentWidth);
-    this.drawText(`${Number($gameSystem.percentCompleteEnemy()).toFixed(1)}％`, 0, 0, width, 'right');
-    this.drawText(`${settings.dropItemPercentLabel}:`, 0, this.lineHeight(), width - percentWidth);
-    this.drawText(`${Number($gameSystem.percentCompleteDrop()).toFixed(1)}％`, 0, this.lineHeight(), width, 'right');
-  }
-
-  refresh() {
-    this.contents.clear();
-    this.drawPercent();
+class Window_EnemyBookPercent extends Window_LabelAndValueTexts {
+  labelAndValueTexts() {
+    return [
+      new LabelAndValueText(settings.enemyPercentLabel, `${$gameSystem.percentCompleteEnemy().toFixed(1)}％`),
+      new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop()}％`),
+    ];
   }
 }
 
@@ -1200,7 +1143,7 @@ Scene_Battle.prototype.createEnemyBookWindows = function () {
     this._enemyBookLayer,
     Scene_EnemyBook.prototype.percentWindowRect.call(this),
     Scene_EnemyBook.prototype.indexWindowRect.call(this),
-    Scene_EnemyBook.prototype.statusWindowRect.call(this),
+    Scene_EnemyBook.prototype.mainWindowRect.call(this),
     true
   );
   this.closeEnemyBook();
