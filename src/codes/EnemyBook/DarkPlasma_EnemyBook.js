@@ -143,14 +143,12 @@ class EnemyBook {
     if (registerableDropItemCount === 0) {
       return 0;
     }
-    const registeredDropItemCount = this._pages
-      .filter((page) => page && page.isRegistered)
-      .reduce((previous, page, enemyId) => {
-        if (!page || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
-          return previous;
-        }
-        return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
-      }, 0);
+    const registeredDropItemCount = this._pages.reduce((previous, page, enemyId) => {
+      if (!page || !page.isRegistered || !$dataEnemies[enemyId] || !isRegisterableEnemy($dataEnemies[enemyId])) {
+        return previous;
+      }
+      return previous + page.registeredDropItemCount($dataEnemies[enemyId]);
+    }, 0);
     return (100 * registeredDropItemCount) / registerableDropItemCount;
   }
 
@@ -358,7 +356,7 @@ class Window_EnemyBookPercent extends Window_LabelAndValueTexts {
   labelAndValueTexts() {
     return [
       new LabelAndValueText(settings.enemyPercentLabel, `${$gameSystem.percentCompleteEnemy().toFixed(1)}％`),
-      new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop()}％`),
+      new LabelAndValueText(settings.dropItemPercentLabel, `${$gameSystem.percentCompleteDrop().toFixed(1)}％`),
     ];
   }
 }
@@ -755,9 +753,9 @@ class Window_EnemyBookStatus extends Window_Base {
     if (!settings.displayDropRate || !denominator) {
       return;
     }
-    const dropRate = Number(100 / denominator).toFixed(1);
     switch (settings.dropRateFormat) {
       case DROP_RATE_FORMAT.PERCENT:
+        const dropRate = Number(100 / denominator).toFixed(1);
         this.drawText(`${dropRate}％`, x, y, width, 'right');
         break;
       case DROP_RATE_FORMAT.FRACTION:

@@ -4,7 +4,9 @@ DarkPlasma_EnemyBook:
   license: MIT
   histories:
     - date: 2021/12/11
-      version: 4.0.0
+      version: 4.0.1
+      description: 'ドロップ収集率が正常に表示されない不具合を修正'
+    - version: 4.0.0
       description: 'レイアウトをMixInに切り出す'
     - description: 'Scene_EnemyBookのインターフェース一部変更（拡張プラグインに影響あり）'
     - date: 2021/12/01
