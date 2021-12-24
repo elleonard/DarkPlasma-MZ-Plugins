@@ -220,7 +220,7 @@ class PluginParameter extends TypedParameter {
     }
     ['parent', 'min', 'max', 'dir']
       .filter((annotation) => {
-        return !!this._parameter[annotation];
+        return !!this._parameter[annotation] || this._parameter[annotation] === '';
       })
       .forEach((annotation) => {
         result.push(` * @${annotation} ${this._parameter[annotation]}`);
