@@ -1,9 +1,10 @@
-// DarkPlasma_AutoLineBreak 1.0.3
+// DarkPlasma_AutoLineBreak 1.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/12/30 1.0.4 自動改行によって改ページが挟まる際に1文字抜ける不具合を修正
  * 2021/07/05 1.0.3 MZ 1.3.2に対応
  * 2021/06/22 1.0.2 名前ウィンドウの表示が崩れる不具合を修正
  *            1.0.1 サブフォルダからの読み込みに対応
@@ -43,7 +44,7 @@
  * @default 4
  *
  * @help
- * version: 1.0.3
+ * version: 1.0.4
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -97,9 +98,11 @@
 
   const _Window_Base_processCharacter = Window_Base.prototype.processCharacter;
   Window_Base.prototype.processCharacter = function (textState) {
-    if (this.shouldLineBreakHere(textState)) {
+    this._autoLineBroken = this.shouldLineBreakHere(textState);
+    if (this._autoLineBroken) {
       this.flushTextState(textState);
       this.processNewLine(textState);
+      this._autoLineBroken = false;
     }
     if (textState.text[textState.index].charCodeAt(0) >= 0x20) {
       textState.lineBuffer += textState.text[textState.index];
@@ -191,6 +194,17 @@
    */
   Window_Base.prototype.lineWidth = function () {
     return this.contentsWidth() - settings.lineWidthMargin;
+  };
+
+  const _Window_Message_processNewLine = Window_Message.prototype.processNewLine;
+  Window_Message.prototype.processNewLine = function (textState) {
+    _Window_Message_processNewLine.call(this, textState);
+    /**
+     * 自動改行によって改ページされる場合、1文字戻す必要がある
+     */
+    if (this.needsNewPage(textState) && this._autoLineBroken) {
+      textState.index--;
+    }
   };
 
   /**
