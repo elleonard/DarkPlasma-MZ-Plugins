@@ -21,9 +21,11 @@ Window_Base.prototype.isAutoLineBreakEnabled = function () {
 
 const _Window_Base_processCharacter = Window_Base.prototype.processCharacter;
 Window_Base.prototype.processCharacter = function (textState) {
-  if (this.shouldLineBreakHere(textState)) {
+  this._autoLineBroken = this.shouldLineBreakHere(textState);
+  if (this._autoLineBroken) {
     this.flushTextState(textState);
     this.processNewLine(textState);
+    this._autoLineBroken = false;
   }
   if (textState.text[textState.index].charCodeAt(0) >= 0x20) {
     textState.lineBuffer += textState.text[textState.index];
@@ -115,6 +117,17 @@ Window_Base.prototype.isProhibitLineBreakAfter = function (character) {
  */
 Window_Base.prototype.lineWidth = function () {
   return this.contentsWidth() - settings.lineWidthMargin;
+};
+
+const _Window_Message_processNewLine = Window_Message.prototype.processNewLine;
+Window_Message.prototype.processNewLine = function (textState) {
+  _Window_Message_processNewLine.call(this, textState);
+  /**
+   * 自動改行によって改ページされる場合、1文字戻す必要がある
+   */
+  if (this.needsNewPage(textState) && this._autoLineBroken) {
+    textState.index--;
+  }
 };
 
 /**
