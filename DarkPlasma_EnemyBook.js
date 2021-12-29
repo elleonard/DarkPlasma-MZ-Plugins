@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.0.1
+// DarkPlasma_EnemyBook 4.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2021/12/29 4.1.0 DarkPlasma_OrderIdAliasに対応
  * 2021/12/11 4.0.1 ドロップ収集率が正常に表示されない不具合を修正
  *            4.0.0 レイアウトをMixInに切り出す
  *                  Scene_EnemyBookのインターフェース一部変更（拡張プラグインに影響あり）
@@ -207,7 +208,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.0.1
+ * version: 4.1.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -220,6 +221,8 @@
  *   <desc1:なんとか>       # 説明１行目
  *   <desc2:かんとか>       # 説明２行目
  *   <book:no>              # 図鑑に載せない場合
+ *
+ * DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
  */
 /*~struct~DebuffStatusIcons:
  * @param mhp
@@ -464,7 +467,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.0.1
+ * version: 4.1.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -477,6 +480,8 @@
  *   <desc1:foobar>         # Description text in the enemy book, line 1
  *   <desc2:blahblah>       # Description text in the enemy book, line 2
  *   <book:no>              # This enemy does not appear in the enemy book
+ *
+ * You can control order of enemies by using DarkPlasma_OrderIdAlias.
  */
 /*~struct~DebuffStatusIconsEn:
  * @param mhp
@@ -815,7 +820,9 @@
    * @return {MZ.Enemy[]}
    */
   function registerableEnemies() {
-    return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy));
+    return $dataEnemies
+      .filter((enemy) => isRegisterableEnemy(enemy))
+      .sort((a, b) => (a.orderId || a.id) - (b.orderId || b.id));
   }
 
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
@@ -1248,7 +1255,7 @@
       const rect = this.itemRect(index);
       let name;
       if ($gameSystem.isInEnemyBook(enemy)) {
-        if (this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id)) {
+        if (this.mustHighlight(enemy)) {
           this.changeTextColor(ColorManager.textColor(settings.highlightColor));
         }
         name = enemy.name;
@@ -1259,6 +1266,15 @@
       this.drawText(name, rect.x, rect.y, rect.width);
       this.changePaintOpacity(true);
       this.resetTextColor();
+    }
+
+    /**
+     * ハイライトすべきか
+     * @param {MZ.Enemy} enemy
+     * @return {boolean}
+     */
+    mustHighlight(enemy) {
+      return this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id);
     }
 
     processHandling() {
