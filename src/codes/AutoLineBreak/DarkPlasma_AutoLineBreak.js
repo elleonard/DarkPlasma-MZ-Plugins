@@ -21,11 +21,15 @@ Window_Base.prototype.isAutoLineBreakEnabled = function () {
 
 const _Window_Base_processCharacter = Window_Base.prototype.processCharacter;
 Window_Base.prototype.processCharacter = function (textState) {
-  this._autoLineBroken = this.shouldLineBreakHere(textState);
-  if (this._autoLineBroken) {
+  if (this.shouldLineBreakHere(textState)) {
     this.flushTextState(textState);
     this.processNewLine(textState);
-    this._autoLineBroken = false;
+    /**
+     * 改ページが必要になったら次の文字は処理しない
+     */
+    if (this.needsNewPage && this.needsNewPage(textState)) {
+      return;
+    }
   }
   if (textState.text[textState.index].charCodeAt(0) >= 0x20) {
     textState.lineBuffer += textState.text[textState.index];
@@ -63,30 +67,45 @@ Window_Base.prototype.shouldLineBreakHere = function (textState) {
   }
   let nextCharacter = textState.text[textState.index];
   if (this.isSurrogatePair(nextCharacter)) {
-    this._surrogatePairBuffer = nextCharacter;
     return false;
   }
-  if (this._surrogatePairBuffer) {
-    nextCharacter = this._surrogatePairBuffer + nextCharacter;
-    this._surrogatePairBuffer = null;
-  }
+  let next2Character = this.nextNCharacter(textState, 2);
+  let next3Character = this.nextNCharacter(textState, 3);
   const size = this.textWidth(`${textState.lineBuffer}${nextCharacter}`);
   if (size + textState.x > this.lineWidth()) {
     return !this.isProhibitLineBreakBefore(nextCharacter);
+  } else if (
+    next2Character &&
+    next3Character &&
+    size + textState.x + this.textWidth(`${next2Character}${next3Character}`) > this.lineWidth()
+  ) {
+    // 行頭禁則文字が行末に2つ並んでおり、かつ枠をはみ出す場合
+    // 例えば、 しゅー のように、2つまでであれば並ぶ余地が十分に考えられる
+    // 3つ以上は流石に先読みコストがかかりすぎるので対応しない
+    return this.isProhibitLineBreakBefore(next2Character) && this.isProhibitLineBreakBefore(next3Character);
   }
   // 行末禁則チェック
-  let targetIndex = textState.index + 1;
-  if (!textState.text[targetIndex]) {
-    return false;
-  }
-  if (this.isSurrogatePair(textState.text[targetIndex])) {
-    targetIndex++;
-  }
-  const next2Character = textState.text.substring(textState.index + 1, targetIndex + 1);
-  if (this.textWidth(`${textState.lineBuffer}${nextCharacter}${next2Character}`) + textState.x > this.lineWidth()) {
+  if (
+    next2Character &&
+    this.textWidth(`${textState.lineBuffer}${nextCharacter}${next2Character}`) + textState.x > this.lineWidth()
+  ) {
     return this.isProhibitLineBreakAfter(nextCharacter);
   }
   return false;
+};
+
+/**
+ * N文字先の文字
+ * @param {MZ.TextState} textState
+ * @param {number} n
+ * @return {string|null}
+ */
+Window_Base.prototype.nextNCharacter = function (textState, n) {
+  let targetIndex = textState.index + n - 1;
+  if (!textState.text[targetIndex]) {
+    return null;
+  }
+  return textState.text.substring(targetIndex, targetIndex + 1);
 };
 
 Window_Base.prototype.isSurrogatePair = function (character) {
@@ -117,17 +136,6 @@ Window_Base.prototype.isProhibitLineBreakAfter = function (character) {
  */
 Window_Base.prototype.lineWidth = function () {
   return this.contentsWidth() - settings.lineWidthMargin;
-};
-
-const _Window_Message_processNewLine = Window_Message.prototype.processNewLine;
-Window_Message.prototype.processNewLine = function (textState) {
-  _Window_Message_processNewLine.call(this, textState);
-  /**
-   * 自動改行によって改ページされる場合、1文字戻す必要がある
-   */
-  if (this.needsNewPage(textState) && this._autoLineBroken) {
-    textState.index--;
-  }
 };
 
 /**
