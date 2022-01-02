@@ -1,0 +1,72 @@
+DarkPlasma_AutoHighlight:
+  name: DarkPlasma_AutoHighlight
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/01/02
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '指定した語句に自動で色をつける'
+  parameters:
+    - param: highlightGroups
+      text:
+        ja: 色と語句
+      desc:
+        ja: ハイライトする際の色と語句を設定します。
+      type: HighlightGroup[]
+      default: []
+    - param: targetWindows
+      text:
+        ja: 対象ウィンドウ
+      desc:
+        ja: 自動ハイライトの対象となるウィンドウクラスを指定します。
+      type: string[]
+      default:
+        - Window_Message
+  commands: []
+  structures:
+    HighlightGroup:
+      - param: title
+        text:
+          ja: 名前
+        desc:
+          ja: 色と語句設定の名前を指定します。ご自身にとってわかりやすい名前をつけてください。
+        type: string
+      - param: color
+        text:
+          ja: 色
+        desc:
+          ja: 色番号を指定します。
+        type: string
+      - param: texts
+        text:
+          ja: 語句
+        desc:
+          ja: ハイライトしたい語句を指定します。
+        type: string[]
+        default: []
+      - param: skills
+        text:
+          ja: スキル
+        desc:
+          ja: 名前をハイライトしたいスキルを指定します。
+        type: skill[]
+        default: []
+      - param: items
+        text:
+          ja: アイテム
+        desc:
+          ja: 名前をハイライトしたいアイテムを指定します。
+        type: item[]
+        default: []
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      指定した語句を指定した色でハイライトします。
