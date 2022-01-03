@@ -1,0 +1,53 @@
+DarkPlasma_ExpandTargetScopeButton:
+  name: DarkPlasma_ExpandTargetScopeButton
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/01/03
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキル/アイテムの対象全体化切り替えボタン'
+  parameters:
+    - param: allButtonImage
+      text:
+        ja: 全体化ボタン画像
+      type: file
+      dir: img
+    - param: singleButtonImage
+      text:
+        ja: 単体化ボタン画像
+      type: file
+      dir: img
+    - param: x
+      text:
+        ja: X座標
+      type: number
+      default: 0
+    - param: y
+      text:
+        ja: Y座標
+      type: number
+      default: 0
+    - param: scale
+      text:
+        ja: サイズ倍率
+      desc:
+        ja: ボタン画像のサイズ倍率（％）
+      type: number
+      default: 100
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_ExpandTargetScope
+        version: 1.1.0
+    orderAfter:
+      - name: DarkPlasma_ExpandTargetScope
+    orderBefore: []
+  help:
+    ja: |
+      スキル/アイテムの対象を単体/全体に切り替えるボタンを表示します。
