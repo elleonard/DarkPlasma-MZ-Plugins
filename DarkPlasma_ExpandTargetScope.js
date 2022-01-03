@@ -1,10 +1,11 @@
-// DarkPlasma_ExpandTargetScope 1.0.9
+// DarkPlasma_ExpandTargetScope 1.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/01/03 1.0.9 全体化ON/OFF時にカーソルを更新するよう修正
+ * 2022/01/03 1.1.0 DarkPlasma_ExpandTargetScopeButtonに対応
+ *            1.0.9 全体化ON/OFF時にカーソルを更新するよう修正
  *                  全体化ON/OFF時にカーソルSEを再生
  * 2021/07/05 1.0.8 MZ 1.3.2に対応
  * 2021/06/22 1.0.7 サブフォルダからの読み込みに対応
@@ -49,7 +50,7 @@
  * @default 100
  *
  * @help
- * version: 1.0.9
+ * version: 1.1.0
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -246,10 +247,14 @@
       }
       const action = BattleManager.inputtingAction();
       if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
-        this.setCursorAll(!this._cursorAll);
+        this.toggleCursorAll();
         return true;
       }
       return false;
+    };
+
+    windowClass.toggleCursorAll = function () {
+      this.setCursorAll(!this._cursorAll);
     };
 
     const _processHandling = windowClass.processHandling;
