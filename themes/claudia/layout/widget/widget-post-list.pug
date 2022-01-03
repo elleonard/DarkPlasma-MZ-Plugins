@@ -1,0 +1,55 @@
+article.post-container.is-flex.is-justify-content-center.section.container.is-max-widescreen.pt-4.px-2
+        div.columns.is-variable.is-1-tablet.is-3-desktop-only.is-2-widescreen.is-full-width
+            section.column
+                if page.posts.length > 0
+                    each post in page.posts.sort('date', -1).toArray()
+                        - var postURL = url_for(`./${post.path}`)
+                        - var coverImg = getPostCoverImg(post)
+                        - var imgURL = coverImg ? url_for(`${post.path}${coverImg}`) : ''
+                        - var isExcerpt = post.excerpt && post.excerpt.length > 0
+                        - var postContent = isExcerpt ? post.excerpt : post.content
+                        article.post-item-card
+                            if imgURL
+                                header.is-relative.is-flex
+                                    div.post-cover-backdrop.is-hidden
+                                        img(src= imgURL alt="loading..")
+                                    a.post-cover-link.has-text-centered.skeleton(href= postURL)
+                                        img.post-cover-img.js-img-fadeIn(src= imgURL alt="loading..", data-backdrop="true")
+                            section.content.post-card-content.p-4.pb-5
+                                if post.tags && post.tags.length > 0
+                                    header
+                                            each tag in post.tags.toArray()
+                                                a(href= url_for(`./tags/${tag.name}`))
+                                                    i.tag.post-item-tag= tag.name
+                                if post.title
+                                    h2.mt-4.mb-0.is-family-serif
+                                        a(href= postURL)= post.title
+                                if post.date
+                                    time.has-text-grey(datetime=post.date.toJSON())= date(post.date, date_format)
+                                p.is-flex-grow-2.mt-2
+                                    = truncate( strip_html(postContent), {length: 360, omission: '..'} )
+                                a.button.is-default.mt-2.has-text-weight-semibold(href= postURL)= __('read_more')
+                                include share
+
+                    -
+                        // turnPage
+                        var paginatorResult = paginator({
+                            escape: false,
+                            prev_text: `<i class="iconfont icon-prev has-text-grey"></i>`,
+                            next_text: `<i class="iconfont icon-next has-text-grey"></i>`,
+                        })
+                        var pageNumber = strip_html(paginatorResult)
+                        var showPageIndicator = pageNumber - 0 !== 1
+                    if showPageIndicator
+                        section.paginator.is-flex.is-justify-content-flex-end.is-flex-wrap-wrap.mt-5!= paginatorResult
+            aside.column.is-hidden-mobile.is-4-tablet.is-3-widescreen
+                block sidebar
+block append script
+    script.
+        $claudia.fadeInImage(null, $claudia.blurBackdropImg)
+
+        window.addEventListener('resize', $claudia.throttle(function () {
+            var images = document.querySelectorAll('.js-img-fadeIn')
+
+            images.forEach($claudia.blurBackdropImg)
+        }, 150))

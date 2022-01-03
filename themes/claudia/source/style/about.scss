@@ -1,0 +1,17 @@
+@import "common/variable";
+
+.about-page {
+  height: 100%;
+  // about page user info cover
+  aside img {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+
+    object-fit: cover;
+  }
+
+  .about-title {
+    font-weight: normal;
+  }
+}

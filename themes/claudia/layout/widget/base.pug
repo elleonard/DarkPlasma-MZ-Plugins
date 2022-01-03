@@ -1,0 +1,86 @@
+
+include methods
+- if (is_archive()) pageTitle = 'Archives'
+- if (is_tag()) pageTitle = 'Tag: ' + page.tag
+- if (is_category()) pageTitle = 'Category: ' + page.category
+- if (is_month()) pageTitle += ': ' + page.month + '/' + page.year
+- if (is_year()) pageTitle += ': ' + page.year
+- var pageTitle = page.title || config.title
+- var appearance = theme.appearance ? theme.appearance : 'auto'
+- var coverImg = getPostCoverImg(page)
+- var imgURL = coverImg ? `${page.path !== 'index.html' ? page.path : ''}${coverImg}` : config.cover
+
+doctype html
+html(lang=config.language class= `appearance-${ appearance }`)
+  head
+    meta(charset='UTF-8')
+    title= pageTitle
+    meta(name="description" content= config.description || theme.user && theme.user.description)
+    meta(name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1")
+    meta(property="og:type" content="website")
+    meta(property="og:title" content= pageTitle)
+    meta(property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/index.html")
+    meta(property="og:site_name" content= config.title)
+    meta(property="og:description" content= config.description)
+    meta(property="og:image" content= `https://elleonard.github.io/DarkPlasma-MZ-Plugins/${imgURL}`)
+    meta(property="og:locale" content="ja")
+    meta(name="twitter:card" content="summary")
+    meta(name="twitter:title" content= config.title)
+    meta(name="twitter:description" content= config.description)
+    meta(name="twitter:creator" content= `@elleonard_f`)
+    meta(name="twitter:image" content= `https://elleonard.github.io/DarkPlasma-MZ-Plugins/${imgURL}`)
+
+    <!-- Google Analytics -->
+    if(theme.ga_track_id)
+      script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q || []).push(arguments)},i[r].l=1 * new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '#{theme.ga_track_id}', '#{ theme.ga_domain || "auto" }');
+        ga('send', 'pageview');
+    <!-- End Google Analytics -->
+
+    <!-- Baidu Analytics -->
+    if (theme.ba_track_id)
+      script.
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + '#{theme.ba_track_id}';
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    <!-- End Baidu Analytics -->
+
+    link(rel="icon" href= url_for(`./${theme.favicon}`))
+    link(rel="stylesheet" href= url_for(`./style/common/bulma.css`))
+    link(rel="stylesheet" href= url_for(`./style/base.css`))
+    link(rel="stylesheet" href= url_for(`./style/common/helper.css`))
+    script(src= url_for(`./js/common.js`))
+    block head
+
+  body.is-flex.is-flex-direction-column
+    include widget-header
+    main
+      block content
+    footer.is-flex.is-flex-direction-column.is-align-items-center.is-flex-shrink-0.is-family-serif
+      section.sns-container
+        include widget-sns
+      p
+        span Copyright ©
+        - var author = (theme.user && theme.user.name) || config.author || ''
+        span= ' ' + author + ' ' + new Date().getFullYear()
+      div.is-flex.is-justify-content-center.is-flex-wrap-wrap
+        p Powered by Hexo &verbar;&nbsp;
+        p.is-flex.is-justify-content-center
+          a(title="Hexo theme author" href='//github.com/haojen') Theme by Haojen&nbsp;
+        div(style="margin-top: 2px")
+          a(title="github-button" class="github-button" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true")
+      div
+        span!= theme.user && theme.user.footnotes
+
+    script(async defer src="https://buttons.github.io/buttons.js")
+    block script
+

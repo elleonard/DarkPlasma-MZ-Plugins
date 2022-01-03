@@ -1,0 +1,64 @@
+@import "./default-dark";
+@import "./default-light";
+
+:root.appearance-light {
+  @include light;
+}
+
+:root.appearance-dark {
+  @include dark;
+}
+
+:root.appearance-auto {
+  @include light;
+
+  @media (prefers-color-scheme: dark) {
+    @include dark;
+  }
+}
+
+:root {
+  --backdropFilter: 20px;
+  --borderRadius: 6px;
+  --activeColor: #3273dc;
+  --boxShadow: 0 6px 30px -10px rgba(0, 0, 0, .1);
+
+  &.appearance-dark,
+  &.appearance-auto,
+  &.appearance-light {
+
+    background: var(--primary-bg-color);
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--primary-text-color)!important;
+    }
+
+    hr {
+      background: var(--third-bg-color);
+    }
+
+    p, strong, dl, ul, ol, cite {
+      color: var(--second-text-color);
+    }
+
+    .post-container, .about-page {
+      span {
+        color: var(--second-text-color);
+      }
+    }
+
+    .content {
+      blockquote {
+        background: var(--third-bg-color);
+        border-color: var(--blockquote-border-color);
+      }
+
+      table {
+        th, tr, td {
+          border-color: var(--table-border-color);
+          color: var(--second-text-color)!important;
+        }
+      }
+    }
+  }
+}

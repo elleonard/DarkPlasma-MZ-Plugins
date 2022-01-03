@@ -1,0 +1,16 @@
+extends widget/base
+
+block append head
+    link(rel='stylesheet', href= url_for(`./style/widget-post-list.css`))
+
+block topic
+    span= `${ _p('archive') } · ${ page.year || __('all') }`
+
+block content
+    include widget/widget-post-list
+        block sidebar
+            div(style="position: sticky; top: 50px;")
+                include widget/widget-archives
+
+
+

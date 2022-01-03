@@ -1,0 +1,26 @@
+.header-widget {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  overflow: hidden;
+
+  width: 100vw;
+  height: 42px;
+  padding: 0 15px;
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background: var(--top-bar-bg-color);
+
+  a {
+    margin: 0 8px;
+    font-weight: bold;
+
+    color: var(--primary-text-color);
+  }
+
+  h3 {
+    font-weight: bold;
+  }
+}
