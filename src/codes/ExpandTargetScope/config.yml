@@ -4,7 +4,9 @@ DarkPlasma_ExpandTargetScope:
   license: MIT
   histories:
     - date: 2022/01/03
-      version: 1.0.9
+      version: 1.1.0
+      description: 'DarkPlasma_ExpandTargetScopeButtonに対応'
+    - version: 1.0.9
       description: '全体化ON/OFF時にカーソルを更新するよう修正'
     - description: '全体化ON/OFF時にカーソルSEを再生'
     - date: 2021/07/05

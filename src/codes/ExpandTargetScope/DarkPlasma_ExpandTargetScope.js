@@ -173,10 +173,14 @@ function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass) {
     }
     const action = BattleManager.inputtingAction();
     if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
-      this.setCursorAll(!this._cursorAll);
+      this.toggleCursorAll();
       return true;
     }
     return false;
+  };
+
+  windowClass.toggleCursorAll = function () {
+    this.setCursorAll(!this._cursorAll);
   };
 
   const _processHandling = windowClass.processHandling;
