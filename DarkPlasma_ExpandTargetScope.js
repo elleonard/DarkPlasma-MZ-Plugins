@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.1.0
+// DarkPlasma_ExpandTargetScope 1.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/05 1.2.0 元々全体を対象とするスキルの対象選択スキップ設定を追加
  * 2022/01/03 1.1.0 DarkPlasma_ExpandTargetScopeButtonに対応
  *            1.0.9 全体化ON/OFF時にカーソルを更新するよう修正
  *                  全体化ON/OFF時にカーソルSEを再生
@@ -49,8 +50,14 @@
  * @type number
  * @default 100
  *
+ * @param skipTargetSelectionForAll
+ * @desc ONの場合、もともと全体を対象とするスキルの対象選択をスキップする
+ * @text 全体対象の選択スキップ
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -72,6 +79,7 @@
     switchScopeButton: String(pluginParameters.switchScopeButton || 'shift'),
     damageRateForAll: Number(pluginParameters.damageRateForAll || 70),
     mpCostRateForAll: Number(pluginParameters.mpCostRateForAll || 100),
+    skipTargetSelectionForAll: String(pluginParameters.skipTargetSelectionForAll || false) === 'true',
   };
 
   /**
@@ -117,7 +125,7 @@
 
     const _needsSelection = gameAction.needsSelection;
     gameAction.needsSelection = function () {
-      return _needsSelection.call(this) || this.isForAll();
+      return _needsSelection.call(this) || (this.isForAll() && !settings.skipTargetSelectionForAll);
     };
 
     const _makeDamageValue = gameAction.makeDamageValue;
