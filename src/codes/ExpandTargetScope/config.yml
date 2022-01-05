@@ -3,6 +3,9 @@ DarkPlasma_ExpandTargetScope:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/01/05
+      version: 1.2.0
+      description: '元々全体を対象とするスキルの対象選択スキップ設定を追加'
     - date: 2022/01/03
       version: 1.1.0
       description: 'DarkPlasma_ExpandTargetScopeButtonに対応'
@@ -70,6 +73,13 @@ DarkPlasma_ExpandTargetScope:
       default: 100
       desc:
         ja: 全体化時のMP消費倍率（％）
+    - param: skipTargetSelectionForAll
+      text:
+        ja: 全体対象の選択スキップ
+      desc:
+        ja: ONの場合、もともと全体を対象とするスキルの対象選択をスキップする
+      type: boolean
+      default: false
   help:
     ja: |
       対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、

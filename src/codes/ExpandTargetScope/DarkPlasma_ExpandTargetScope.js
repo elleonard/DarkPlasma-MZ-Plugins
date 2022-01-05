@@ -43,7 +43,7 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction) {
 
   const _needsSelection = gameAction.needsSelection;
   gameAction.needsSelection = function () {
-    return _needsSelection.call(this) || this.isForAll();
+    return _needsSelection.call(this) || (this.isForAll() && !settings.skipTargetSelectionForAll);
   };
 
   const _makeDamageValue = gameAction.makeDamageValue;
