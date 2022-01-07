@@ -1,9 +1,10 @@
-// DarkPlasma_AutoLineBreak 1.1.0
+// DarkPlasma_AutoLineBreak 1.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/07 1.2.0 行幅マージンを取得するメソッドを追加
  * 2021/12/30 1.1.0 行頭禁則文字が行末に2文字連続で来る場合に対応
  *            1.0.4 自動改行によって改ページが挟まる際に1文字抜ける不具合を修正
  * 2021/07/05 1.0.3 MZ 1.3.2に対応
@@ -45,7 +46,7 @@
  * @default 4
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -215,6 +216,10 @@
    */
   Window_Base.prototype.lineWidth = function () {
     return this.contentsWidth() - settings.lineWidthMargin;
+  };
+
+  Window_Base.prototype.lineWidthMargin = function () {
+    return settings.lineWidthMargin;
   };
 
   /**
