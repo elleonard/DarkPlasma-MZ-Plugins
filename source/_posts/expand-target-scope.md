@@ -27,4 +27,4 @@ Rawボタンを右クリックして対象をファイルに保存してくだ�
 
 # 関連プラグイン
 
-[対象範囲切り替えボタン画像表示プラグイン](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScopeButton.js)
+- [対象範囲切り替えボタンプラグイン](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScopeButton.js)

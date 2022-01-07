@@ -30,3 +30,7 @@ Rawボタンを右クリックして対象をファイルに保存してくだ�
 
 MZ版の本プラグインを利用するためには、下記プラグインが必要です。
 - [DarkPlasma_CustomKeyHandler](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CustomKeyHandler.js)
+
+# 関連プラグイン
+
+- [スキルの詳細説明文表示切り替えボタンプラグイン](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetailButton.js)
