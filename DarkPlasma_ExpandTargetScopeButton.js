@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScopeButton 1.0.0
+// DarkPlasma_ExpandTargetScopeButton 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/07 1.0.1 リファクタ
  * 2022/01/03 1.0.0 公開
  */
 
@@ -45,7 +46,7 @@
  * @default 100
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * スキル/アイテムの対象を単体/全体に切り替えるボタンを表示します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -56,6 +57,71 @@
 
 (() => {
   'use strict';
+
+  class Sprite_ToggleButton extends Sprite_Clickable {
+    initialize(toggleHandler) {
+      super.initialize(null);
+      this._handler = toggleHandler;
+      this.loadButtonImage();
+      this.scale.x = this.scaleXY();
+      this.scale.y = this.scaleXY();
+      this.x = this.positionX();
+      this.y = this.positionY();
+      this.hide();
+    }
+
+    /**
+     * @return {number}
+     */
+    scaleXY() {
+      return 1;
+    }
+
+    /**
+     * @return {number}
+     */
+    positionX() {
+      return 0;
+    }
+
+    /**
+     * @return {number}
+     */
+    positionY() {
+      return 0;
+    }
+
+    /**
+     * @return {string}
+     */
+    onImageName() {
+      return '';
+    }
+
+    /**
+     * @return {string}
+     */
+    offImageName() {
+      return '';
+    }
+
+    loadButtonImage() {
+      this._onBitmap = ImageManager.loadBitmap('img/', this.onImageName());
+      this._offBitmap = ImageManager.loadBitmap('img/', this.offImageName());
+      this.bitmap = this._onBitmap;
+    }
+
+    onClick() {
+      this._handler();
+    }
+
+    /**
+     * @param {boolean} on
+     */
+    setImage(on) {
+      this.bitmap = on ? this._onBitmap : this._offBitmap;
+    }
+  }
 
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
@@ -138,30 +204,25 @@
   Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleActor.prototype);
   Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleEnemy.prototype);
 
-  class Sprite_ExpandTargetScopeButton extends Sprite_Clickable {
-    initialize(cursorAllHandler) {
-      super.initialize(null);
-      this._handler = cursorAllHandler;
-      this.loadButtonImage();
-      this.scale.x = settings.scale / 100;
-      this.scale.y = settings.scale / 100;
-      this.x = settings.x;
-      this.y = settings.y;
-      this.hide();
+  class Sprite_ExpandTargetScopeButton extends Sprite_ToggleButton {
+    scaleXY() {
+      return settings.scale / 100;
     }
 
-    loadButtonImage() {
-      this._expandBitmap = ImageManager.loadBitmap('img/', settings.allButtonImage);
-      this._contractBitmap = ImageManager.loadBitmap('img/', settings.singleButtonImage);
-      this.bitmap = this._expandBitmap;
+    positionX() {
+      return settings.x;
     }
 
-    onClick() {
-      this._handler();
+    positionY() {
+      return settings.y;
     }
 
-    setImage(cursorAll) {
-      this.bitmap = cursorAll ? this._expandBitmap : this._contractBitmap;
+    onImageName() {
+      return settings.allButtonImage;
+    }
+
+    offImageName() {
+      return settings.singleButtonImage;
     }
   }
 })();
