@@ -31,7 +31,8 @@ DarkPlasma_SkillDetail:
     base:
       - name: DarkPlasma_CustomKeyHandler
         version: 1.1.0
-    orderAfter: []
+    orderAfter:
+      - name: DarkPlasma_CustomKeyHandler
     orderBefore: []
   help:
     ja: |
