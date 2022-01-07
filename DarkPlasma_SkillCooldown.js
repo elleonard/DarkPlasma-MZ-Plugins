@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.0.4
+// DarkPlasma_SkillCooldown 2.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/07 2.0.5 TPBにおいてターンカウントが正常に進まない不具合を修正
  * 2021/11/14 2.0.4 戦闘中にパーティメンバーを追加するとエラーが発生する不具合を修正
  * 2021/07/05 2.0.3 MZ 1.3.2に対応
  * 2021/06/22 2.0.2 サブフォルダからの読み込みに対応
@@ -51,13 +52,13 @@
  * @parent displaySetting
  *
  * @param decreaseBenchwarmersCooldown
- * @desc 控えメンバーのクールタイムも進める
+ * @desc 控えメンバーのクールタイムも進める(ターン制のみ)
  * @text 控えクールタイム減
  * @type boolean
  * @default true
  *
  * @help
- * version: 2.0.4
+ * version: 2.0.5
  * スキルにクールタイムを指定します。
  * スキルX使用後、スキルYの使用を一定ターン数制限することができます。
  */
@@ -270,12 +271,22 @@
     /**
      * すべてのクールダウンターン数を進める
      */
-    decreaseCooldownTurns() {
+    decreaseAllCooldownTurns() {
       const actorsCooldowns = settings.decreaseBenchwarmersCooldown
         ? this._actorsSkillCooldowns
         : this._actorsSkillCooldowns.filter((_, actorId) => $gameActors.actor(actorId).isBattleMember());
       const cooldowns = actorsCooldowns.flat().concat(this._enemysSkillCooldowns.flat());
       cooldowns.forEach((cooldown) => cooldown.decreaseTurn());
+    }
+
+    /**
+     * 特定バトラーのクールダウンターン数を進める
+     * @param {number} id
+     * @param {boolean} isActor
+     */
+    decreaseCooldownTurns(id, isActor) {
+      const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
+      targetCooldowns.forEach((cooldown) => cooldown.decreaseTurn());
     }
   }
 
@@ -290,7 +301,15 @@
   const _BattleManager_endTurn = BattleManager.endTurn;
   BattleManager.endTurn = function () {
     _BattleManager_endTurn.call(this);
-    skillCooldownManager.decreaseCooldownTurns();
+    /**
+     * ターン制のみ、控えメンバーのターン経過
+     */
+    if (!this.isTpb() && settings.decreaseBenchwarmersCooldown) {
+      $gameParty
+        .allMembers()
+        .filter((actor) => !actor.isBattleMember())
+        .forEach((actor) => skillCooldownManager.decreaseCooldownTurns(actor.skillCooldownId(), true));
+    }
   };
 
   /**
@@ -331,17 +350,42 @@
     gameBattlerBase.skillCooldownId = function () {
       return 0;
     };
+
+    /**
+     * クールダウンターンカウントを進める
+     */
+    gameBattlerBase.decreaseCooldownTurns = function () {
+      skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), this.isActor());
+    };
   }
 
   Game_BattlerBase_SkillCooldownMixIn(Game_BattlerBase.prototype);
 
-  const _Game_Battler_useItem = Game_Battler.prototype.useItem;
-  Game_Battler.prototype.useItem = function (item) {
-    _Game_Battler_useItem.call(this, item);
-    if (DataManager.isSkill(item) && $gameParty.inBattle()) {
-      this.setupCooldownTurn(item);
-    }
-  };
+  /**
+   * @param {Game_Battler.prototype} gameBattler
+   */
+  function Game_Battler_SkillCooldownMixIn(gameBattler) {
+    const _useItem = gameBattler.useItem;
+    gameBattler.useItem = function (item) {
+      _useItem.call(this, item);
+      if (DataManager.isSkill(item) && $gameParty.inBattle()) {
+        this.setupCooldownTurn(item);
+      }
+    };
+
+    const _onTurnEnd = gameBattler.onTurnEnd;
+    gameBattler.onTurnEnd = function () {
+      _onTurnEnd.call(this);
+      /**
+       * アクターの場合、マップ上でもターンエンド判定があるため、戦闘中に限定する
+       */
+      if ($gameParty.inBattle()) {
+        this.decreaseCooldownTurns();
+      }
+    };
+  }
+
+  Game_Battler_SkillCooldownMixIn(Game_Battler.prototype);
 
   Game_Actor.prototype.skillCooldownId = function () {
     return this.actorId();
