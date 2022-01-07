@@ -150,12 +150,22 @@ class SkillCooldownManager {
   /**
    * すべてのクールダウンターン数を進める
    */
-  decreaseCooldownTurns() {
+  decreaseAllCooldownTurns() {
     const actorsCooldowns = settings.decreaseBenchwarmersCooldown
       ? this._actorsSkillCooldowns
       : this._actorsSkillCooldowns.filter((_, actorId) => $gameActors.actor(actorId).isBattleMember());
     const cooldowns = actorsCooldowns.flat().concat(this._enemysSkillCooldowns.flat());
     cooldowns.forEach((cooldown) => cooldown.decreaseTurn());
+  }
+
+  /**
+   * 特定バトラーのクールダウンターン数を進める
+   * @param {number} id
+   * @param {boolean} isActor
+   */
+  decreaseCooldownTurns(id, isActor) {
+    const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
+    targetCooldowns.forEach((cooldown) => cooldown.decreaseTurn());
   }
 }
 
@@ -170,7 +180,15 @@ BattleManager.startBattle = function () {
 const _BattleManager_endTurn = BattleManager.endTurn;
 BattleManager.endTurn = function () {
   _BattleManager_endTurn.call(this);
-  skillCooldownManager.decreaseCooldownTurns();
+  /**
+   * ターン制のみ、控えメンバーのターン経過
+   */
+  if (!this.isTpb() && settings.decreaseBenchwarmersCooldown) {
+    $gameParty
+      .allMembers()
+      .filter((actor) => !actor.isBattleMember())
+      .forEach((actor) => skillCooldownManager.decreaseCooldownTurns(actor.skillCooldownId(), true));
+  }
 };
 
 /**
@@ -211,17 +229,42 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase) {
   gameBattlerBase.skillCooldownId = function () {
     return 0;
   };
+
+  /**
+   * クールダウンターンカウントを進める
+   */
+  gameBattlerBase.decreaseCooldownTurns = function () {
+    skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), this.isActor());
+  };
 }
 
 Game_BattlerBase_SkillCooldownMixIn(Game_BattlerBase.prototype);
 
-const _Game_Battler_useItem = Game_Battler.prototype.useItem;
-Game_Battler.prototype.useItem = function (item) {
-  _Game_Battler_useItem.call(this, item);
-  if (DataManager.isSkill(item) && $gameParty.inBattle()) {
-    this.setupCooldownTurn(item);
-  }
-};
+/**
+ * @param {Game_Battler.prototype} gameBattler
+ */
+function Game_Battler_SkillCooldownMixIn(gameBattler) {
+  const _useItem = gameBattler.useItem;
+  gameBattler.useItem = function (item) {
+    _useItem.call(this, item);
+    if (DataManager.isSkill(item) && $gameParty.inBattle()) {
+      this.setupCooldownTurn(item);
+    }
+  };
+
+  const _onTurnEnd = gameBattler.onTurnEnd;
+  gameBattler.onTurnEnd = function () {
+    _onTurnEnd.call(this);
+    /**
+     * アクターの場合、マップ上でもターンエンド判定があるため、戦闘中に限定する
+     */
+    if ($gameParty.inBattle()) {
+      this.decreaseCooldownTurns();
+    }
+  };
+}
+
+Game_Battler_SkillCooldownMixIn(Game_Battler.prototype);
 
 Game_Actor.prototype.skillCooldownId = function () {
   return this.actorId();

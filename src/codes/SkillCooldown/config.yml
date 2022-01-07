@@ -3,26 +3,29 @@ DarkPlasma_SkillCooldown:
   year: 2020
   license: MIT
   histories:
-    - date: '2021/11/14'
-      version: '2.0.4'
+    - date: 2022/01/07
+      version: 2.0.5
+      description: 'TPBにおいてターンカウントが正常に進まない不具合を修正'
+    - date: 2021/11/14
+      version: 2.0.4
       description: '戦闘中にパーティメンバーを追加するとエラーが発生する不具合を修正'
-    - date: '2021/07/05'
-      version: '2.0.3'
+    - date: 2021/07/05
+      version: 2.0.3
       description: 'MZ 1.3.2に対応'
-    - date: '2021/06/22'
-      version: '2.0.2'
+    - date: 2021/06/22
+      version: 2.0.2
       description: 'サブフォルダからの読み込みに対応'
-    - date: '2020/10/20'
-      version: '2.0.1'
+    - date: 2020/10/20
+      version: 2.0.1
       description: '設定値が正常に読み込まれない不具合を修正'
-    - date: '2020/09/08'
-      version: '2.0.0'
+    - date: 2020/09/08
+      version: 2.0.0
       description: 'パラメータ名を変更'
-    - date: '2020/09/01'
-      version: '1.0.1'
+    - date: 2020/09/01
+      version: 1.0.1
       description: 'クールダウンターン数が1少ない不具合を修正'
-    - date: '2020/08/27'
-      version: '1.0.0'
+    - date: 2020/08/27
+      version: 1.0.0
       description: MZ版公開
 
   locates:
@@ -65,7 +68,7 @@ DarkPlasma_SkillCooldown:
       parent: displaySetting
     - param: decreaseBenchwarmersCooldown
       desc:
-        ja: 控えメンバーのクールタイムも進める
+        ja: 控えメンバーのクールタイムも進める(ターン制のみ)
       text:
         ja: 控えクールタイム減
       type: boolean
