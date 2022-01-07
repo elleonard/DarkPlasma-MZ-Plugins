@@ -22,10 +22,11 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetail.js)
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetail.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillDetail.js)
 
 # 前提プラグイン
 
-本プラグインを利用するためには、下記プラグインが必要です。
+MZ版の本プラグインを利用するためには、下記プラグインが必要です。
 - [DarkPlasma_CustomKeyHandler](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CustomKeyHandler.js)
