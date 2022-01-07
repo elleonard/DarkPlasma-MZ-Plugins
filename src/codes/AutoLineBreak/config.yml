@@ -3,6 +3,9 @@ DarkPlasma_AutoLineBreak:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/01/07
+      version: 1.2.0
+      description: '行幅マージンを取得するメソッドを追加'
     - date: 2021/12/30
       version: 1.1.0
       description: '行頭禁則文字が行末に2文字連続で来る場合に対応'

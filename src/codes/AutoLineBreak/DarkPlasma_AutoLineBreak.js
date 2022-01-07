@@ -138,6 +138,10 @@ Window_Base.prototype.lineWidth = function () {
   return this.contentsWidth() - settings.lineWidthMargin;
 };
 
+Window_Base.prototype.lineWidthMargin = function () {
+  return settings.lineWidthMargin;
+};
+
 /**
  * Window_ChoiceList は選択肢幅によってウィンドウサイズが変わる
  * そのため、自動折返しの対象外とする
