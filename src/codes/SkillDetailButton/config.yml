@@ -1,0 +1,52 @@
+DarkPlasma_SkillDetailButton:
+  name: DarkPlasma_SkillDetailButton
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/01/07
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルの詳細説明文表示ボタン'
+  parameters:
+    - param: showButtonImage
+      text:
+        ja: 表示ボタン画像
+      type: file
+      dir: img
+    - param: hideButtonImage
+      text:
+        ja: 非表示ボタン画像
+      type: file
+      dir: img
+    - param: x
+      text:
+        ja: X座標
+      type: number
+      default: 0
+    - param: y
+      text:
+        ja: Y座標
+      type: number
+      default: 0
+    - param: scale
+      text:
+        ja: サイズ倍率
+      desc:
+        ja: ボタン画像のサイズ倍率（％）
+      type: number
+      default: 100
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_SkillDetail
+        version: 1.0.0
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキルの詳細説明文表示を切り替えるボタン画像を表示します。
