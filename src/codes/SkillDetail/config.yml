@@ -1,0 +1,43 @@
+DarkPlasma_SkillDetail:
+  name: DarkPlasma_SkillDetail
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/01/07
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルに詳細説明文を追加する'
+  parameters:
+    - param: openDetailKey
+      text:
+        ja: 詳細説明ボタン
+      desc:
+        ja: 詳細説明を開くためのボタン
+      type: select
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+      default: shift
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_CustomKeyHandler
+        version: 1.1.0
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキル画面のスキルにカーソルを合わせて特定のボタンを押すと
+      スキル詳細説明画面を開きます。
+
+      スキルのメモ欄に下記のような記述で詳細説明を記述できます。
+      <detail:詳細説明文。
+      ～～～～。>
