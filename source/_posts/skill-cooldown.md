@@ -21,5 +21,5 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js)
+[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillCooldown.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
