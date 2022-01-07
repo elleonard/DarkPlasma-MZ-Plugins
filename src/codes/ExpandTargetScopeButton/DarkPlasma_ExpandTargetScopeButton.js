@@ -1,3 +1,4 @@
+import { Sprite_ToggleButton } from '../../common/sprite/toggleButton';
 import { settings } from './_build/DarkPlasma_ExpandTargetScopeButton_parameters';
 
 /**
@@ -67,29 +68,24 @@ function Window_BattleTarget_ExpandTargetScopeButtonMixIn(windowClass) {
 Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleActor.prototype);
 Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleEnemy.prototype);
 
-class Sprite_ExpandTargetScopeButton extends Sprite_Clickable {
-  initialize(cursorAllHandler) {
-    super.initialize(null);
-    this._handler = cursorAllHandler;
-    this.loadButtonImage();
-    this.scale.x = settings.scale / 100;
-    this.scale.y = settings.scale / 100;
-    this.x = settings.x;
-    this.y = settings.y;
-    this.hide();
+class Sprite_ExpandTargetScopeButton extends Sprite_ToggleButton {
+  scaleXY() {
+    return settings.scale / 100;
   }
 
-  loadButtonImage() {
-    this._expandBitmap = ImageManager.loadBitmap('img/', settings.allButtonImage);
-    this._contractBitmap = ImageManager.loadBitmap('img/', settings.singleButtonImage);
-    this.bitmap = this._expandBitmap;
+  positionX() {
+    return settings.x;
   }
 
-  onClick() {
-    this._handler();
+  positionY() {
+    return settings.y;
   }
 
-  setImage(cursorAll) {
-    this.bitmap = cursorAll ? this._expandBitmap : this._contractBitmap;
+  onImageName() {
+    return settings.allButtonImage;
+  }
+
+  offImageName() {
+    return settings.singleButtonImage;
   }
 }

@@ -3,6 +3,9 @@ DarkPlasma_ExpandTargetScopeButton:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/01/07
+      version: 1.0.1
+      description: 'リファクタ'
     - date: 2022/01/03
       version: 1.0.0
       description: '公開'
