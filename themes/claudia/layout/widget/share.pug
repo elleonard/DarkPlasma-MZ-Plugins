@@ -1,5 +1,6 @@
 - var title = post ? post.title : page.title
 - var path = post ? post.path : page.path
-div.alignright
-  a(href= "https://twitter.com/share?ref_src=twsrc%5Etfw" data-text= `${title} | ${config.title}` data-url= `${config.url}/${path}` data-via= "elleonard_f" data-show-count= "false").twitter-share-button=Twitter
+div.clearfix
+  div.alignright
+    a(href= "https://twitter.com/share?ref_src=twsrc%5Etfw" data-text= `${title} | ${config.title}` data-url= `${config.url}/${path}` data-via= "elleonard_f" data-show-count= "false").twitter-share-button=Twitter
 script(async src= "https://platform.twitter.com/widgets.js" charset= "utf-8")

@@ -57,6 +57,11 @@
     }
   }
 
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
   .alignright {
     float: right
   }
