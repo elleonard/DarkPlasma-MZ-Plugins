@@ -3,8 +3,11 @@ DarkPlasma_CustomKeyHandler:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/10/10'
-      version: '1.0.0'
+    - date: 2022/01/07
+      version: 1.1.0
+      description: 'ハンドラ名をキー名とは別に設定可能にする'
+    - date: 2021/10/10
+      version: 1.0.0
       description: '初版'
 
   locates:
@@ -22,5 +25,11 @@ DarkPlasma_CustomKeyHandler:
     ja: |
       shiftなどを押した際のハンドラを追加できるようにします。
 
-      (例) shiftキーハンドラをすべての選択可能ウィンドウに追加する:
-      Window_CustomKeyHandlerMixIn("shift", Window_Selectable.prototype);
+      本プラグインは単体では機能しません。
+      本プラグインを必要とする別のプラグインと一緒に利用してください。
+
+      (例) shiftキーハンドラをすべての選択可能ウィンドウにハンドラ名hogeで追加する:
+      Window_CustomKeyHandlerMixIn("shift", Window_Selectable.prototype, "hoge");
+      ハンドラ名は省略するとキー名と同じになります。
+      このウィンドウに対して、 window.setHandler("hoge", method) などとして
+      ハンドラを追加することで、shiftキーでその操作を行わせることができます。
