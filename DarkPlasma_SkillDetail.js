@@ -16,6 +16,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_CustomKeyHandler
  *
  * @param openDetailKey
  * @desc 詳細説明を開くためのボタン
@@ -39,6 +40,8 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_CustomKeyHandler version:1.1.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
  */
 
 (() => {
