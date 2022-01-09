@@ -1,10 +1,11 @@
-// DarkPlasma_MultiAttackDamageFall 1.0.0
+// DarkPlasma_MultiAttackDamageFall 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/01/09 1.0.0 公開
+ * 2022/01/09 1.0.1 同一対象への複数回攻撃でダメージが減衰しない不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -28,7 +29,7 @@
  * @default 10
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * スキルのメモ欄に <multiAttack> とつけると
  * 範囲または連続攻撃時にダメージを減衰していきます。
  *
@@ -51,6 +52,29 @@
     minimumRate: Number(pluginParameters.minimumRate || 10),
   };
 
+  class MultiAttackTarget {
+    constructor(target) {
+      this._target = target;
+      this._attacked = false;
+    }
+
+    /**
+     * 複数攻撃のダメージ計算に用いる対象であるか
+     * @param {Game_Battler} target
+     * @return {boolean}
+     */
+    isMultiAttackTarget(target) {
+      return this._target === target && !this._attacked;
+    }
+
+    /**
+     * 攻撃済みフラグを立てる
+     */
+    attack() {
+      this._attacked = true;
+    }
+  }
+
   /**
    * @param {Game_Action.prototype} gameAction
    */
@@ -58,7 +82,7 @@
     const _clear = gameAction.clear;
     gameAction.clear = function () {
       _clear.call(this);
-      this._cachedTargets = [];
+      this._multiAttackTargets = [];
     };
 
     const _makeDamageValue = gameAction.makeDamageValue;
@@ -77,19 +101,20 @@
        * ダメージ計算で使うため、ターゲット情報はキャッシュしておく
        */
       const targets = _makeTargets.call(this);
-      this._cachedTargets = [...targets];
+      this._multiAttackTargets = targets.map((target) => new MultiAttackTarget(target));
       return targets;
     };
 
-    gameAction.cachedTargetIndex = function (target) {
-      return this._cachedTargets.indexOf(target);
+    gameAction.multiAttackTargetIndex = function (target) {
+      return this._multiAttackTargets.findIndex((cache) => cache.isMultiAttackTarget(target));
     };
 
     gameAction.multiAttackDamageFallRate = function (target) {
       if (!this.isMultiAttack()) {
         return 1;
       }
-      const targetIndex = this.cachedTargetIndex(target);
+      const targetIndex = this.multiAttackTargetIndex(target);
+      this._multiAttackTargets[targetIndex].attack();
       if (targetIndex > 0) {
         return Math.max((100 - settings.fallRate * targetIndex) / 100, settings.minimumRate / 100);
       }
