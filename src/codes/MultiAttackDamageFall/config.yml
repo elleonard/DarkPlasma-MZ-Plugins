@@ -1,0 +1,42 @@
+DarkPlasma_MultiAttackDamageFall:
+  name: DarkPlasma_MultiAttackDamageFall
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/01/09
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '範囲・連続攻撃のダメージ減衰'
+  parameters:
+    - param: fallRate
+      text:
+        ja: 減衰率（％）
+      desc:
+        ja: 攻撃対象1体ごとのダメージ減衰率
+      type: number
+      default: 10
+    - param: minimumRate
+      text:
+        ja: 最小ダメージ率（％）
+      desc:
+        ja: 減衰の限界となる最小ダメージ率
+      type: number
+      default: 10
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキルのメモ欄に <multiAttack> とつけると
+      範囲または連続攻撃時にダメージを減衰していきます。
+
+      範囲攻撃において減衰率を10％とした場合、
+      1体目には100％、2体目には90％、3体目には80％...
+      というふうに、与えるダメージが減少していきます。
