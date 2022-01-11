@@ -1,9 +1,12 @@
-// DarkPlasma_ItemStorage 1.0.0
+// DarkPlasma_ItemStorage 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/11 1.0.1 倉庫内にアイテムがあるかどうか判定できない不具合を修正
+ *                  最大数所持しているアイテムをそれ以上引き出せないように修正
+ *                  最大数預けているアイテムをそれ以上預けられないように修正
  * 2022/01/10 1.0.0 公開
  */
 
@@ -40,7 +43,7 @@
  * @type boolean
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -197,7 +200,7 @@
      * @return {boolean}
      */
     hasItem(item) {
-      return numItems(item) > 0;
+      return this.numItems(item) > 0;
     }
 
     /**
@@ -501,7 +504,12 @@
     }
 
     isEnabled(item) {
-      return !!item;
+      return (
+        !!item &&
+        (this.isPartyItem()
+          ? $gameParty.storageItems().numItems(item) < settings.maxItems
+          : $gameParty.numItems(item) < $gameParty.maxItems(item))
+      );
     }
 
     isCursorMovable() {
