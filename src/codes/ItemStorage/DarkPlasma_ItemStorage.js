@@ -140,7 +140,7 @@ class Game_StorageItems {
    * @return {boolean}
    */
   hasItem(item) {
-    return numItems(item) > 0;
+    return this.numItems(item) > 0;
   }
 
   /**
@@ -444,7 +444,12 @@ class Window_StorageItems extends Window_ItemList {
   }
 
   isEnabled(item) {
-    return !!item;
+    return (
+      !!item &&
+      (this.isPartyItem()
+        ? $gameParty.storageItems().numItems(item) < settings.maxItems
+        : $gameParty.numItems(item) < $gameParty.maxItems(item))
+    );
   }
 
   isCursorMovable() {

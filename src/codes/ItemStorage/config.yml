@@ -3,6 +3,11 @@ DarkPlasma_ItemStorage:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/01/11
+      version: 1.0.1
+      description: '倉庫内にアイテムがあるかどうか判定できない不具合を修正'
+    - description: '最大数所持しているアイテムをそれ以上引き出せないように修正'
+    - description: '最大数預けているアイテムをそれ以上預けられないように修正'
     - date: 2022/01/10
       version: 1.0.0
       description: '公開'
