@@ -39,3 +39,4 @@ Rawボタンを右クリックして対象をファイルに保存してくだ�
 # 類似プラグイン
 
 - [ABMZ_EnemyBook](https://github.com/ebinonote/ABMZ_EnemyBook)
+- [NUUN_EnemyBook](https://github.com/nuun888/MZ/blob/master/README/EnemyBook.md)
