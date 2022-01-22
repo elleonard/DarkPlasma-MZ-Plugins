@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.0.1
+// DarkPlasma_ItemStorage 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/01/22 1.1.0 Scene_ItemStorageのインターフェースを公開
  * 2022/01/11 1.0.1 倉庫内にアイテムがあるかどうか判定できない不具合を修正
  *                  最大数所持しているアイテムをそれ以上引き出せないように修正
  *                  最大数預けているアイテムをそれ以上預けられないように修正
@@ -43,7 +44,7 @@
  * @type boolean
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -423,6 +424,8 @@
       }
     }
   }
+
+  window.Scene_ItemStorage = Scene_ItemStorage;
 
   class Window_StorageItemCategory extends Window_ItemCategory {
     maxCols() {
