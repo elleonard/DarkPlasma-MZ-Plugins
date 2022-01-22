@@ -3,6 +3,9 @@ DarkPlasma_ItemStorage:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/01/22
+      version: 1.1.0
+      description: 'Scene_ItemStorageのインターフェースを公開'
     - date: 2022/01/11
       version: 1.0.1
       description: '倉庫内にアイテムがあるかどうか判定できない不具合を修正'

@@ -364,6 +364,8 @@ class Scene_ItemStorage extends Scene_MenuBase {
   }
 }
 
+window.Scene_ItemStorage = Scene_ItemStorage;
+
 class Window_StorageItemCategory extends Window_ItemCategory {
   maxCols() {
     return $gameTemp.storageCategories().count();
