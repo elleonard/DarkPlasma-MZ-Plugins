@@ -9,13 +9,15 @@ main.aside-card-container.recent-widget
                     // change to element replace image placeholder
                     - var backgroundColor = 'f5f5f5'
                     - var uiAvatarURL = `background=${backgroundColor}&name=${title.slice(0, 2)}`
+                    - var postURL = url_for(`./${post.path}`)
                     - var coverImg = getPostCoverImg(post)
-                    img.js-img-fadeIn(src= coverImg ? `${post.path}${getPostCoverImg(post)}` : `.${theme.user.avatar}` alt="cover")
+                    - var imgURL = coverImg ? url_for(`${post.path}${coverImg}`) : ''
+                    img.js-img-fadeIn(src= coverImg ? `${imgURL}` : url_for(`.${theme.user.avatar}`) alt="cover")
                     //else
                     //    div.post-img-placeholder
                     section.is-flex-grow-2
                         p.has-text-weight-semibold(style= "line-height: 20px; font-size: 14px")
-                            a(href=url_for(`${config.root}${post.path}`))= post.title || __('title')
+                            a(href=postURL)= post.title || __('title')
                         if post.date
                             time(datetime=post.date.toJSON()).has-text-weight-semibold.has-text-grey
                                 = date(post.date, date_format)
