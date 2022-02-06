@@ -141,36 +141,6 @@ Scene_Equip.prototype.onItemCancel = function () {
 };
 
 /**
- * シフトキーハンドラを追加するmixin
- * @param {Window_Selectable} windowClass ウィンドウクラスのプロトタイプ
- */
-function Window_ShiftMixIn(windowClass) {
-  const _processHandling = windowClass.processHandling;
-  windowClass.processHandling = function () {
-    _processHandling.call(this);
-    if (this.isOpenAndActive()) {
-      if (this.isShiftTriggered()) {
-        return this.processShift();
-      }
-    }
-  };
-
-  windowClass.isShiftTriggered = function () {
-    return Input.isTriggered('shift');
-  };
-
-  windowClass.processShift = function () {
-    this.playCursorSound();
-    this.updateInputData();
-    this.callShiftHandler();
-  };
-
-  windowClass.callShiftHandler = function () {
-    this.callHandler('shift');
-  };
-}
-
-/**
  * @type {number}
  */
 let uniqueTraitId = settings.startIdOfUniqueTraitId;
@@ -891,9 +861,9 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
   }
 }
 
-Window_ShiftMixIn(Window_EquipItem.prototype);
-Window_ShiftMixIn(Window_EquipFilterTrait.prototype);
-Window_ShiftMixIn(Window_EquipFilterEffect.prototype);
+Window_CustomKeyHandlerMixIn('shift', Window_EquipItem.prototype);
+Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterTrait.prototype);
+Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterEffect.prototype);
 
 Window_EquipItem.prototype.setFilter = function (filter, etypeId) {
   if (this.etypeId() !== etypeId) {

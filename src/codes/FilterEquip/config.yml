@@ -3,20 +3,24 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/09/05'
-      version: '0.0.5'
+    - date: 2022/02/06
+      version: 1.0.0
+      description: '正式版公開'
+    - description: '依存関係にDarkPlasma_CustomKeyHandlerを追加'
+    - date: 2021/09/05
+      version: 0.0.5
       description: '独自特徴を定義する機能を追加'
-    - date: '2021/08/28'
-      version: '0.0.4'
+    - date: 2021/08/28
+      version: 0.0.4
       description: '装備選択キャンセル時に絞り込みを解除する, 効果選択時にshiftで絞り込みウィンドウを閉じる'
-    - date: '2021/08/26'
-      version: '0.0.3'
+    - date: 2021/08/26
+      version: 0.0.3
       description: 'スクロールできていない不具合を修正'
-    - date: '2021/08/25'
-      version: '0.0.2'
+    - date: 2021/08/25
+      version: 0.0.2
       description: '絞り込み有効化時に装備リストウィンドウを最上部までスクロール'
-    - date: '2021/08/24'
-      version: '0.0.1'
+    - date: 2021/08/24
+      version: 0.0.1
       description: '試作公開'
 
   locates:
@@ -212,7 +216,10 @@ DarkPlasma_FilterEquip:
     base:
       - name: DarkPlasma_ParameterText
         version: 1.0.4
-    orderAfter: []
+      - name: DarkPlasma_CustomKeyHandler
+        version: 1.1.0
+    orderAfter:
+      - name: DarkPlasma_CustomKeyHandler
     orderBefore:
       - name: DarkPlasma_PartyAbilityTraitExtension
         version: 1.1.0
