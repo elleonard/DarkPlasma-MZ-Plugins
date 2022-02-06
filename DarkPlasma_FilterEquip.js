@@ -1,9 +1,11 @@
-// DarkPlasma_FilterEquip 0.0.5
+// DarkPlasma_FilterEquip 1.0.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/02/06 1.0.0 正式版公開
+ *                  依存関係にDarkPlasma_CustomKeyHandlerを追加
  * 2021/09/05 0.0.5 独自特徴を定義する機能を追加
  * 2021/08/28 0.0.4 装備選択キャンセル時に絞り込みを解除する, 効果選択時にshiftで絞り込みウィンドウを閉じる
  * 2021/08/26 0.0.3 スクロールできていない不具合を修正
@@ -20,6 +22,8 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_ParameterText
+ * @base DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_CustomKeyHandler
  * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  * @orderBefore DarkPlasma_FilterEquip_RecentlyGained
  *
@@ -41,7 +45,7 @@
  * @default 71
  *
  * @help
- * version: 0.0.5
+ * version: 1.0.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -87,6 +91,9 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_ParameterText version:1.0.4
+ * DarkPlasma_CustomKeyHandler version:1.1.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
@@ -411,36 +418,6 @@
     _Scene_Equip_onItemCancel.call(this);
     this._filters[this._slotWindow.index()].allOff();
   };
-
-  /**
-   * シフトキーハンドラを追加するmixin
-   * @param {Window_Selectable} windowClass ウィンドウクラスのプロトタイプ
-   */
-  function Window_ShiftMixIn(windowClass) {
-    const _processHandling = windowClass.processHandling;
-    windowClass.processHandling = function () {
-      _processHandling.call(this);
-      if (this.isOpenAndActive()) {
-        if (this.isShiftTriggered()) {
-          return this.processShift();
-        }
-      }
-    };
-
-    windowClass.isShiftTriggered = function () {
-      return Input.isTriggered('shift');
-    };
-
-    windowClass.processShift = function () {
-      this.playCursorSound();
-      this.updateInputData();
-      this.callShiftHandler();
-    };
-
-    windowClass.callShiftHandler = function () {
-      this.callHandler('shift');
-    };
-  }
 
   /**
    * @type {number}
@@ -1163,9 +1140,9 @@
     }
   }
 
-  Window_ShiftMixIn(Window_EquipItem.prototype);
-  Window_ShiftMixIn(Window_EquipFilterTrait.prototype);
-  Window_ShiftMixIn(Window_EquipFilterEffect.prototype);
+  Window_CustomKeyHandlerMixIn('shift', Window_EquipItem.prototype);
+  Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterTrait.prototype);
+  Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterEffect.prototype);
 
   Window_EquipItem.prototype.setFilter = function (filter, etypeId) {
     if (this.etypeId() !== etypeId) {
