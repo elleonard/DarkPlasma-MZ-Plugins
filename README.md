@@ -16,10 +16,16 @@ node と yarn が必要です。
 
 ```bash
 yarn install
-yarn build
+yarn build:all
 ```
 
 `yarn install` は初回のみ必要です。
+
+## 個別ビルド
+
+```bash
+yarn build (ビルド対象)
+```
 
 # 動作確認したい
 
