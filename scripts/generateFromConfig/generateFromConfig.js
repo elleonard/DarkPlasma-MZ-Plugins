@@ -4,6 +4,7 @@ const YAML = require('yaml');
 const mkdirp = require('mkdirp');
 const { generateHeader } = require('./generateHeader');
 const { generateParameterReader } = require('./generateParameterReader');
+const { generatePluginCommand } = require('./generatePluginCommand');
 
 async function generateFromConfig(file) {
   const config = loadConfig(file);
@@ -16,6 +17,8 @@ async function generateFromConfig(file) {
     if (!key.endsWith('_Test')) {
       const parameterReader = await generateParameterReader(currentConfig);
       fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
+      const pluginCommands = await generatePluginCommand(currentConfig);
+      fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
       /**
        * テストプラグインがいる場合、パラメータをコピーする
        */

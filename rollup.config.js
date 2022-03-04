@@ -4,11 +4,20 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import applyTemplate from './extensions/rollup/rollup-apply-template';
 
-const targetJsList = [
-  glob.sync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
-  glob.sync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
-  glob.sync(path.join(__dirname, 'src', 'tests', '*', `DarkPlasma*_Test.js`)),
-].flat();
+const targetJsList = (() => {
+  const targetFile = (() => {
+    const file = process.env.TARGET;
+    const dir = process.argv.some((n) => n === '-e') ? 'excludes' : 'codes';
+    return file ? glob.sync(path.join(__dirname, 'src', dir, file, 'DarkPlasma*.js')) : null;
+  })();
+  return targetFile
+    ? [targetFile].flat()
+    : [
+        glob.sync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
+        glob.sync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
+        glob.sync(path.join(__dirname, 'src', 'tests', '*', `DarkPlasma*_Test.js`)),
+      ].flat();
+})();
 
 const config = targetJsList.map((input) => {
   const name = path.basename(input, '.js');

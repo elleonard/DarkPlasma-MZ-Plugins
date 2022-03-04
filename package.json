@@ -8,9 +8,12 @@
   "private": true,
   "scripts": {
     "format": "prettier --write ./src/**/DarkPlasma_*.js",
-    "build": "run-s clean build:*",
+    "build": "run-s clean \"build:target:config {@}\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
+    "build:all": "run-s clean build:*",
     "build:config": "node ./scripts/generateFromConfig",
+    "build:target:config": "node ./scripts/generateFromConfig -f",
     "build:js": "rollup -c",
+    "build:target:js": "rollup -c",
     "build:format": "prettier --write ./_dist/**/*.js",
     "build:copy": "node ./scripts/copyToProject",
     "watch": "run-p watch:*",
