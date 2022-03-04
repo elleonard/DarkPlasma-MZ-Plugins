@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
         working-directory: ./stage
-      - run: yarn build:all
+      - run: yarn buildAll
         working-directory: ./stage
       - run: node ./scripts/publish.js ../release
         working-directory: ./stage
