@@ -1,0 +1,48 @@
+DarkPlasma_StateAliasBySide:
+  name: DarkPlasma_StateAliasBySide
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/03/11
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '敵味方に応じてステートを変更する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      敵・味方に応じて別のステートを付与することができます。
+
+      <stateAliasEnemy:X>
+      ステートのメモ欄にこう記述した場合、
+      敵にそのステートを付与する場合、
+      代わりにステートID:Xのステートが付与されます。
+      ステート有効度や無効フラグはXではなく元のステートのものが使用されます。
+
+      <stateAliasActor:X>
+      ステートのメモ欄にこう記述した場合、
+      味方にそのステートを付与する場合、
+      代わりにステートID:Xのステートが付与されます。
+      ステート有効度や無効フラグはXではなく元のステートのものが使用されます。
+
+      例:
+      <stateAliasEnemy:14>
+      ステートID4を敵に付与する場合、
+      ステートID4ではなく14が付与されます。
+      味方用の毒と敵用の毒を分けたい場合に有効です。
+
+      この場合、ステート有効度及び無効フラグはID4のものが使用されます。
+
+      ステートID:14 の毒に対して、以下のように記述します。
+      <stateAliasActor:4>
+      ステートID14を味方に付与する場合、
+      ステートID14ではなく4が付与されます。
