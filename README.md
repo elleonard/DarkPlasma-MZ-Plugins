@@ -16,7 +16,7 @@ node と yarn が必要です。
 
 ```bash
 yarn install
-yarn build:all
+yarn buildAll
 ```
 
 `yarn install` は初回のみ必要です。
