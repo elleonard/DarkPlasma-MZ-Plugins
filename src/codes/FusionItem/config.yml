@@ -1,0 +1,207 @@
+DarkPlasma_FusionItem:
+  name: DarkPlasma_FusionItem
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/03/13
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテム融合ショップ'
+  parameters:
+    - param: presets
+      text:
+        ja: 品揃えプリセット
+      type: FusionGoods[]
+      default: []
+    - param: useEquip
+      text:
+        ja: 装備しているものを使うか
+      desc:
+        ja: ONの場合、融合素材に装備しているものを使用します。
+      type: boolean
+      default: false
+    - param: commandName
+      text:
+        ja: 融合コマンド名
+      desc:
+        ja: ショップを開いた際に表示されるコマンド名
+      type: string
+      default: 融合する
+  commands:
+    - command: fusionShop
+      text:
+        ja: 融合ショップを開く
+      args:
+        - arg: presetIds
+          text:
+            ja: プリセットIDリスト
+          desc:
+            ja: プラグインパラメータで設定したプリセットIDを指定します。複数指定した場合、マージされます。
+          type: number[]
+  structures:
+    FusionGoods:
+      - param: id
+        text:
+          ja: ID
+        desc:
+          ja: プラグインコマンド実行時に指定するプリセットID
+        type: number
+      - param: items
+        text:
+          ja: 融合アイテム品揃え
+        type: FusionGoodItem[]
+        default: []
+      - param: weapons
+        text:
+          ja: 融合武器品揃え
+        type: FusionGoodWeapon[]
+        default: []
+      - param: armors
+        text:
+          ja: 融合防具品揃え
+        type: FusionGoodArmor[]
+        default: []
+    FusionGoodBase:
+      - param: materialItems
+        text:
+          ja: 融合素材アイテムリスト
+        type: MaterialItem[]
+        default: []
+      - param: materialWeapons
+        text:
+          ja: 融合素材武器リスト
+        type: MaterialWeapon[]
+        default: []
+      - param: materialArmors
+        text:
+          ja: 融合素材防具リスト
+        type: MaterialArmor[]
+        default: []
+      - param: gold
+        text:
+          ja: 価格
+        type: number
+        default: 0
+      - param: condition
+        text:
+          ja: 融合可能条件
+        desc:
+          ja: 指定した場合、この条件がすべて満たされる場合のみ融合ショップに表示します。
+        type: FusionGoodCondition
+        default:
+          - switchId: 0
+          - variableId: 0
+          - threshold: 0
+    FusionGoodCondition:
+      - param: switchId
+        text:
+          ja: スイッチ
+        desc:
+          ja: 指定した場合、このスイッチがONの場合のみ融合ショップに表示します。
+        type: switch
+        default: 0
+      - param: variableId
+        text:
+          ja: 変数
+        desc:
+          ja: 指定した場合、この変数が閾値より大の場合のみ融合ショップに表示します。
+        type: variable
+        default: 0
+      - param: threshold
+        text:
+          ja: 閾値
+        type: number
+        default: 0
+    FusionGoodItem:
+      - param: result
+        text:
+          ja: 融合結果アイテム
+        type: item
+      - param: base
+        text:
+          ja: 融合メタ情報
+        type: FusionGoodBase
+        default:
+          materialItems: []
+          materialWeapons: []
+          materialArmors: []
+          gold: 0
+          condition: 0
+    FusionGoodWeapon:
+      - param: result
+        text:
+          ja: 融合結果武器
+        type: weapon
+      - param: base
+        text:
+          ja: 融合メタ情報
+        type: FusionGoodBase
+        default:
+          materialItems: []
+          materialWeapons: []
+          materialArmors: []
+          gold: 0
+          condition: 0
+    FusionGoodArmor:
+      - param: result
+        text:
+          ja: 融合結果防具
+        type: armor
+      - param: base
+        text:
+          ja: 融合メタ情報
+        type: FusionGoodBase
+        default:
+          materialItems: []
+          materialWeapons: []
+          materialArmors: []
+          gold: 0
+          condition: 0
+    MaterialItem:
+      - param: id
+        text:
+          ja: アイテム
+        type: item
+      - param: count
+        text:
+          ja: 個数
+        type: number
+        default: 1
+        min: 1
+    MaterialWeapon:
+      - param: id
+        text:
+          ja: 武器
+        type: weapon
+      - param: count
+        text:
+          ja: 個数
+        type: number
+        default: 1
+        min: 1
+    MaterialArmor:
+      - param: id
+        text:
+          ja: 防具
+        type: armor
+      - param: count
+        text:
+          ja: 個数
+        type: number
+        default: 1
+        min: 1
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      複数のアイテム、武器、防具、お金を
+      ひとつのアイテムに変換する融合ショップを提供します。
+
+      プラグインパラメータで品揃えプリセットを登録し、
+      プラグインコマンドでプリセットIDを指定してください。
