@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.0.0
+// DarkPlasma_FusionItem 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/03/14 1.1.0 レイアウト用にクラス定義をグローバルに公開
  * 2022/03/13 1.0.0 公開
  */
 
@@ -40,7 +41,7 @@
  * @type number[]
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -596,6 +597,10 @@
       this.refresh();
     }
 
+    materialLineHeight() {
+      return this.lineHeight();
+    }
+
     drawMaterials(x, y) {
       if (this._materials) {
         const width = this.innerWidth - this.itemPadding() - x;
@@ -604,7 +609,7 @@
         this.resetTextColor();
         const countWidth = this.textWidth('00/00');
         this._materials.forEach((material, index) => {
-          const materialY = y + (index + 1) * this.lineHeight();
+          const materialY = y + (index + 1) * this.materialLineHeight();
           this.drawText(material.data.name, x, materialY, width - countWidth);
           this.drawText(
             `${$gameParty.numUsableItemsForFusion(material.data)}/${material.count}`,
@@ -617,6 +622,8 @@
       }
     }
   }
+
+  globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
 
   class Window_FusionShopBuy extends Window_ShopBuy {
     /**
