@@ -3,6 +3,9 @@ DarkPlasma_FusionItem:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/03/14
+      version: 1.1.0
+      description: 'レイアウト用にクラス定義をグローバルに公開'
     - date: 2022/03/13
       version: 1.0.0
       description: '公開'

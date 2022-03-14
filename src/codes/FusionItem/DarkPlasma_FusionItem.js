@@ -236,6 +236,10 @@ class Window_FusionShopStatus extends Window_ShopStatus {
     this.refresh();
   }
 
+  materialLineHeight() {
+    return this.lineHeight();
+  }
+
   drawMaterials(x, y) {
     if (this._materials) {
       const width = this.innerWidth - this.itemPadding() - x;
@@ -244,7 +248,7 @@ class Window_FusionShopStatus extends Window_ShopStatus {
       this.resetTextColor();
       const countWidth = this.textWidth('00/00');
       this._materials.forEach((material, index) => {
-        const materialY = y + (index + 1) * this.lineHeight();
+        const materialY = y + (index + 1) * this.materialLineHeight();
         this.drawText(material.data.name, x, materialY, width - countWidth);
         this.drawText(
           `${$gameParty.numUsableItemsForFusion(material.data)}/${material.count}`,
@@ -257,6 +261,8 @@ class Window_FusionShopStatus extends Window_ShopStatus {
     }
   }
 }
+
+globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
 
 class Window_FusionShopBuy extends Window_ShopBuy {
   /**
