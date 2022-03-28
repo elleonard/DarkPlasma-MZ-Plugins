@@ -3,44 +3,44 @@ DarkPlasma_ForceFormation:
   year: 2020
   license: MIT
   histories:
-    - date: '2021/07/05'
-      version: '2.3.3'
+    - date: 2021/07/05
+      version: 2.3.3
       description: 'MZ 1.3.2に対応'
-    - date: '2021/06/22'
-      version: '2.3.2'
+    - date: 2021/06/22
+      version: 2.3.2
       description: 'サブフォルダからの読み込みに対応'
-    - date: '2021/05/09'
-      version: '2.3.1'
-      desription: '戦闘テスト開始時にエラーが発生する不具合を修正'
-    - date: '2021/05/07'
-      version: '2.3.0'
+    - date: 2021/05/09
+      version: 2.3.1
+      description: '戦闘テスト開始時にエラーが発生する不具合を修正'
+    - date: 2021/05/07
+      version: 2.3.0
       description: '特定マップで強制入れ替えを無効化する機能を追加'
-    - date: '2021/01/04'
-      version: '2.2.4'
+    - date: 2021/01/04
+      version: 2.2.4
       description: '正しく動作しない不具合を修正'
-    - date: '2021/01/04'
-      version: '2.2.3'
+    - date: 2021/01/04
+      version: 2.2.3
       description: 'null合体演算子が動作しないブラウザに対応'
-    - date: '2021/01/04'
-      version: '2.2.2'
+    - date: 2021/01/04
+      version: 2.2.2
       description: '全滅判定を飛ばした場合にも入れ替え無効スイッチを判定するよう修正'
-    - date: '2021/01/01'
-      version: '2.2.1'
+    - date: 2021/01/01
+      version: 2.2.1
       description: '戦闘外の全滅判定に影響していた不具合を修正'
-    - date: '2020/12/31'
-      version: '2.2.0'
+    - date: 2020/12/31
+      version: 2.2.0
       description: '強制入れ替え無効スイッチ設定を追加'
-    - date: '2020/11/23'
-      version: '2.1.1'
-      description: 'リファクタ'
-    - date: '2020/10/13'
-      version: '2.1.0'
+    - date: 2020/11/23
+      version: 2.1.1
+      description: リファクタ
+    - date: 2020/10/13
+      version: 2.1.0
       description: '戦闘中の入れ替えクールダウン用のコード追加'
-    - date: '2020/09/08'
-      version: '2.0.0'
+    - date: 2020/09/08
+      version: 2.0.0
       description: 'パラメータ名を変更'
-    - date: '2020/08/28'
-      version: '1.0.0'
+    - date: 2020/08/28
+      version: 1.0.0
       description: 'MZ版公開'
 
   locates:
