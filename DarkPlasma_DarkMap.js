@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 1.0.0
+// DarkPlasma_DarkMap 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/03/31 1.0.1 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/11/19 1.0.0 公開
  */
 
@@ -33,7 +34,7 @@
  * @default 200
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -66,6 +67,14 @@
 (() => {
   'use strict';
 
+  /**
+   * マップのメタデータを取得できるか
+   * @return {boolean}
+   */
+  function isMapMetaDataAvailable() {
+    return $dataMap && $dataMap.meta;
+  }
+
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
   });
@@ -90,7 +99,7 @@
    */
   function Game_Map_DarkMapMixIn(gameMap) {
     gameMap.isDark = function () {
-      return $dataMap && $dataMap.meta.dark;
+      return isMapMetaDataAvailable() && $dataMap.meta.dark;
     };
 
     gameMap.lightEvents = function () {

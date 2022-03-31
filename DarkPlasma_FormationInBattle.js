@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.2.3
+// DarkPlasma_FormationInBattle 1.2.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/03/31 1.2.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/07/05 1.2.3 MZ 1.3.2に対応
  * 2021/06/22 1.2.2 サブフォルダからの読み込みに対応
  * 2021/05/09 1.2.1 戦闘テスト開始時にエラーが発生する不具合を修正
@@ -52,7 +53,7 @@
  * @default true
  *
  * @help
- * version: 1.2.3
+ * version: 1.2.4
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -66,6 +67,14 @@
 
 (() => {
   'use strict';
+
+  /**
+   * マップのメタデータを取得できるか
+   * @return {boolean}
+   */
+  function isMapMetaDataAvailable() {
+    return $dataMap && $dataMap.meta;
+  }
 
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
@@ -181,7 +190,7 @@
   };
 
   Game_Map.prototype.isFormationInBattleEnabled = function () {
-    return !$dataMap || !$dataMap.meta.disableFormationInBattle;
+    return !isMapMetaDataAvailable() || !$dataMap.meta.disableFormationInBattle;
   };
 
   const _BattleManager_startTurn = BattleManager.startTurn;

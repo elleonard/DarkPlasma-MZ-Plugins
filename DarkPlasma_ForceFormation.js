@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.3.3
+// DarkPlasma_ForceFormation 2.3.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/03/31 2.3.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/07/05 2.3.3 MZ 1.3.2に対応
  * 2021/06/22 2.3.2 サブフォルダからの読み込みに対応
  * 2021/05/09 2.3.1 戦闘テスト開始時にエラーが発生する不具合を修正
@@ -52,7 +53,7 @@
  * @default 0
  *
  * @help
- * version: 2.3.3
+ * version: 2.3.4
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  *
  * マップのメモ欄に<disableForceFormation>と書くことで、
@@ -61,6 +62,14 @@
 
 (() => {
   'use strict';
+
+  /**
+   * マップのメタデータを取得できるか
+   * @return {boolean}
+   */
+  function isMapMetaDataAvailable() {
+    return $dataMap && $dataMap.meta;
+  }
 
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
@@ -111,7 +120,7 @@
   };
 
   Game_Map.prototype.isForceFormationEnabled = function () {
-    return !$dataMap || !$dataMap.meta.disableForceFormation;
+    return !isMapMetaDataAvailable() || !$dataMap.meta.disableForceFormation;
   };
 
   // GameParty
