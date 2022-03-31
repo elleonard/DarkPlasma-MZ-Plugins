@@ -1,3 +1,4 @@
+import { isMapMetaDataAvailable } from '../../common/mapMetaData';
 import { settings } from './_build/DarkPlasma_DarkMap_parameters';
 
 /**
@@ -5,7 +6,7 @@ import { settings } from './_build/DarkPlasma_DarkMap_parameters';
  */
 function Game_Map_DarkMapMixIn(gameMap) {
   gameMap.isDark = function () {
-    return $dataMap && $dataMap.meta.dark;
+    return isMapMetaDataAvailable() && $dataMap.meta.dark;
   };
 
   gameMap.lightEvents = function () {

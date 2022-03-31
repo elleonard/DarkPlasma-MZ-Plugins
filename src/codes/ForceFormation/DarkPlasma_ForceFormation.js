@@ -1,3 +1,4 @@
+import { isMapMetaDataAvailable } from '../../common/mapMetaData';
 import { settings } from './_build/DarkPlasma_ForceFormation_parameters';
 
 // Window_BattleLog
@@ -34,7 +35,7 @@ BattleManager.checkBattleEnd = function () {
 };
 
 Game_Map.prototype.isForceFormationEnabled = function () {
-  return !$dataMap || !$dataMap.meta.disableForceFormation;
+  return !isMapMetaDataAvailable() || !$dataMap.meta.disableForceFormation;
 };
 
 // GameParty

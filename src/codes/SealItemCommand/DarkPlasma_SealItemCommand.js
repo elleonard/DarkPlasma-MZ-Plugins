@@ -1,5 +1,7 @@
+import { isMapMetaDataAvailable } from '../../common/mapMetaData';
+
 Game_Map.prototype.isItemCommandEnabled = function () {
-  return !$dataMap || !$dataMap.meta.sealItemCommand;
+  return !isMapMetaDataAvailable() || !$dataMap.meta.sealItemCommand;
 };
 
 const _Window_MenuCommand_makeCommandList = Window_MenuCommand.prototype.makeCommandList;

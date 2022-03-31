@@ -1,3 +1,4 @@
+import { isMapMetaDataAvailable } from '../../common/mapMetaData';
 import { settings } from './_build/DarkPlasma_FormationInBattle_parameters';
 
 /**
@@ -100,7 +101,7 @@ Game_Party.prototype.onBattleStart = function () {
 };
 
 Game_Map.prototype.isFormationInBattleEnabled = function () {
-  return !$dataMap || !$dataMap.meta.disableFormationInBattle;
+  return !isMapMetaDataAvailable() || !$dataMap.meta.disableFormationInBattle;
 };
 
 const _BattleManager_startTurn = BattleManager.startTurn;

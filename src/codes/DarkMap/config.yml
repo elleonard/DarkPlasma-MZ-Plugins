@@ -3,8 +3,11 @@ DarkPlasma_DarkMap:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/11/19'
-      version: '1.0.0'
+    - date: 2022/03/31
+      version: 1.0.1
+      description: 'TemplateEvent.jsと併用すると戦闘テストできない不具合を修正'
+    - date: 2021/11/19
+      version: 1.0.0
       description: '公開'
 
   locates:
