@@ -1,0 +1,19 @@
+{
+  "extends": ["prettier"],
+  "rules": {
+    "no-var": "error",
+    "no-mixed-spaces-and-tabs": "error",
+    "no-trailing-spaces": "error",
+    "space-infix-ops": "error",
+    "dot-notation": "error",
+    "eqeqeq": "error",
+    "arrow-spacing": "error",
+    "no-console": "error"
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true
+  }
+}

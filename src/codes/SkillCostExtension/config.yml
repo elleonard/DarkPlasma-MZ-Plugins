@@ -3,6 +3,9 @@ DarkPlasma_SkillCostExtension:
   year: 2020
   license: MIT
   histories:
+    - date: '2022/04/19'
+      version: '1.3.3'
+      description: 'コストの記述が不正であった場合にエラーでゲームを止めるように変更'
     - date: '2021/07/05'
       version: '1.3.2'
       description: 'MZ 1.3.2に対応'
