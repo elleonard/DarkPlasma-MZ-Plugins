@@ -136,8 +136,7 @@ DataManager.extractAdditionalSkillCost = function (data) {
               result[key] = Number(match[2]);
               break;
             default:
-              console.log(`undefined cost type:${match[1]}`);
-              break;
+              throw new Error(`undefined cost type:${match[1]}`);
           }
         }
       }
