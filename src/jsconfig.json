@@ -2,13 +2,5 @@
   "compilerOptions": {
     "target": "es6"
   },
-  "files": [
-    "../rmmz/rmmz_core.js",
-    "../rmmz/rmmz_managers.js",
-    "../rmmz/rmmz_objects.js",
-    "../rmmz/rmmz_scenes.js",
-    "../rmmz/rmmz_sprites.js",
-    "../rmmz/rmmz_windows.js"
-  ],
   "include": ["./*", "./**/*.js", "./rmmz/*.js", "./typings/rmmz/*"]
 }

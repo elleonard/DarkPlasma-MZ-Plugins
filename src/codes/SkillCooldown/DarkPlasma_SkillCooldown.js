@@ -287,7 +287,7 @@ Window_SkillList.prototype.drawSkillCost = function (skill, x, y, width) {
 
 if (!Array.prototype.flat) {
   Array.prototype.flat = function (depth) {
-    var flattend = [];
+    let flattend = [];
     (function flat(array, depth) {
       for (let el of array) {
         if (Array.isArray(el) && depth > 0) {

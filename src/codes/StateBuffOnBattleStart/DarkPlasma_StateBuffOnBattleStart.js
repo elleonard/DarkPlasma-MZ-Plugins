@@ -13,11 +13,7 @@ class StateOnBattleStart {
    */
   static fromJson(json) {
     const parsed = JsonEx.parse(json);
-    return new StateOnBattleStart(
-      Number(parsed['Id'] || 0),
-      Number(parsed['State Id'] || 1),
-      Number(parsed['Turn'] || -1)
-    );
+    return new StateOnBattleStart(Number(parsed.Id || 0), Number(parsed['State Id'] || 1), Number(parsed.Turn || -1));
   }
 
   /**
@@ -61,10 +57,10 @@ class BuffOnBattleStart {
   static fromJson(json) {
     const parsed = JsonEx.parse(json);
     return new BuffOnBattleStart(
-      Number(parsed['Id'] || 0),
+      Number(parsed.Id || 0),
       Number(parsed['Param Id'] || 0),
       Number(parsed['Buff Step'] || 1),
-      Number(parsed['Turn'] || 3)
+      Number(parsed.Turn || 3)
     );
   }
 
