@@ -3,6 +3,9 @@ DarkPlasma_AutoLineBreak:
   year: 2020
   license: MIT
   histories:
+    - data: 2022/04/19
+      version: 1.2.1
+      description: '文字列の長さ次第で二重改行される不具合を修正'
     - date: 2022/01/07
       version: 1.2.0
       description: '行幅マージンを取得するメソッドを追加'

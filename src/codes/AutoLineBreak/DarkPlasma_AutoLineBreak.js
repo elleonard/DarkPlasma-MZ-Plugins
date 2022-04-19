@@ -23,7 +23,9 @@ const _Window_Base_processCharacter = Window_Base.prototype.processCharacter;
 Window_Base.prototype.processCharacter = function (textState) {
   if (this.shouldLineBreakHere(textState)) {
     this.flushTextState(textState);
-    this.processNewLine(textState);
+    if (textState.text[textState.index] !== "\n") {
+      this.processNewLine(textState);
+    }
     /**
      * 改ページが必要になったら次の文字は処理しない
      */
