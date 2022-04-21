@@ -15,7 +15,9 @@ function generatePluginCommand(config) {
           ${command.args.map((arg) => `${arg.name}: ${arg.parser}`).join(',\n')}
         };
       }`;
-      })
+      }).concat(commands
+        .map(command => `export const command_${commandNameToSymbol(command.name)} = "${command.name}";`)
+      )
       .join('\n\n');
     return prettier.format(code, options);
   });
