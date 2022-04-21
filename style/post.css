@@ -1,0 +1,84 @@
+#postTopic {
+  cursor: pointer;
+  will-change: transform;
+  transform: translateY(100%); }
+  #postTopic p {
+    color: var(--primary-text-color); }
+  #postTopic.is-show-scrollToTop-tips {
+    transition: transform 300ms linear 300ms;
+    transform: translateY(-100%); }
+  #postTopic.is-flash-scrollToTop-tips {
+    transition: transform 300ms linear 900ms;
+    transform: translateY(0); }
+  #postTopic.is-switch-post-title {
+    transition: none;
+    transform: translateY(0); }
+  #postTopic.is-show-post-title {
+    transition: transform 300ms linear;
+    transform: translateY(0); }
+  #postTopic.is-hidden-topic-bar {
+    transition: transform 100ms linear;
+    transform: translateY(100%); }
+  #postTopic.immediately-show {
+    transition: none;
+    transform: translateY(0); }
+
+.post-page .post-content code {
+  border-radius: 4px;
+  background: var(--third-bg-color); }
+
+.post-page .post-content pre {
+  padding: 0;
+  background: transparent; }
+  .post-page .post-content pre code {
+    padding: 15px;
+    border: 1px solid var(--border-line-color);
+    background: var(--pre-code-bg-color); }
+
+.post-page .post-content .hljs {
+  color: var(--second-text-color); }
+
+.post-page .post-content img {
+  display: block;
+  margin: 0 auto;
+  max-height: 500px;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  will-change: opacity; }
+
+.post-page .post-content a {
+  color: #3273dc; }
+
+.post-page .jump-container .button {
+  max-width: calc(50% - 5px); }
+  .post-page .jump-container .button span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+
+.post-page .comment-container {
+  border-top: 1px solid var(--border-line-color); }
+
+.post-page .toc {
+  position: sticky;
+  top: 60px;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 15px;
+  height: calc(100vh - 100px);
+  overflow: auto;
+  list-style: none !important;
+  border-left: 1px solid var(--border-line-color); }
+  .post-page .toc::-webkit-scrollbar {
+    display: none; }
+  .post-page .toc ol {
+    margin-top: 5px;
+    margin-left: 15px;
+    list-style: none !important; }
+  .post-page .toc .is-active span {
+    color: #3273dc !important; }
+
+.post-page :target {
+  padding-top: 60px;
+  margin-top: -60px !important; }

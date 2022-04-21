@@ -1,0 +1,9 @@
+.about-page {
+  height: 100%; }
+  .about-page aside img {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    object-fit: cover; }
+  .about-page .about-title {
+    font-weight: normal; }

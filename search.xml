@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>装備セットを記録して復元する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/04/22/save-equip-set/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/04/22/save-equip-set/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>2つのプラグインコマンドを提供します。</p><ul><li>パーティメンバーの現在の装備セットを記録する</li><li>パーティメンバーに記録した装備セットを復元する</li></ul><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SaveEquipSet.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 装備 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>別のステートの有効度及び無効フラグを参照するステート</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/03/11/state-rate-alias/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/03/11/state-rate-alias/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>別のステートの有効度及び無効フラグを参照するステートを作成できます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting1.png" alt="設定例" title="設定例"></p><p>設定例では、ID:41の猛毒ステートを付与しようとする際、成功判定にID:40の毒ステートの有効度及び無効フラグを用います。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateRateAlias.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>敵味方に応じてステートを変更</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/03/11/state-alias-by-side/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/03/11/state-alias-by-side/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>対象が敵であるか味方であるかに応じて、付与されるステートを変更します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting1.png" alt="設定例1" title="設定例1"><br><img src="setting2.png" alt="設定例2" title="設定例2"></p><p>ステートID4の味方毒を敵キャラに付与しようとすると、ステートID34の敵毒になります。<br>逆に、ステートID34の敵毒をアクターに付与しようとすると、ステートID4の味方毒になります。</p><p>成功判定においては、付与しようとした元々のステートの有効度、無効フラグが用いられることに注意してください。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateAliasBySide.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ウィンドウが非アクティブの時にもゲームを止めない</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/26/always-active/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/26/always-active/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>本プラグインを導入した場合、ウィンドウがアクティブでない時にもゲームを止めません。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AlwaysActive.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> システム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>パーティ能力特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/24/party-ability-trait-extension/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/24/party-ability-trait-extension/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクター、職業、装備、ステートに、パーティ全体に効果を及ぼす特徴を設定可能にします。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="party-ability-trait-extension.png" alt="設定例" title="設定例"><br>パーティ全体の床ダメージ率を0％乗算します。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_PartyAbilityTraitExtension.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> パーティ </tag>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 職業 </tag>
+            
+            <tag> アクター </tag>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>アイテム倉庫</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/10/item-storage/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/10/item-storage/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムを預けたり取り出したりできる倉庫を提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="item-storage.png" alt="使用例" title="使用例"><br><img src="item-storage-setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ItemStorage.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>範囲・連続攻撃のダメージ減衰</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/09/multi-attack-damage-fall/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/09/multi-attack-damage-fall/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>攻撃対象ごとにダメージを減少していく範囲攻撃や連続攻撃を実現します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="multi-attack-damage-fall.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiAttackDamageFall.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> ダメージ計算 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>スキルの詳細説明文を表示する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/07/skill-detail/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/07/skill-detail/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>スキルに詳細説明文を設定して表示します。<br>スキル一覧画面でカーソルを合わせて特定のキーを押すことで、詳細説明を表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="skill-detail.png" alt="使用例" title="使用例"><br><img src="skill-detail-setting.png" alt="設定例" title="設定例"></p><p>長い文字列を自動で改行するには <a href="/DarkPlasma-MZ-Plugins/2021/12/29/auto-line-break/" title="ウィンドウ幅を超える日本語を自動で折り返す">ウィンドウ幅を超える日本語を自動で折り返す</a> をご利用ください。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetail.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillDetail.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><p>MZ版の本プラグインを利用するためには、下記プラグインが必要です。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CustomKeyHandler.js">DarkPlasma_CustomKeyHandler</a></li></ul><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetailButton.js">スキルの詳細説明文表示切り替えボタンプラグイン</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> テキスト </tag>
+            
+            <tag> スキル </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>スキル使用のクールタイムを設定する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/07/skill-cooldown/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/07/skill-cooldown/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>戦闘中、スキルXの使用後、スキルYの使用を一定ターン数制限できます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="skill-cooldown.png" alt="使用例" title="使用例"><br><img src="skill-cooldown-setting.png" alt="設定例" title="設定例"></p><p>スキルID172（強撃）の使用をトリガーにして、3ターンの間同スキルが使えなくする設定です。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillCooldown.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillCooldown.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> スキル </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>スキル,アイテムの対象を全体化する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>単体を対象とするスキルやアイテムの対象を全体化可能にします。<br>全体化可能に設定した行動は、対象選択の際に特定のキーを押すことで対象範囲を切り替えることができます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="expand-target-scope-setting.png" alt="設定例" title="設定例"></p><p>ファイアⅠを全体化可能にし、全体化した際のアニメーションを70番に変更する設定です。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScopeButton.js">対象範囲切り替えボタンプラグイン</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> スキル </tag>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>指定した語句に自動で色をつける</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/02/auto-highlight/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/02/auto-highlight/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>指定した語句に自動的に色をつけます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="auto-highlight.png" alt="使用例" title="使用例"><br><img src="auto-highlight-setting.png" alt="設定例" title="設定例"></p><p>スキル名やアイテム名についてもハイライトの対象とすることができます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AutoHighlight.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_AutoHighlight.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> テキスト </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>新規入手アイテムを強調表示する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/01/highlight-new-item/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/01/highlight-new-item/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>新規入手アイテムを強調表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="highlight-new-item.png" alt="使用例" title="使用例"></p><p>入手したハイポーションが強調表示されています。<br>カーソルを合わせると新規入手フラグが消え、通常の色に戻ります。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_HighlightNewItem.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_HighlightNewItem.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>並び替えシーン</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/01/formation/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/01/formation/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>パーティメンバーを並び替えるシーンを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="formation.png" alt="使用例" title="使用例"><br><img src="formation-event.png" alt="イベント例" title="イベント例"></p><p>本プラグイン単体では、メニュー画面から並び替えシーンを開くことができません。<br>以下の方法でメニュー画面から並び替えシーンを開くことができます。</p><ul><li>メニュー拡張系のプラグインを利用して <code>Scene_Formation</code> を呼び出すよう設定する</li><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInMenu.js">メニューの並び替えでシーンを呼び出す</a>プラグインを利用する</li></ul><p>また、戦闘中に並び替えシーンを開くためには<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInBattle.js">戦闘中に並び替えを行う</a>プラグインが必要です。</p><h2 id="紹介動画"><a href="#紹介動画" class="headerlink" title="紹介動画"></a>紹介動画</h2><iframe width="560" height="315" src="https://www.youtube.com/embed/bahj4ogR46Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_Formation.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInMenu.js">メニューの並び替えでシーンを呼び出す</a></li><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInBattle.js">戦闘中に並び替えを行う</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> パーティ </tag>
+            
+            <tag> 並び替え </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>敵キャラ図鑑</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/01/enemy-book/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/01/enemy-book/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>遭遇時に敵キャラを登録する図鑑シーンを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="enemy-book.png" alt="使用例" title="使用例"></p><h2 id="図鑑を開く方法"><a href="#図鑑を開く方法" class="headerlink" title="図鑑を開く方法"></a>図鑑を開く方法</h2><p>マップ上であれば、プラグインコマンドで開くことができます。<br>戦闘中にはワンボタンで開くことができます。</p><h2 id="特徴"><a href="#特徴" class="headerlink" title="特徴"></a>特徴</h2><p>本プラグインには、下記機能があります。</p><ul><li>戦闘中に開いた場合、出現している敵について<ul><li>強調表示できる（目次での色を変える）</li><li>ページ切り替えキーで行き来できる</li><li>最上部にまとめて表示できる</li></ul></li><li><a href="/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/" title="DarkPlasma_OrderIdAlias">DarkPlasma_OrderIdAlias</a>で表示順を設定できる</li></ul><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><ul><li><a href="https://github.com/ebinonote/ABMZ_EnemyBook">ABMZ_EnemyBook</a></li><li><a href="https://github.com/nuun888/MZ/blob/master/README/EnemyBook.md">NUUN_EnemyBook</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> データベース </tag>
+            
+            <tag> 敵キャラ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>アイテムやスキルの表示順を設定する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムやスキルの並び順を、データベース上のIDとは別に設定できるようになります。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="order-id-alias.png" alt="使用例" title="使用例"><br><img src="order-id-alias-setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_OrderIdAlias.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_OrderIdAlias.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> データベース </tag>
+            
+            <tag> スキル </tag>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>暗いマップと明かり</title>
+      <link href="/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/"/>
+      <url>/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>暗いマップを作ることができます。<br>プレイヤーやイベントの周囲を明るくすることができます。</p><p>本プラグインは簡単化のため、機能と設定項目を絞っています。<br>複雑な機能・設定をお求めの場合、類似の異なるプラグインをお試しください。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="dark-map.png" alt="使用例" title="使用例"><br><img src="dark-map-setting1.png" alt="設定例-マップ" title="マップの設定例"><br><img src="dark-map-setting-event.png" alt="設定例-イベント" title="イベントの設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_/DarkPlasma_DarkMap.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> マップ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>戦闘中に戦闘背景を変更する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2021/12/30/change-battleback/"/>
+      <url>/DarkPlasma-MZ-Plugins/2021/12/30/change-battleback/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>戦闘中に戦闘背景を変更するプラグインコマンドを提供します。<br>イベントコマンドの戦闘背景の変更は、戦闘中に実行しても即座に効果が現れません。<br>本プラグインコマンドを利用することで、戦闘の演出として戦闘背景を変更することができます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="change-battleback.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangeBattlebackInBattle.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>このブログは何？</title>
+      <link href="/DarkPlasma-MZ-Plugins/2021/12/30/about/"/>
+      <url>/DarkPlasma-MZ-Plugins/2021/12/30/about/</url>
+      
+        <content type="html"><![CDATA[<p>DarkPlasmaが作成したRPGツクールMZ向けプラグインの使い方を説明するブログです。<br>本ブログで紹介しているプラグインは、<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release">GitHub</a>にて配布しています。<br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/tree/release">MV向け</a>にも同様の機能を持つプラグインがあればリンクを貼っています。</p><h1 id="プラグインや当サイトに関するお問い合わせ"><a href="#プラグインや当サイトに関するお問い合わせ" class="headerlink" title="プラグインや当サイトに関するお問い合わせ"></a>プラグインや当サイトに関するお問い合わせ</h1><p>DarkPlasmaが作成したプラグインや当サイトについては、Twitterや<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues">GitHubのIssues</a>にてお問い合わせください。<br>GitHubにサインインしていれば、本ブログの記事にコメントを書くこともできます。</p><p>Twitter:<a href="https://twitter.com/plasma_dark">DarkPlasma</a> (R18)<br>Twitter:<a href="https://twitter.com/elleonard_f">NPlasma</a> (全年齢)</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ウィンドウ幅を超える日本語を自動で折り返す</title>
+      <link href="/DarkPlasma-MZ-Plugins/2021/12/29/auto-line-break/"/>
+      <url>/DarkPlasma-MZ-Plugins/2021/12/29/auto-line-break/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ウィンドウ幅を超えるような日本語を自動で改行します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="auto-line-break.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AutoLineBreak.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_AutoLineBreak.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> テキスト </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
