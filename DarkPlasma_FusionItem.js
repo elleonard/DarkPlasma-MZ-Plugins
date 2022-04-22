@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.1.0
+// DarkPlasma_FusionItem 1.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/04/22 1.2.0 条件カスタマイズ用にクラス定義をグローバルに公開
  * 2022/03/14 1.1.0 レイアウト用にクラス定義をグローバルに公開
  * 2022/03/13 1.0.0 公開
  */
@@ -41,7 +42,7 @@
  * @type number[]
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -191,6 +192,8 @@
       }),
     };
   }
+
+  const command_fusionShop = 'fusionShop';
 
   const pluginParameters = PluginManager.parameters(pluginName);
 
@@ -386,7 +389,7 @@
     );
   }
 
-  PluginManager.registerCommand(pluginName, 'fusionShop', function (args) {
+  PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
     const parsedArgs = parseArgs_fusionShop(args);
     const goods = parsedArgs.presetIds
       .map((presetId) => {
@@ -463,6 +466,8 @@
       );
     }
   }
+
+  globalThis.FusionItemGoods = FusionItemGoods;
 
   /**
    * @param {Game_Party.prototype} gameParty
