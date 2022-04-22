@@ -29,6 +29,8 @@ DarkPlasma_ItemStorage:
       default: 99
   commands:
     - command: openStorage
+      text:
+        ja: 倉庫を開く
       args:
         - arg: item
           text:
