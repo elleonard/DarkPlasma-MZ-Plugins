@@ -26,6 +26,7 @@
  * @default 99
  *
  * @command openStorage
+ * @text 倉庫を開く
  * @arg item
  * @text アイテム表示
  * @desc カテゴリにアイテムを表示するか
