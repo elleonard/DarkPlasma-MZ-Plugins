@@ -1,5 +1,5 @@
 import { pluginName } from '../../common/pluginName';
-import { parseArgs_fusionShop } from './_build/DarkPlasma_FusionItem_commands';
+import { command_fusionShop, parseArgs_fusionShop } from './_build/DarkPlasma_FusionItem_commands';
 import { settings } from './_build/DarkPlasma_FusionItem_parameters';
 
 /**
@@ -25,7 +25,7 @@ function toFusionItemGood(data, item) {
   );
 }
 
-PluginManager.registerCommand(pluginName, 'fusionShop', function (args) {
+PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
   const parsedArgs = parseArgs_fusionShop(args);
   const goods = parsedArgs.presetIds
     .map((presetId) => {
@@ -102,6 +102,8 @@ class FusionItemGoods {
     );
   }
 }
+
+globalThis.FusionItemGoods = FusionItemGoods;
 
 /**
  * @param {Game_Party.prototype} gameParty
