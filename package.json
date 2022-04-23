@@ -31,10 +31,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn buildAll && lint-staged"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
+    "./src/**/config.yml": [
+      "node ./scripts/generateFromConfig"
+    ],
     "./src/**/DarkPlasma_*.js": [
       "pretty-quick --staged",
       "eslint --fix --ext .js"

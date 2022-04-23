@@ -23,6 +23,7 @@ async function generate(file) {
     console.error(`[ERROR] ${file}`);
     console.error(e);
     console.error('');
+    process.exit(1);
   }
 }
 
