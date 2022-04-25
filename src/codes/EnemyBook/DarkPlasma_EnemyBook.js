@@ -3,6 +3,7 @@ import { LabelAndValueText } from '../../common/object/labelAndValueText';
 import { pluginName } from './../../common/pluginName';
 import { settings } from './_build/DarkPlasma_EnemyBook_parameters';
 import { Window_LabelAndValueTexts } from '../../common/window/labelAndValueTextsWindow';
+import { Scene_Battle_InputtingWindowMixIn } from '../../common/scene/battleInputtingWindow';
 
 const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
@@ -1090,101 +1091,93 @@ Game_Enemy.prototype.makeDropItems = function () {
   }, []);
 };
 
-const _Scene_Battle_createWindowLayer = Scene_Battle.prototype.createWindowLayer;
-Scene_Battle.prototype.createWindowLayer = function () {
-  _Scene_Battle_createWindowLayer.call(this);
-  if (settings.enableInBattle) {
-    this._enemyBookLayer = new WindowLayer();
-    this.addChild(this._enemyBookLayer);
-  }
-};
+/**
+ * @param {Scene_Battle.prototype} sceneBattle
+ */
+function Scene_Battle_EnemyBookMixIn(sceneBattle) {
+  const _createWindowLayer = sceneBattle.createWindowLayer;
+  sceneBattle.createWindowLayer = function () {
+    _createWindowLayer.call(this);
+    if (settings.enableInBattle) {
+      this._enemyBookLayer = new WindowLayer();
+      this._enemyBookLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+      this._enemyBookLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+      this.addChild(this._enemyBookLayer);
+    }
+  };
 
-const _Scene_Battle_createAllWindows = Scene_Battle.prototype.createAllWindows;
-Scene_Battle.prototype.createAllWindows = function () {
-  _Scene_Battle_createAllWindows.call(this);
-  if (settings.enableInBattle) {
-    this.createEnemyBookWindows();
-  }
-};
+  const _createAllWindows = sceneBattle.createAllWindows;
+  sceneBattle.createAllWindows = function () {
+    _createAllWindows.call(this);
+    if (settings.enableInBattle) {
+      this.createEnemyBookWindows();
+    }
+  };
 
-const _Scene_Battle_createPartyCommandWindow = Scene_Battle.prototype.createPartyCommandWindow;
-Scene_Battle.prototype.createPartyCommandWindow = function () {
-  _Scene_Battle_createPartyCommandWindow.call(this);
-  if (settings.enableInBattle) {
-    this._partyCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-  }
-};
+  const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
+  sceneBattle.createPartyCommandWindow = function () {
+    _createPartyCommandWindow.call(this);
+    if (settings.enableInBattle) {
+      this._partyCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
+    }
+  };
 
-const _Scene_Battle_createActorCommandWindow = Scene_Battle.prototype.createActorCommandWindow;
-Scene_Battle.prototype.createActorCommandWindow = function () {
-  _Scene_Battle_createActorCommandWindow.call(this);
-  if (settings.enableInBattle) {
-    this._actorCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-  }
-};
+  const _createActorCommandWindow = sceneBattle.createActorCommandWindow;
+  sceneBattle.createActorCommandWindow = function () {
+    _createActorCommandWindow.call(this);
+    if (settings.enableInBattle) {
+      this._actorCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
+    }
+  };
 
-const _Scene_Battle_isAnyInputWindowActive = Scene_Battle.prototype.isAnyInputWindowActive;
-Scene_Battle.prototype.isAnyInputWindowActive = function () {
-  return (
-    _Scene_Battle_isAnyInputWindowActive.call(this) || (settings.enableInBattle && this._enemyBookWindows.isActive())
-  );
-};
+  const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
+  sceneBattle.isAnyInputWindowActive = function () {
+    return _isAnyInputWindowActive.call(this) || (settings.enableInBattle && this._enemyBookWindows.isActive());
+  };
 
-Scene_Battle.prototype.inputtingWindow = function () {
-  return this.inputWindows().find((inputWindow) => inputWindow.active);
-};
+  sceneBattle.createEnemyBookWindows = function () {
+    this._enemyBookWindows = new EnemyBookWindows(
+      this.closeEnemyBook.bind(this),
+      this._enemyBookLayer,
+      Scene_EnemyBook.prototype.percentWindowRect.call(this),
+      Scene_EnemyBook.prototype.indexWindowRect.call(this),
+      Scene_EnemyBook.prototype.mainWindowRect.call(this),
+      true
+    );
+    this.closeEnemyBook();
+  };
 
-Scene_Battle.prototype.inputWindows = function () {
-  return [
-    this._partyCommandWindow,
-    this._actorCommandWindow,
-    this._skillWindow,
-    this._itemWindow,
-    this._actorWindow,
-    this._enemyWindow,
-    this._enemyBookWindows.indexWindow,
-  ];
-};
+  sceneBattle.percentWindowHeight = function () {
+    return Scene_EnemyBook.prototype.percentWindowHeight.call(this);
+  };
 
-Scene_Battle.prototype.createEnemyBookWindows = function () {
-  this._enemyBookWindows = new EnemyBookWindows(
-    this.closeEnemyBook.bind(this),
-    this._enemyBookLayer,
-    Scene_EnemyBook.prototype.percentWindowRect.call(this),
-    Scene_EnemyBook.prototype.indexWindowRect.call(this),
-    Scene_EnemyBook.prototype.mainWindowRect.call(this),
-    true
-  );
-  this.closeEnemyBook();
-};
+  sceneBattle.indexWindowWidth = function () {
+    return Scene_EnemyBook.prototype.indexWindowWidth.call(this);
+  };
 
-Scene_Battle.prototype.percentWindowHeight = function () {
-  return Scene_EnemyBook.prototype.percentWindowHeight.call(this);
-};
+  sceneBattle.indexWindowHeight = function () {
+    return Scene_EnemyBook.prototype.indexWindowHeight.call(this);
+  };
 
-Scene_Battle.prototype.indexWindowWidth = function () {
-  return Scene_EnemyBook.prototype.indexWindowWidth.call(this);
-};
+  sceneBattle.closeEnemyBook = function () {
+    this._enemyBookWindows.close();
+    if (this._returnFromEnemyBook) {
+      this._returnFromEnemyBook.activate();
+      this._returnFromEnemyBook = null;
+    }
+  };
 
-Scene_Battle.prototype.indexWindowHeight = function () {
-  return Scene_EnemyBook.prototype.indexWindowHeight.call(this);
-};
+  sceneBattle.openEnemyBook = function () {
+    this._returnFromEnemyBook = this.inputtingWindow();
+    if (this._returnFromEnemyBook) {
+      this._returnFromEnemyBook.deactivate();
+    }
+    this._enemyBookWindows.open();
+  };
+}
 
-Scene_Battle.prototype.closeEnemyBook = function () {
-  this._enemyBookWindows.close();
-  if (this._returnFromEnemyBook) {
-    this._returnFromEnemyBook.activate();
-    this._returnFromEnemyBook = null;
-  }
-};
-
-Scene_Battle.prototype.openEnemyBook = function () {
-  this._returnFromEnemyBook = this.inputtingWindow();
-  if (this._returnFromEnemyBook) {
-    this._returnFromEnemyBook.deactivate();
-  }
-  this._enemyBookWindows.open();
-};
+Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
+Scene_Battle_EnemyBookMixIn(Scene_Battle.prototype);
 
 const _Window_PartyCommand_processHandling = Window_PartyCommand.prototype.processHandling;
 Window_PartyCommand.prototype.processHandling = function () {
