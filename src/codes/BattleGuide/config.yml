@@ -3,6 +3,9 @@ DarkPlasma_BattleGuide:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/04/25
+      version: 1.0.1
+      description: 'ウィンドウレイヤー位置調整'
     - date: 2022/04/24
       version: 1.0.0
       description: '公開'

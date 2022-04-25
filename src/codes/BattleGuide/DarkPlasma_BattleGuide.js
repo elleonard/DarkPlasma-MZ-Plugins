@@ -74,6 +74,8 @@ function Scene_Battle_GuideMixIn(sceneBattle) {
   sceneBattle.createWindowLayer = function () {
     _createWindowLayer.call(this);
     this._guideWindowLayer = new WindowLayer();
+    this._guideWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+    this._guideWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
     this.addChild(this._guideWindowLayer);
   };
 
