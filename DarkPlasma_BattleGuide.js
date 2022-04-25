@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.0.0
+// DarkPlasma_BattleGuide 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/04/25 1.0.1 ウィンドウレイヤー位置調整
  * 2022/04/24 1.0.0 公開
  */
 
@@ -63,7 +64,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 戦闘中に手引書を表示することができます。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -265,6 +266,8 @@
     sceneBattle.createWindowLayer = function () {
       _createWindowLayer.call(this);
       this._guideWindowLayer = new WindowLayer();
+      this._guideWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+      this._guideWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
       this.addChild(this._guideWindowLayer);
     };
 
