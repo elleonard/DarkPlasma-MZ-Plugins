@@ -1,9 +1,10 @@
-// DarkPlasma_MultiAttackDamageFall 1.0.1
+// DarkPlasma_MultiAttackDamageFall 1.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/07 1.0.2 身代わり発動時にエラーが起きる不具合を修正
  * 2022/01/09 1.0.1 同一対象への複数回攻撃でダメージが減衰しない不具合を修正
  *            1.0.0 公開
  */
@@ -29,7 +30,7 @@
  * @default 10
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * スキルのメモ欄に <multiAttack> とつけると
  * 範囲または連続攻撃時にダメージを減衰していきます。
  *
@@ -68,12 +69,39 @@
     }
 
     /**
+     * 身代わりによりダメージを受ける対象が変更される場合に呼び出す
+     * @param {Game_Battler} originalTarget
+     * @param {Game_Battler} realTarget
+     */
+    substitute(originalTarget, realTarget) {
+      if (this._target === originalTarget) {
+        this._target = realTarget;
+      }
+    }
+
+    /**
      * 攻撃済みフラグを立てる
      */
     attack() {
       this._attacked = true;
     }
   }
+
+  /**
+   * @param {BattleManager} battleManager
+   */
+  function BattleManager_MultiAttackDamageFallMixIn(battleManager) {
+    const _applySubstitute = battleManager.applySubstitute;
+    battleManager.applySubstitute = function (target) {
+      const realTarget = _applySubstitute.call(this, target);
+      if (target !== realTarget && this._action && this._action.isMultiAttack()) {
+        this._action.substituteMultiAttackTarget(target, realTarget);
+      }
+      return realTarget;
+    };
+  }
+
+  BattleManager_MultiAttackDamageFallMixIn(BattleManager);
 
   /**
    * @param {Game_Action.prototype} gameAction
@@ -103,6 +131,15 @@
       const targets = _makeTargets.call(this);
       this._multiAttackTargets = targets.map((target) => new MultiAttackTarget(target));
       return targets;
+    };
+
+    /**
+     * 身代わり処理
+     * @param {Game_Battler} originalTarget
+     * @param {Game_Battler} realTarget
+     */
+    gameAction.substituteMultiAttackTarget = function (originalTarget, realTarget) {
+      this._multiAttackTargets.forEach((target) => target.substitute(originalTarget, realTarget));
     };
 
     gameAction.multiAttackTargetIndex = function (target) {
