@@ -99,7 +99,7 @@ function partyAbilityTraitAdd(object, key) {
  */
 function partyAbilityTraitMulti(object, key) {
   const match = new RegExp(`${key}:([0-9]+)`).exec(object.meta.partyAbility);
-  return match && match.length > 1 ? Number(match[1]) : 1;
+  return match && match.length > 1 ? Number(match[1]) / 100 : 1;
 }
 
 const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
