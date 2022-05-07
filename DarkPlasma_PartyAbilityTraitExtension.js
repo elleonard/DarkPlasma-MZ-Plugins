@@ -1,9 +1,10 @@
-// DarkPlasma_PartyAbilityTraitExtension 1.1.0
+// DarkPlasma_PartyAbilityTraitExtension 1.1.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/08 1.1.1 乗算系能力を1％以上100％未満にできない不具合を修正
  * 2021/08/24 1.1.0 装備絞り込みプラグインに対応
  * 2021/07/05 1.0.1 MZ 1.3.2に対応
  * 2021/06/27 1.0.0 公開
@@ -20,7 +21,7 @@
  * @orderAfter DarkPlasma_FilterEquip
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -56,8 +57,11 @@
  * 床ダメージ率*0:
  * <partyAbility:fdr:0>
  *
+ * MP消費率 80％:
+ * <partyAbility:mcr:80>
+ *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * DarkPlasma_FilterEquip version:0.0.1
+ * DarkPlasma_FilterEquip version:1.0.0
  */
 
 (() => {
@@ -166,7 +170,7 @@
    */
   function partyAbilityTraitMulti(object, key) {
     const match = new RegExp(`${key}:([0-9]+)`).exec(object.meta.partyAbility);
-    return match && match.length > 1 ? Number(match[1]) : 1;
+    return match && match.length > 1 ? Number(match[1]) / 100 : 1;
   }
 
   const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
