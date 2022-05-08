@@ -15,6 +15,10 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction) {
     this._isExpandedScope = !this.isForAllByDefault();
   };
 
+  gameAction.resetExpandScope = function () {
+    this._isExpandedScope = false;
+  };
+
   gameAction.canExpandScope = function () {
     return this._item.object().meta.canExpandScope;
   };
@@ -133,18 +137,22 @@ function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle) {
 
   const _onActorOk = sceneBattle.onActorOk;
   sceneBattle.onActorOk = function () {
+    const action = BattleManager.inputtingAction();
     if (this._actorWindow.cursorAll()) {
-      const action = BattleManager.inputtingAction();
       action.expandScope();
+    } else {
+      action.resetExpandScope();
     }
     _onActorOk.call(this);
   };
 
   const _onEnemyOk = sceneBattle.onEnemyOk;
   sceneBattle.onEnemyOk = function () {
+    const action = BattleManager.inputtingAction();
     if (this._enemyWindow.cursorAll()) {
-      const action = BattleManager.inputtingAction();
       action.expandScope();
+    } else {
+      action.resetExpandScope();
     }
     _onEnemyOk.call(this);
   };
