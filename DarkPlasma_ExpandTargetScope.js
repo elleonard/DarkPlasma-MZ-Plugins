@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.2.0
+// DarkPlasma_ExpandTargetScope 1.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/09 1.2.1 全体化できないスキルが全体化される不具合を修正
  * 2022/01/05 1.2.0 元々全体を対象とするスキルの対象選択スキップ設定を追加
  * 2022/01/03 1.1.0 DarkPlasma_ExpandTargetScopeButtonに対応
  *            1.0.9 全体化ON/OFF時にカーソルを更新するよう修正
@@ -57,7 +58,7 @@
  * @default false
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -95,6 +96,10 @@
 
     gameAction.expandScope = function () {
       this._isExpandedScope = !this.isForAllByDefault();
+    };
+
+    gameAction.resetExpandScope = function () {
+      this._isExpandedScope = false;
     };
 
     gameAction.canExpandScope = function () {
@@ -215,18 +220,22 @@
 
     const _onActorOk = sceneBattle.onActorOk;
     sceneBattle.onActorOk = function () {
+      const action = BattleManager.inputtingAction();
       if (this._actorWindow.cursorAll()) {
-        const action = BattleManager.inputtingAction();
         action.expandScope();
+      } else {
+        action.resetExpandScope();
       }
       _onActorOk.call(this);
     };
 
     const _onEnemyOk = sceneBattle.onEnemyOk;
     sceneBattle.onEnemyOk = function () {
+      const action = BattleManager.inputtingAction();
       if (this._enemyWindow.cursorAll()) {
-        const action = BattleManager.inputtingAction();
         action.expandScope();
+      } else {
+        action.resetExpandScope();
       }
       _onEnemyOk.call(this);
     };
