@@ -1,3 +1,4 @@
+import { orderIdSort } from '../../common/orderIdSort';
 import { pluginName } from '../../common/pluginName';
 import { settings } from './_build/DarkPlasma_ItemStorage_parameters';
 
@@ -347,6 +348,11 @@ class Scene_ItemStorage extends Scene_MenuBase {
     this.endNumberInput();
     this._inventoryWindow.refresh();
     this._storageWindow.refresh();
+    if (this._inventoryWindow.active) {
+      this._inventoryWindow.updateHelp();
+    } else {
+      this._storageWindow.updateHelp();
+    }
   }
 
   onNumberCancel() {
@@ -460,7 +466,7 @@ class Window_StorageItems extends Window_ItemList {
 
   makeItemList() {
     const allItems = this.isPartyItem() ? $gameParty.allItems() : $gameParty.storageItems().allItems();
-    this._data = allItems.filter((item) => this.includes(item));
+    this._data = allItems.filter((item) => this.includes(item)).sort(orderIdSort);
     if (this.index() >= this.maxItems()) {
       this.select(this.maxItems() - 1);
     }
