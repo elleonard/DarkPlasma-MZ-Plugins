@@ -4,6 +4,7 @@ import { pluginName } from './../../common/pluginName';
 import { settings } from './_build/DarkPlasma_EnemyBook_parameters';
 import { Window_LabelAndValueTexts } from '../../common/window/labelAndValueTextsWindow';
 import { Scene_Battle_InputtingWindowMixIn } from '../../common/scene/battleInputtingWindow';
+import { orderIdSort } from '../../common/orderIdSort';
 
 const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
@@ -34,9 +35,7 @@ function isRegisterableEnemy(enemy) {
  * @return {MZ.Enemy[]}
  */
 function registerableEnemies() {
-  return $dataEnemies
-    .filter((enemy) => isRegisterableEnemy(enemy))
-    .sort((a, b) => (a.orderId || a.id) - (b.orderId || b.id));
+  return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy)).sort(orderIdSort);
 }
 
 PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
