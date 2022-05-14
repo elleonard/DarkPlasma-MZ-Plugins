@@ -1,9 +1,10 @@
-// DarkPlasma_TinyMedal 2.2.2
+// DarkPlasma_TinyMedal 3.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/14 3.0.0 報酬獲得済みフラグのキーを変更（2.x以前とセーブデータ互換性がありません）
  * 2021/07/05 2.2.2 MZ 1.3.2に対応
  * 2021/06/22 2.2.1 サブフォルダからの読み込みに対応
  * 2021/02/13 2.2.0 報酬メッセージ複数行対応
@@ -66,6 +67,12 @@
  * @type struct<RewardMessage>[]
  * @default ["{\"message\":\"${itemName} を手に入れた！\",\"faceFile\":\"\",\"faceIndex\":\"0\"}"]
  *
+ * @param migrateV2ToV3
+ * @desc 2.xからバージョンアップする際のセーブデータ変換をするかどうか。詳細はヘルプ
+ * @text 2.xからのセーブデータ変換
+ * @type boolean
+ * @default true
+ *
  * @command gotoSceneMedal
  * @text ちいさなメダルシーンを開く
  * @desc 小さなメダルメニューが開き、報酬アイテム一覧が確認できます。
@@ -75,8 +82,33 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 2.2.2
+ * version: 3.0.0
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
+ *
+ * 同じメダル数で同じアイテム・武器・防具の報酬を
+ * 設定した場合の動作は保証しません。
+ * デフォルトにおける獲得済みフラグのキーは
+ * メダル数とアイテム・武器・防具の種別とIDです。
+ * 例: アイテムID:1のアイテムをメダル10枚で獲得した場合のキー
+ * 10_1_1
+ *
+ * これをカスタマイズしたい場合、
+ * 以下を上書きするプラグインを追加してください。
+ * Data_TinyMedal_RewardItem.prototype.rewardKey: () => string
+ *
+ * ゲームのリリース後にキーとなる値を変更してしまうと、
+ * セーブデータ互換性を破壊することに注意してください。
+ *
+ * 2.xからのセーブデータ変換について
+ * この機能をONにした場合、2.x以前を使用していたときのセーブデータを
+ * ロードした際に3.x用に変換します。
+ * ただし、報酬設定の順序や内容を変更すると正しくセーブデータが変換されず、
+ * 意図しない挙動となることに注意してください。
+ *
+ * 2.xから3.x以降へバージョンアップする場合、
+ * セーブデータ変換をOFFにすると、
+ * 2.x以前を使用していたときのセーブデータにおいて、
+ * 報酬獲得状況がリセットされます。
  */
 /*~struct~RewardItems:
  * @param medalCount
@@ -144,6 +176,10 @@
     return arguments[1];
   });
 
+  const command_gotoSceneMedal = 'gotoSceneMedal';
+
+  const command_processTinyMedal = 'processTinyMedal';
+
   const pluginParameters = PluginManager.parameters(pluginName);
 
   const settings = {
@@ -189,6 +225,7 @@
         };
       })(e || '{}');
     }),
+    migrateV2ToV3: String(pluginParameters.migrateV2ToV3 || true) === 'true',
   };
 
   const ITEM_KIND = {
@@ -196,8 +233,6 @@
     WEAPON: 2,
     ARMOR: 3,
   };
-
-  let autoIncrementRewardId = 0;
 
   /**
    * @type {RewardMessage[]}
@@ -214,7 +249,6 @@
       this._id = id;
       this._kind = kind;
       this._medalCount = medalCount;
-      this._rewardId = ++autoIncrementRewardId;
     }
 
     /**
@@ -226,20 +260,8 @@
       return new RewardItem(object.id, kind, object.medalCount);
     }
 
-    get rewardId() {
-      return this._rewardId;
-    }
-
     get medalCount() {
       return this._medalCount;
-    }
-
-    get rewardData() {
-      return {
-        data: this.itemData,
-        metalCount: this._medalCount,
-        rewardId: this._rewardId,
-      };
     }
 
     get itemData() {
@@ -256,11 +278,19 @@
     }
 
     /**
+     * 報酬獲得フラグ用のキー
+     * @return {string}
+     */
+    rewardKey() {
+      return `${this._medalCount}_${this._kind}_${this._id}`;
+    }
+
+    /**
      * 報酬アイテムを入手する
      */
     complete() {
       $gameParty.gainItem(this.itemData, 1);
-      $gameSystem.completeMedalReward(this._rewardId);
+      $gameSystem.completeMedalReward(this.rewardKey());
       rewardMessages
         .map((message) => {
           return new RewardMessage(this.itemData.name, message);
@@ -272,9 +302,11 @@
      * @return {boolean} 入手済みかどうか
      */
     completed() {
-      return $gameSystem.isMedalRewardCompleted(this._rewardId);
+      return $gameSystem.isMedalRewardCompleted(this.rewardKey());
     }
   }
+
+  globalThis.Data_TinyMedal_RewardItem = RewardItem;
 
   class RewardMessage {
     /**
@@ -331,12 +363,167 @@
     }
   }
 
+  /**
+   * @type {RewardItem[]}
+   */
   const rewardItems = settings.rewardItems
     .map((rewardItem) => RewardItem.fromObject(rewardItem, ITEM_KIND.ITEM))
     .concat(settings.rewardWeapons.map((rewardWeapon) => RewardItem.fromObject(rewardWeapon, ITEM_KIND.WEAPON)))
     .concat(settings.rewardArmors.map((rewardArmor) => RewardItem.fromObject(rewardArmor, ITEM_KIND.ARMOR)));
 
+  /**
+   * @type {RewardMessageStatic[]}
+   */
   const rewardMessages = settings.rewardMessages.map((rewardMessage) => RewardMessageStatic.fromObject(rewardMessage));
+
+  PluginManager.registerCommand(pluginName, command_gotoSceneMedal, function () {
+    SceneManager.push(Scene_TinyMedal);
+  });
+
+  PluginManager.registerCommand(pluginName, command_processTinyMedal, function () {
+    $gameSystem.processTinyMedal();
+    if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
+      const reservedMessage = reservedRewardMessages.shift();
+      reservedMessage.show();
+    }
+  });
+
+  /**
+   * 2.xのデータから3.xのデータに変換する
+   * @param {boolean[]} v2Array
+   * @return {{[key: string]: boolean}}
+   */
+  function convertV2DataToV3(v2Array) {
+    const result = {};
+    if (v2Array.length === 0) {
+      return result;
+    }
+    /**
+     * 元のセーブデータは先頭がダミーデータのため捨てる
+     */
+    v2Array.slice(1).forEach((isCompleted, oldRewardId) => {
+      const reward = rewardItems[oldRewardId];
+      if (reward) {
+        result[reward.rewardKey()] = isCompleted;
+      }
+    });
+    return result;
+  }
+
+  /**
+   * @param {Game_System.prototype} gameSystem
+   */
+  function Game_System_TinyMedalMixIn(gameSystem) {
+    const _initialize = gameSystem.initialize;
+    gameSystem.initialize = function () {
+      _initialize.call(this);
+      this.initializeMedalRewardsCompletion();
+    };
+
+    /**
+     * メダル報酬獲得フラグの初期化
+     */
+    gameSystem.initializeMedalRewardsCompletion = function () {
+      this._medalRewardsCompletion = {};
+    };
+
+    /**
+     * メダル報酬獲得フラグの更新
+     * @param {string} rewardKey 報酬ID
+     */
+    gameSystem.completeMedalReward = function (rewardKey) {
+      this._medalRewardsCompletion[rewardKey] = true;
+    };
+
+    gameSystem.isMedalRewardCompleted = function (rewardKey) {
+      return this._medalRewardsCompletion[rewardKey] || false;
+    };
+
+    const _onAfterLoad = gameSystem.onAfterLoad;
+    gameSystem.onAfterLoad = function () {
+      _onAfterLoad.call(this);
+      if (!this._medalRewardsCompletion) {
+        this.initializeMedalRewardsCompletion();
+      }
+      /**
+       * 2.xからのバージョンアップ用
+       */
+      if (settings.migrateV2ToV3 && Array.isArray(this._medalRewardsCompletion)) {
+        this._medalRewardsCompletion = convertV2DataToV3(this._medalRewardsCompletion);
+      }
+    };
+
+    gameSystem.processTinyMedal = function () {
+      const beforeCount = $gameVariables.value(settings.medalCountVariable);
+      $gameVariables.setValue(settings.medalCountVariable, beforeCount + $gameParty.numMedalItems());
+      $gameParty.loseAllMedalItem();
+      const afterCount = $gameVariables.value(settings.medalCountVariable);
+      // 報酬アイテム入手
+      const gainRewards = rewardItems
+        .sort((a, b) => a.medalCount - b.medalCount)
+        .filter((rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount);
+      gainRewards.forEach((rewardItem) => rewardItem.complete());
+    };
+  }
+
+  Game_System_TinyMedalMixIn(Game_System.prototype);
+
+  /**
+   * @param {Game_Party.prototype} gameParty
+   */
+  function Game_Party_TinyMedalMixIn(gameParty) {
+    /**
+     * @return {number} メダルアイテムの数
+     */
+    gameParty.numMedalItems = function () {
+      return this.numItems($dataItems[settings.medalItem]);
+    };
+
+    /**
+     * @return {boolean} メダルアイテムを持っているかどうか
+     */
+    gameParty.hasMedalItem = function () {
+      return this.hasItem($dataItems[settings.medalItem]);
+    };
+
+    /**
+     * 所持しているメダルアイテムをすべて失う
+     */
+    gameParty.loseAllMedalItem = function () {
+      this.loseItem($dataItems[settings.medalItem], this.numMedalItems());
+    };
+  }
+
+  Game_Party_TinyMedalMixIn(Game_Party.prototype);
+
+  /**
+   * @param {Game_Interpreter.prototype} gameInterpreter
+   */
+  function Game_Interpreter_TinyMedalMixIn(gameInterpreter) {
+    const _executeCommand = gameInterpreter.executeCommand;
+    gameInterpreter.executeCommand = function () {
+      /**
+       * 報酬メッセージがあればそれを先に処理する
+       */
+      if (reservedRewardMessages.length > 0) {
+        this.processReservedRewardMessages();
+        return true;
+      }
+      return _executeCommand.call(this);
+    };
+
+    /**
+     * 報酬メッセージを表示する
+     */
+    gameInterpreter.processReservedRewardMessages = function () {
+      if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
+        const reservedMessage = reservedRewardMessages.shift();
+        reservedMessage.show();
+      }
+    };
+  }
+
+  Game_Interpreter_TinyMedalMixIn(Game_Interpreter.prototype);
 
   class Scene_TinyMedal extends Scene_Base {
     constructor() {
@@ -498,105 +685,4 @@
       return settings.medalUnit;
     }
   }
-
-  const _Game_System_initialize = Game_System.prototype.initialize;
-  Game_System.prototype.initialize = function () {
-    _Game_System_initialize.call(this);
-    this.initializeMedalRewardsCompletion();
-  };
-
-  /**
-   * メダル報酬獲得状態の初期化
-   */
-  Game_System.prototype.initializeMedalRewardsCompletion = function () {
-    this._medalRewardsCompletion = rewardItems.map((_) => false);
-    this._medalRewardsCompletion.unshift(true);
-  };
-
-  /**
-   * メダル報酬を獲得する
-   * @param {number} rewardId 報酬ID
-   */
-  Game_System.prototype.completeMedalReward = function (rewardId) {
-    this._medalRewardsCompletion[rewardId] = true;
-  };
-
-  Game_System.prototype.isMedalRewardCompleted = function (rewardId) {
-    return this._medalRewardsCompletion[rewardId];
-  };
-
-  const _Game_System_onAfterLoad = Game_System.prototype.onAfterLoad;
-  Game_System.prototype.onAfterLoad = function () {
-    _Game_System_onAfterLoad.call(this);
-    if (!this._medalRewardsCompletion) {
-      this.initializeMedalRewardsCompletion();
-    }
-  };
-
-  /**
-   * @return {number} メダルアイテムの数
-   */
-  Game_Party.prototype.numMedalItems = function () {
-    return this.numItems($dataItems[settings.medalItem]);
-  };
-
-  /**
-   * @return {boolean} メダルアイテムを持っているかどうか
-   */
-  Game_Party.prototype.hasMedalItem = function () {
-    return this.hasItem($dataItems[settings.medalItem]);
-  };
-
-  /**
-   * 所持しているメダルアイテムをすべて失う
-   */
-  Game_Party.prototype.loseAllMedalItem = function () {
-    this.loseItem($dataItems[settings.medalItem], this.numMedalItems());
-  };
-
-  Game_System.prototype.processTinyMedal = function () {
-    const beforeCount = $gameVariables.value(settings.medalCountVariable);
-    $gameVariables.setValue(settings.medalCountVariable, beforeCount + $gameParty.numMedalItems());
-    $gameParty.loseAllMedalItem();
-    const afterCount = $gameVariables.value(settings.medalCountVariable);
-    // 報酬アイテム入手
-    const gainRewards = rewardItems
-      .sort((a, b) => a.medalCount - b.medalCount)
-      .filter((rewardItem) => !rewardItem.completed() && afterCount >= rewardItem.medalCount);
-    gainRewards.forEach((rewardItem) => rewardItem.complete());
-  };
-
-  const _Game_Interpreter_executeCommand = Game_Interpreter.prototype.executeCommand;
-  Game_Interpreter.prototype.executeCommand = function () {
-    /**
-     * 報酬メッセージがあればそれを先に処理する
-     */
-    if (reservedRewardMessages.length > 0) {
-      this.processReservedRewardMessages();
-      return true;
-    }
-    return _Game_Interpreter_executeCommand.call(this);
-  };
-
-  /**
-   * 報酬メッセージを表示する
-   */
-  Game_Interpreter.prototype.processReservedRewardMessages = function () {
-    if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
-      const reservedMessage = reservedRewardMessages.shift();
-      reservedMessage.show();
-    }
-  };
-
-  PluginManager.registerCommand(pluginName, 'gotoSceneMedal', function () {
-    SceneManager.push(Scene_TinyMedal);
-  });
-
-  PluginManager.registerCommand(pluginName, 'processTinyMedal', function () {
-    $gameSystem.processTinyMedal();
-    if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
-      const reservedMessage = reservedRewardMessages.shift();
-      reservedMessage.show();
-    }
-  });
 })();
