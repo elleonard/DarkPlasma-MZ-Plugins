@@ -3,20 +3,23 @@ DarkPlasma_OrderIdAlias:
   year: 2020
   license: MIT
   histories:
-    - date: '2021/07/27'
-      version: '1.1.0'
+    - date: 2022/05/14
+      version: 1.1.1
+      description: 'リファクタ'
+    - date: 2021/07/27
+      version: 1.1.0
       description: 'スキルの並び順設定をデフォルトのままにする設定を追加'
-    - date: '2021/07/05'
-      version: '1.0.3'
+    - date: 2021/07/05
+      version: 1.0.3
       description: 'MZ 1.3.2に対応'
-    - date: '2021/06/22'
-      version: '1.0.2'
+    - date: 2021/06/22
+      version: 1.0.2
       description: 'サブフォルダからの読み込みに対応'
-    - date: '2020/09/08'
-      version: '1.0.1'
+    - date: 2020/09/08
+      version: 1.0.1
       description: 'rollup構成へ移行'
-    - date: '2020/08/27'
-      version: '1.0.0'
+    - date: 2020/08/27
+      version: 1.0.0
       description: 'MZ版公開'
 
   locates:
