@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.1.1
+// DarkPlasma_EnemyBook 4.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/14 4.1.2 リファクタ
  * 2022/04/25 4.1.1 リファクタ
  *                  図鑑ウィンドウレイヤーの位置調整
  * 2021/12/29 4.1.0 DarkPlasma_OrderIdAliasに対応
@@ -210,7 +211,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.1.1
+ * version: 4.1.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -469,7 +470,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.1.1
+ * version: 4.1.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -819,6 +820,18 @@
     }
   }
 
+  function orderIdSort(a, b) {
+    if (a === null && b === null) {
+      // 両方nullなら順不同
+      return 0;
+    } else if (a === null) {
+      return 1;
+    } else if (b === null) {
+      return -1;
+    }
+    return (a.orderId || a.id) - (b.orderId || b.id);
+  }
+
   const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
   const PLUGIN_COMMAND_NAME = {
@@ -848,9 +861,7 @@
    * @return {MZ.Enemy[]}
    */
   function registerableEnemies() {
-    return $dataEnemies
-      .filter((enemy) => isRegisterableEnemy(enemy))
-      .sort((a, b) => (a.orderId || a.id) - (b.orderId || b.id));
+    return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy)).sort(orderIdSort);
   }
 
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {

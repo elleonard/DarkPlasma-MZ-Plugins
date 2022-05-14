@@ -1,9 +1,11 @@
-// DarkPlasma_ItemStorage 1.1.0
+// DarkPlasma_ItemStorage 1.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/14 1.2.0 アイテム出し入れ時に説明文が更新されない不具合を修正
+ *                  DarkPlasma_OrderIdAliasに対応
  * 2022/01/22 1.1.0 Scene_ItemStorageのインターフェースを公開
  * 2022/01/11 1.0.1 倉庫内にアイテムがあるかどうか判定できない不具合を修正
  *                  最大数所持しているアイテムをそれ以上引き出せないように修正
@@ -45,13 +47,25 @@
  * @type boolean
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
 
 (() => {
   'use strict';
+
+  function orderIdSort(a, b) {
+    if (a === null && b === null) {
+      // 両方nullなら順不同
+      return 0;
+    } else if (a === null) {
+      return 1;
+    } else if (b === null) {
+      return -1;
+    }
+    return (a.orderId || a.id) - (b.orderId || b.id);
+  }
 
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
@@ -409,6 +423,11 @@
       this.endNumberInput();
       this._inventoryWindow.refresh();
       this._storageWindow.refresh();
+      if (this._inventoryWindow.active) {
+        this._inventoryWindow.updateHelp();
+      } else {
+        this._storageWindow.updateHelp();
+      }
     }
 
     onNumberCancel() {
@@ -522,7 +541,7 @@
 
     makeItemList() {
       const allItems = this.isPartyItem() ? $gameParty.allItems() : $gameParty.storageItems().allItems();
-      this._data = allItems.filter((item) => this.includes(item));
+      this._data = allItems.filter((item) => this.includes(item)).sort(orderIdSort);
       if (this.index() >= this.maxItems()) {
         this.select(this.maxItems() - 1);
       }
