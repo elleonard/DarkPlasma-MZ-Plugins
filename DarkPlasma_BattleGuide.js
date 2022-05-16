@@ -1,9 +1,13 @@
-// DarkPlasma_BattleGuide 1.0.1
+// DarkPlasma_BattleGuide 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/16 1.1.0 SceneGlossaryの説明文のみ引用する機能を追加
+ *                  フォントサイズ設定を追加
+ *                  左右キーでページめくり機能追加
+ *                  ページめくり可能な場合、左右矢印を表示
  * 2022/04/25 1.0.1 ウィンドウレイヤー位置調整
  * 2022/04/24 1.0.0 公開
  */
@@ -30,6 +34,12 @@
  * @text 目次横幅
  * @type number
  * @default 240
+ *
+ * @param fontSize
+ * @desc 手引書のフォントサイズを設定します。
+ * @text フォントサイズ
+ * @type number
+ * @default 22
  *
  * @param showPageNumber
  * @desc ページ番号の表示戦略を設定します。
@@ -64,8 +74,10 @@
  * @default 手引書
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * 戦闘中に手引書を表示することができます。
+ *
+ * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_CustomKeyHandler version:1.1.0
@@ -84,6 +96,11 @@
  * @desc 手引書の具体的な内容を設定します。
  * @text 内容
  * @type multiline_string[]
+ *
+ * @param glossaryItem
+ * @desc SceneGlossaryで設定した説明文を参照します。指定した場合、内容設定を無視します。
+ * @text 用語集参照アイテム
+ * @type item
  *
  * @param condition
  * @desc この条件を満たした場合にのみ手引書に表示します。
@@ -176,6 +193,7 @@
           texts: JSON.parse(parsed.texts || '[]').map((e) => {
             return String(e || '');
           }),
+          glossaryItem: Number(parsed.glossaryItem || 0),
           condition: ((parameter) => {
             const parsed = JSON.parse(parameter);
             return {
@@ -188,6 +206,7 @@
       })(e || '{}');
     }),
     listWidth: Number(pluginParameters.listWidth || 240),
+    fontSize: Number(pluginParameters.fontSize || 22),
     showPageNumber: Number(pluginParameters.showPageNumber || 0),
     key: String(pluginParameters.key || 'pageup'),
     addPartyCommand: String(pluginParameters.addPartyCommand || true) === 'true',
@@ -246,15 +265,57 @@
   }
 
   /**
+   * SceneGlossary.js で定義される用語集アイテムであるかどうか
+   * $gameParty.isGlossaryItem でも判定可能だが、
+   * セーブデータロード前にゲームセーブデータインスタンスに依存するべきではないため独自に定義する
+   * @param {MZ.Item} item
+   * @return {boolean}
+   */
+  function isGlossaryItem(item) {
+    return item && item.meta && (item.meta['SG説明'] || item.meta.SGDescription);
+  }
+
+  /**
+   * SceneGlossary.js で定義される用語集アイテムの説明文を取得する
+   * @param {MZ.Item} item
+   * @return {string[]|null}
+   */
+  function getGlossaryDescription(item) {
+    if (!isGlossaryItem(item)) {
+      return null;
+    }
+    const result = [];
+    const metaTag = item.meta['SG説明'] ? 'SG説明' : 'SGDescription';
+    result.push(item.meta[metaTag]);
+    for (let i = 2; item.meta[`${metaTag}${i}`]; i++) {
+      result.push(item.meta[`${metaTag}${i}`]);
+    }
+    return result;
+  }
+
+  /**
    * @type {Data_BattleGuide[]}
    */
-  let $dataBattleGuides = settings.guides.map((guide) => {
-    return new Data_BattleGuide(
-      guide.title,
-      guide.texts,
-      new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
-    );
-  });
+  let $dataBattleGuides = [];
+
+  /**
+   * @param {Scene_Boot.prototype} sceneBoot
+   */
+  function Scene_Boot_GuideMixIn(sceneBoot) {
+    const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
+    sceneBoot.onDatabaseLoaded = function () {
+      _onDatabaseLoaded.call(this);
+      $dataBattleGuides = settings.guides.map((guide) => {
+        return new Data_BattleGuide(
+          guide.title,
+          getGlossaryDescription($dataItems[guide.glossaryItem]) || guide.texts,
+          new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
+        );
+      });
+    };
+  }
+
+  Scene_Boot_GuideMixIn(Scene_Boot.prototype);
 
   Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
 
@@ -404,10 +465,21 @@
     }
 
     /**
-     * ページめくりの音はカーソル音にしておく
+     * ページめくりの音はテキストウィンドウに任せる
      */
-    playOkSound() {
-      this.playCursorSound();
+    playOkSound() {}
+
+    cursorRight() {
+      if (this._textWindow) {
+        this._textWindow.turnPage();
+      }
+    }
+
+    cursorLeft() {
+      if (this._textWindow) {
+        this._textWindow.backPage();
+        this.playCursorSound();
+      }
     }
   }
 
@@ -429,6 +501,11 @@
       }
     }
 
+    resetFontSettings() {
+      super.resetFontSettings();
+      this.contents.fontSize = settings.fontSize;
+    }
+
     /**
      * @param {number} page
      */
@@ -444,9 +521,25 @@
     }
 
     turnPage() {
+      const page = this._page;
       this._page++;
       if (this._page >= this.maxPage()) {
         this._page = 0;
+      }
+      if (page !== this._page) {
+        this.playCursorSound();
+      }
+      this.refresh();
+    }
+
+    backPage() {
+      const page = this._page;
+      this._page--;
+      if (this._page < 0) {
+        this._page = this.maxPage() - 1;
+      }
+      if (page !== this._page) {
+        this.playCursorSound();
       }
       this.refresh();
     }
@@ -457,6 +550,12 @@
         this.drawTextEx(this._guide.texts[this._page], 0, 0);
         this.drawPageNumber();
       }
+      this.updateArrows();
+    }
+
+    updateArrows() {
+      this.downArrowVisible = this._page > 0;
+      this.upArrowVisible = this._page < this.maxPage() - 1;
     }
 
     /**
@@ -477,6 +576,16 @@
       this._isManualVisible = this.isPageNumberVisible();
       this.addManualText(`[ ${this._page + 1} / ${this.maxPage()} ]`);
       this.drawManual();
+    }
+
+    _refreshArrows() {
+      super._refreshArrows();
+      const horizontalPadding = 12;
+
+      this._downArrowSprite.rotation = Math.PI / 2;
+      this._downArrowSprite.move(horizontalPadding, this.height / 2);
+      this._upArrowSprite.rotation = Math.PI / 2;
+      this._upArrowSprite.move(this.width - horizontalPadding, this.height / 2);
     }
   }
 
