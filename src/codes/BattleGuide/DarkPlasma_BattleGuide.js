@@ -54,15 +54,57 @@ class Data_BattleGuideCondition {
 }
 
 /**
+ * SceneGlossary.js で定義される用語集アイテムであるかどうか
+ * $gameParty.isGlossaryItem でも判定可能だが、
+ * セーブデータロード前にゲームセーブデータインスタンスに依存するべきではないため独自に定義する
+ * @param {MZ.Item} item
+ * @return {boolean}
+ */
+function isGlossaryItem(item) {
+  return item && item.meta && (item.meta['SG説明'] || item.meta.SGDescription);
+}
+
+/**
+ * SceneGlossary.js で定義される用語集アイテムの説明文を取得する
+ * @param {MZ.Item} item
+ * @return {string[]|null}
+ */
+function getGlossaryDescription(item) {
+  if (!isGlossaryItem(item)) {
+    return null;
+  }
+  const result = [];
+  const metaTag = item.meta['SG説明'] ? 'SG説明' : 'SGDescription';
+  result.push(item.meta[metaTag]);
+  for (let i = 2; item.meta[`${metaTag}${i}`]; i++) {
+    result.push(item.meta[`${metaTag}${i}`]);
+  }
+  return result;
+}
+
+/**
  * @type {Data_BattleGuide[]}
  */
-let $dataBattleGuides = settings.guides.map((guide) => {
-  return new Data_BattleGuide(
-    guide.title,
-    guide.texts,
-    new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
-  );
-});
+let $dataBattleGuides = [];
+
+/**
+ * @param {Scene_Boot.prototype} sceneBoot
+ */
+function Scene_Boot_GuideMixIn(sceneBoot) {
+  const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
+  sceneBoot.onDatabaseLoaded = function () {
+    _onDatabaseLoaded.call(this);
+    $dataBattleGuides = settings.guides.map((guide) => {
+      return new Data_BattleGuide(
+        guide.title,
+        getGlossaryDescription($dataItems[guide.glossaryItem]) || guide.texts,
+        new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
+      );
+    });
+  };
+}
+
+Scene_Boot_GuideMixIn(Scene_Boot.prototype);
 
 Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
 
@@ -212,10 +254,21 @@ class Window_BattleGuideList extends Window_Selectable {
   }
 
   /**
-   * ページめくりの音はカーソル音にしておく
+   * ページめくりの音はテキストウィンドウに任せる
    */
-  playOkSound() {
-    this.playCursorSound();
+  playOkSound() {}
+
+  cursorRight() {
+    if (this._textWindow) {
+      this._textWindow.turnPage();
+    }
+  }
+
+  cursorLeft() {
+    if (this._textWindow) {
+      this._textWindow.backPage();
+      this.playCursorSound();
+    }
   }
 }
 
@@ -237,6 +290,11 @@ class Window_BattleGuideText extends Window_Base {
     }
   }
 
+  resetFontSettings() {
+    super.resetFontSettings();
+    this.contents.fontSize = settings.fontSize;
+  }
+
   /**
    * @param {number} page
    */
@@ -252,9 +310,25 @@ class Window_BattleGuideText extends Window_Base {
   }
 
   turnPage() {
+    const page = this._page;
     this._page++;
     if (this._page >= this.maxPage()) {
       this._page = 0;
+    }
+    if (page !== this._page) {
+      this.playCursorSound();
+    }
+    this.refresh();
+  }
+
+  backPage() {
+    const page = this._page;
+    this._page--;
+    if (this._page < 0) {
+      this._page = this.maxPage() - 1;
+    }
+    if (page !== this._page) {
+      this.playCursorSound();
     }
     this.refresh();
   }
@@ -265,6 +339,12 @@ class Window_BattleGuideText extends Window_Base {
       this.drawTextEx(this._guide.texts[this._page], 0, 0);
       this.drawPageNumber();
     }
+    this.updateArrows();
+  }
+
+  updateArrows() {
+    this.downArrowVisible = this._page > 0;
+    this.upArrowVisible = this._page < this.maxPage() - 1;
   }
 
   /**
@@ -285,6 +365,16 @@ class Window_BattleGuideText extends Window_Base {
     this._isManualVisible = this.isPageNumberVisible();
     this.addManualText(`[ ${this._page + 1} / ${this.maxPage()} ]`);
     this.drawManual();
+  }
+
+  _refreshArrows() {
+    super._refreshArrows();
+    const horizontalPadding = 12;
+
+    this._downArrowSprite.rotation = Math.PI / 2;
+    this._downArrowSprite.move(horizontalPadding, this.height / 2);
+    this._upArrowSprite.rotation = Math.PI / 2;
+    this._upArrowSprite.move(this.width - horizontalPadding, this.height / 2);
   }
 }
 
