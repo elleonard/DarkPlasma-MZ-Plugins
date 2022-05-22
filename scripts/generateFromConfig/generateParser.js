@@ -27,7 +27,7 @@ function generateParser(config, parameter, forTest) {
       parser = booleanParser(parameter, forTest);
       break;
     case 'select':
-      if (parameter.options[0].value || Number.isFinite(parameter.options[0].value)) {
+      if (parameter.options[0].value && Number.isFinite(parameter.options[0].value)) {
         parser = numberParser(parameter, forTest);
       } else {
         parser = stringParser(parameter, forTest);

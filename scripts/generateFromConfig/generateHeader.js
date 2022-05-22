@@ -203,7 +203,7 @@ class PluginParameter extends TypedParameter {
      */
     if (!this._parameter.dummy) {
       result.push(` * @type ${this.typeText(language)}`);
-      if (this._parameter.type === 'select' && this._parameter.options) {
+      if ((this._parameter.type === 'select' || this._parameter.type === 'select[]') && this._parameter.options) {
         this._parameter.options.forEach((option) => {
           result.push(` * @option ${option.name}`);
           if (option.value || Number.isFinite(option.value)) {

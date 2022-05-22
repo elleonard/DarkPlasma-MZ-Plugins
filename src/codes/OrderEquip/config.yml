@@ -1,0 +1,108 @@
+DarkPlasma_OrderEquip:
+  name: DarkPlasma_OrderEquip
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/05/22
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '装備の並び順を指定する'
+  parameters:
+    - param: weaponSortKeys
+      text:
+        ja: 武器の並び順キー
+      type: select[]
+      options:
+        - name: ID
+          value: id
+        - name: 攻撃力
+          value: atk
+        - name: 防御力
+          value: def
+        - name: 魔法力
+          value: mat
+        - name: 魔法防御
+          value: mdf
+        - name: 敏捷性
+          value: agi
+        - name: 運
+          value: luk
+        - name: 最大HP
+          value: mhp
+        - name: 最大MP
+          value: mmp
+        - name: 価格
+          value: price
+        - name: 武器タイプ
+          value: wtypeId
+      default:
+        - id
+    - param: weaponOrder
+      text:
+        ja: 武器の並び順
+      type: select
+      options:
+        - name: 昇順
+          value: asc
+        - name: 降順
+          value: desc
+      default: asc
+    - param: armorSortKeys
+      text:
+        ja: 防具の並び順
+      type: select[]
+      options:
+        - name: ID
+          value: id
+        - name: 攻撃力
+          value: atk
+        - name: 防御力
+          value: def
+        - name: 魔法力
+          value: mat
+        - name: 魔法防御
+          value: mdf
+        - name: 敏捷性
+          value: agi
+        - name: 運
+          value: luk
+        - name: 最大HP
+          value: mhp
+        - name: 最大MP
+          value: mmp
+        - name: 価格
+          value: price
+        - name: 装備タイプ
+          value: etypeId
+        - name: 防具タイプ
+          value: atypeId
+      default:
+        - id
+    - param: armorOrder
+      text:
+        ja: 防具の並び順
+      type: select
+      options:
+        - name: 昇順
+          value: asc
+        - name: 降順
+          value: desc
+      default: asc
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter:
+      - name: DarkPlasma_OrderIdAlias
+    orderBefore:
+  help:
+    ja: |
+      武器・防具の並び順を指定します。
+
+      プラグインパラメータの並び順指定に従って表示します。
+      DarkPlasma_OrderIdAliasとともに使用して並び順キーにIDを指定した場合、
+      データベースのIDの代わりにOrderIdが使用されます。
