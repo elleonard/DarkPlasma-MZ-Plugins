@@ -1,0 +1,78 @@
+DarkPlasma_ItemStorage:
+  name: DarkPlasma_ItemStorage
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/05/22
+      version: 1.3.0
+      description: 'DarkPlasma_OrderEquipに対応'
+    - date: 2022/05/14
+      version: 1.2.0
+      description: 'アイテム出し入れ時に説明文が更新されない不具合を修正'
+    - description: 'DarkPlasma_OrderIdAliasに対応'
+    - date: 2022/01/22
+      version: 1.1.0
+      description: 'Scene_ItemStorageのインターフェースを公開'
+    - date: 2022/01/11
+      version: 1.0.1
+      description: '倉庫内にアイテムがあるかどうか判定できない不具合を修正'
+    - description: '最大数所持しているアイテムをそれ以上引き出せないように修正'
+    - description: '最大数預けているアイテムをそれ以上預けられないように修正'
+    - date: 2022/01/10
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテム倉庫'
+  parameters:
+    - param: maxItems
+      text:
+        ja: アイテム別最大数
+      desc:
+        ja: 倉庫内に格納できるアイテム1種類の最大数を設定します。
+      type: number
+      default: 99
+  commands:
+    - command: openStorage
+      text:
+        ja: 倉庫を開く
+      args:
+        - arg: item
+          text:
+            ja: アイテム表示
+          desc:
+            ja: カテゴリにアイテムを表示するか
+          type: boolean
+          default: true
+        - arg: weapon
+          text:
+            ja: 武器表示
+          desc:
+            ja: カテゴリに武器を表示するか
+          type: boolean
+          default: true
+        - arg: armor
+          text:
+            ja: 防具表示
+          desc:
+            ja: カテゴリに防具を表示するか
+          type: boolean
+          default: true
+        - arg: keyItem
+          text:
+            ja: 大事なもの表示
+          desc:
+            ja: カテゴリに大事なものを表示するか
+          type: boolean
+          default: false
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      アイテム倉庫シーンを提供します。
+      プラグインコマンドで倉庫を開くことができます。
