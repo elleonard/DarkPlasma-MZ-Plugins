@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.2.0
+// DarkPlasma_ItemStorage 1.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/22 1.3.0 DarkPlasma_OrderEquipに対応
  * 2022/05/14 1.2.0 アイテム出し入れ時に説明文が更新されない不具合を修正
  *                  DarkPlasma_OrderIdAliasに対応
  * 2022/01/22 1.1.0 Scene_ItemStorageのインターフェースを公開
@@ -47,7 +48,7 @@
  * @type boolean
  *
  * @help
- * version: 1.2.0
+ * version: 1.3.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -544,6 +545,9 @@
       this._data = allItems.filter((item) => this.includes(item)).sort(orderIdSort);
       if (this.index() >= this.maxItems()) {
         this.select(this.maxItems() - 1);
+      }
+      if (this.sortEquips) {
+        this.sortEquips();
       }
     }
 

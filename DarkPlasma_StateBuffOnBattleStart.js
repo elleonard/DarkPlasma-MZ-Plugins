@@ -137,7 +137,7 @@
         const parsed = JSON.parse(parameter);
         return {
           id: Number(parsed.id || 0),
-          paramId: Number(parsed.paramId || 0),
+          paramId: String(parsed.paramId || ''),
           buffStep: Number(parsed.buffStep || 1),
           turn: Number(parsed.turn || 3),
         };
