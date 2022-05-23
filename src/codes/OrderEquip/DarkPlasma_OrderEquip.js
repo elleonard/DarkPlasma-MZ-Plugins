@@ -42,6 +42,14 @@ function equipSortKeyMap(equip, key) {
  * @param {string[]} keys
  */
 function compareEquip(a, b, keys) {
+  if (a === null && b === null) {
+    // 両方nullなら順不同
+    return 0;
+  } else if (a === null) {
+    return 1;
+  } else if (b === null) {
+    return -1;
+  }
   const key = keys.shift();
   const diff = equipSortKeyMap(a, key) - equipSortKeyMap(b, key);
   if (diff === 0) {
@@ -89,12 +97,35 @@ function Window_ItemList_OrderEquipMixIn(windowClass) {
   };
 
   windowClass.sortEquips = function () {
-    if (this._category === 'weapon') {
+    if (this.isWeaponList()) {
       this._data = this.sortWeapons(this._data);
-    } else if (this._category === 'armor') {
+    } else if (this.isArmorList()) {
       this._data = this.sortArmors(this._data);
     }
+  };
+
+  windowClass.isWeaponList = function () {
+    return this._category === 'weapon';
+  };
+
+  windowClass.isArmorList = function () {
+    return this._category === 'armor';
   };
 }
 
 Window_ItemList_OrderEquipMixIn(Window_ItemList.prototype);
+
+/**
+ * @param {Window_EquipItem.prototype} windowClass
+ */
+function Window_EquipItem_OrderEquipMixIn(windowClass) {
+  windowClass.isWeaponList = function () {
+    return this.etypeId() === 1;
+  };
+
+  windowClass.isArmorList = function () {
+    return this.etypeId() > 1;
+  };
+}
+
+Window_EquipItem_OrderEquipMixIn(Window_EquipItem.prototype);
