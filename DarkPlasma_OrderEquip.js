@@ -1,9 +1,10 @@
-// DarkPlasma_OrderEquip 1.0.0
+// DarkPlasma_OrderEquip 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/23 1.0.1 装備アイテム選択時の並び順に対応
  * 2022/05/22 1.0.0 公開
  */
 
@@ -92,7 +93,7 @@
  * @default asc
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 武器・防具の並び順を指定します。
  *
  * プラグインパラメータの並び順指定に従って表示します。
@@ -165,6 +166,14 @@
    * @param {string[]} keys
    */
   function compareEquip(a, b, keys) {
+    if (a === null && b === null) {
+      // 両方nullなら順不同
+      return 0;
+    } else if (a === null) {
+      return 1;
+    } else if (b === null) {
+      return -1;
+    }
     const key = keys.shift();
     const diff = equipSortKeyMap(a, key) - equipSortKeyMap(b, key);
     if (diff === 0) {
@@ -212,13 +221,36 @@
     };
 
     windowClass.sortEquips = function () {
-      if (this._category === 'weapon') {
+      if (this.isWeaponList()) {
         this._data = this.sortWeapons(this._data);
-      } else if (this._category === 'armor') {
+      } else if (this.isArmorList()) {
         this._data = this.sortArmors(this._data);
       }
+    };
+
+    windowClass.isWeaponList = function () {
+      return this._category === 'weapon';
+    };
+
+    windowClass.isArmorList = function () {
+      return this._category === 'armor';
     };
   }
 
   Window_ItemList_OrderEquipMixIn(Window_ItemList.prototype);
+
+  /**
+   * @param {Window_EquipItem.prototype} windowClass
+   */
+  function Window_EquipItem_OrderEquipMixIn(windowClass) {
+    windowClass.isWeaponList = function () {
+      return this.etypeId() === 1;
+    };
+
+    windowClass.isArmorList = function () {
+      return this.etypeId() > 1;
+    };
+  }
+
+  Window_EquipItem_OrderEquipMixIn(Window_EquipItem.prototype);
 })();
