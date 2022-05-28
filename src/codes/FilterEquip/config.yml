@@ -3,6 +3,9 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
+    - date: 2022/05/28
+      version: 1.1.0
+      description: '独自特徴IDの仕組みをDarkPlasma_AllocateUniqueTraitIdに分離'
     - date: 2022/02/06
       version: 1.0.0
       description: '正式版公開'
@@ -41,13 +44,6 @@ DarkPlasma_FilterEquip:
         ja: 絞り込みONの項目の色
       type: number
       default: 2
-    - param: startIdOfUniqueTraitId
-      text:
-        ja: 独自特徴ID始点
-      desc:
-        ja: 独自に特徴IDを確保する際の始点ID。わからない場合はそのままにしてください
-      type: number
-      default: 71
   commands: []
   structures:
     TraitName:
@@ -218,8 +214,11 @@ DarkPlasma_FilterEquip:
         version: 1.0.4
       - name: DarkPlasma_CustomKeyHandler
         version: 1.1.0
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
+      - name: DarkPlasma_AllocateUniqueTraitId
     orderBefore:
       - name: DarkPlasma_PartyAbilityTraitExtension
         version: 1.1.0
@@ -244,10 +243,6 @@ DarkPlasma_FilterEquip:
         具体的な利用例は下記プラグインをご覧ください
          - DarkPlasma_PartyAbilityTraitExtension
          - DarkPlasma_FilterEquip_RecentlyGained
-
-      EquipFilterBuilder.allocateUniqueTraitId
-        : (stirng, number) => number
-        独自の特徴IDを確保する
 
       EquipFilterBuilder.allocateUniqueDataId
         : (string, number, number) => number

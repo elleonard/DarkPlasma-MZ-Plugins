@@ -141,16 +141,6 @@ Scene_Equip.prototype.onItemCancel = function () {
 };
 
 /**
- * @type {number}
- */
-let uniqueTraitId = settings.startIdOfUniqueTraitId;
-
-/**
- * 独自traitIdのキャッシュ
- */
-const uniqueTraitIdCache = {};
-
-/**
  * 独自dataIdの定義用
  */
 const uniqueDataIds = {
@@ -192,6 +182,15 @@ const TRAIT_NAMES = {
   [Game_BattlerBase.TRAIT_SPECIAL_FLAG]: settings.traitName.specialFlag,
   [Game_BattlerBase.TRAIT_PARTY_ABILITY]: settings.traitName.partyAbility,
 };
+
+/**
+ * 特徴名
+ * @param {number} traitId 特徴ID
+ * @return {string}
+ */
+function traitName(traitId) {
+  return TRAIT_NAMES[traitId] || uniqueTraitIdCache.nameByTraitId(traitId);
+}
 
 /**
  * 効果のない特徴（回避率+0％など）であるか
@@ -365,7 +364,7 @@ class EquipFilterBuilder {
     if (effects_.length > 0) {
       return new EquipFilter_Trait(
         traitId,
-        TRAIT_NAMES[traitId],
+        traitName(traitId),
         effects_
           .sort((a, b) => a.dataId - b.dataId)
           .filter((effect) => this.traitToEffectName(traitId, effect.dataId))
@@ -447,19 +446,14 @@ class EquipFilterBuilder {
 
   /**
    * 独自のtraitIdを確保する
+   * @deprecated DarkPlasma_AllocateUniqueTraitIdを直接利用してください。
    * @param {string} pluginName プラグイン名
    * @param {string} traitName 特徴名
    * @param {number} id ID
    * @return {number}
    */
   static allocateUniqueTraitId(pluginName, traitName, id) {
-    const cacheKey = `${pluginName}_${id}`;
-    if (!uniqueTraitIdCache[cacheKey]) {
-      uniqueTraitIdCache[cacheKey] = uniqueTraitId;
-      TRAIT_NAMES[uniqueTraitIdCache[cacheKey]] = traitName;
-      uniqueTraitId++;
-    }
-    return uniqueTraitIdCache[cacheKey];
+    return uniqueTraitIdCache.allocate(pluginName, id, traitName).id;
   }
 
   /**
