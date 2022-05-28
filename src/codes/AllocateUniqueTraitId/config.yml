@@ -1,0 +1,55 @@
+DarkPlasma_AllocateUniqueTraitId:
+  name: DarkPlasma_AllocateUniqueTraitId
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/05/28
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '独自の特徴IDを確保する'
+  parameters:
+    - param: startIdOfUniqueTraitId
+      text:
+        ja: 独自特徴ID始点
+      desc:
+        ja: 独自に特徴IDを確保する際の始点ID。わからない場合はそのままにしてください
+      type: number
+      default: 71
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      特徴の特徴IDを確保し、利用できるようにします。
+
+      本プラグインは単体では機能しません。
+      本プラグインを必要とする別のプラグインと一緒に利用してください。
+
+      uniqueTraitIdCache オブジェクトに対してリクエストを投げてください。
+
+      uniqueTraitIdCache.allocate
+        : (pluginName: string, localId: number, name: string) => UniqueTraitId
+        プラグインで独自の特徴IDを確保します。
+
+      uniqueTraitIdCache.traitIdOf
+        : (pluginName: string, localId: number) => number|undefined
+        確保した特徴ID
+        確保していない場合はundefined
+
+      uniqueTraitIdCache.nameOf
+        : (pluginName: string, localId: number) => string|undefined
+        確保した特徴IDの名前
+        確保していない場合はundefined
+
+      UniqueTraitId.prototype.id: number
+        確保した特徴ID
+
+      UniqueTraitId.prototype.name: string
+        確保した特徴IDの名前
