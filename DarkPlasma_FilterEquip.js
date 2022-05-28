@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.0.0
+// DarkPlasma_FilterEquip 1.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/05/28 1.1.0 独自特徴IDの仕組みをDarkPlasma_AllocateUniqueTraitIdに分離
  * 2022/02/06 1.0.0 正式版公開
  *                  依存関係にDarkPlasma_CustomKeyHandlerを追加
  * 2021/09/05 0.0.5 独自特徴を定義する機能を追加
@@ -23,7 +24,9 @@
  *
  * @base DarkPlasma_ParameterText
  * @base DarkPlasma_CustomKeyHandler
+ * @base DarkPlasma_AllocateUniqueTraitId
  * @orderAfter DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
  * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  * @orderBefore DarkPlasma_FilterEquip_RecentlyGained
  *
@@ -38,14 +41,8 @@
  * @type number
  * @default 2
  *
- * @param startIdOfUniqueTraitId
- * @desc 独自に特徴IDを確保する際の始点ID。わからない場合はそのままにしてください
- * @text 独自特徴ID始点
- * @type number
- * @default 71
- *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -63,10 +60,6 @@
  *   具体的な利用例は下記プラグインをご覧ください
  *    - DarkPlasma_PartyAbilityTraitExtension
  *    - DarkPlasma_FilterEquip_RecentlyGained
- *
- * EquipFilterBuilder.allocateUniqueTraitId
- *   : (stirng, number) => number
- *   独自の特徴IDを確保する
  *
  * EquipFilterBuilder.allocateUniqueDataId
  *   : (string, number, number) => number
@@ -92,8 +85,10 @@
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_ParameterText version:1.0.4
  * DarkPlasma_CustomKeyHandler version:1.1.0
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
+ * DarkPlasma_AllocateUniqueTraitId
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
@@ -276,7 +271,6 @@
       };
     })(pluginParameters.traitName || '{}'),
     selectedItemColor: Number(pluginParameters.selectedItemColor || 2),
-    startIdOfUniqueTraitId: Number(pluginParameters.startIdOfUniqueTraitId || 71),
   };
 
   const _Scene_Equip_create = Scene_Equip.prototype.create;
@@ -420,16 +414,6 @@
   };
 
   /**
-   * @type {number}
-   */
-  let uniqueTraitId = settings.startIdOfUniqueTraitId;
-
-  /**
-   * 独自traitIdのキャッシュ
-   */
-  const uniqueTraitIdCache = {};
-
-  /**
    * 独自dataIdの定義用
    */
   const uniqueDataIds = {
@@ -471,6 +455,15 @@
     [Game_BattlerBase.TRAIT_SPECIAL_FLAG]: settings.traitName.specialFlag,
     [Game_BattlerBase.TRAIT_PARTY_ABILITY]: settings.traitName.partyAbility,
   };
+
+  /**
+   * 特徴名
+   * @param {number} traitId 特徴ID
+   * @return {string}
+   */
+  function traitName(traitId) {
+    return TRAIT_NAMES[traitId] || uniqueTraitIdCache.nameByTraitId(traitId);
+  }
 
   /**
    * 効果のない特徴（回避率+0％など）であるか
@@ -644,7 +637,7 @@
       if (effects_.length > 0) {
         return new EquipFilter_Trait(
           traitId,
-          TRAIT_NAMES[traitId],
+          traitName(traitId),
           effects_
             .sort((a, b) => a.dataId - b.dataId)
             .filter((effect) => this.traitToEffectName(traitId, effect.dataId))
@@ -726,19 +719,14 @@
 
     /**
      * 独自のtraitIdを確保する
+     * @deprecated DarkPlasma_AllocateUniqueTraitIdを直接利用してください。
      * @param {string} pluginName プラグイン名
      * @param {string} traitName 特徴名
      * @param {number} id ID
      * @return {number}
      */
     static allocateUniqueTraitId(pluginName, traitName, id) {
-      const cacheKey = `${pluginName}_${id}`;
-      if (!uniqueTraitIdCache[cacheKey]) {
-        uniqueTraitIdCache[cacheKey] = uniqueTraitId;
-        TRAIT_NAMES[uniqueTraitIdCache[cacheKey]] = traitName;
-        uniqueTraitId++;
-      }
-      return uniqueTraitIdCache[cacheKey];
+      return uniqueTraitIdCache.allocate(pluginName, id, traitName).id;
     }
 
     /**
