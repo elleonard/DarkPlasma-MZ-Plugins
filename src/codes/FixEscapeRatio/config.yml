@@ -1,0 +1,29 @@
+DarkPlasma_FixEscapeRatio:
+  name: DarkPlasma_FixEscapeRatio
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/05/29
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '逃走確率を固定値にする'
+  parameters:
+    - param: ratio
+      text:
+        ja: 逃走確率（％）
+      type: number
+      default: 50
+      max: 100
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      逃走確率を固定値に設定します。
