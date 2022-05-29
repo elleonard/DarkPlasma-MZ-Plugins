@@ -1,0 +1,28 @@
+DarkPlasma_StateWithDeath:
+  name: DarkPlasma_StateWithDeath
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/05/29
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '戦闘不能になっても消えないステート'
+  parameters:
+    - param: statesWithDeath
+      text:
+        ja: 消えないステート
+      type: state[]
+      default: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      指定したステートは戦闘不能になっても解除されません。
