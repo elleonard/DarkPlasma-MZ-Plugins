@@ -8,7 +8,7 @@ function Game_BattlerBase_StateWithDeathMixIn(gameBattlerBase) {
   gameBattlerBase.die = function () {
     const continueStates = this._states.filter((stateId) => settings.statesWithDeath.includes(stateId));
     const continueStateTurns = {};
-    continuesStates.forEach((stateId) => (continueStateTurns[stateId] = this._stateTurns[stateId]));
+    continueStates.forEach((stateId) => (continueStateTurns[stateId] = this._stateTurns[stateId]));
     _die.call(this);
     this._states = continueStates;
     this._stateTurns = continueStateTurns;
