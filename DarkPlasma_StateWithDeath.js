@@ -1,10 +1,11 @@
-// DarkPlasma_StateWithDeath 1.0.0
+// DarkPlasma_StateWithDeath 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/05/29 1.0.0 公開
+ * 2022/05/29 1.0.1 戦闘時にエラーになる不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -21,7 +22,7 @@
  * @default []
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 指定したステートは戦闘不能になっても解除されません。
  */
 
@@ -48,7 +49,7 @@
     gameBattlerBase.die = function () {
       const continueStates = this._states.filter((stateId) => settings.statesWithDeath.includes(stateId));
       const continueStateTurns = {};
-      continuesStates.forEach((stateId) => (continueStateTurns[stateId] = this._stateTurns[stateId]));
+      continueStates.forEach((stateId) => (continueStateTurns[stateId] = this._stateTurns[stateId]));
       _die.call(this);
       this._states = continueStates;
       this._stateTurns = continueStateTurns;
