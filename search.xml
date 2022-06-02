@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>マップイベント中は使用できないアイテム・スキル</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップイベント実行中に使用できないアイテム・スキルを実現します。</p><p>重要なイベントでメニューを開かせるが、コモンイベント実行のアイテムを使うとメニューが閉じてイベントが進んでしまう、という場合にどうぞ。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> スキル </tag>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>装備セットを記録して復元する</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/04/22/save-equip-set/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/04/22/save-equip-set/</url>
