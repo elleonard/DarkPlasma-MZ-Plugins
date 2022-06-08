@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 1.0.0
+// DarkPlasma_AutoHighlight 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/06/08 1.0.1 対象ウィンドウのクラス名がグローバルに展開されていなくても有効にする
  * 2022/01/02 1.0.0 公開
  */
 
@@ -28,7 +29,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 指定した語句を指定した色でハイライトします。
  */
 /*~struct~HighlightGroup:
@@ -226,8 +227,6 @@
   };
 
   Window_Base.prototype.isHighlightWindow = function () {
-    return settings.targetWindows.some(
-      (targetWindow) => typeof window[targetWindow] === 'function' && this instanceof window[targetWindow]
-    );
+    return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
   };
 })();
