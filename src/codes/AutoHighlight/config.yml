@@ -3,6 +3,9 @@ DarkPlasma_AutoHighlight:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/06/08
+      version: 1.0.1
+      description: '対象ウィンドウのクラス名がグローバルに展開されていなくても有効にする'
     - date: 2022/01/02
       version: 1.0.0
       description: '公開'

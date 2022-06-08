@@ -133,7 +133,5 @@ Window_Base.prototype.convertEscapeCharacters = function (text) {
 };
 
 Window_Base.prototype.isHighlightWindow = function () {
-  return settings.targetWindows.some(
-    (targetWindow) => typeof window[targetWindow] === 'function' && this instanceof window[targetWindow]
-  );
+  return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
 };
