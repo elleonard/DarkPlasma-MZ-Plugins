@@ -11,6 +11,7 @@ class SkillCooldown {
   }
 
   /**
+   * 指定IDのスキル使用をトリガーとするクールダウンオブジェクトのセットアップ
    * @param {number} triggerSkillId トリガースキルID
    * @return {SkillCooldown[]}
    */
@@ -18,11 +19,23 @@ class SkillCooldown {
     const cooldownSetting = settings.skillCooldownSettings.find(
       (cooldown) => cooldown.triggerSkillId === triggerSkillId
     );
-    return cooldownSetting
-      ? cooldownSetting.targetSkills.map(
-          (target) => new SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1)
-        )
-      : [];
+    /**
+     * メモ欄による設定
+     */
+    const result = [];
+    if ($dataSkills[triggerSkillId].meta.cooldownTurn) {
+      result.push(new SkillCooldown(triggerSkillId, Number($dataSkills[triggerSkillId].meta.cooldownTurn) + 1));
+    }
+    /**
+     * プラグインパラメータによる設定
+     */
+    return result.concat(
+      cooldownSetting
+        ? cooldownSetting.targetSkills.map(
+            (target) => new SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1)
+          )
+        : []
+    );
   }
 
   /**
