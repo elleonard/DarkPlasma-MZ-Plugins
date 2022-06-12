@@ -1,0 +1,28 @@
+DarkPlasma_ActionDebuffSuccessRate:
+  name: DarkPlasma_ActionDebuffSuccessRate
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/06/12
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキル・アイテムに弱体成功率を設定する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキル・アイテムのメモ欄に以下のように記述すると
+      その行動による弱体付与の基本成功率がx％になります。（未設定の場合100）
+      <debuffSuccessRate:x>
+
+      最終的な付与成功率は、以下の通りになります。
+      基本成功率 x 対象の弱体有効度 x 対象との運差による補正
