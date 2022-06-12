@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.0.5
+// DarkPlasma_SkillCooldown 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/06/12 2.1.0 メモ欄による設定をサポート
  * 2022/01/07 2.0.5 TPBにおいてターンカウントが正常に進まない不具合を修正
  * 2021/11/14 2.0.4 戦闘中にパーティメンバーを追加するとエラーが発生する不具合を修正
  * 2021/07/05 2.0.3 MZ 1.3.2に対応
@@ -58,9 +59,15 @@
  * @default true
  *
  * @help
- * version: 2.0.5
+ * version: 2.1.0
  * スキルにクールタイムを指定します。
- * スキルX使用後、スキルYの使用を一定ターン数制限することができます。
+ * バトラーがスキルXを使用した後、
+ * そのバトラーのスキルYの使用を一定ターン数制限することができます。
+ *
+ * バトラーがスキルXを使用した後、
+ * そのバトラーのスキルX自体の使用をxターン数制限する場合、
+ * スキルのメモ欄でも設定可能です。
+ * <cooldownTurn:x>
  */
 /*~struct~SkillCooldown:
  * @param triggerSkillId
@@ -132,6 +139,7 @@
     }
 
     /**
+     * 指定IDのスキル使用をトリガーとするクールダウンオブジェクトのセットアップ
      * @param {number} triggerSkillId トリガースキルID
      * @return {SkillCooldown[]}
      */
@@ -139,11 +147,23 @@
       const cooldownSetting = settings.skillCooldownSettings.find(
         (cooldown) => cooldown.triggerSkillId === triggerSkillId
       );
-      return cooldownSetting
-        ? cooldownSetting.targetSkills.map(
-            (target) => new SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1)
-          )
-        : [];
+      /**
+       * メモ欄による設定
+       */
+      const result = [];
+      if ($dataSkills[triggerSkillId].meta.cooldownTurn) {
+        result.push(new SkillCooldown(triggerSkillId, Number($dataSkills[triggerSkillId].meta.cooldownTurn) + 1));
+      }
+      /**
+       * プラグインパラメータによる設定
+       */
+      return result.concat(
+        cooldownSetting
+          ? cooldownSetting.targetSkills.map(
+              (target) => new SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1)
+            )
+          : []
+      );
     }
 
     /**
