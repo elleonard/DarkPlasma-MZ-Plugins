@@ -1,9 +1,10 @@
-// DarkPlasma_MultiAttackDamageFall 1.0.2
+// DarkPlasma_MultiAttackDamageFall 1.0.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/06/17 1.0.3 カウンター発動時にエラーが起きる不具合を修正
  * 2022/05/07 1.0.2 身代わり発動時にエラーが起きる不具合を修正
  * 2022/01/09 1.0.1 同一対象への複数回攻撃でダメージが減衰しない不具合を修正
  *            1.0.0 公開
@@ -30,7 +31,7 @@
  * @default 10
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * スキルのメモ欄に <multiAttack> とつけると
  * 範囲または連続攻撃時にダメージを減衰していきます。
  *
@@ -151,6 +152,12 @@
         return 1;
       }
       const targetIndex = this.multiAttackTargetIndex(target);
+      /**
+       * カウンター時はターゲット情報のキャッシュがないため、100％とする
+       */
+      if (targetIndex < 0 || !this._multiAttackTargets[targetIndex]) {
+        return 1;
+      }
       this._multiAttackTargets[targetIndex].attack();
       if (targetIndex > 0) {
         return Math.max((100 - settings.fallRate * targetIndex) / 100, settings.minimumRate / 100);
