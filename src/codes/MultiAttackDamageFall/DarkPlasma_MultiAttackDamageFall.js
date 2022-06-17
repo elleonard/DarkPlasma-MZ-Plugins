@@ -98,6 +98,12 @@ function Game_Action_MultiAttackDamageFallMixIn(gameAction) {
       return 1;
     }
     const targetIndex = this.multiAttackTargetIndex(target);
+    /**
+     * カウンター時はターゲット情報のキャッシュがないため、100％とする
+     */
+    if (targetIndex < 0 || !this._multiAttackTargets[targetIndex]) {
+      return 1;
+    }
     this._multiAttackTargets[targetIndex].attack();
     if (targetIndex > 0) {
       return Math.max((100 - settings.fallRate * targetIndex) / 100, settings.minimumRate / 100);

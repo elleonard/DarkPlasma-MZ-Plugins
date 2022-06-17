@@ -3,6 +3,9 @@ DarkPlasma_MultiAttackDamageFall:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/06/17
+      version: 1.0.3
+      description: 'カウンター発動時にエラーが起きる不具合を修正'
     - date: 2022/05/07
       version: 1.0.2
       description: '身代わり発動時にエラーが起きる不具合を修正'
