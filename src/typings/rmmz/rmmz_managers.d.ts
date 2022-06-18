@@ -31,6 +31,7 @@ declare var $gameTroop: Game_Troop;
 declare var $gameMap: Game_Map;
 declare var $gamePlayer: Game_Player;
 declare var $testEvent: MZ.EventCommand[] | null;
+declare var $plugins: MZ.Plugin[];
 
 //-----------------------------------------------------------------------------
 /**

@@ -396,6 +396,32 @@ declare class Sprite_AnimationMV extends Sprite {
 
 //-----------------------------------------------------------------------------
 /**
+ * The sprite for displaying a background image in battle.
+ */
+declare class Sprite_Battleback extends TilingSprite {
+  public constructor();
+
+  public initialize(type: number): void;
+  public adjustPosition(): void;
+  public battleback1Bitmap(): Bitmap;
+  public battleback2Bitmap(): Bitmap;
+  public battleback1Name(): string;
+  public battleback2Name(): string;
+  public overworldBattleback1Name(): string;
+  public overworldBattleback2Name(): string;
+  public normalBattleback1Name(): string;
+  public normalBattleback2Name(): string;
+  public terrainBattleback1Name(type: number): string;
+  public terrainBattleback2Name(type: number): string;
+  public defaultBattleback1Name(): string;
+  public defaultBattleback2Name(): string;
+  public shipBattleback1Name(): string;
+  public shipBattleback2Name(): string;
+  public autotileType(z: number): number;
+}
+
+//-----------------------------------------------------------------------------
+/**
  * The sprite for displaying a popup damage.
  */
 declare class Sprite_Damage extends Sprite {
