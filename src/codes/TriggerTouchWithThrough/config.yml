@@ -1,0 +1,34 @@
+DarkPlasma_TriggerTouchWithThrough:
+  name: DarkPlasma_TriggerTouchWithThrough
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/06/18
+      version: 1.0.1
+      description: 'MITライセンスとして公開'
+    - date: 2022/02/19
+      version: 1.0.0
+      description: '初版'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'すり抜けでもイベントからの接触が有効なイベント'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      すり抜けをONにしてもイベントからの接触を有効にできる
+      イベント用メタタグを提供します。
+
+      すり抜けONでもイベントからの接触を有効にしたいイベントの
+      メモ欄に下記のように記述してください。
+      <triggerTouch>
+
+      対象のイベントはプレイヤーのみすり抜けられなくなり、
+      イベントからの接触トリガーが有効になります。
