@@ -6,9 +6,11 @@ import applyTemplate from './extensions/rollup/rollup-apply-template';
 
 const targetJsList = (() => {
   const targetFile = (() => {
-    const file = process.env.TARGET;
+    const plugin = process.env.TARGET;
     const dir = process.argv.some((n) => n === '-e') ? 'excludes' : 'codes';
-    return file ? glob.sync(path.join(__dirname, 'src', dir, file, 'DarkPlasma*.js')) : null;
+    const versionIndex = process.argv.findIndex(n => n === '-V');
+    const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex+1]}` : "";
+    return plugin ? glob.sync(path.join(__dirname, 'src', dir, `${plugin}${versionDir}`, 'DarkPlasma*.js')) : null;
   })();
   return targetFile
     ? [targetFile].flat()
@@ -22,10 +24,12 @@ const targetJsList = (() => {
 const config = targetJsList.map((input) => {
   const name = path.basename(input, '.js');
   const dir = path.dirname(input).split('/').slice(-2)[0];
+  const versionIndex = process.argv.findIndex(n => n === '-V');
+  const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex+1]}` : "";
   return {
     input,
     output: {
-      file: `_dist/${dir}/${name}.js`,
+      file: `_dist/${dir}${versionDir}/${name}.js`,
       format: 'iife',
     },
     plugins: [

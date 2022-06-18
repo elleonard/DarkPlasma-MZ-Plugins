@@ -13,7 +13,13 @@ const isWatch = process.argv.some((n) => n === '-w');
 const targetDir = (() => {
   const index = process.argv.findIndex((n) => n === '-f');
   const dir = process.argv.some((n) => n === '-e') ? 'excludes' : 'codes';
-  return index >= 0 ? path.resolve(__dirname, '..', '..', 'src', dir, process.argv[index + 1], 'config.yml') : null;
+  /**
+   * rollupの-vと重複してしまうので、雑に大文字-V
+   */
+  const versionIndex = process.argv.findIndex(n => n === '-V');
+  const pluginDir = index >= 0 ? process.argv[index + 1] : "";
+  const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex + 1]}` : "";
+  return index >= 0 ? path.resolve(__dirname, '..', '..', 'src', dir, `${pluginDir}${versionDir}`, 'config.yml') : null;
 })();
 
 async function generate(file) {
