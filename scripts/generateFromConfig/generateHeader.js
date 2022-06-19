@@ -71,6 +71,108 @@ class TypedParameter {
       this.isArray() ? '[]' : ''
     }`;
   }
+
+  defaultValue(language) {
+    if (this.originalDefault() === undefined || this.originalDefault() === null) {
+      return '';
+    }
+    if (typeof this.originalDefault() === 'boolean' || Number.isFinite(this.originalDefault())) {
+      return this.originalDefault();
+    }
+    return this.originalDefault()[language] ? this.originalDefault()[language] : this.originalDefault();
+  }
+
+    /**
+   * トップコメントやパラメータパース用のデフォルト値を返す
+   * トップコメント用は余分なクオートやエスケープが必要なのでやや汚い
+   * FIXME: 余分なクオートを取り除くオプションはバグの恐れがある
+   * パーサに食わせるのだからトップコメント用と同じエスケープをつけるべき
+   * prettierでエスケープが最適化されてしまうので、 singleQuote オプションを切るのが良いだろう
+   *
+   * @param {string} language 言語
+   * @param {boolean} withoutExtraQuotes トップコメント用のクオートを外す（パラメータパースコード用）
+   * @return {string}
+   */
+     defaultText(language, withoutExtraQuotes) {
+      const defaultValue = this.defaultValue(language);
+      if (defaultValue || typeof defaultValue === 'boolean' || Number.isFinite(defaultValue)) {
+        if (Array.isArray(defaultValue)) {
+          if (defaultValue.length === 0) {
+            return '[]';
+          }
+          /**
+           * 雑判定だが、二重配列のパラメータはサポートしないのでこれで良い
+           */
+          if (typeof defaultValue[0] === 'object') {
+            const result = `[${defaultValue
+              .map((defaultValue) => {
+                const objectKeyValue = this.escapeDoubleQuote(
+                  Object.entries(defaultValue)
+                    .map(([key, value]) => {
+                      return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+                    })
+                    .join(',')
+                );
+                return withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`;
+              })
+              .join(',')}]`;
+            return result;
+          }
+          return `[${defaultValue.map((value) => `"${value}"`).join(', ')}]`;
+        }
+        if (typeof defaultValue === 'object') {
+          return `{${Object.entries(defaultValue)
+            .map(([key, value]) => {
+              return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+            })
+            .join(', ')}}`;
+        }
+        return defaultValue;
+      }
+      return '';
+    }
+  
+    defaultObjectKeyValueToText(key, value, withoutExtraQuotes) {
+      if (Array.isArray(value)) {
+        if (value.length === 0) {
+          return `"${key}":${withoutExtraQuotes ? '[]' : '"[]"'}`;
+        }
+        if (typeof value[0] === 'object') {
+          const objectKeyValue = Object.entries(value)
+            .map(([k, v]) => {
+              return this.defaultObjectKeyValueToText(k, v);
+            })
+            .join(', ');
+          return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
+        }
+        /**
+         * オブジェクト内配列は、更にダブルクオートを2回エスケープする必要がある
+         */
+        return `"${key}":${
+          withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${this.escapeDoubleQuote(this.escapeDoubleQuote(value.map((v) => `"${v}"`).join(',')))}]"`
+        }`;
+      }
+      if (value && typeof value === 'object') {
+        const objectKeyValue = this.escapeDoubleQuote(
+          Object.entries(value)
+            .map(([k, v]) => {
+              return this.defaultObjectKeyValueToText(k, v);
+            })
+            .join(', ')
+        );
+        return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
+      }
+      return `"${key}":"${value}"`;
+    }
+  
+    /**
+     * エスケープが必要なダブルクォートをエスケープする
+     * @param {string} string 対象文字列
+     * @return {string}
+     */
+    escapeDoubleQuote(string) {
+      return string.replace(/"/g, '\\"');
+    }
 }
 
 class PluginParameter extends TypedParameter {
@@ -91,103 +193,8 @@ class PluginParameter extends TypedParameter {
     return !!this._parameter.dummy;
   }
 
-  defaultValue(language) {
-    if (this._parameter.default === undefined || this._parameter.default === null) {
-      return '';
-    }
-    if (typeof this._parameter.default === 'boolean' || Number.isFinite(this._parameter.default)) {
-      return this._parameter.default;
-    }
-    return this._parameter.default[language] ? this._parameter.default[language] : this._parameter.default;
-  }
-
-  /**
-   * トップコメントやパラメータパース用のデフォルト値を返す
-   * トップコメント用は余分なクオートやエスケープが必要なのでやや汚い
-   * FIXME: 余分なクオートを取り除くオプションはバグの恐れがある
-   * パーサに食わせるのだからトップコメント用と同じエスケープをつけるべき
-   * prettierでエスケープが最適化されてしまうので、 singleQuote オプションを切るのが良いだろう
-   *
-   * @param {string} language 言語
-   * @param {boolean} withoutExtraQuotes トップコメント用のクオートを外す（パラメータパースコード用）
-   * @return {string}
-   */
-  defaultText(language, withoutExtraQuotes) {
-    const defaultValue = this.defaultValue(language);
-    if (defaultValue || typeof defaultValue === 'boolean' || Number.isFinite(defaultValue)) {
-      if (Array.isArray(defaultValue)) {
-        if (defaultValue.length === 0) {
-          return '[]';
-        }
-        /**
-         * 雑判定だが、二重配列のパラメータはサポートしないのでこれで良い
-         */
-        if (typeof defaultValue[0] === 'object') {
-          const result = `[${defaultValue
-            .map((defaultValue) => {
-              const objectKeyValue = this.escapeDoubleQuote(
-                Object.entries(defaultValue)
-                  .map(([key, value]) => {
-                    return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
-                  })
-                  .join(',')
-              );
-              return withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`;
-            })
-            .join(',')}]`;
-          return result;
-        }
-        return `[${defaultValue.map((value) => `"${value}"`).join(', ')}]`;
-      }
-      if (typeof defaultValue === 'object') {
-        return `{${Object.entries(defaultValue)
-          .map(([key, value]) => {
-            return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
-          })
-          .join(', ')}}`;
-      }
-      return defaultValue;
-    }
-    return '';
-  }
-
-  defaultObjectKeyValueToText(key, value, withoutExtraQuotes) {
-    if (Array.isArray(value)) {
-      if (value.length === 0) {
-        return `"${key}":${withoutExtraQuotes ? '[]' : '"[]"'}`;
-      }
-      if (typeof value[0] === 'object') {
-        const objectKeyValue = Object.entries(value)
-          .map(([k, v]) => {
-            return this.defaultObjectKeyValueToText(k, v);
-          })
-          .join(', ');
-        return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
-      }
-      return `"${key}":${
-        withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${value.map((v) => `"${v}"`).join(',')}]"`
-      }`;
-    }
-    if (value && typeof value === 'object') {
-      const objectKeyValue = this.escapeDoubleQuote(
-        Object.entries(value)
-          .map(([k, v]) => {
-            return this.defaultObjectKeyValueToText(k, v);
-          })
-          .join(', ')
-      );
-      return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
-    }
-    return `"${key}":"${value}"`;
-  }
-
-  /**
-   * エスケープが必要なダブルクォートをエスケープする
-   * @param {string} string 対象文字列
-   * @return {string}
-   */
-  escapeDoubleQuote(string) {
-    return string.replace(/"/g, '\\"');
+  originalDefault() {
+    return this._parameter.default;
   }
 
   toParameterText(language) {
@@ -239,6 +246,10 @@ class PluginCommandArgument extends TypedParameter {
     return this._argument.type;
   }
 
+  originalDefault() {
+    return this._argument.default;
+  }
+
   toArgumentText(language) {
     const result = [` * @arg ${this._argument.arg}`];
     if (this._argument.text) {
@@ -257,6 +268,10 @@ class PluginCommandArgument extends TypedParameter {
           }
         });
       }
+    }
+    const default_ = this.defaultText(language);
+    if (default_ || typeof default_ === 'boolean' || Number.isFinite(default_)) {
+      result.push(` * @default ${default_}`);
     }
     ['min', 'max', 'dir']
       .filter((annotation) => {
