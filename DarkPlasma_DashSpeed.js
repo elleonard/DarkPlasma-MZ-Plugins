@@ -31,6 +31,7 @@
  * @arg dashSpeed
  * @text ダッシュ速度
  * @type number
+ * @default 1
  *
  * @help
  * version: 1.0.3

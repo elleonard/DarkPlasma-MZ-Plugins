@@ -34,18 +34,22 @@
  * @text アイテム表示
  * @desc カテゴリにアイテムを表示するか
  * @type boolean
+ * @default true
  * @arg weapon
  * @text 武器表示
  * @desc カテゴリに武器を表示するか
  * @type boolean
+ * @default true
  * @arg armor
  * @text 防具表示
  * @desc カテゴリに防具を表示するか
  * @type boolean
+ * @default true
  * @arg keyItem
  * @text 大事なもの表示
  * @desc カテゴリに大事なものを表示するか
  * @type boolean
+ * @default false
  *
  * @help
  * version: 1.3.0

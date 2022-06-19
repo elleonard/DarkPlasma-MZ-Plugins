@@ -29,6 +29,7 @@
  * @text ヘルプテキスト一覧
  * @desc ヘルプテキスト一覧を設定します。選択肢と同じ順番に設定してください。
  * @type multiline_string[]
+ * @default []
  *
  * @help
  * version: 1.0.6

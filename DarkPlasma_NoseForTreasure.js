@@ -31,6 +31,7 @@
  * @text セルフスイッチ
  * @desc 特定セルフスイッチの状態で探すイベントを絞り込みます。
  * @type struct<SelfSwitch>[]
+ * @default ["{\"name\":\"A\",\"state\":\"false\"}"]
  * @arg balloon
  * @text フキダシ
  * @desc 探した種類のイベントに表示するフキダシ
@@ -67,6 +68,7 @@
  * @value 14
  * @option ユーザー定義5
  * @value 15
+ * @default 0
  *
  * @help
  * version: 1.1.0
