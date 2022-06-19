@@ -1,0 +1,133 @@
+DarkPlasma_ExtraBalloon:
+  name: DarkPlasma_ExtraBalloon
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/06/19
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '吹き出しアイコンを15個を超えて増やす'
+  parameters:
+    - param: ballonIdRangeList
+      text:
+        ja: フキダシID割当
+      type: BalloonIdRange[]
+      default:
+        - image: Balloon
+          startId: 1
+          endId: 15
+          nameList:
+            - びっくり
+            - はてな
+            - 音符
+            - 怒り
+            - ハート
+            - 汗
+            - くしゃくしゃ
+            - 沈黙
+            - 電球
+            - Zzz
+            - ユーザー定義1
+            - ユーザー定義2
+            - ユーザー定義3
+            - ユーザー定義4
+            - ユーザー定義5
+    - param: generateAdditionalPlugin
+      text:
+        ja: 追加プラグイン生成
+      desc:
+        ja: ONの場合、テストプレイ起動時に追加プラグインを生成します。
+      type: boolean
+      default: false
+  commands:
+    - command: showBalloon
+      text:
+        ja: フキダシ表示
+      desc:
+        ja: IDを指定してフキダシを表示します。
+      args:
+        - arg: id
+          text:
+            ja: フキダシID
+          type: number
+          default: 1
+        - arg: targetType
+          text:
+            ja: 対象キャラクター
+          desc:
+            ja: フキダシ表示対象を選択します。
+          type: select
+          options:
+            - name: プレイヤー
+              value: player
+            - name: このイベント
+              value: thisEvent
+            - name: その他イベント
+              value: otherEvent
+          default: player
+        - arg: targetEventId
+          text:
+            ja: 対象イベントID
+          desc:
+            ja: キャラクターにその他イベントを選択した場合、イベントIDを指定します。
+          type: number
+          default: 1
+        - arg: wait
+          text:
+            ja: 完了までウェイト
+          desc:
+            ja: ONの場合、フキダシ表示完了までウェイトします。
+          type: boolean
+          default: false
+  structures:
+    BalloonIdRange:
+      - param: image
+        text:
+          ja: 画像
+        type: file
+        dir: img/system
+        default: Balloon
+      - param: startId
+        text:
+          ja: 開始ID
+        desc:
+          ja: 指定画像に割り振るフキダシIDの最小値を指定します。
+        type: number
+      - param: endId
+        text:
+          ja: 終了ID
+        desc:
+          ja: 指定画像に割り振るフキダシIDの最大値を指定します。開始ID+84以下にしてください。
+        type: number
+      - param: nameList
+        text:
+          ja: バルーン名
+        desc:
+          ja: 追加プラグイン生成時に各IDに割り当てる名前を指定します。
+        type: string[]
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      フキダシID16以降を設定し、表示できるようにします。
+
+      デフォルト設定では、デフォルトフキダシ画像にID1から15が割り当てられています。
+      デフォルト画像に16行目以降のバルーンを登録する場合、
+      設定で終了IDを16以上の値にしてください。
+
+      1画像につき、85個までIDを割り当てることができます。
+
+      IDを割り当て、プラグインコマンドでそのIDを指定することで
+      ID16以降のフキダシを表示できます。
+
+      設定をONにすると、テストプレイ開始時に追加プラグイン
+      DarkPlasma_NamedExtendBalloon
+      が生成されます。
+      生成されたプラグインのプラグインコマンドでは、
+      本プラグインで設定した名前をベースにフキダシを選択して表示できます。
