@@ -8,7 +8,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/06/19/extra-balloon/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/06/19/extra-balloon/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>フキダシID16以降をパラメータで定義し、表示するためのプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><h2 id="デフォルト設定"><a href="#デフォルト設定" class="headerlink" title="デフォルト設定"></a>デフォルト設定</h2><p><img src="setting1.png" alt="設定例" title="設定例1"></p><p>元々ツクールMZに含まれるフキダシアイコン設定と等価な設定です。<br>ID1～15までを、 system/Balloon.png に割り当てています。<br>同じ画像には85個までのフキダシを設定できます。<br>85個のフキダシを1画像に割り当てる場合、終了IDを開始ID+84にします。</p><h2 id="別画像での追加フキダシ"><a href="#別画像での追加フキダシ" class="headerlink" title="別画像での追加フキダシ"></a>別画像での追加フキダシ</h2><p><img src="setting2.png" alt="設定例" title="設定例2"><br><img src="setting3.png" alt="設定例" title="設定例3"></p><p>Balloon.pngをコピーして色相をいじった BalloonAnother.png を作りました。<br>この画像にはID16～30のフキダシを割り当てました。</p><p>24番の紫色になった電球アナザーフキダシを表示するには、以下のように指定します。</p><p><img src="setting4.png" alt="設定例" title="設定例4"><br><img src="showBalloon.png" alt="使用例" title="使用例"></p><h2 id="名前でフキダシを選択する"><a href="#名前でフキダシを選択する" class="headerlink" title="名前でフキダシを選択する"></a>名前でフキダシを選択する</h2><p>追加プラグイン生成設定をONにした状態でテストプレイを起動すると、パラメータの設定に応じた内容の追加プラグイン DarkPlasma_NamedExtraBalloon.js がプラグインフォルダ内に生成されます。<br>そのプラグインを利用することで、IDの数字を入力するのではなく、設定した名前を選択することでフキダシを表示できます。</p><p><img src="setting5.png" alt="設定例" title="設定例5"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>フキダシID16以降をパラメータで定義し、表示するためのプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><h2 id="デフォルト設定"><a href="#デフォルト設定" class="headerlink" title="デフォルト設定"></a>デフォルト設定</h2><p><img src="setting1.png" alt="設定例" title="設定例1"></p><p>元々ツクールMZに含まれるフキダシアイコン設定と等価な設定です。<br>ID1～15までを、 system/Balloon.png に割り当てています。<br>同じ画像には85個までのフキダシを設定できます。<br>85個のフキダシを1画像に割り当てる場合、終了IDを開始ID+84にします。</p><h2 id="別画像での追加フキダシ"><a href="#別画像での追加フキダシ" class="headerlink" title="別画像での追加フキダシ"></a>別画像での追加フキダシ</h2><p><img src="setting2.png" alt="設定例" title="設定例2"><br><img src="setting3.png" alt="設定例" title="設定例3"></p><p>Balloon.pngをコピーして色相をいじった BalloonAnother.png を作りました。<br>この画像にはID16～30のフキダシを割り当てました。</p><p>24番の紫色になった電球アナザーフキダシを表示するには、以下のように指定します。</p><p><img src="setting4.png" alt="設定例" title="設定例4"><br><img src="showBalloon.png" alt="使用例" title="使用例"></p><h2 id="名前でフキダシを選択する"><a href="#名前でフキダシを選択する" class="headerlink" title="名前でフキダシを選択する"></a>名前でフキダシを選択する</h2><p>追加プラグイン生成設定をONにした状態でテストプレイを起動すると、パラメータの設定に応じた内容の追加プラグイン DarkPlasma_NamedExtraBalloon.js がプラグインフォルダ内に生成されます。<br>そのプラグインを利用することで、IDの数字を入力するのではなく、設定した名前を選択することでフキダシを表示できます。</p><p><img src="setting5.png" alt="設定例" title="設定例5"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExtraBalloon.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
       
       
       <categories>
@@ -17,6 +17,12 @@
           
       </categories>
       
+      
+        <tags>
+            
+            <tag> イベント </tag>
+            
+        </tags>
       
     </entry>
     
