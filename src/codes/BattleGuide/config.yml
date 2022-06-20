@@ -3,6 +3,9 @@ DarkPlasma_BattleGuide:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/06/21
+      version: 1.2.0
+      description: 'ショートカットキーなし設定を追加'
     - date: 2022/05/16
       version: 1.1.0
       description: 'SceneGlossaryの説明文のみ引用する機能を追加'
@@ -57,8 +60,9 @@ DarkPlasma_BattleGuide:
       text:
         ja: 手引書を開くキー
       type: select
-      default: pageup
+      default: ''
       options:
+        - name: ''
         - name: pageup
         - name: pagedown
         - name: shift

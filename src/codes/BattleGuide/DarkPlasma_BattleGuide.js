@@ -380,8 +380,10 @@ class Window_BattleGuideText extends Window_Base {
 
 Window_ManualTextMixIn(Window_BattleGuideText.prototype);
 
-Window_CustomKeyHandlerMixIn(settings.key, Window_PartyCommand.prototype, 'guide');
-Window_CustomKeyHandlerMixIn(settings.key, Window_ActorCommand.prototype, 'guide');
+if (settings.key) {
+  Window_CustomKeyHandlerMixIn(settings.key, Window_PartyCommand.prototype, 'guide');
+  Window_CustomKeyHandlerMixIn(settings.key, Window_ActorCommand.prototype, 'guide');
+}
 
 /**
  * @param {Window_PartyCommand.prototype} windowClass
