@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.1.0
+// DarkPlasma_BattleGuide 1.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/06/21 1.2.0 ショートカットキーなし設定を追加
  * 2022/05/16 1.1.0 SceneGlossaryの説明文のみ引用する機能を追加
  *                  フォントサイズ設定を追加
  *                  左右キーでページめくり機能追加
@@ -56,12 +57,12 @@
  * @param key
  * @text 手引書を開くキー
  * @type select
+ * @option
  * @option pageup
  * @option pagedown
  * @option shift
  * @option control
  * @option tab
- * @default pageup
  *
  * @param addPartyCommand
  * @text パーティコマンドに追加する
@@ -74,7 +75,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
@@ -208,7 +209,7 @@
     listWidth: Number(pluginParameters.listWidth || 240),
     fontSize: Number(pluginParameters.fontSize || 22),
     showPageNumber: String(pluginParameters.showPageNumber || ''),
-    key: String(pluginParameters.key || 'pageup'),
+    key: String(pluginParameters.key || ''),
     addPartyCommand: String(pluginParameters.addPartyCommand || true) === 'true',
     partyCommandName: String(pluginParameters.partyCommandName || '手引書'),
   };
@@ -591,8 +592,10 @@
 
   Window_ManualTextMixIn(Window_BattleGuideText.prototype);
 
-  Window_CustomKeyHandlerMixIn(settings.key, Window_PartyCommand.prototype, 'guide');
-  Window_CustomKeyHandlerMixIn(settings.key, Window_ActorCommand.prototype, 'guide');
+  if (settings.key) {
+    Window_CustomKeyHandlerMixIn(settings.key, Window_PartyCommand.prototype, 'guide');
+    Window_CustomKeyHandlerMixIn(settings.key, Window_ActorCommand.prototype, 'guide');
+  }
 
   /**
    * @param {Window_PartyCommand.prototype} windowClass
