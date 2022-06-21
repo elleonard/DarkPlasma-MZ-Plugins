@@ -1,47 +1,244 @@
-const _DataManager_extractMetadata = DataManager.extractMetadata;
-DataManager.extractMetadata = function (data) {
-  _DataManager_extractMetadata.call(this, data);
-  if (data.meta.StateGroup) {
-    data.stateGroup = String(data.meta.StateGroup);
-    data.statePriority = Number(data.meta.StatePriority || 0);
+import { settings } from './_build/DarkPlasma_StateGroup_parameters';
+
+class StateAndPriority {
+  constructor(stateId, priority) {
+    this._stateId = stateId;
+    this._priority = priority;
   }
-};
 
-const _Game_Battler_addState = Game_Battler.prototype.addState;
-Game_Battler.prototype.addState = function (stateId) {
-  // 優先度の低い同グループステートにかかっている場合は上書きする
-  if (this.isLowPriorityStateGroupAffected(stateId)) {
-    this.eraseState(this.affectedSameGroupState(stateId).id);
+  /**
+   * @return {number}
+   */
+  get id() {
+    return this._stateId;
   }
-  _Game_Battler_addState.call(this, stateId);
-};
 
-const _Game_Battler_isStateAddable = Game_Battler.prototype.isStateAddable;
-Game_Battler.prototype.isStateAddable = function (stateId) {
-  // 優先度の高い同グループステートにかかっている場合はそのステートにかからない
-  return _Game_Battler_isStateAddable.call(this, stateId) && !this.isHighPriorityStateGroupAffected(stateId);
-};
+  /**
+   * @return {number}
+   */
+  get priority() {
+    return this._priority;
+  }
+
+  /**
+   * @param {number} priority
+   */
+  setPriority(priority) {
+    this._priority = priority;
+  }
+}
+
+class StateGroup {
+  constructor(name) {
+    this._name = name;
+    this._states = [];
+  }
+
+  /**
+   * @return {string}
+   */
+  get name() {
+    return this._name;
+  }
+
+  /**
+   * @return {StateAndPriority[]}
+   */
+  get states() {
+    return this._states;
+  }
+
+  /**
+   * @param {number} stateId
+   * @param {number} priority
+   */
+  addState(stateId, priority) {
+    if (this.priorityOf(stateId) === null) {
+      this.states.push(new StateAndPriority(stateId, priority));
+    } else {
+      // 設定済みの場合は上書きする
+      this.setPriorityOf(stateId, priority);
+    }
+  }
+
+  /**
+   * @param {number} stateId
+   * @return {boolean}
+   */
+  hasState(stateId) {
+    return this.states.some((state) => state.id === stateId);
+  }
+
+  /**
+   * @param {number} stateId
+   * @return {number[]}
+   */
+  higherOrEqualPriorityStateIds(stateId) {
+    const priority = this.priorityOf(stateId);
+    return priority === null ? [] : this.states.filter((state) => state.priority >= priority).map((state) => state.id);
+  }
+
+  /**
+   * @param {number} stateId
+   * @return {number[]}
+   */
+  lowerPriorityStateIds(stateId) {
+    const priority = this.priorityOf(stateId);
+    return priority === null ? [] : this.states.filter((state) => state.priority < priority).map((state) => state.id);
+  }
+
+  /**
+   * @param {number} stateId
+   * @return {number|null}
+   */
+  priorityOf(stateId) {
+    const targetState = this.states.find((state) => state.id === stateId);
+    return targetState ? targetState.priority : null;
+  }
+
+  /**
+   * @param {number} stateId
+   * @param {number} priority
+   */
+  setPriorityOf(stateId, priority) {
+    const targetState = this.states.find((state) => state.id === stateId);
+    if (!targetState) {
+      throw Error(`グループ ${this.name} にステート ${$dataStates[stateId].name} が存在しません。`);
+    }
+    targetState.setPriority(priority);
+  }
+}
+
+class StateGroupManager {
+  /**
+   * @return {StateGroup[]}
+   */
+  static initialStateGroup() {
+    return settings.groups.map((group) => {
+      const stateGroup = new StateGroup(group.name);
+      group.states.forEach(stateGroup.addState);
+      return stateGroup;
+    });
+  }
+
+  static newGroup(name) {
+    const result = new StateGroup(name);
+    $dataStateGroups.push(result);
+    return result;
+  }
+
+  /**
+   * @param {string} groupName
+   * @param {number} stateId
+   * @param {number} priority
+   */
+  static addStateToGroup(groupName, stateId, priority) {
+    const targetGroup = this.groupByName(groupName) || this.newGroup(groupName);
+    targetGroup.addState(stateId, priority);
+  }
+
+  /**
+   * @param {number} stateId
+   * @return {StateGroup[]}
+   */
+  static groupListByState(stateId) {
+    return $dataStateGroups.filter((group) => group.hasState(stateId));
+  }
+
+  /**
+   * @param {string} name
+   * @return {StateGroup}
+   */
+  static groupByName(name) {
+    return $dataStateGroups.find((group) => group.name === name);
+  }
+}
 
 /**
- * 同じグループに属する優先度の高いステートにかかっているかどうか
+ * @type {StateGroup[]}
  */
-Game_Battler.prototype.isHighPriorityStateGroupAffected = function (stateId) {
-  const sameGroupState = this.affectedSameGroupState(stateId);
-  return sameGroupState ? sameGroupState.statePriority > $dataStates[stateId].statePriority : false;
-};
+const $dataStateGroups = StateGroupManager.initialStateGroup();
 
 /**
- * 同じグループに属する優先度の低いステートにかかっているかどうか
+ * @param {typeof DataManager} dataManager
  */
-Game_Battler.prototype.isLowPriorityStateGroupAffected = function (stateId) {
-  const sameGroupState = this.affectedSameGroupState(stateId);
-  return sameGroupState ? sameGroupState.statePriority < $dataStates[stateId].statePriority : false;
-};
+function DataManager_StateGroupMixIn(dataManager) {
+  const _extractMetadata = dataManager.extractMetadata;
+  dataManager.extractMetadata = function (data) {
+    _extractMetadata.call(this, data);
+    if (this.isState(data)) {
+      if (data.meta.StateGroup) {
+        StateGroupManager.addStateToGroup(data.meta.StateGroup, data.id, Number(data.meta.StatePriority || 0));
+      }
+    }
+  };
+
+  dataManager.isState = function (data) {
+    return $dataStates && $dataStates.includes(data);
+  };
+}
+
+DataManager_StateGroupMixIn(DataManager);
 
 /**
- * かかっているステートの中で、同じグループに属するステートを取得する
- * @param {number} stateId
+ * @param {Game_Battler.prototype} gameBattler
  */
-Game_Battler.prototype.affectedSameGroupState = function (stateId) {
-  return this.states().find((activeState) => activeState.stateGroup === $dataStates[stateId].stateGroup);
-};
+function Game_Battler_StateGroupMixIn(gameBattler) {
+  const _addState = gameBattler.addState;
+  gameBattler.addState = function (stateId) {
+    /**
+     * 優先度の低い同グループステートにかかっている場合は上書き
+     */
+    const lowerPriorityStateIds = this.lowerPriorityStateIds(stateId);
+    lowerPriorityStateIds.forEach((lowerPriorityStateId) => this.eraseState(lowerPriorityStateId));
+    /**
+     * グループ上書き設定
+     */
+    if ($dataStates[stateId].meta.OverwriteStateGroup) {
+      const group = StateGroupManager.groupByName($dataStates[stateId].meta.OverwriteStateGroup);
+      this.states()
+        .filter((state) => state.id !== stateId && group.hasState(state.id))
+        .forEach((state) => this.eraseState(state.id));
+    }
+    _addState.call(this, stateId);
+  };
+
+  const _isStateAddable = gameBattler.isStateAddable;
+  gameBattler.isStateAddable = function (stateId) {
+    // 優先度の高いか同じ同グループステートにかかっている場合はそのステートにかからない
+    return _isStateAddable.call(this, stateId) && !this.isHigherOrEqualPriorityStateAffected(stateId);
+  };
+
+  /**
+   * 同じグループに属する優先度の高いステートにかかっているかどうか
+   */
+  gameBattler.isHigherOrEqualPriorityStateAffected = function (stateId) {
+    return StateGroupManager.groupListByState(stateId).some((group) => {
+      return group.higherOrEqualPriorityStateIds(stateId).some((id) => this.states().some((state) => state.id === id));
+    });
+  };
+
+  /**
+   * かかっているステートの中で、
+   * 指定したステートIDと同じグループに属する、優先度の低いステートID一覧を返す
+   * @param {number} stateId
+   * @return {number[]}
+   */
+  gameBattler.lowerPriorityStateIds = function (stateId) {
+    return StateGroupManager.groupListByState(stateId)
+      .map((group) => {
+        return group.lowerPriorityStateIds(stateId).filter((id) => this.states().some((state) => state.id === id));
+      })
+      .flat();
+  };
+
+  /**
+   * かかっているステートの中で、同じグループに属するステートを取得する
+   * @param {number} stateId
+   */
+  gameBattler.affectedSameGroupState = function (stateId) {
+    return this.states().find((activeState) => activeState.stateGroup === $dataStates[stateId].stateGroup);
+  };
+}
+
+Game_Battler_StateGroupMixIn(Game_Battler.prototype);
