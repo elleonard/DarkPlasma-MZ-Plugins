@@ -274,6 +274,14 @@ declare class Scene_MenuBase extends Scene_Base {
   public create(): void;
   public actor(): Game_Actor;
   public updateActor(): void;
+
+  public helpAreaTop(): number;
+  public helpAreaBottom(): number;
+  public helpAreaHeight(): number;
+  public mainAreaTop(): number;
+  public mainAreaBottom(): number;
+  public mainAreaHeight(): number;
+
   public createBackground(): void;
   public setBackgroundOpacity(opacity: number): void;
   public createHelpWindow(): void;
@@ -403,6 +411,14 @@ declare class Scene_Skill extends Scene_ItemBase {
   public createSkillTypeWindow(): void;
   public createStatusWindow(): void;
   public createItemWindow(): void;
+
+  public skillTypeWindowRect(): Rectangle;
+  public statusWindowRect(): Rectangle;
+  public itemWindowRect(): Rectangle;
+
+  public needsPageButons(): boolean;
+  public arePageButtonsEnabled(): boolean;
+
   public refreshActor(): void;
 
   public user(): Game_Actor;
