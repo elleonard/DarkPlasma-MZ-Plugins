@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>複数のピクチャを同時に消去する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/07/03/erase-pictures/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/07/03/erase-pictures/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>指定した範囲のIDのピクチャを同時に消去するプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="usage.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ErasePictures.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ピクチャ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>フキダシアイコンを15個を超えて増やす</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/06/19/extra-balloon/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/06/19/extra-balloon/</url>
