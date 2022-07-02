@@ -652,7 +652,7 @@
     enemyPercentLabel: String(pluginParameters.enemyPercentLabel || 'Enemy'),
     dropItemPercentLabel: String(pluginParameters.dropItemPercentLabel || 'Drop Item'),
     displayDropRate: String(pluginParameters.displayDropRate || false) === 'true',
-    dropRateFormat: String(pluginParameters.dropRateFormat || ''),
+    dropRateFormat: Number(pluginParameters.dropRateFormat || 0),
     elementIcons: JSON.parse(
       pluginParameters.elementIcons || '["0", "76", "64", "65", "66", "67", "68", "69", "70", "71"]'
     ).map((e) => {

@@ -208,7 +208,7 @@
     }),
     listWidth: Number(pluginParameters.listWidth || 240),
     fontSize: Number(pluginParameters.fontSize || 22),
-    showPageNumber: String(pluginParameters.showPageNumber || ''),
+    showPageNumber: Number(pluginParameters.showPageNumber || 0),
     key: String(pluginParameters.key || ''),
     addPartyCommand: String(pluginParameters.addPartyCommand || true) === 'true',
     partyCommandName: String(pluginParameters.partyCommandName || '手引書'),
