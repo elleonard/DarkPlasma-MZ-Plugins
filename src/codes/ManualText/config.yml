@@ -3,6 +3,9 @@ DarkPlasma_ManualText:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/07/02
+      version: 1.4.0
+      description: 'マニュアルの行間設定を追加'
     - date: 2022/04/24
       version: 1.3.0
       description: '公開'
@@ -21,7 +24,14 @@ DarkPlasma_ManualText:
     - ja
   plugindesc:
     ja: 'ウィンドウに操作説明を表示する'
-  parameters: []
+  parameters:
+    - param: linePadding
+      text:
+        ja: 行間
+      desc:
+        ja: マニュアルの行間を指定します。
+      type: number
+      default: 12
   commands: []
   structures:
   dependencies:

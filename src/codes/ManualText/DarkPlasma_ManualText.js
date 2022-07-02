@@ -1,3 +1,5 @@
+import { settings } from './_build/DarkPlasma_ManualText_parameters';
+
 /**
  * @param {Window_Base.prototype} windowClass
  */
@@ -27,7 +29,7 @@ function Window_ManualTextMixIn(windowClass) {
   };
 
   windowClass.manualOffsetY = function () {
-    return this._manualOffsetY || 0;
+    return this._manualOffsetY || -settings.linePadding;
   };
 
   windowClass.manualLineHeight = function () {
@@ -39,7 +41,7 @@ function Window_ManualTextMixIn(windowClass) {
   };
 
   windowClass.manualPadding = function () {
-    return this._manualPadding || this.padding;
+    return this._manualPadding || settings.linePadding;
   };
 
   windowClass.initManualTexts = function () {
