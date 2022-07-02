@@ -1,0 +1,38 @@
+DarkPlasma_ErasePictures:
+  name: DarkPlasma_ErasePictures
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/07/03
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '複数のピクチャを消去する'
+  parameters: []
+  commands:
+    - command: erasePictures
+      text:
+        ja: 指定範囲のピクチャを消去する
+      args:
+        - arg: start
+          text:
+            ja: 開始ID
+          type: number
+          default: 1
+          min: 1
+        - arg: end
+          text:
+            ja: 終了ID
+          type: number
+          default: 100
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      指定したIDの範囲のピクチャを消去するプラグインコマンドを提供します。
