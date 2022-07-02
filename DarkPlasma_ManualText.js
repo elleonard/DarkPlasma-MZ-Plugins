@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.3.0
+// DarkPlasma_ManualText 1.4.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/02 1.4.0 マニュアルの行間設定を追加
  * 2022/04/24 1.3.0 公開
  * 2022/03/14 1.2.0 マニュアル設定ごとにrefreshしないように修正
  *                  行間変更に対応
@@ -19,8 +20,14 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @param linePadding
+ * @desc マニュアルの行間を指定します。
+ * @text 行間
+ * @type number
+ * @default 12
+ *
  * @help
- * version: 1.3.0
+ * version: 1.4.0
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -80,6 +87,16 @@
 (() => {
   'use strict';
 
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
+
+  const pluginParameters = PluginManager.parameters(pluginName);
+
+  const settings = {
+    linePadding: Number(pluginParameters.linePadding || 12),
+  };
+
   /**
    * @param {Window_Base.prototype} windowClass
    */
@@ -109,7 +126,7 @@
     };
 
     windowClass.manualOffsetY = function () {
-      return this._manualOffsetY || 0;
+      return this._manualOffsetY || -settings.linePadding;
     };
 
     windowClass.manualLineHeight = function () {
@@ -121,7 +138,7 @@
     };
 
     windowClass.manualPadding = function () {
-      return this._manualPadding || this.padding;
+      return this._manualPadding || settings.linePadding;
     };
 
     windowClass.initManualTexts = function () {
