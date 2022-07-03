@@ -218,6 +218,10 @@ class Window_FusionShopCommand extends Window_ShopCommand {
     this.addCommand(settings.commandName, 'buy');
     this.addCommand(TextManager.cancel, 'cancel');
   }
+
+  maxCols() {
+    return 2;
+  }
 }
 
 class Window_FusionShopStatus extends Window_ShopStatus {
