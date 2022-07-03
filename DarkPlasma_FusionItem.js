@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.2.0
+// DarkPlasma_FusionItem 1.2.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/03 1.2.1 コマンドウィンドウのコマンド表示幅変更
  * 2022/04/22 1.2.0 条件カスタマイズ用にクラス定義をグローバルに公開
  * 2022/03/14 1.1.0 レイアウト用にクラス定義をグローバルに公開
  * 2022/03/13 1.0.0 公開
@@ -42,7 +43,7 @@
  * @type number[]
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -581,6 +582,10 @@
     makeCommandList() {
       this.addCommand(settings.commandName, 'buy');
       this.addCommand(TextManager.cancel, 'cancel');
+    }
+
+    maxCols() {
+      return 2;
     }
   }
 
