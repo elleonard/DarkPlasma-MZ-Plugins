@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/07/09
+      version: 4.2.0
+      description: 'レイアウト調整用にウィンドウクラスをグローバルに公開'
     - date: 2022/05/14
       version: 4.1.2
       description: 'リファクタ'

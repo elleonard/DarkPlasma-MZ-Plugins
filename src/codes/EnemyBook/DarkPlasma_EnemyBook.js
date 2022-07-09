@@ -363,6 +363,8 @@ class Window_EnemyBookPercent extends Window_LabelAndValueTexts {
   }
 }
 
+globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
+
 /**
  * エネミー図鑑目次
  */
@@ -540,7 +542,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
 Window_EnemyBookIndex.lastTopRow = 0;
 Window_EnemyBookIndex.lastIndex = 0;
 
-window.Window_EnemyBookIndex = Window_EnemyBookIndex;
+globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
 
 /**
  * 図鑑ステータスウィンドウ
@@ -987,7 +989,7 @@ class Window_EnemyBookStatus extends Window_Base {
   }
 }
 
-window[Window_EnemyBookStatus.name] = Window_EnemyBookStatus;
+globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
 
 const _Game_System_initialize = Game_System.prototype.initialize;
 Game_System.prototype.initialize = function () {
