@@ -1,0 +1,68 @@
+DarkPlasma_AreaEvent:
+  name: DarkPlasma_AreaEvent
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/07/10
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'イベントの当たり判定 起動判定マスを拡張する'
+  parameters: []
+  commands:
+    - command: registerArea
+      text:
+        ja: エリア設定
+      desc:
+        ja: このコマンドを置いたページの当たり判定を拡張します。
+      args:
+        - arg: width
+          text:
+            ja: 横幅
+          type: number
+          default: 1
+          min: 1
+        - arg: height
+          text:
+            ja: 縦幅
+          type: number
+          default: 1
+          min: 1
+        - arg: origin
+          text:
+            ja: 原点
+          desc:
+            ja: エディタ上で設定するイベントの位置を範囲のどこにおくかを設定します。
+          type: select
+          options:
+            - name: 左上
+              value: 7
+            - name: 中央上
+              value: 8
+            - name: 右上
+              value: 9
+            - name: 左
+              value: 4
+            - name: 中央
+              value: 5
+            - name: 右
+              value: 6
+            - name: 左下
+              value: 1
+            - name: 中央下
+              value: 2
+            - name: 右下
+              value: 3
+          default: 7
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      <areaEvent>メタタグのついたイベントの当たり判定 起動判定マスを拡張します。
+      範囲はページの先頭でプラグインコマンドによって設定します。
