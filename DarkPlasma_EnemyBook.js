@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.1.2
+// DarkPlasma_EnemyBook 4.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/09 4.2.0 レイアウト調整用にウィンドウクラスをグローバルに公開
  * 2022/05/14 4.1.2 リファクタ
  * 2022/04/25 4.1.1 リファクタ
  *                  図鑑ウィンドウレイヤーの位置調整
@@ -211,7 +212,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.1.2
+ * version: 4.2.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -470,7 +471,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.1.2
+ * version: 4.2.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1189,6 +1190,8 @@
     }
   }
 
+  globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
+
   /**
    * エネミー図鑑目次
    */
@@ -1366,7 +1369,7 @@
   Window_EnemyBookIndex.lastTopRow = 0;
   Window_EnemyBookIndex.lastIndex = 0;
 
-  window.Window_EnemyBookIndex = Window_EnemyBookIndex;
+  globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
 
   /**
    * 図鑑ステータスウィンドウ
@@ -1813,7 +1816,7 @@
     }
   }
 
-  window[Window_EnemyBookStatus.name] = Window_EnemyBookStatus;
+  globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
 
   const _Game_System_initialize = Game_System.prototype.initialize;
   Game_System.prototype.initialize = function () {
