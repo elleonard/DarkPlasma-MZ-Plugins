@@ -1,3 +1,4 @@
 import { pluginName } from './pluginName';
+import { pluginParametersOf } from './pluginParametersOf';
 
-export const pluginParameters = PluginManager.parameters(pluginName);
+export const pluginParameters = pluginParametersOf(pluginName);
