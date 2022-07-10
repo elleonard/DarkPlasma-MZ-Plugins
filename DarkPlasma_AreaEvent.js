@@ -1,9 +1,10 @@
-// DarkPlasma_AreaEvent 1.0.0
+// DarkPlasma_AreaEvent 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/11 1.0.1 原点設定が正しくない不具合を修正
  * 2022/07/10 1.0.0 公開
  */
 
@@ -53,7 +54,7 @@
  * @default 7
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * <areaEvent>メタタグのついたイベントの当たり判定 起動判定マスを拡張します。
  * 範囲はページの先頭でプラグインコマンドによって設定します。
  */
@@ -117,19 +118,19 @@
     rectangle(eventX, eventY) {
       const x = (() => {
         if (this._originType % 3 === 1) {
-          return eventX - Math.floor(this._width / 2);
-        } else if (this._originType % 3 === 2) {
           return eventX;
+        } else if (this._originType % 3 === 2) {
+          return eventX - Math.floor(this._width / 2);
         }
         return eventX + Math.floor(this._width / 2);
       })();
       const y = (() => {
         if (this._originType > 6) {
-          return eventY - Math.floor(this._height / 2);
+          return eventY;
         } else if (this._originType < 4) {
           return eventY + Math.floor(this._height / 2);
         }
-        return eventY;
+        return eventY - Math.floor(this._height / 2);
       })();
       return new Rectangle(x, y, this._width, this._height);
     }
