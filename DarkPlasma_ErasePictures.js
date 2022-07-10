@@ -41,15 +41,15 @@
 
   function parseArgs_erasePictures(args) {
     return {
-      start: Number(args.start || 1),
-      end: Number(args.end || 100),
+      start: Number(undefined.start || 1),
+      end: Number(undefined.end || 100),
     };
   }
 
   const command_erasePictures = 'erasePictures';
 
   PluginManager.registerCommand(pluginName, command_erasePictures, function (args) {
-    const parsedArgs = parseArgs_erasePictures(args);
+    const parsedArgs = parseArgs_erasePictures();
     $gameScreen.erasePictures(parsedArgs.start, parsedArgs.end);
   });
 

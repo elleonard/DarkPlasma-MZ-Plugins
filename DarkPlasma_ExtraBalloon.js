@@ -105,10 +105,10 @@
 
   function parseArgs_showBalloon(args) {
     return {
-      id: Number(args.id || 1),
-      targetType: String(args.targetType || 'player'),
-      targetEventId: Number(args.targetEventId || 1),
-      wait: String(args.wait || false) === 'true',
+      id: Number(undefined.id || 1),
+      targetType: String(undefined.targetType || 'player'),
+      targetEventId: Number(undefined.targetEventId || 1),
+      wait: String(undefined.wait || false) === 'true',
     };
   }
 
@@ -145,7 +145,7 @@
   const NAMED_EXTRA_BALLOON_PLUGIN = 'DarkPlasma_NamedExtraBalloon';
 
   PluginManager.registerCommand(pluginName, command_showBalloon, function (args) {
-    const parsedArgs = parseArgs_showBalloon(args);
+    const parsedArgs = parseArgs_showBalloon();
     const target = (() => {
       switch (parsedArgs.targetType) {
         case TARGET_TYPE.PLAYER:
