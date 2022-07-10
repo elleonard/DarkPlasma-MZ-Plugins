@@ -1,12 +1,13 @@
 const { PluginParameter } = require('./generateHeader');
+const SYMBOL_TYPE = require('./parameterSymbolType');
 
-function generateParser(config, parameter, forTest) {
+function generateParser(config, parameter, symbolType) {
   let parser = 'TODO';
   switch (parameter.type) {
     case 'string':
     case 'multiline_string':
     case 'file':
-      parser = stringParser(parameter, forTest);
+      parser = stringParser(parameter, symbolType);
       break;
     case 'number':
     case 'actor':
@@ -21,44 +22,44 @@ function generateParser(config, parameter, forTest) {
     case 'switch':
     case 'variable':
     case 'common_event':
-      parser = numberParser(parameter, forTest);
+      parser = numberParser(parameter, symbolType);
       break;
     case 'boolean':
-      parser = booleanParser(parameter, forTest);
+      parser = booleanParser(parameter, symbolType);
       break;
     case 'select':
       if (parameter.options[0].value !== undefined && Number.isFinite(parameter.options[0].value)) {
-        parser = numberParser(parameter, forTest);
+        parser = numberParser(parameter, symbolType);
       } else {
-        parser = stringParser(parameter, forTest);
+        parser = stringParser(parameter, symbolType);
       }
       break;
     default:
       // structure or array
       if (parameter.type.endsWith('[]')) {
-        parser = arrayParser(config, parameter, forTest);
+        parser = arrayParser(config, parameter, symbolType);
         break;
       }
-      parser = structParser(config, parameter, forTest);
+      parser = structParser(config, parameter, symbolType);
       break;
   }
   return parser;
 }
 
-function stringParser(parameter, forTest) {
+function stringParser(parameter, symbolType) {
   const default_ = parameter.default ? (parameter.default.ja ? parameter.default.ja : parameter.default) : '';
-  return `String(${parameterSymbol(parameter, forTest)} || '${default_}')`;
+  return `String(${parameterSymbol(parameter, symbolType)} || '${default_}')`;
 }
 
-function numberParser(parameter, forTest) {
-  return `Number(${parameterSymbol(parameter, forTest)} || ${parameter.default ? parameter.default : 0})`;
+function numberParser(parameter, symbolType) {
+  return `Number(${parameterSymbol(parameter, symbolType)} || ${parameter.default ? parameter.default : 0})`;
 }
 
-function booleanParser(parameter, forTest) {
-  return `String(${parameterSymbol(parameter, forTest)} || ${parameter.default}) === 'true'`;
+function booleanParser(parameter, symbolType) {
+  return `String(${parameterSymbol(parameter, symbolType)} || ${parameter.default}) === 'true'`;
 }
 
-function arrayParser(config, parameter, forTest) {
+function arrayParser(config, parameter, symbolType) {
   const parameterObject = new PluginParameter(parameter);
   const subParameter = {
     type: parameterObject.baseType(),
@@ -68,12 +69,12 @@ function arrayParser(config, parameter, forTest) {
     subParameter.options = parameter.options;
   }
   const default_ = parameter.default ? parameterObject.defaultText('ja', true).replace(/\\/g, '') : '[]';
-  return `JSON.parse(${parameterSymbol(parameter, forTest)} || '${default_}').map(${subParameter.symbol} => {
-    return ${generateParser(config, subParameter, forTest)};
+  return `JSON.parse(${parameterSymbol(parameter, symbolType)} || '${default_}').map(${subParameter.symbol} => {
+    return ${generateParser(config, subParameter, symbolType)};
   })`;
 }
 
-function structParser(config, parameter, forTest) {
+function structParser(config, parameter, symbolType) {
   const structure = config.structures[parameter.type];
   if (!structure) throw `unknown structure: ${parameter.type}`;
   const parameterObject = new PluginParameter(parameter);
@@ -84,14 +85,14 @@ function structParser(config, parameter, forTest) {
       ${structure
         .map((subParameter) => {
           subParameter.symbol = `parsed.${subParameter.param}`;
-          return `${subParameter.param}: ${generateParser(config, subParameter, forTest)}`;
+          return `${subParameter.param}: ${generateParser(config, subParameter, symbolType)}`;
         })
         .join(',\n')}};
-  })(${parameterSymbol(parameter, forTest)} || '${default_}')`;
+  })(${parameterSymbol(parameter, symbolType)} || '${default_}')`;
 }
 
-function parameterSymbol(parameter, forTest) {
-  const objectName = parameter.arg ? `args` : forTest ? `testPluginParameters` : `pluginParameters`;
+function parameterSymbol(parameter, symbolType) {
+  const objectName = symbolType;
   return parameter.symbol ? parameter.symbol : `${objectName}.${parameter.param || parameter.arg}`;
 }
 

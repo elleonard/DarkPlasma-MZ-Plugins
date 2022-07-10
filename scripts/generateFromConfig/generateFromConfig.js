@@ -3,7 +3,7 @@ const path = require('path');
 const YAML = require('yaml');
 const mkdirp = require('mkdirp');
 const { generateHeader } = require('./generateHeader');
-const { generateParameterReader } = require('./generateParameterReader');
+const { generateParameterReader, generateParameterReaderFunction } = require('./generateParameterReader');
 const { generatePluginCommand } = require('./generatePluginCommand');
 
 async function generateFromConfig(file) {
@@ -17,6 +17,8 @@ async function generateFromConfig(file) {
     if (!key.endsWith('_Test')) {
       const parameterReader = await generateParameterReader(currentConfig);
       fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
+      const parameterReaderFunction = await generateParameterReaderFunction(currentConfig);
+      fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
       const pluginCommands = await generatePluginCommand(currentConfig);
       fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
       /**
