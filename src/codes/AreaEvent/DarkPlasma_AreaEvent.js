@@ -43,19 +43,19 @@ class Game_EventArea {
   rectangle(eventX, eventY) {
     const x = (() => {
       if (this._originType % 3 === 1) {
-        return eventX - Math.floor(this._width / 2);
-      } else if (this._originType % 3 === 2) {
         return eventX;
+      } else if (this._originType % 3 === 2) {
+        return eventX - Math.floor(this._width / 2);
       }
       return eventX + Math.floor(this._width / 2);
     })();
     const y = (() => {
       if (this._originType > 6) {
-        return eventY - Math.floor(this._height / 2);
+        return eventY;
       } else if (this._originType < 4) {
         return eventY + Math.floor(this._height / 2);
       }
-      return eventY;
+      return eventY - Math.floor(this._height / 2);
     })();
     return new Rectangle(x, y, this._width, this._height);
   }
