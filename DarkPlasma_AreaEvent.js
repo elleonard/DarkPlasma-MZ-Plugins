@@ -67,9 +67,9 @@
 
   function parseArgs_registerArea(args) {
     return {
-      width: Number(undefined.width || 1),
-      height: Number(undefined.height || 1),
-      origin: Number(undefined.origin || 7),
+      width: Number(args.width || 1),
+      height: Number(args.height || 1),
+      origin: Number(args.origin || 7),
     };
   }
 

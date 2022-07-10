@@ -188,7 +188,7 @@
 
   function parseArgs_fusionShop(args) {
     return {
-      presetIds: JSON.parse(undefined.presetIds || '[]').map((e) => {
+      presetIds: JSON.parse(args.presetIds || '[]').map((e) => {
         return Number(e || 0);
       }),
     };
@@ -393,7 +393,7 @@
   }
 
   PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
-    const parsedArgs = parseArgs_fusionShop();
+    const parsedArgs = parseArgs_fusionShop(args);
     const goods = parsedArgs.presetIds
       .map((presetId) => {
         const preset = settings.presets.find((preset) => preset.id === presetId);
