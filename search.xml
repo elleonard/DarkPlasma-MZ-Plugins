@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>イベントのページごとに当たり判定を拡張する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/07/11/area-event/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/07/11/area-event/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>イベントのページごとに当たり判定を矩形で拡張します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"><br>対象キャラクターを中心に5x5マスの矩形となるよう、当たり判定を拡張する設定です。</p><p><img src="area-event.png" alt="使用例" title="使用例"></p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><h2 id="NUUN-EventRange-js"><a href="#NUUN-EventRange-js" class="headerlink" title="NUUN_EventRange.js"></a><a href="https://github.com/nuun888/MZ/blob/master/README/EventRange.md">NUUN_EventRange.js</a></h2><p>メモ欄のみで指定するためページごとに範囲を変えることができません。<br>矩形のみでなく、ひし形や円形、三角形に近似した範囲を設定できます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AreaEvent.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> イベント </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>複数のピクチャを同時に消去する</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/07/03/erase-pictures/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/07/03/erase-pictures/</url>
