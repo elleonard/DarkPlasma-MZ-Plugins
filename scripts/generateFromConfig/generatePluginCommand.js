@@ -1,7 +1,7 @@
 const path = require('path');
 const prettier = require('prettier');
 const { generateParser } = require('./generateParser');
-const SYMBOL_TYPE = require('./parameterSymbolType');
+const { SYMBOL_TYPE } = require('./parameterSymbolType');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 function generatePluginCommand(config) {

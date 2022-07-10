@@ -1,5 +1,4 @@
 const { PluginParameter } = require('./generateHeader');
-const SYMBOL_TYPE = require('./parameterSymbolType');
 
 function generateParser(config, parameter, symbolType) {
   let parser = 'TODO';
