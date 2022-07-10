@@ -126,7 +126,9 @@
     return arguments[1];
   });
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     extraParamNameCritical: String(pluginParameters.extraParamNameCritical || '会心率'),

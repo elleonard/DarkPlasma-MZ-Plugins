@@ -119,7 +119,9 @@
     return arguments[1];
   });
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     stateOnBattleStart: JSON.parse(pluginParameters.stateOnBattleStart || '[]').map((e) => {

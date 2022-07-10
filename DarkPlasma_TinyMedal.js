@@ -180,7 +180,9 @@
 
   const command_processTinyMedal = 'processTinyMedal';
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     medalItem: Number(pluginParameters.medalItem || 1),

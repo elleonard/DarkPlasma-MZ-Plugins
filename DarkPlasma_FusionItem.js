@@ -196,7 +196,9 @@
 
   const command_fusionShop = 'fusionShop';
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     presets: JSON.parse(pluginParameters.presets || '[]').map((e) => {

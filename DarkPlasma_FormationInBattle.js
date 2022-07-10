@@ -80,7 +80,9 @@
     return arguments[1];
   });
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     cooldownTurnCount: Number(pluginParameters.cooldownTurnCount || 0),

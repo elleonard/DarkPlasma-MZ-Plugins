@@ -114,7 +114,9 @@
 
   const command_showBalloon = 'showBalloon';
 
-  const pluginParameters = PluginManager.parameters(pluginName);
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
     ballonIdRangeList: JSON.parse(
