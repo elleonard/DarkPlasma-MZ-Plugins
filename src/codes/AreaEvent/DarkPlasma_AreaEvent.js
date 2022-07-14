@@ -89,8 +89,12 @@ function Game_Event_AreaEventMixIn(gameEvent) {
           command.parameters.includes(pluginName) &&
           command.parameters.includes(command_registerArea)
       );
-      const args = parseArgs_registerArea(command.parameters[3]);
-      this._area = new Game_EventArea(args.width, args.height, args.origin);
+      if (command) {
+        const args = parseArgs_registerArea(command.parameters[3]);
+        this._area = new Game_EventArea(args.width, args.height, args.origin);
+      } else {
+        this._area = Game_EventArea.default();
+      }
     } else {
       this._area = Game_EventArea.default();
     }
