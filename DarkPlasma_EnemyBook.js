@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.2.0
+// DarkPlasma_EnemyBook 4.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/16 4.3.0 ウィンドウ操作用にインターフェースを公開
  * 2022/07/09 4.2.0 レイアウト調整用にウィンドウクラスをグローバルに公開
  * 2022/05/14 4.1.2 リファクタ
  * 2022/04/25 4.1.1 リファクタ
@@ -212,7 +213,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.2.0
+ * version: 4.3.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -471,7 +472,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.2.0
+ * version: 4.3.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -1177,6 +1178,10 @@
 
     get statusWindow() {
       return this._statusWindow;
+    }
+
+    get percentWindow() {
+      return this._percentWindow;
     }
   }
 
