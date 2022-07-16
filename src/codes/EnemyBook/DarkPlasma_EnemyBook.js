@@ -349,6 +349,10 @@ class EnemyBookWindows {
   get statusWindow() {
     return this._statusWindow;
   }
+
+  get percentWindow() {
+    return this._percentWindow;
+  }
 }
 
 /**
