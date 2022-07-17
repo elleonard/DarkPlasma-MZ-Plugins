@@ -580,6 +580,7 @@ declare class Window_SkillList extends Window_Selectable {
   public item(): MZ.Skill | null;
   public isCurrentItemEnabled(): boolean;
 
+  public itemAt(index: number): MZ.Skill | null;
   public includes(item: MZ.Skill | null): boolean;
   public isEnabled(item: MZ.Skill): void;
 

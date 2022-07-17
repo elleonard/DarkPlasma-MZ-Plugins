@@ -1,0 +1,47 @@
+DarkPlasma_AllocateUniqueEffectCode:
+  name: DarkPlasma_AllocateUniqueEffectCode
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/07/17
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '独自の効果コードを確保する'
+  parameters:
+    - param: startOfUniqueEffectCode
+      text:
+        ja: 独自効果コード始点
+      desc:
+        ja: 独自に効果コードを確保する際の始点。わからない場合はそのままにしてください
+      type: number
+      default: 51
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      特徴の効果コードを確保し、利用できるようにします。
+
+      本プラグインは単体では機能しません。
+      本プラグインを必要とする別のプラグインと一緒に利用してください。
+
+      uniqueEffectCodeCache オブジェクトに対してリクエストを投げてください。
+
+      uniqueEffectCodeCache.allocate
+        : (pluginName: string, localId: number) => UniqueEffectCode
+        プラグインで独自の効果コードを確保します。
+
+      uniqueEffectCodeCache.effectCodeOf
+        : (pluginName: string, localId: number) => number|undefined
+        確保した効果コード
+        確保していない場合はundefined
+
+      UniqueEffectCode.prototype.code: number
+        確保した効果コード
