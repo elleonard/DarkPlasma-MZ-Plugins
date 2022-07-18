@@ -473,7 +473,10 @@ declare class Scene_Equip extends Scene_MenuBase {
 declare class Scene_Status extends Scene_MenuBase {
   public constructor();
 
+  public _profileWindow: Window_Help;
   public _statusWindow: Window_Status;
+  public _statusParamsWindow: Window_StatusParams;
+  public _statusEquipWindow: Window_StatusEquip;
 
   public initialize(...args: any[]): void;
 

@@ -701,7 +701,34 @@ declare class Window_EquipItem extends Window_ItemList {
 /**
  * The window for displaying full status on the status screen.
  */
-declare class Window_Status extends Window_Selectable {
+declare class Window_StatusBase extends Window_Selectable {
+  public constructor();
+
+  public _additionalSprites: any;
+
+  public loadFaceImages(): void;
+  public refresh(): void;
+  public hideAdditionalSprites(): void;
+  public placeActorName(actor: Game_Actor, x: number, y: number): void;
+  public placeStateIcon(actor: Game_Actor, x: number, y: number): void;
+  public placeGauge(actor: Game_Actor, type: string, x: number, y: number): void;
+  public createInnerSprite(key: string, spriteClass: typeof Sprite): Sprite;
+  public placeTimeGauge(actor: Game_Actor, x: number, y: number): void;
+  public placeBasicGauges(actor: Game_Actor, x: number, y: number): void;
+  public gaugeLineHeight(): number;
+  
+  public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
+  public drawActorFace(actor: Game_Actor, x: number, y: number, width: number, height: number): void;
+  public drawActorName(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorClass(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorNickname(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
+  public drawActorIcons(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorSimpleStatus(actor: Game_Actor, x: number, y: number): void;
+  public actorSlotName(actor: Game_Actor, index: number): string;
+}
+
+declare class Window_Status extends Window_StatusBase {
   public constructor();
 
   public _actor: Game_Actor | null | undefined;
@@ -711,18 +738,42 @@ declare class Window_Status extends Window_Selectable {
   public setActor(actor: Game_Actor | null): void;
 
   public refresh(): void;
+
   public drawBlock1(y: number): void;
+  public block1Y(): number;
+
   public drawBlock2(y: number): void;
-  public drawBlock3(y: number): void;
-  public drawBlock4(y: number): void;
-  public drawHorzLine(y: number): void;
-  public lineColor(): string;
+  public block2Y(): number;
+
   public drawBasicInfo(x: number, y: number): void;
-  public drawParameters(x: number, y: number): void;
   public drawExpInfo(x: number, y: number): void;
-  public drawEquipments(x: number, y: number): void;
-  public drawProfile(x: number, y: number): void;
-  public maxEquipmentLines(): number;
+  public expTotalValue(): string | number;
+  public expNextValue(): string | number;
+}
+
+declare class Window_StatusParams extends Window_StatusBase {
+  public constructor();
+  public _actor: Game_Actor;
+
+  public initialize(rect: Rectangle): void;
+
+  public setActor(actor: Game_Actor): void;
+  public maxItems(): number;
+  public itemHeight(): number;
+  public drawItem(index: number): void;
+  public drawItemBackground(index: number): void;
+}
+
+declare class Window_StatusEquip extends Window_StatusBase {
+  public constructor();
+  public _actor: Game_Actor;
+
+  public initialize(rect: Rectangle): void;
+  public setActor(actor: Game_Actor): void;
+  public maxItems(): number;
+  public itemHeight(): number;
+  public drawItem(index: number): void;
+  public drawItemBackground(index: number): void;
 }
 
 //-----------------------------------------------------------------------------
