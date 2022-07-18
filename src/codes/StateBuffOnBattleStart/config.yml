@@ -4,7 +4,10 @@ DarkPlasma_StateBuffOnBattleStart:
   license: MIT
   histories:
     - date: 2022/07/18
-      version: 2.0.3
+      version: 3.0.0
+      description: 'スキルをメモタグの対象外に変更 ステートをメモタグの対象に変更'
+    - description: 'ランダム設定を追加'
+    - version: 2.0.3
       description: 'リファクタ'
     - date: 2021/07/05
       version: 2.0.2
@@ -22,7 +25,7 @@ DarkPlasma_StateBuffOnBattleStart:
   locates:
     - ja
   plugindesc:
-    ja: '戦闘開始時にステート/バフにかかる'
+    ja: '戦闘開始時にステート/強化/弱体にかかる'
   parameters:
     - param: stateOnBattleStart
       text:
@@ -31,7 +34,7 @@ DarkPlasma_StateBuffOnBattleStart:
       default: []
     - param: buffOnBattleStart
       text:
-        ja: 戦闘開始時バフ
+        ja: 戦闘開始時強化・弱体
       type: BuffOnBattleStart[]
       default: []
   commands: []
@@ -56,6 +59,7 @@ DarkPlasma_StateBuffOnBattleStart:
           ja: 持続ターン
         type: number
         default: -1
+        min: -1
     BuffOnBattleStart:
       - param: id
         desc:
@@ -66,7 +70,7 @@ DarkPlasma_StateBuffOnBattleStart:
         default: 0
       - param: paramId
         desc:
-          ja: バフデバフ対象パラメータ
+          ja: 強化・弱体の対象パラメータ
         text:
           ja: 対象パラメータ
         type: select
@@ -90,16 +94,16 @@ DarkPlasma_StateBuffOnBattleStart:
         default: 0
       - param: buffStep
         text:
-          ja: バフデバフ段階
+          ja: 強化・弱体段階
         type: select
         options:
           - name: 2段階強化
             value: 2
           - name: 1段階強化
             value: 1
-          - name: 1段階弱化
+          - name: 1段階弱体
             value: -1
-          - name: 2段階弱化
+          - name: 2段階弱体
             value: -2
         default: 1
       - param: turn
@@ -109,19 +113,28 @@ DarkPlasma_StateBuffOnBattleStart:
         default: 3
   help:
     ja: |
-      持続ターン数を上書き指定できるようにする
-
-      任意のアクター、職業、スキル、装備、敵キャラのメモ欄に以下のように記述してください。
+      任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
+      指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかります。
 
       アクター: そのアクターであれば自身に
       職業: その職業であれば自身に
-      スキル: そのスキルを習得していれば自身に
       装備: その武器/防具を装備していれば自身に
+      ステート: 戦闘開始時にすでにステートにかかっていれば自身に
 
-      敵キャラ: そのエネミーであれば自身に（敵キャラにステートやバフがかかる）
+      敵キャラ: そのエネミーであれば自身に（敵キャラにステート、強化、弱体がかかる）
 
       <StateOnBattleStartId: id1, id2, id3, ...>
       戦闘開始時にステートにかかる
+      IDはプラグインパラメータで設定したもの
+
+      <StateOnBattleStartRandom>
+      StateOnBattleStartIdメモタグで指定したIDの中から
+      ランダムに1つ選択してかかる
 
       <BuffOnBattleStartId: id1, id2, id3, ...>
-      戦闘開始時にバフにかかる
+      戦闘開始時に強化・弱体にかかる
+      IDはプラグインパラメータで設定したもの
+
+      <BuffOnBattleStartRandom>
+      BuffOnBattleStartIdメモタグで指定したIDの中から
+      ランダムに1つ選択してかかる
