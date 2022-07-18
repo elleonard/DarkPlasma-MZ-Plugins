@@ -1,10 +1,12 @@
-// DarkPlasma_StateBuffOnBattleStart 2.0.3
+// DarkPlasma_StateBuffOnBattleStart 3.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/07/18 2.0.3 リファクタ
+ * 2022/07/18 3.0.0 スキルをメモタグの対象外に変更 ステートをメモタグの対象に変更
+ *                  ランダム設定を追加
+ *            2.0.3 リファクタ
  * 2021/07/05 2.0.2 MZ 1.3.2に対応
  * 2021/06/22 2.0.1 サブフォルダからの読み込みに対応
  * 2020/09/08 2.0.0 パラメータ名を変更
@@ -12,7 +14,7 @@
  */
 
 /*:ja
- * @plugindesc 戦闘開始時にステート/バフにかかる
+ * @plugindesc 戦闘開始時にステート/強化/弱体にかかる
  * @author DarkPlasma
  * @license MIT
  *
@@ -25,28 +27,37 @@
  * @default []
  *
  * @param buffOnBattleStart
- * @text 戦闘開始時バフ
+ * @text 戦闘開始時強化・弱体
  * @type struct<BuffOnBattleStart>[]
  * @default []
  *
  * @help
- * version: 2.0.3
- * 持続ターン数を上書き指定できるようにする
- *
- * 任意のアクター、職業、スキル、装備、敵キャラのメモ欄に以下のように記述してください。
+ * version: 3.0.0
+ * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
+ * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかります。
  *
  * アクター: そのアクターであれば自身に
  * 職業: その職業であれば自身に
- * スキル: そのスキルを習得していれば自身に
  * 装備: その武器/防具を装備していれば自身に
+ * ステート: 戦闘開始時にすでにステートにかかっていれば自身に
  *
- * 敵キャラ: そのエネミーであれば自身に（敵キャラにステートやバフがかかる）
+ * 敵キャラ: そのエネミーであれば自身に（敵キャラにステート、強化、弱体がかかる）
  *
  * <StateOnBattleStartId: id1, id2, id3, ...>
  * 戦闘開始時にステートにかかる
+ * IDはプラグインパラメータで設定したもの
+ *
+ * <StateOnBattleStartRandom>
+ * StateOnBattleStartIdメモタグで指定したIDの中から
+ * ランダムに1つ選択してかかる
  *
  * <BuffOnBattleStartId: id1, id2, id3, ...>
- * 戦闘開始時にバフにかかる
+ * 戦闘開始時に強化・弱体にかかる
+ * IDはプラグインパラメータで設定したもの
+ *
+ * <BuffOnBattleStartRandom>
+ * BuffOnBattleStartIdメモタグで指定したIDの中から
+ * ランダムに1つ選択してかかる
  */
 /*~struct~StateOnBattleStart:
  * @param id
@@ -65,6 +76,7 @@
  * @text 持続ターン
  * @type number
  * @default -1
+ * @min -1
  */
 /*~struct~BuffOnBattleStart:
  * @param id
@@ -74,7 +86,7 @@
  * @default 0
  *
  * @param paramId
- * @desc バフデバフ対象パラメータ
+ * @desc 強化・弱体の対象パラメータ
  * @text 対象パラメータ
  * @type select
  * @option 最大HP
@@ -96,15 +108,15 @@
  * @default 0
  *
  * @param buffStep
- * @text バフデバフ段階
+ * @text 強化・弱体段階
  * @type select
  * @option 2段階強化
  * @value 2
  * @option 1段階強化
  * @value 1
- * @option 1段階弱化
+ * @option 1段階弱体
  * @value -1
- * @option 2段階弱化
+ * @option 2段階弱体
  * @value -2
  * @default 1
  *
@@ -264,48 +276,52 @@
     const _extractMetadata = dataManager.extractMetadata;
     dataManager.extractMetadata = function (data) {
       _extractMetadata.call(this, data);
-      if (this.isActor(data) || this.isSkill(data) || this.isWeapon(data) || this.isArmor(data) || this.isEnemy(data)) {
-        if (data.meta.StateOnBattleStartId) {
-          data.stateOnBattleStartIds = data.meta.StateOnBattleStartId.split(',').map((id) => Number(id));
-        }
-        if (data.meta.BuffOnBattleStartId) {
-          data.buffOnBattleStartIds = data.meta.BuffOnBattleStartId.split(',').map((id) => Number(id));
-        }
+      if (data.meta.StateOnBattleStartId) {
+        data.stateOnBattleStartIds = data.meta.StateOnBattleStartId.split(',').map((id) => Number(id));
+      }
+      if (data.meta.BuffOnBattleStartId) {
+        data.buffOnBattleStartIds = data.meta.BuffOnBattleStartId.split(',').map((id) => Number(id));
       }
     };
 
-    dataManager.isEnemy = function (data) {
-      return $dataEnemies && data && data.id && $dataEnemies.length > data.id && data === $dataEnemies[data.id];
+    /**
+     * 対象オブジェクトの戦闘開始時ステート設定ID一覧
+     * @param {MZ.Actor|MZ.Class|MZ.Skill|MZ.Weapon|MZ.Armor|MZ.Enemy} data
+     * @return {number[]}
+     */
+    dataManager.stateOnBattleStartIds = function (data) {
+      if (!data || !data.stateOnBattleStartIds) {
+        return [];
+      }
+      return data.meta.StateOnBattleStartRandom
+        ? [data.stateOnBattleStartIds[Math.randomInt(data.stateOnBattleStartIds.length)]]
+        : data.stateOnBattleStartIds;
     };
 
-    const _isSkill = dataManager.isSkill;
-    dataManager.isSkill = function (data) {
-      return $dataSkills && _isSkill.call(this, data);
-    };
+    /**
+     * 対象オブジェクトの戦闘開始時強化・弱体設定ID一覧
+     * @param {MZ.Actor|MZ.Class|MZ.Skill|MZ.Weapon|MZ.Armor|MZ.Enemy} data
+     * @return {number[]}
+     */
+    dataManager.buffOnBattleStartIds = function (data) {
+      if (!data || !data.buffOnBattleStartIds) {
+        return [];
+      }
 
-    const _isWeapon = dataManager.isWeapon;
-    dataManager.isWeapon = function (data) {
-      return $dataWeapons && _isWeapon.call(this, data);
-    };
-
-    const _isArmor = dataManager.isArmor;
-    dataManager.isArmor = function (data) {
-      return $dataArmors && _isArmor.call(this, data);
-    };
-
-    dataManager.isActor = function (data) {
-      return $dataActors && data && data.id && $dataActors.length > data.id && data === $dataActors[data.id];
+      return data.meta.BuffOnBattleStartRandom
+        ? [data.buffOnBattleStartIds[Math.randomInt(data.buffOnBattleStartIds.length)]]
+        : data.buffOnBattleStartIds;
     };
   }
 
   DataManager_StateBuffOnBattleStartMixIn(DataManager);
 
   /**
-   * @param {Game_Actor.prototype} gameActor
+   * @param {Game_Battler.prototype} gameBattler
    */
-  function Game_Actor_StateBuffOnBattleStartMixIn(gameActor) {
-    const _onBattleStart = gameActor.onBattleStart;
-    gameActor.onBattleStart = function () {
+  function Game_Battler_StateBuffOnBattleStartMixIn(gameBattler) {
+    const _onBattleStart = gameBattler.onBattleStart;
+    gameBattler.onBattleStart = function () {
       _onBattleStart.call(this);
       /**
        * 戦闘開始時ステート
@@ -322,7 +338,7 @@
       /**
        * 戦闘開始時バフ
        */
-      this.buffsOnStartBattle().forEach((buffOnBattleStart) => {
+      this.buffsOnBattleStart().forEach((buffOnBattleStart) => {
         let buffStep = buffOnBattleStart.buffStep;
         while (buffStep > 0) {
           this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
@@ -339,120 +355,22 @@
      * 戦闘開始時ステート一覧
      * @return {StateOnBattleStart[]}
      */
-    gameActor.statesOnBattleStart = function () {
-      const statesOnBattleStartIds = (this.actor().stateOnBattleStartIds || [])
-        .concat(this.equipsStatesOnBattleStartIds())
-        .concat(this.skillsStatesOnBattleStartIds());
-      return stateBuffOnBattleStartManager.statesFromIds(statesOnBattleStartIds);
+    gameBattler.statesOnBattleStart = function () {
+      return stateBuffOnBattleStartManager.statesFromIds(
+        this.traitObjects().flatMap((object) => DataManager.stateOnBattleStartIds(object))
+      );
     };
 
     /**
-     * 装備による戦闘開始時ステート IDリスト
-     * @return {number[]}
-     */
-    gameActor.equipsStatesOnBattleStartIds = function () {
-      return this.equips()
-        .filter((equip) => equip && equip.stateOnBattleStartIds)
-        .reduce((previous, current) => previous.concat(current.stateOnBattleStartIds), []);
-    };
-
-    /**
-     * スキルによる戦闘開始時ステート IDリスト
-     * @return {number[]}
-     */
-    gameActor.skillsStatesOnBattleStartIds = function () {
-      return this.skills()
-        .filter((skill) => skill && skill.stateOnBattleStartIds)
-        .reduce((previous, current) => previous.concat(current.stateOnBattleStartIds), []);
-    };
-
-    /**
-     * 戦闘開始時バフ一覧
-     * @return {BuffOnBattleStart[]}
-     */
-    gameActor.buffsOnStartBattle = function () {
-      const buffsOnStartBattleIds = (this.actor().buffOnBattleStartIds || [])
-        .concat(this.equipsBuffsOnBattleStartIds())
-        .concat(this.skillsBuffsOnBattleStartIds());
-      return stateBuffOnBattleStartManager.buffsFromIds(buffsOnStartBattleIds);
-    };
-
-    /**
-     * 装備による戦闘開始時バフ一覧
-     * @return {number[]}
-     */
-    gameActor.equipsBuffsOnBattleStartIds = function () {
-      return this.equips()
-        .filter((equip) => equip && equip.buffOnBattleStartIds)
-        .reduce((previous, current) => previous.concat(current.buffOnBattleStartIds), []);
-    };
-
-    /**
-     * スキルによる戦闘開始時バフ一覧
-     * @return {number[]}
-     */
-    gameActor.skillsBuffsOnBattleStartIds = function () {
-      return this.skills()
-        .filter((equip) => equip && equip.buffOnBattleStartIds)
-        .reduce((previous, current) => previous.concat(current.buffOnBattleStartIds), []);
-    };
-  }
-
-  Game_Actor_StateBuffOnBattleStartMixIn(Game_Actor.prototype);
-
-  /**
-   * @param {Game_Enemy.prototype} gameEnemy
-   */
-  function Game_Enemy_StateBuffOnBattleStartMixIn(gameEnemy) {
-    const _onBattleStart = gameEnemy.onBattleStart;
-    gameEnemy.onBattleStart = function () {
-      _onBattleStart.call(this);
-      /**
-       * 戦闘開始時ステート
-       */
-      this.statesOnBattleStart().forEach((stateOnBattleStart) => {
-        this.addState(stateOnBattleStart.stateId);
-        /**
-         * ターン数上書き
-         */
-        if (this.isStateAffected(stateOnBattleStart.stateId) && stateOnBattleStart.turn >= 0) {
-          this._stateTurns[stateOnBattleStart.stateId] = stateOnBattleStart.turn;
-        }
-      });
-      /**
-       * 戦闘開始時バフ
-       */
-      this.buffsOnStartBattle().forEach((buffOnBattleStart) => {
-        let buffStep = buffOnBattleStart.buffStep;
-        while (buffStep > 0) {
-          this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
-          buffStep--;
-        }
-        while (buffStep < 0) {
-          this.addDebuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
-          buffStep++;
-        }
-      });
-    };
-
-    /**
-     * 戦闘開始時ステート一覧
+     * 戦闘開始時強化・弱体一覧
      * @return {StateOnBattleStart[]}
      */
-    gameEnemy.statesOnBattleStart = function () {
-      const statesOnBattleStartIds = this.enemy().stateOnBattleStartIds || [];
-      return stateBuffOnBattleStartManager.statesFromIds(statesOnBattleStartIds);
-    };
-
-    /**
-     * 戦闘開始時バフ一覧
-     * @return {BuffOnBattleStart[]}
-     */
-    gameEnemy.buffsOnStartBattle = function () {
-      const buffsOnStartBattleIds = this.enemy().buffOnBattleStartIds || [];
-      return stateBuffOnBattleStartManager.buffsFromIds(buffsOnStartBattleIds);
+    gameBattler.buffsOnBattleStart = function () {
+      return stateBuffOnBattleStartManager.buffsFromIds(
+        this.traitObjects().flatMap((object) => DataManager.buffOnBattleStartIds(object))
+      );
     };
   }
 
-  Game_Enemy_StateBuffOnBattleStartMixIn(Game_Enemy.prototype);
+  Game_Battler_StateBuffOnBattleStartMixIn(Game_Battler.prototype);
 })();
