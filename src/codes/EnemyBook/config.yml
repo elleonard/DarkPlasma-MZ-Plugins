@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/07/18
+      version: 4.3.1
+      description: 'リファクタ'
     - date: 2022/07/16
       version: 4.3.0
       description: 'ウィンドウ操作用にインターフェースを公開'

@@ -1103,6 +1103,10 @@ function Scene_Battle_EnemyBookMixIn(sceneBattle) {
   const _createWindowLayer = sceneBattle.createWindowLayer;
   sceneBattle.createWindowLayer = function () {
     _createWindowLayer.call(this);
+    this.createEnemyBookWindowLayer();
+  };
+
+  sceneBattle.createEnemyBookWindowLayer = function () {
     if (settings.enableInBattle) {
       this._enemyBookLayer = new WindowLayer();
       this._enemyBookLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
