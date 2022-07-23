@@ -37,6 +37,8 @@ DarkPlasma_SaveEquipSet:
     - command: saveActorEquipSetAt
       text:
         ja: アクターの装備セットを記録する
+      desc:
+        ja: アクターの指定インデックスに装備セットを記録します。
       args:
         - arg: actorId
           text:
@@ -54,6 +56,8 @@ DarkPlasma_SaveEquipSet:
     - command: loadActorEquipSetAt
       text:
         ja: アクターに装備セットを復元する
+      desc:
+        ja: アクターの指定インデックスから装備セットを復元します。
       args:
         - arg: actorId
           text:
@@ -76,6 +80,8 @@ DarkPlasma_SaveEquipSet:
     - command: deleteActorEquipSetAt
       text:
         ja: アクターの装備セットを削除する
+      desc:
+        ja: アクターの指定インデックスの装備セットを削除します。
       args:
         - arg: actorId
           text:
