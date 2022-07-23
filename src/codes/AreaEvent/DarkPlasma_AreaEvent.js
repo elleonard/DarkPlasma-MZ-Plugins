@@ -61,6 +61,8 @@ class Game_EventArea {
   }
 }
 
+globalThis.Game_EventArea = Game_EventArea;
+
 /**
  * @param {Game_Event.prototype} gameEvent
  */

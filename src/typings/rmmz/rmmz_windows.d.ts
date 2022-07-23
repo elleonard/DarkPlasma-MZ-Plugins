@@ -644,7 +644,7 @@ declare class Window_EquipCommand extends Window_HorzCommand {
 /**
  * The window for selecting an equipment slot on the equipment screen.
  */
-declare class Window_EquipSlot extends Window_Selectable {
+declare class Window_EquipSlot extends Window_StatusBase {
   public constructor(x?: number, y?: number, width?: number, height?: number);
 
   public _actor: Game_Actor | null;
@@ -659,9 +659,10 @@ declare class Window_EquipSlot extends Window_Selectable {
 
   public maxItems(): number;
   public item(): MZ.Weapon | MZ.Armor | null;
+  public itemAt(index: number): MZ.Weapon | MZ.Armor | null;
 
   public drawItem(index: number): void;
-  public slotName(index: number): string;
+  public slotNameWidth(): number;
   public isEnabled(index: number): boolean;
   public isCurrentItemEnabled(): boolean;
 
@@ -716,7 +717,7 @@ declare class Window_StatusBase extends Window_Selectable {
   public placeTimeGauge(actor: Game_Actor, x: number, y: number): void;
   public placeBasicGauges(actor: Game_Actor, x: number, y: number): void;
   public gaugeLineHeight(): number;
-  
+
   public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
   public drawActorFace(actor: Game_Actor, x: number, y: number, width: number, height: number): void;
   public drawActorName(actor: Game_Actor, x: number, y: number, width: ?number): void;

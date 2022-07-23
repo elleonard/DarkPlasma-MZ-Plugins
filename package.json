@@ -26,8 +26,7 @@
     "generate": "node ./scripts/generateDirectory",
     "generate:config": "node ./scripts/generateConfig",
     "clean": "run-p clean:*",
-    "clean:dist": "rimraf ./_dist",
-    "clean:generated": "rimraf ./src/codes/**/_build"
+    "clean:dist": "rimraf ./_dist"
   },
   "husky": {
     "hooks": {
