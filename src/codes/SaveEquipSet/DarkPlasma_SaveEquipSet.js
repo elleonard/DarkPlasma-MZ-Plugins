@@ -52,6 +52,12 @@ PluginManager.registerCommand(pluginName, command_deleteActorEquipSetAt, functio
   }
 });
 
+const KIND = {
+  ITEM: 1,
+  WEAPON: 2,
+  ARMOR: 3,
+};
+
 class Game_EquipSlot {
   /**
    * @param {number} slotId
@@ -59,7 +65,7 @@ class Game_EquipSlot {
    */
   constructor(slotId, item) {
     this._slotId = slotId;
-    this._item = item;
+    this.initIdAndKind(item);
   }
 
   get slotId() {
@@ -67,7 +73,57 @@ class Game_EquipSlot {
   }
 
   get item() {
-    return this._item;
+    /**
+     * 旧バージョンのセーブデータ救済
+     */
+    if (this._item || this._item === null) {
+      this.initIdAndKind(this._item);
+    }
+    if (this._itemId === null) {
+      return null;
+    }
+    switch (this._kind) {
+      case KIND.ITEM:
+        return $dataItems[this._itemId];
+      case KIND.WEAPON:
+        return $dataWeapons[this._itemId];
+      case KIND.ARMOR:
+        return $dataArmors[this._itemId];
+      default:
+        throw Error(`不正なアイテム種別です: ${this._kind} ${this._itemId}`);
+    }
+  }
+
+  /**
+   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
+   */
+  initIdAndKind(item) {
+    this._itemId = item ? item.id : null;
+    this._kind = item
+      ? (() => {
+          if (DataManager.isItem(item)) {
+            /**
+             * アイテムを装備する系システムにふわっと対応
+             */
+            return KIND.ITEM;
+          } else if (DataManager.isWeapon(item)) {
+            return KIND.WEAPON;
+          } else if (DataManager.isArmor(item)) {
+            return KIND.ARMOR;
+          } else {
+            /**
+             * 武器と防具のみ、1.1.0以前のセーブデータに対応
+             */
+            if (item.etypeId === 1) {
+              return KIND.WEAPON;
+            } else if (item.etypeId > 1) {
+              return KIND.ARMOR;
+            }
+          }
+          throw Error(`不正な装備です: ${item.name}`);
+        })()
+      : null;
+    delete this._item;
   }
 }
 
