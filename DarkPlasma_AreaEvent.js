@@ -1,9 +1,10 @@
-// DarkPlasma_AreaEvent 1.0.2
+// DarkPlasma_AreaEvent 1.0.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/23 1.0.3 エリアイベントがあるマップでセーブしたデータをロードできない不具合を修正
  * 2022/07/14 1.0.2 エリアイベントメモタグをつけたイベントの有効なページにエリア登録がない場合にエラーにしない
  * 2022/07/11 1.0.1 原点設定が正しくない不具合を修正
  * 2022/07/10 1.0.0 公開
@@ -55,7 +56,7 @@
  * @default 7
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * <areaEvent>メタタグのついたイベントの当たり判定 起動判定マスを拡張します。
  * 範囲はページの先頭でプラグインコマンドによって設定します。
  */
@@ -136,6 +137,8 @@
       return new Rectangle(x, y, this._width, this._height);
     }
   }
+
+  globalThis.Game_EventArea = Game_EventArea;
 
   /**
    * @param {Game_Event.prototype} gameEvent
