@@ -3,6 +3,9 @@ DarkPlasma_SaveEquipSet:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/07/23
+      version: 1.1.0
+      description: '記録装備セット数設定を追加'
     - date: 2022/04/22
       version: 1.0.0
       description: '公開'
@@ -11,18 +14,80 @@ DarkPlasma_SaveEquipSet:
     - ja
   plugindesc:
     ja: 'パーティメンバーの装備セットを記録する'
-  parameters: []
+  parameters:
+    - param: equipSetCount
+      text:
+        ja: 記録可能な装備セット数
+      desc:
+        ja: アクターごとに記録可能な装備セットの数を設定します。増やすほどセーブデータ容量が増えます。
+      type: number
+      default: 1
+      min: 1
   commands:
     - command: saveEquipSet
       text:
         ja: 装備セットを記録する
       desc:
-        ja: 現在のパーティメンバーの装備セットを記録します。
+        ja: 現在のパーティメンバーの装備セットを先頭に記録します。
     - command: loadEquipSet
       text:
         ja: 装備セットを復元する
       desc:
-        ja: 記録した装備セットを現在のパーティメンバーに復元します。
+        ja: 先頭に記録した装備セットを現在のパーティメンバーに復元します。
+    - command: saveActorEquipSetAt
+      text:
+        ja: アクターの装備セットを記録する
+      args:
+        - arg: actorId
+          text:
+            ja: アクター
+          desc:
+            ja: 装備セットを記録するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
+          type: actor
+        - arg: index
+          text:
+            ja: インデックス
+          desc:
+            ja: 0を先頭とするインデックスを指定します。記録可能なセット数以上の値を指定するとコマンドが無効になります。
+          type: number
+          default: 0
+    - command: loadActorEquipSetAt
+      text:
+        ja: アクターに装備セットを復元する
+      args:
+        - arg: actorId
+          text:
+            ja: アクター
+          desc:
+            ja: 装備セットを復元するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
+          type: actor
+        - arg: index
+          text:
+            ja: インデックス
+          desc:
+            ja: 0を先頭とするインデックスを指定します。記録されていないインデックスを指定するとコマンドが無効になります。
+          type: number
+          default: 0
+    - command: clearEquipSets
+      text:
+        ja: 装備セットを全て削除する
+      desc:
+        ja: 現在のパーティメンバーの記録した装備セットを全て削除します。
+    - command: deleteActorEquipSetAt
+      text:
+        ja: アクターの装備セットを削除する
+      args:
+        - arg: actorId
+          text:
+            ja: アクター
+          desc:
+            ja: 装備セットを削除するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
+          type: actor
+        - arg: index
+          text:
+            ja: インデックス
+          type: number
+          default: 0
   structures:
   dependencies:
     base: []
