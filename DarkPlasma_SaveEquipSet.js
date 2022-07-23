@@ -33,6 +33,7 @@
  *
  * @command saveActorEquipSetAt
  * @text アクターの装備セットを記録する
+ * @desc アクターの指定インデックスに装備セットを記録します。
  * @arg actorId
  * @text アクター
  * @desc 装備セットを記録するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
@@ -45,6 +46,7 @@
  *
  * @command loadActorEquipSetAt
  * @text アクターに装備セットを復元する
+ * @desc アクターの指定インデックスから装備セットを復元します。
  * @arg actorId
  * @text アクター
  * @desc 装備セットを復元するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
@@ -61,6 +63,7 @@
  *
  * @command deleteActorEquipSetAt
  * @text アクターの装備セットを削除する
+ * @desc アクターの指定インデックスの装備セットを削除します。
  * @arg actorId
  * @text アクター
  * @desc 装備セットを削除するアクターを指定します。パーティメンバーにいない場合はコマンドが無効になります。
