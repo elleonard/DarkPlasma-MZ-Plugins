@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 4.4.0
+// DarkPlasma_EnemyBook 4.5.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/07/24 4.4.0 敵キャラ画像表示位置設定を追加
+ * 2022/07/24 4.5.0 敵キャラ画像のスケール設定メモタグを追加
+ *            4.4.0 敵キャラ画像表示位置設定を追加
  * 2022/07/18 4.3.1 リファクタ
  * 2022/07/16 4.3.0 ウィンドウ操作用にインターフェースを公開
  * 2022/07/09 4.2.0 レイアウト調整用にウィンドウクラスをグローバルに公開
@@ -220,7 +221,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.4.0
+ * version: 4.5.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -233,6 +234,7 @@
  *   <desc1:なんとか>       # 説明１行目
  *   <desc2:かんとか>       # 説明２行目
  *   <book:no>              # 図鑑に載せない場合
+ *   <scaleInBook:80> # 図鑑上の画像の拡大率
  *
  * DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
  */
@@ -493,7 +495,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.4.0
+ * version: 4.5.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -506,6 +508,7 @@
  *   <desc1:foobar>         # Description text in the enemy book, line 1
  *   <desc2:blahblah>       # Description text in the enemy book, line 2
  *   <book:no>              # This enemy does not appear in the enemy book
+ *   <scaleInBook:80> # Enemy image scale in book
  *
  * You can control order of enemies by using DarkPlasma_OrderIdAlias.
  */
@@ -1452,7 +1455,10 @@
 
     update() {
       super.update();
-      if (this._enemySprite.bitmap) {
+      /**
+       * データベースで拡大率が設定されていない場合は自動調整
+       */
+      if (this._enemySprite.bitmap && !this._enemy.meta.scaleInBook) {
         const bitmapHeight = this._enemySprite.bitmap.height;
         const contentsHeight = this.contents.height;
         let scale = 1;
@@ -1482,6 +1488,11 @@
         bitmap = ImageManager.loadEnemy(name, hue);
       }
       this._enemySprite.bitmap = bitmap;
+      if (enemy.meta.scaleInBook) {
+        const scale = Number(enemy.meta.scaleInBook);
+        this._enemySprite.scale.x = scale / 100;
+        this._enemySprite.scale.y = scale / 100;
+      }
       this._enemySprite.setHue(enemy.battlerHue);
 
       this.resetTextColor();
