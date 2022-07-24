@@ -563,8 +563,8 @@ class Window_EnemyBookStatus extends Window_Base {
     this._enemySprite = new Sprite();
     this._enemySprite.anchor.x = 0.5;
     this._enemySprite.anchor.y = 0.5;
-    this._enemySprite.x = width / 4;
-    this._enemySprite.y = height / 4 + this.lineHeight();
+    this._enemySprite.x = settings.enemyImageView.x;
+    this._enemySprite.y = settings.enemyImageView.y;
     this.addChildToBack(this._enemySprite);
   }
 

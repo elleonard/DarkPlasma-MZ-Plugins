@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/07/24
+      version: 4.4.0
+      description: '敵キャラ画像表示位置設定を追加'
     - date: 2022/07/18
       version: 4.3.1
       description: 'リファクタ'
@@ -341,6 +344,14 @@ DarkPlasma_EnemyBook:
         en: Display battler enemy to top of the list.
       type: boolean
       default: true
+    - param: enemyImageView
+      text:
+        ja: 敵キャラ画像表示設定
+        en: Display enemy image setting.
+      type: ImageView
+      default:
+        x: 135
+        y: 190
   commands:
     - command: open enemyBook
       text:
@@ -499,6 +510,17 @@ DarkPlasma_EnemyBook:
         text:
           ja: 閾値（大）
           en: Threshold (large)
+        type: number
+    ImageView:
+      - param: x
+        text:
+          ja: X座標
+          en: position x
+        type: number
+      - param: y
+        text:
+          ja: Y座標
+          en: position y
         type: number
   help:
     ja: |
