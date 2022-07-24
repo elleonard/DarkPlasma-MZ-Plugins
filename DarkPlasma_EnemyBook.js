@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.3.1
+// DarkPlasma_EnemyBook 4.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/24 4.4.0 敵キャラ画像表示位置設定を追加
  * 2022/07/18 4.3.1 リファクタ
  * 2022/07/16 4.3.0 ウィンドウ操作用にインターフェースを公開
  * 2022/07/09 4.2.0 レイアウト調整用にウィンドウクラスをグローバルに公開
@@ -187,6 +188,11 @@
  * @type boolean
  * @default true
  *
+ * @param enemyImageView
+ * @text 敵キャラ画像表示設定
+ * @type struct<ImageView>
+ * @default {"x":"135", "y":"190"}
+ *
  * @command open enemyBook
  * @text 図鑑を開く
  * @desc 図鑑シーンを開きます。
@@ -214,7 +220,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.3.1
+ * version: 4.4.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -283,6 +289,15 @@
  * @text 耐性閾値
  * @type struct<DebuffStatusThreshold>
  * @default {"small":"100", "large":"50"}
+ */
+/*~struct~ImageView:
+ * @param x
+ * @text X座標
+ * @type number
+ *
+ * @param y
+ * @text Y座標
+ * @type number
  */
 /*~struct~DebuffStatusIcon:
  * @param small
@@ -446,6 +461,11 @@
  * @type boolean
  * @default true
  *
+ * @param enemyImageView
+ * @text Display enemy image setting.
+ * @type struct<ImageViewEn>
+ * @default {"x":"135", "y":"190"}
+ *
  * @command open enemyBook
  * @text open enemy book
  * @desc Open enemy book.
@@ -473,7 +493,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.3.1
+ * version: 4.4.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -542,6 +562,15 @@
  * @text Resist Threshold
  * @type struct<DebuffStatusThresholdEn>
  * @default {"small":"100", "large":"50"}
+ */
+/*~struct~ImageViewEn:
+ * @param x
+ * @text position x
+ * @type number
+ *
+ * @param y
+ * @text position y
+ * @type number
  */
 /*~struct~DebuffStatusIconEn:
  * @param small
@@ -765,6 +794,13 @@
     highlightColor: Number(pluginParameters.highlightColor || 2),
     skipToBattlerEnemy: String(pluginParameters.skipToBattlerEnemy || false) === 'true',
     battlerEnemyToTop: String(pluginParameters.battlerEnemyToTop || true) === 'true',
+    enemyImageView: ((parameter) => {
+      const parsed = JSON.parse(parameter);
+      return {
+        x: Number(parsed.x || 0),
+        y: Number(parsed.y || 0),
+      };
+    })(pluginParameters.enemyImageView || '{"x":"135", "y":"190"}'),
   };
 
   class Window_LabelAndValueTexts extends Window_Base {
@@ -1394,8 +1430,8 @@
       this._enemySprite = new Sprite();
       this._enemySprite.anchor.x = 0.5;
       this._enemySprite.anchor.y = 0.5;
-      this._enemySprite.x = width / 4;
-      this._enemySprite.y = height / 4 + this.lineHeight();
+      this._enemySprite.x = settings.enemyImageView.x;
+      this._enemySprite.y = settings.enemyImageView.y;
       this.addChildToBack(this._enemySprite);
     }
 
