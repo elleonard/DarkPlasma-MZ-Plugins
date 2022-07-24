@@ -585,7 +585,10 @@ class Window_EnemyBookStatus extends Window_Base {
 
   update() {
     super.update();
-    if (this._enemySprite.bitmap) {
+    /**
+     * データベースで拡大率が設定されていない場合は自動調整
+     */
+    if (this._enemySprite.bitmap && !this._enemy.meta.scaleInBook) {
       const bitmapHeight = this._enemySprite.bitmap.height;
       const contentsHeight = this.contents.height;
       let scale = 1;
@@ -615,6 +618,11 @@ class Window_EnemyBookStatus extends Window_Base {
       bitmap = ImageManager.loadEnemy(name, hue);
     }
     this._enemySprite.bitmap = bitmap;
+    if (enemy.meta.scaleInBook) {
+      const scale = Number(enemy.meta.scaleInBook);
+      this._enemySprite.scale.x = scale / 100;
+      this._enemySprite.scale.y = scale / 100;
+    }
     this._enemySprite.setHue(enemy.battlerHue);
 
     this.resetTextColor();

@@ -4,7 +4,9 @@ DarkPlasma_EnemyBook:
   license: MIT
   histories:
     - date: 2022/07/24
-      version: 4.4.0
+      version: 4.5.0
+      description: '敵キャラ画像のスケール設定メモタグを追加'
+    - version: 4.4.0
       description: '敵キャラ画像表示位置設定を追加'
     - date: 2022/07/18
       version: 4.3.1
@@ -536,6 +538,7 @@ DarkPlasma_EnemyBook:
         <desc1:なんとか>       # 説明１行目
         <desc2:かんとか>       # 説明２行目
         <book:no>              # 図鑑に載せない場合
+        <scaleInBook:80> # 図鑑上の画像の拡大率
 
       DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
     en: |
@@ -551,5 +554,6 @@ DarkPlasma_EnemyBook:
         <desc1:foobar>         # Description text in the enemy book, line 1
         <desc2:blahblah>       # Description text in the enemy book, line 2
         <book:no>              # This enemy does not appear in the enemy book
+        <scaleInBook:80> # Enemy image scale in book
 
       You can control order of enemies by using DarkPlasma_OrderIdAlias.
