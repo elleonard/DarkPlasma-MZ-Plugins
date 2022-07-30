@@ -1,0 +1,27 @@
+DarkPlasma_StrikeWithBackOfSword:
+  name: DarkPlasma_StrikeWithBackOfSword
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/07/31
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'トドメを刺せないスキル・アイテム'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      メモ欄に以下のように記述したスキルでは
+      相手のHP以上のダメージを与えられません。
+      （必ず、HP1以上残ります）
+
+      <strikeWithBackOfSword>
