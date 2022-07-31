@@ -642,16 +642,20 @@ class Window_FormationSelect extends Window_Selectable {
     }
   }
 
+  actor() {
+    return $gameParty.allMembers()[this.index()];
+  }
+
   select(index) {
     super.select(index);
     if (this._statusWindow) {
-      this._statusWindow.setActor($gameParty.allMembers()[this.index()]);
+      this._statusWindow.setActor(this.actor());
     }
     if (this._statusParamsWindow) {
-      this._statusParamsWindow.setActor($gameParty.allMembers()[this.index()]);
+      this._statusParamsWindow.setActor(this.actor());
     }
     if (this._equipWindow) {
-      this._equipWindow.setActor($gameParty.allMembers()[this.index()]);
+      this._equipWindow.setActor(this.actor());
     }
   }
 
