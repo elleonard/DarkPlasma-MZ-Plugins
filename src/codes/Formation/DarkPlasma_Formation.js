@@ -100,13 +100,17 @@ class Scene_Formation extends Scene_Base {
   }
 
   helpWindowRect() {
-    const width = ConfigManager.touchUI
-      ? Graphics.boxWidth -
-        this.cancelButtonWidth() -
-        settings.cancelButtonRightMergin -
-        settings.cancelButtonLeftMergin
-      : Graphics.boxWidth;
-    return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
+    if (settings.showHelpWindow) {
+      const width = ConfigManager.touchUI
+        ? Graphics.boxWidth -
+          this.cancelButtonWidth() -
+          settings.cancelButtonRightMergin -
+          settings.cancelButtonLeftMergin
+        : Graphics.boxWidth;
+      return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
+    } else {
+      return new Rectangle(0, 0, 0, 0);
+    }
   }
 
   helpWindowText() {
