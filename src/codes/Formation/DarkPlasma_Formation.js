@@ -143,13 +143,17 @@ class Scene_Formation extends Scene_Base {
     return new Rectangle(
       0,
       this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
-      Graphics.boxWidth,
+      this.formationStatusWindowWidth(),
       this.formationStatusWindowHeight()
     );
   }
 
   formationStatusWindow() {
     return this._statusWindow;
+  }
+
+  formationStatusWindowWidth() {
+    return Graphics.boxWidth;
   }
 
   formationStatusWindowHeight() {
@@ -315,7 +319,7 @@ class Scene_Formation extends Scene_Base {
   }
 }
 
-window[Scene_Formation.name] = Scene_Formation;
+globalThis.Scene_Formation = Scene_Formation;
 
 class Window_FormationStatus extends Window_SkillStatus {
   loadFaceImages() {
@@ -699,7 +703,7 @@ class Window_FormationSelect extends Window_Selectable {
   }
 }
 
-window[Window_FormationStatus.name] = Window_FormationStatus;
-window[Window_FormationBattleMember.name] = Window_FormationBattleMember;
-window[Window_FormationWaitingMember.name] = Window_FormationWaitingMember;
-window[Window_FormationSelect.name] = Window_FormationSelect;
+globalThis.Window_FormationStatus = Window_FormationStatus;
+globalThis.Window_FormationBattleMember = Window_FormationBattleMember;
+globalThis.Window_FormationWaitingMember = Window_FormationWaitingMember;
+globalThis.Window_FormationSelect = Window_FormationSelect;
