@@ -1,10 +1,11 @@
-// DarkPlasma_Formation 1.3.1
+// DarkPlasma_Formation 1.3.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/07/31 1.3.1 リファクタ
+ * 2022/07/31 1.3.2 リファクタ
+ *            1.3.1 リファクタ
  *            1.3.0 ヘルプウィンドウ表示設定を追加
  * 2021/09/08 1.2.5 並び替えで全滅できる不具合を修正
  * 2021/07/05 1.2.4 MZ 1.3.2に対応
@@ -77,7 +78,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.3.1
+ * version: 1.3.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -753,16 +754,20 @@
       }
     }
 
+    actor() {
+      return $gameParty.allMembers()[this.index()];
+    }
+
     select(index) {
       super.select(index);
       if (this._statusWindow) {
-        this._statusWindow.setActor($gameParty.allMembers()[this.index()]);
+        this._statusWindow.setActor(this.actor());
       }
       if (this._statusParamsWindow) {
-        this._statusParamsWindow.setActor($gameParty.allMembers()[this.index()]);
+        this._statusParamsWindow.setActor(this.actor());
       }
       if (this._equipWindow) {
-        this._equipWindow.setActor($gameParty.allMembers()[this.index()]);
+        this._equipWindow.setActor(this.actor());
       }
     }
 
