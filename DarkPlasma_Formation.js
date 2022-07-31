@@ -1,10 +1,11 @@
-// DarkPlasma_Formation 1.3.0
+// DarkPlasma_Formation 1.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/07/31 1.3.0 ヘルプウィンドウ表示設定を追加
+ * 2022/07/31 1.3.1 リファクタ
+ *            1.3.0 ヘルプウィンドウ表示設定を追加
  * 2021/09/08 1.2.5 並び替えで全滅できる不具合を修正
  * 2021/07/05 1.2.4 MZ 1.3.2に対応
  * 2021/06/23 1.2.3' $つき画像を歩行グラとするアクターを左向きに表示できない不具合を修正
@@ -76,7 +77,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -253,13 +254,17 @@
       return new Rectangle(
         0,
         this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
-        Graphics.boxWidth,
+        this.formationStatusWindowWidth(),
         this.formationStatusWindowHeight()
       );
     }
 
     formationStatusWindow() {
       return this._statusWindow;
+    }
+
+    formationStatusWindowWidth() {
+      return Graphics.boxWidth;
     }
 
     formationStatusWindowHeight() {
@@ -425,7 +430,7 @@
     }
   }
 
-  window[Scene_Formation.name] = Scene_Formation;
+  globalThis.Scene_Formation = Scene_Formation;
 
   class Window_FormationStatus extends Window_SkillStatus {
     loadFaceImages() {
@@ -809,8 +814,8 @@
     }
   }
 
-  window[Window_FormationStatus.name] = Window_FormationStatus;
-  window[Window_FormationBattleMember.name] = Window_FormationBattleMember;
-  window[Window_FormationWaitingMember.name] = Window_FormationWaitingMember;
-  window[Window_FormationSelect.name] = Window_FormationSelect;
+  globalThis.Window_FormationStatus = Window_FormationStatus;
+  globalThis.Window_FormationBattleMember = Window_FormationBattleMember;
+  globalThis.Window_FormationWaitingMember = Window_FormationWaitingMember;
+  globalThis.Window_FormationSelect = Window_FormationSelect;
 })();
