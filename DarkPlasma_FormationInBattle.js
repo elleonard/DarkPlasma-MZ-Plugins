@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 1.2.4
+// DarkPlasma_FormationInBattle 1.2.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/01 1.2.5 DarkPlasma_Formation 1.3.2に対応
  * 2022/03/31 1.2.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/07/05 1.2.3 MZ 1.3.2に対応
  * 2021/06/22 1.2.2 サブフォルダからの読み込みに対応
@@ -53,7 +54,7 @@
  * @default true
  *
  * @help
- * version: 1.2.4
+ * version: 1.2.5
  * 戦闘シーンで並び替えできるようになります。
  *
  * DarkPlasma_Formationが必要です。
@@ -62,7 +63,7 @@
  * 対象マップでの戦闘中に並び替えを選択できなくなります。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_Formation
+ * DarkPlasma_Formation version:1.3.2
  */
 
 (() => {
@@ -269,6 +270,10 @@
 
   Scene_Battle.prototype.formationStatusWindowRect = function () {
     return Scene_Formation.prototype.statusWindowRect.call(this);
+  };
+
+  Scene_Battle.prototype.formationStatusWindowWidth = function () {
+    return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
   };
 
   Scene_Battle.prototype.formationStatusWindowHeight = function () {
