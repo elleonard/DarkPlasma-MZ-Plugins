@@ -127,194 +127,201 @@ BattleManager.endTurn = function () {
   formationCooldown.decreaseCooldownTurn();
 };
 
-const _Scene_Battle_createAllWindows = Scene_Battle.prototype.createAllWindows;
-Scene_Battle.prototype.createAllWindows = function () {
-  _Scene_Battle_createAllWindows.call(this);
-  this.createFormationWindows();
-};
+/**
+ * @param {Scene_Battle.prototype} sceneBattle
+ */
+function Scene_Battle_FormationMixIn(sceneBattle) {
+  const _createAllWindows = sceneBattle.createAllWindows;
+  sceneBattle.createAllWindows = function () {
+    _createAllWindows.call(this);
+    this.createFormationWindows();
+  };
 
-const _Scene_Battle_createPartyCommandWindow = Scene_Battle.prototype.createPartyCommandWindow;
-Scene_Battle.prototype.createPartyCommandWindow = function () {
-  _Scene_Battle_createPartyCommandWindow.call(this);
-  this._partyCommandWindow.setHandler('formation', this.commandFormation.bind(this));
-};
+  const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
+  sceneBattle.createPartyCommandWindow = function () {
+    _createPartyCommandWindow.call(this);
+    this._partyCommandWindow.setHandler('formation', this.commandFormation.bind(this));
+  };
 
-Scene_Battle.prototype.createFormationWindows = function () {
-  this.createFormationHelpWindow();
-  this.createFormationBattleMemberWindow();
-  this.createFormationWaitingMemberWindow();
-  this.createFormationStatusWindow();
-  this.createFormationSelectWindow();
-  this.hideFormationWindows();
-};
+  sceneBattle.createFormationWindows = function () {
+    this.createFormationHelpWindow();
+    this.createFormationBattleMemberWindow();
+    this.createFormationWaitingMemberWindow();
+    this.createFormationStatusWindow();
+    this.createFormationSelectWindow();
+    this.hideFormationWindows();
+  };
 
-Scene_Battle.prototype.createFormationHelpWindow = function () {
-  this._formationHelpWindow = new Window_Help(this.formationHelpWindowRect());
-  this._formationHelpWindow.setText(TextManager.formation);
-  this.addWindow(this._formationHelpWindow);
-};
+  sceneBattle.createFormationHelpWindow = function () {
+    this._formationHelpWindow = new Window_Help(this.formationHelpWindowRect());
+    this._formationHelpWindow.setText(TextManager.formation);
+    this.addWindow(this._formationHelpWindow);
+  };
 
-Scene_Battle.prototype.formationHelpWindowRect = function () {
-  return Scene_Formation.prototype.helpWindowRect.call(this);
-};
+  sceneBattle.formationHelpWindowRect = function () {
+    return Scene_Formation.prototype.helpWindowRect.call(this);
+  };
 
-Scene_Battle.prototype.formationHelpWindow = function () {
-  return this._formationHelpWindow;
-};
+  sceneBattle.formationHelpWindow = function () {
+    return this._formationHelpWindow;
+  };
 
-Scene_Battle.prototype.cancelButtonWidth = function () {
-  /**
-   * 戦闘シーンではウィンドウ生成後にキャンセルボタンが生成されるため、
-   * サイズ計算のために一時的にインスタンスを作る
-   */
-  const cancelButton = new Sprite_Button('cancel');
-  return cancelButton.width;
-};
-
-Scene_Battle.prototype.createFormationStatusWindow = function () {
-  this._formationStatusWindow = new Window_FormationStatus(this.formationStatusWindowRect());
-  this.addWindow(this._formationStatusWindow);
-};
-
-Scene_Battle.prototype.formationStatusWindowRect = function () {
-  return Scene_Formation.prototype.statusWindowRect.call(this);
-};
-
-Scene_Battle.prototype.formationStatusWindowWidth = function () {
-  return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
-};
-
-Scene_Battle.prototype.formationStatusWindowHeight = function () {
-  return Scene_Formation.prototype.formationStatusWindowHeight.call(this);
-};
-
-Scene_Battle.prototype.formationStatusWindow = function () {
-  return this._formationStatusWindow;
-};
-
-Scene_Battle.prototype.createFormationBattleMemberWindow = function () {
-  this._formationBattleMemberWindow = new Window_FormationBattleMember(this.formationBattleMemberWindowRect());
-  this.addWindow(this._formationBattleMemberWindow);
-};
-
-Scene_Battle.prototype.formationBattleMemberWindowRect = function () {
-  return Scene_Formation.prototype.battleMemberWindowRect.call(this);
-};
-
-Scene_Battle.prototype.battleMemberWindowWidth = function () {
-  return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
-};
-
-Scene_Battle.prototype.formationBattleMemberWindow = function () {
-  return this._formationBattleMemberWindow;
-};
-
-Scene_Battle.prototype.createFormationWaitingMemberWindow = function () {
-  this._formationWaitingMemberWindow = new Window_FormationWaitingMember(this.formationWaitingMemberWindowRect());
-  this.addWindow(this._formationWaitingMemberWindow);
-};
-
-Scene_Battle.prototype.formationWaitingMemberWindowRect = function () {
-  return Scene_Formation.prototype.waitingMemberWindowRect.call(this);
-};
-
-Scene_Battle.prototype.waitingMemberWindowHeight = function () {
-  return Scene_Formation.prototype.waitingMemberWindowHeight.call(this);
-};
-
-Scene_Battle.prototype.formationWaitingMemberWindow = function () {
-  return this._formationWaitingMemberWindow;
-};
-
-Scene_Battle.prototype.createFormationSelectWindow = function () {
-  this._formationSelectWindow = new Window_FormationSelect(this.formationSelectWindowRect());
-  Scene_Formation.prototype.setupFormationSelectWindow.call(this);
-};
-
-Scene_Battle.prototype.formationSelectWindowRect = function () {
-  return Scene_Formation.prototype.selectWindowRect.call(this);
-};
-
-Scene_Battle.prototype.formationSelectWindow = function () {
-  return this._formationSelectWindow;
-};
-
-Scene_Battle.prototype.formationStatusParamsWindowHeight = function () {
-  return 0;
-};
-
-Scene_Battle.prototype.formationStatusParamsWindow = function () {
-  return null;
-};
-
-Scene_Battle.prototype.formationEquipStatusWindow = function () {
-  return null;
-};
-
-Scene_Battle.prototype.moveCancelButtonToEdge = function () {
-  if (this._cancelButton) {
-    this._cancelButton.y = Math.floor((this.buttonAreaHeight() - 48) / 2);
-  }
-};
-
-Scene_Battle.prototype.returnCancelButton = function () {
-  if (this._cancelButton) {
-    this._cancelButton.y = this.buttonY();
-  }
-};
-
-Scene_Battle.prototype.showFormationWindows = function () {
-  this._formationHelpWindow.show();
-  this._formationStatusWindow.show();
-  this._formationBattleMemberWindow.show();
-  this._formationWaitingMemberWindow.show();
-  this._formationSelectWindow.show();
-  this._formationSelectWindow.select(0);
-  this._formationSelectWindow.activate();
-  this.moveCancelButtonToEdge();
-};
-
-Scene_Battle.prototype.hideFormationWindows = function () {
-  this._formationHelpWindow.hide();
-  this._formationStatusWindow.hide();
-  this._formationBattleMemberWindow.hide();
-  this._formationWaitingMemberWindow.hide();
-  this._formationSelectWindow.hide();
-  this._formationSelectWindow.deactivate();
-};
-
-Scene_Battle.prototype.commandFormation = function () {
-  this.showFormationWindows();
-};
-
-Scene_Battle.prototype.onFormationOk = function () {
-  Scene_Formation.prototype.onFormationOk.call(this);
-  $gameTemp.requestBattleRefresh();
-};
-
-Scene_Battle.prototype.onFormationCancel = function () {
-  Scene_Formation.prototype.onFormationCancel.call(this);
-};
-
-Scene_Battle.prototype.quitFromFormation = function () {
-  this.hideFormationWindows();
-  this.startPartyCommandSelection();
-  /**
-   * コマンド入力情報初期化
-   */
-  $gameParty.makeActions();
-};
-
-const _Scene_Battle_updateCancelButton = Scene_Battle.prototype.updateCancelButton;
-Scene_Battle.prototype.updateCancelButton = function () {
-  _Scene_Battle_updateCancelButton.call(this);
-  if (this._cancelButton && !this._cancelButton.visible) {
+  sceneBattle.cancelButtonWidth = function () {
     /**
-     * 非表示になってから元の位置に戻す
+     * 戦闘シーンではウィンドウ生成後にキャンセルボタンが生成されるため、
+     * サイズ計算のために一時的にインスタンスを作る
      */
-    this.returnCancelButton();
-  }
-};
+    const cancelButton = new Sprite_Button('cancel');
+    return cancelButton.width;
+  };
+
+  sceneBattle.createFormationStatusWindow = function () {
+    this._formationStatusWindow = new Window_FormationStatus(this.formationStatusWindowRect());
+    this.addWindow(this._formationStatusWindow);
+  };
+
+  sceneBattle.formationStatusWindowRect = function () {
+    return Scene_Formation.prototype.statusWindowRect.call(this);
+  };
+
+  sceneBattle.formationStatusWindowWidth = function () {
+    return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
+  };
+
+  sceneBattle.formationStatusWindowHeight = function () {
+    return Scene_Formation.prototype.formationStatusWindowHeight.call(this);
+  };
+
+  sceneBattle.formationStatusWindow = function () {
+    return this._formationStatusWindow;
+  };
+
+  sceneBattle.createFormationBattleMemberWindow = function () {
+    this._formationBattleMemberWindow = new Window_FormationBattleMember(this.formationBattleMemberWindowRect());
+    this.addWindow(this._formationBattleMemberWindow);
+  };
+
+  sceneBattle.formationBattleMemberWindowRect = function () {
+    return Scene_Formation.prototype.battleMemberWindowRect.call(this);
+  };
+
+  sceneBattle.battleMemberWindowWidth = function () {
+    return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
+  };
+
+  sceneBattle.formationBattleMemberWindow = function () {
+    return this._formationBattleMemberWindow;
+  };
+
+  sceneBattle.createFormationWaitingMemberWindow = function () {
+    this._formationWaitingMemberWindow = new Window_FormationWaitingMember(this.formationWaitingMemberWindowRect());
+    this.addWindow(this._formationWaitingMemberWindow);
+  };
+
+  sceneBattle.formationWaitingMemberWindowRect = function () {
+    return Scene_Formation.prototype.waitingMemberWindowRect.call(this);
+  };
+
+  sceneBattle.waitingMemberWindowHeight = function () {
+    return Scene_Formation.prototype.waitingMemberWindowHeight.call(this);
+  };
+
+  sceneBattle.formationWaitingMemberWindow = function () {
+    return this._formationWaitingMemberWindow;
+  };
+
+  sceneBattle.createFormationSelectWindow = function () {
+    this._formationSelectWindow = new Window_FormationSelect(this.formationSelectWindowRect());
+    Scene_Formation.prototype.setupFormationSelectWindow.call(this);
+  };
+
+  sceneBattle.formationSelectWindowRect = function () {
+    return Scene_Formation.prototype.selectWindowRect.call(this);
+  };
+
+  sceneBattle.formationSelectWindow = function () {
+    return this._formationSelectWindow;
+  };
+
+  sceneBattle.formationStatusParamsWindowHeight = function () {
+    return 0;
+  };
+
+  sceneBattle.formationStatusParamsWindow = function () {
+    return null;
+  };
+
+  sceneBattle.formationEquipStatusWindow = function () {
+    return null;
+  };
+
+  sceneBattle.moveCancelButtonToEdge = function () {
+    if (this._cancelButton) {
+      this._cancelButton.y = Math.floor((this.buttonAreaHeight() - 48) / 2);
+    }
+  };
+
+  sceneBattle.returnCancelButton = function () {
+    if (this._cancelButton) {
+      this._cancelButton.y = this.buttonY();
+    }
+  };
+
+  sceneBattle.showFormationWindows = function () {
+    this._formationHelpWindow.show();
+    this._formationStatusWindow.show();
+    this._formationBattleMemberWindow.show();
+    this._formationWaitingMemberWindow.show();
+    this._formationSelectWindow.show();
+    this._formationSelectWindow.select(0);
+    this._formationSelectWindow.activate();
+    this.moveCancelButtonToEdge();
+  };
+
+  sceneBattle.hideFormationWindows = function () {
+    this._formationHelpWindow.hide();
+    this._formationStatusWindow.hide();
+    this._formationBattleMemberWindow.hide();
+    this._formationWaitingMemberWindow.hide();
+    this._formationSelectWindow.hide();
+    this._formationSelectWindow.deactivate();
+  };
+
+  sceneBattle.commandFormation = function () {
+    this.showFormationWindows();
+  };
+
+  sceneBattle.onFormationOk = function () {
+    Scene_Formation.prototype.onFormationOk.call(this);
+    $gameTemp.requestBattleRefresh();
+  };
+
+  sceneBattle.onFormationCancel = function () {
+    Scene_Formation.prototype.onFormationCancel.call(this);
+  };
+
+  sceneBattle.quitFromFormation = function () {
+    this.hideFormationWindows();
+    this.startPartyCommandSelection();
+    /**
+     * コマンド入力情報初期化
+     */
+    $gameParty.makeActions();
+  };
+
+  const _updateCancelButton = sceneBattle.updateCancelButton;
+  sceneBattle.updateCancelButton = function () {
+    _updateCancelButton.call(this);
+    if (this._cancelButton && !this._cancelButton.visible) {
+      /**
+       * 非表示になってから元の位置に戻す
+       */
+      this.returnCancelButton();
+    }
+  };
+}
+
+Scene_Battle_FormationMixIn(Scene_Battle.prototype);
 
 Window_PartyCommand.prototype.addCommandAt = function (index, name, symbol, enabled = true, ext = null) {
   this._list.splice(index, 0, {
