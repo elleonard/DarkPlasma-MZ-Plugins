@@ -180,6 +180,10 @@ Scene_Battle.prototype.formationStatusWindowRect = function () {
   return Scene_Formation.prototype.statusWindowRect.call(this);
 };
 
+Scene_Battle.prototype.formationStatusWindowWidth = function () {
+  return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
+};
+
 Scene_Battle.prototype.formationStatusWindowHeight = function () {
   return Scene_Formation.prototype.formationStatusWindowHeight.call(this);
 };
