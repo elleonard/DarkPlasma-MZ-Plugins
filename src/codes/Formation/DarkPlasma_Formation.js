@@ -59,7 +59,146 @@ Game_Temp.prototype.isFormationWaitingMemberWindowRefreshRequested = function ()
   return this._needsFormationWaitingMemberWindowRefresh;
 };
 
-class Scene_Formation extends Scene_Base {
+/**
+ * @template {Scene_Base} TScene
+ * @param {TScene} sceneClass
+ * @return {TScene}
+ * @mixin
+ */
+function Scene_FormationMixIn(sceneClass) {
+  return class extends sceneClass {
+    /**
+     * @return {Rectangle}
+     */
+    helpWindowRect() {
+      if (settings.showHelpWindow) {
+        const width = ConfigManager.touchUI
+          ? Graphics.boxWidth -
+            this.cancelButtonWidth() -
+            settings.cancelButtonRightMergin -
+            settings.cancelButtonLeftMergin
+          : Graphics.boxWidth;
+        return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
+      } else {
+        return new Rectangle(0, 0, 0, 0);
+      }
+    }
+
+    /**
+     * @return {Rectangle}
+     */
+    statusWindowRect() {
+      return new Rectangle(
+        0,
+        this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
+        this.formationStatusWindowWidth(),
+        this.formationStatusWindowHeight()
+      );
+    }
+
+    formationStatusWindowWidth() {
+      return Graphics.boxWidth;
+    }
+
+    formationStatusWindowHeight() {
+      return this.calcWindowHeight(4, false);
+    }
+
+    /**
+     * @return {Rectangle}
+     */
+    battleMemberWindowRect() {
+      return new Rectangle(
+        0,
+        this.formationHelpWindow().height,
+        this.battleMemberWindowWidth(),
+        this.waitingMemberWindowHeight()
+      );
+    }
+
+    battleMemberWindowWidth() {
+      const characterSpacing = Window_FormationBattleMember.prototype.spacing();
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? (settings.characterWidth + characterSpacing) * $gameParty.maxBattleMembers()
+        : (settings.characterWidth + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
+    }
+
+    /**
+     * @return {Rectangle}
+     */
+    waitingMemberWindowRect() {
+      return new Rectangle(
+        this.formationBattleMemberWindow().width,
+        this.formationHelpWindow().height,
+        Graphics.boxWidth - this.formationBattleMemberWindow().width,
+        this.waitingMemberWindowHeight()
+      );
+    }
+
+    waitingMemberWindowHeight() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? settings.characterHeight + WAITING_WINDOW_PADDING
+        : settings.characterHeight * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
+    }
+
+    setupFormationSelectWindow() {
+      this.formationSelectWindow().setStatusWindow(this.formationStatusWindow());
+      this.formationSelectWindow().setBattleMemberWindow(this.formationBattleMemberWindow());
+      this.formationSelectWindow().setWaitingMemberWindow(this.formationWaitingMemberWindow());
+      this.formationSelectWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
+      this.formationSelectWindow().setEquipWindow(this.formationEquipStatusWindow());
+      this.formationSelectWindow().setHandler('ok', this.onFormationOk.bind(this));
+      this.formationSelectWindow().setHandler('cancel', this.onFormationCancel.bind(this));
+      this.formationSelectWindow().select(0);
+      /**
+       * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
+       */
+      this._selectWindowLayer = new WindowLayer();
+      this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+      this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+      this.addChild(this._selectWindowLayer);
+      this._selectWindowLayer.addChild(this.formationSelectWindow());
+    }
+
+    /**
+     * @return {Rectangle}
+     */
+    selectWindowRect() {
+      return new Rectangle(
+        0,
+        this.formationWaitingMemberWindow().y,
+        Graphics.boxWidth,
+        this.formationWaitingMemberWindow().height
+      );
+    }
+
+    onFormationOk() {
+      const index = this.formationSelectWindow().index();
+      const pendingIndex = this.formationSelectWindow().pendingIndex();
+      if (pendingIndex >= 0) {
+        $gameParty.swapOrder(index, pendingIndex);
+        this.formationSelectWindow().setPendingIndex(-1);
+        $gameTemp.requestFormationMemberWindowsRefresh();
+      } else {
+        this.formationSelectWindow().setPendingIndex(index);
+      }
+      this.formationSelectWindow().activate();
+    }
+
+    onFormationCancel() {
+      if (this.formationSelectWindow().pendingIndex() >= 0) {
+        this.formationSelectWindow().setPendingIndex(-1);
+        this.formationSelectWindow().activate();
+      } else {
+        this.quitFromFormation();
+      }
+    }
+  };
+}
+
+globalThis.Scene_FormationMixIn = Scene_FormationMixIn;
+
+class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   create() {
     super.create();
     this.createBackground();
@@ -99,20 +238,6 @@ class Scene_Formation extends Scene_Base {
     this.addWindow(this._helpWindow);
   }
 
-  helpWindowRect() {
-    if (settings.showHelpWindow) {
-      const width = ConfigManager.touchUI
-        ? Graphics.boxWidth -
-          this.cancelButtonWidth() -
-          settings.cancelButtonRightMergin -
-          settings.cancelButtonLeftMergin
-        : Graphics.boxWidth;
-      return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
-    } else {
-      return new Rectangle(0, 0, 0, 0);
-    }
-  }
-
   helpWindowText() {
     return TextManager.formation;
   }
@@ -139,25 +264,8 @@ class Scene_Formation extends Scene_Base {
     this.addWindow(this._statusWindow);
   }
 
-  statusWindowRect() {
-    return new Rectangle(
-      0,
-      this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
-      this.formationStatusWindowWidth(),
-      this.formationStatusWindowHeight()
-    );
-  }
-
   formationStatusWindow() {
     return this._statusWindow;
-  }
-
-  formationStatusWindowWidth() {
-    return Graphics.boxWidth;
-  }
-
-  formationStatusWindowHeight() {
-    return this.calcWindowHeight(4, false);
   }
 
   createStatusParamsWindow() {
@@ -210,22 +318,6 @@ class Scene_Formation extends Scene_Base {
     this.addWindow(this._battleMemberWindow);
   }
 
-  battleMemberWindowRect() {
-    return new Rectangle(
-      0,
-      this.formationHelpWindow().height,
-      this.battleMemberWindowWidth(),
-      this.waitingMemberWindowHeight()
-    );
-  }
-
-  battleMemberWindowWidth() {
-    const characterSpacing = Window_FormationBattleMember.prototype.spacing();
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE
-      ? (settings.characterWidth + characterSpacing) * $gameParty.maxBattleMembers()
-      : (settings.characterWidth + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
-  }
-
   formationBattleMemberWindow() {
     return this._battleMemberWindow;
   }
@@ -233,21 +325,6 @@ class Scene_Formation extends Scene_Base {
   createWaitingMemberWindow() {
     this._waitingMemberWindow = new Window_FormationWaitingMember(this.waitingMemberWindowRect());
     this.addWindow(this._waitingMemberWindow);
-  }
-
-  waitingMemberWindowRect() {
-    return new Rectangle(
-      this.formationBattleMemberWindow().width,
-      this.formationHelpWindow().height,
-      Graphics.boxWidth - this.formationBattleMemberWindow().width,
-      this.waitingMemberWindowHeight()
-    );
-  }
-
-  waitingMemberWindowHeight() {
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE
-      ? settings.characterHeight + WAITING_WINDOW_PADDING
-      : settings.characterHeight * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
   }
 
   formationWaitingMemberWindow() {
@@ -259,58 +336,8 @@ class Scene_Formation extends Scene_Base {
     this.setupFormationSelectWindow();
   }
 
-  setupFormationSelectWindow() {
-    this.formationSelectWindow().setStatusWindow(this.formationStatusWindow());
-    this.formationSelectWindow().setBattleMemberWindow(this.formationBattleMemberWindow());
-    this.formationSelectWindow().setWaitingMemberWindow(this.formationWaitingMemberWindow());
-    this.formationSelectWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
-    this.formationSelectWindow().setEquipWindow(this.formationEquipStatusWindow());
-    this.formationSelectWindow().setHandler('ok', this.onFormationOk.bind(this));
-    this.formationSelectWindow().setHandler('cancel', this.onFormationCancel.bind(this));
-    this.formationSelectWindow().select(0);
-    /**
-     * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
-     */
-    this._selectWindowLayer = new WindowLayer();
-    this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-    this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-    this.addChild(this._selectWindowLayer);
-    this._selectWindowLayer.addChild(this.formationSelectWindow());
-  }
-
-  selectWindowRect() {
-    return new Rectangle(
-      0,
-      this.formationWaitingMemberWindow().y,
-      Graphics.boxWidth,
-      this.formationWaitingMemberWindow().height
-    );
-  }
-
   formationSelectWindow() {
     return this._selectWindow;
-  }
-
-  onFormationOk() {
-    const index = this.formationSelectWindow().index();
-    const pendingIndex = this.formationSelectWindow().pendingIndex();
-    if (pendingIndex >= 0) {
-      $gameParty.swapOrder(index, pendingIndex);
-      this.formationSelectWindow().setPendingIndex(-1);
-      $gameTemp.requestFormationMemberWindowsRefresh();
-    } else {
-      this.formationSelectWindow().setPendingIndex(index);
-    }
-    this.formationSelectWindow().activate();
-  }
-
-  onFormationCancel() {
-    if (this.formationSelectWindow().pendingIndex() >= 0) {
-      this.formationSelectWindow().setPendingIndex(-1);
-      this.formationSelectWindow().activate();
-    } else {
-      this.quitFromFormation();
-    }
   }
 
   quitFromFormation() {
