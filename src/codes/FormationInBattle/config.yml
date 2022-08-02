@@ -4,7 +4,9 @@ DarkPlasma_FormationInBattle:
   license: MIT
   histories:
     - date: 2022/08/02
-      version: 1.2.6
+      version: 1.2.7
+      description: 'リファクタ'
+    - version: 1.2.6
       description: 'リファクタ'
     - date: 2022/08/01
       version: 1.2.5
@@ -84,12 +86,10 @@ DarkPlasma_FormationInBattle:
   dependencies:
     base:
       - name: DarkPlasma_Formation
-        version: 1.3.2
+        version: 1.3.3
   help:
     ja: |
       戦闘シーンで並び替えできるようになります。
-
-      DarkPlasma_Formationが必要です。
 
       マップのメモ欄に<disableFormationInBattle>と記述することで、
       対象マップでの戦闘中に並び替えを選択できなくなります。

@@ -131,6 +131,8 @@ BattleManager.endTurn = function () {
  * @param {Scene_Battle.prototype} sceneBattle
  */
 function Scene_Battle_FormationMixIn(sceneBattle) {
+  const baseClass = Scene_FormationMixIn(Scene_Base).prototype;
+
   const _createAllWindows = sceneBattle.createAllWindows;
   sceneBattle.createAllWindows = function () {
     _createAllWindows.call(this);
@@ -159,7 +161,7 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
   };
 
   sceneBattle.formationHelpWindowRect = function () {
-    return Scene_Formation.prototype.helpWindowRect.call(this);
+    return baseClass.helpWindowRect.call(this);
   };
 
   sceneBattle.formationHelpWindow = function () {
@@ -181,15 +183,15 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
   };
 
   sceneBattle.formationStatusWindowRect = function () {
-    return Scene_Formation.prototype.statusWindowRect.call(this);
+    return baseClass.statusWindowRect.call(this);
   };
 
   sceneBattle.formationStatusWindowWidth = function () {
-    return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
+    return baseClass.formationStatusWindowWidth.call(this);
   };
 
   sceneBattle.formationStatusWindowHeight = function () {
-    return Scene_Formation.prototype.formationStatusWindowHeight.call(this);
+    return baseClass.formationStatusWindowHeight.call(this);
   };
 
   sceneBattle.formationStatusWindow = function () {
@@ -202,11 +204,11 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
   };
 
   sceneBattle.formationBattleMemberWindowRect = function () {
-    return Scene_Formation.prototype.battleMemberWindowRect.call(this);
+    return baseClass.battleMemberWindowRect.call(this);
   };
 
   sceneBattle.battleMemberWindowWidth = function () {
-    return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
+    return baseClass.battleMemberWindowWidth.call(this);
   };
 
   sceneBattle.formationBattleMemberWindow = function () {
@@ -219,11 +221,11 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
   };
 
   sceneBattle.formationWaitingMemberWindowRect = function () {
-    return Scene_Formation.prototype.waitingMemberWindowRect.call(this);
+    return baseClass.waitingMemberWindowRect.call(this);
   };
 
   sceneBattle.waitingMemberWindowHeight = function () {
-    return Scene_Formation.prototype.waitingMemberWindowHeight.call(this);
+    return baseClass.waitingMemberWindowHeight.call(this);
   };
 
   sceneBattle.formationWaitingMemberWindow = function () {
@@ -232,11 +234,11 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
 
   sceneBattle.createFormationSelectWindow = function () {
     this._formationSelectWindow = new Window_FormationSelect(this.formationSelectWindowRect());
-    Scene_Formation.prototype.setupFormationSelectWindow.call(this);
+    baseClass.setupFormationSelectWindow.call(this);
   };
 
   sceneBattle.formationSelectWindowRect = function () {
-    return Scene_Formation.prototype.selectWindowRect.call(this);
+    return baseClass.selectWindowRect.call(this);
   };
 
   sceneBattle.formationSelectWindow = function () {
@@ -292,12 +294,12 @@ function Scene_Battle_FormationMixIn(sceneBattle) {
   };
 
   sceneBattle.onFormationOk = function () {
-    Scene_Formation.prototype.onFormationOk.call(this);
+    baseClass.onFormationOk.call(this);
     $gameTemp.requestBattleRefresh();
   };
 
   sceneBattle.onFormationCancel = function () {
-    Scene_Formation.prototype.onFormationCancel.call(this);
+    baseClass.onFormationCancel.call(this);
   };
 
   sceneBattle.quitFromFormation = function () {
