@@ -1,10 +1,11 @@
-// DarkPlasma_FormationInBattle 1.2.6
+// DarkPlasma_FormationInBattle 1.2.7
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/02 1.2.6 リファクタ
+ * 2022/08/02 1.2.7 リファクタ
+ *            1.2.6 リファクタ
  * 2022/08/01 1.2.5 DarkPlasma_Formation 1.3.2に対応
  * 2022/03/31 1.2.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/07/05 1.2.3 MZ 1.3.2に対応
@@ -55,16 +56,14 @@
  * @default true
  *
  * @help
- * version: 1.2.6
+ * version: 1.2.7
  * 戦闘シーンで並び替えできるようになります。
- *
- * DarkPlasma_Formationが必要です。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
  * 対象マップでの戦闘中に並び替えを選択できなくなります。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_Formation version:1.3.2
+ * DarkPlasma_Formation version:1.3.3
  */
 
 (() => {
@@ -224,6 +223,8 @@
    * @param {Scene_Battle.prototype} sceneBattle
    */
   function Scene_Battle_FormationMixIn(sceneBattle) {
+    const baseClass = Scene_FormationMixIn(Scene_Base).prototype;
+
     const _createAllWindows = sceneBattle.createAllWindows;
     sceneBattle.createAllWindows = function () {
       _createAllWindows.call(this);
@@ -252,7 +253,7 @@
     };
 
     sceneBattle.formationHelpWindowRect = function () {
-      return Scene_Formation.prototype.helpWindowRect.call(this);
+      return baseClass.helpWindowRect.call(this);
     };
 
     sceneBattle.formationHelpWindow = function () {
@@ -274,15 +275,15 @@
     };
 
     sceneBattle.formationStatusWindowRect = function () {
-      return Scene_Formation.prototype.statusWindowRect.call(this);
+      return baseClass.statusWindowRect.call(this);
     };
 
     sceneBattle.formationStatusWindowWidth = function () {
-      return Scene_Formation.prototype.formationStatusWindowWidth.call(this);
+      return baseClass.formationStatusWindowWidth.call(this);
     };
 
     sceneBattle.formationStatusWindowHeight = function () {
-      return Scene_Formation.prototype.formationStatusWindowHeight.call(this);
+      return baseClass.formationStatusWindowHeight.call(this);
     };
 
     sceneBattle.formationStatusWindow = function () {
@@ -295,11 +296,11 @@
     };
 
     sceneBattle.formationBattleMemberWindowRect = function () {
-      return Scene_Formation.prototype.battleMemberWindowRect.call(this);
+      return baseClass.battleMemberWindowRect.call(this);
     };
 
     sceneBattle.battleMemberWindowWidth = function () {
-      return Scene_Formation.prototype.battleMemberWindowWidth.call(this);
+      return baseClass.battleMemberWindowWidth.call(this);
     };
 
     sceneBattle.formationBattleMemberWindow = function () {
@@ -312,11 +313,11 @@
     };
 
     sceneBattle.formationWaitingMemberWindowRect = function () {
-      return Scene_Formation.prototype.waitingMemberWindowRect.call(this);
+      return baseClass.waitingMemberWindowRect.call(this);
     };
 
     sceneBattle.waitingMemberWindowHeight = function () {
-      return Scene_Formation.prototype.waitingMemberWindowHeight.call(this);
+      return baseClass.waitingMemberWindowHeight.call(this);
     };
 
     sceneBattle.formationWaitingMemberWindow = function () {
@@ -325,11 +326,11 @@
 
     sceneBattle.createFormationSelectWindow = function () {
       this._formationSelectWindow = new Window_FormationSelect(this.formationSelectWindowRect());
-      Scene_Formation.prototype.setupFormationSelectWindow.call(this);
+      baseClass.setupFormationSelectWindow.call(this);
     };
 
     sceneBattle.formationSelectWindowRect = function () {
-      return Scene_Formation.prototype.selectWindowRect.call(this);
+      return baseClass.selectWindowRect.call(this);
     };
 
     sceneBattle.formationSelectWindow = function () {
@@ -385,12 +386,12 @@
     };
 
     sceneBattle.onFormationOk = function () {
-      Scene_Formation.prototype.onFormationOk.call(this);
+      baseClass.onFormationOk.call(this);
       $gameTemp.requestBattleRefresh();
     };
 
     sceneBattle.onFormationCancel = function () {
-      Scene_Formation.prototype.onFormationCancel.call(this);
+      baseClass.onFormationCancel.call(this);
     };
 
     sceneBattle.quitFromFormation = function () {
