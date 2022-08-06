@@ -1,0 +1,120 @@
+DarkPlasma_AnimeLight:
+  name: DarkPlasma_AnimeLight
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/08/06
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '拡縮アニメーションする明かりイベント'
+  parameters:
+    - param: defaultScale
+      text:
+        ja: 拡縮率（％）
+      desc:
+        ja: アニメーションの大きさを％で指定します。
+      type: number
+      default: 10
+    - param: defaultZ
+      text:
+        ja: Z座標
+      type: select
+      options:
+        - name: プライオリティ『通常キャラの下』より下
+          value: 0
+        - name: プライオリティ『通常キャラと同じ』より下
+          value: 2
+        - name: プライオリティ『通常キャラと同じ』より上
+          value: 4
+        - name: プライオリティ『通常キャラの上』より上
+          value: 6
+      default: 4
+    - param: defaultFrameLength
+      text:
+        ja: 1周のフレーム数
+      type: number
+      default: 30
+  commands:
+    - command: markAsLight
+      text:
+        ja: 自動明かりイベント
+      desc:
+        ja: メモ欄に<animeLight>と記入してある場合、このイベントは自動的に明かりになります。
+      args:
+        - arg: image
+          text:
+            ja: 画像ファイル
+          type: file
+          dir: img
+        - arg: opacity
+          text:
+            ja: 不透明度
+          type: number
+          default: 255
+          max: 255
+        - arg: offsetX
+          text:
+            ja: X座標オフセット
+          type: number
+          default: 0
+        - arg: offsetY
+          text:
+            ja: Y座標オフセット
+          type: number
+          default: 0
+        - arg: scale
+          text:
+            ja: 拡縮率（％）
+          desc:
+            ja: アニメーションの大きさを％で指定します。0でデフォルト。
+          type: number
+          default: 0
+        - arg: frameLength
+          text:
+            ja: フレーム数
+          desc:
+            ja: アニメーションフレーム数を設定します。0でデフォルト。
+          type: number
+          default: 0
+        - arg: z
+          text:
+            ja: Z座標
+          type: select
+          options:
+            - name: デフォルト
+              value: -1
+            - name: プライオリティ『通常キャラの下』より下
+              value: 0
+            - name: プライオリティ『通常キャラと同じ』より下
+              value: 2
+            - name: プライオリティ『通常キャラと同じ』より上
+              value: 4
+            - name: プライオリティ『通常キャラの上』より上
+              value: 6
+          default: -1
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      拡縮アニメーションする明かりを
+      イベントの座標を基準にしてマップ上に表示します。
+
+      イベントのメモ欄による設定
+      <animeLight:TMAnimeLight1 192 24 -44 4>
+        画像 img/system/TMAnimeLight1.png を不透明度 192 で、
+        イベントの足元から右に 24、
+        上に 44 ドットずらした位置にZ座標 4 で表示します。
+        不透明度は 0～255 です。
+
+      プラグインコマンド 自動明かりイベントによる設定
+        メモ欄の代わりに使用できます。
+
+      本プラグインは TMAnimeLight.js と一部互換性があります。
+      注釈を用いることはできません。
