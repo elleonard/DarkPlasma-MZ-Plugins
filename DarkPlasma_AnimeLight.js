@@ -1,10 +1,12 @@
-// DarkPlasma_AnimeLight 1.0.0
+// DarkPlasma_AnimeLight 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/06 1.0.0 公開
+ * 2022/08/06 1.0.1 オフセットに負の値を設定できない不具合を修正
+ *                  自動明かりイベントが動作しない不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -55,10 +57,12 @@
  * @text X座標オフセット
  * @type number
  * @default 0
+ * @min -1000
  * @arg offsetY
  * @text Y座標オフセット
  * @type number
  * @default 0
+ * @min -1000
  * @arg scale
  * @text 拡縮率（％）
  * @desc アニメーションの大きさを％で指定します。0でデフォルト。
@@ -85,7 +89,7 @@
  * @default -1
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 拡縮アニメーションする明かりを
  * イベントの座標を基準にしてマップ上に表示します。
  *
@@ -271,7 +275,7 @@
           if (command) {
             const parsedArgs = parseArgs_markAsLight(command.parameters[3]);
             return new Data_AnimeLight(
-              parsedArgs.filename,
+              parsedArgs.image,
               parsedArgs.opacity,
               parsedArgs.offsetX,
               parsedArgs.offsetY,
