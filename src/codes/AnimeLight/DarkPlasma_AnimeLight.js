@@ -139,7 +139,7 @@ function Game_Event_AnimeLightMixIn(gameEvent) {
         if (command) {
           const parsedArgs = parseArgs_markAsLight(command.parameters[3]);
           return new Data_AnimeLight(
-            parsedArgs.filename,
+            parsedArgs.image,
             parsedArgs.opacity,
             parsedArgs.offsetX,
             parsedArgs.offsetY,
