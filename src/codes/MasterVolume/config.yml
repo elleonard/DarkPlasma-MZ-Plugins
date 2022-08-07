@@ -1,0 +1,42 @@
+DarkPlasma_MasterVolume:
+  name: DarkPlasma_MasterVolume
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/08/07
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マスターボリュームを設定する'
+  parameters:
+    - param: optionName
+      text:
+        ja: 設定項目名
+      type: string
+      default: 全体 音量
+    - param: defaultVolume
+      text:
+        ja: 初期値
+      type: number
+      default: 100
+      max: 100
+    - param: offset
+      text:
+        ja: 音量の増減量
+      type: number
+      default: 20
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      オプション画面にマスターボリュームを追加します。
+      BGM/BGS/ME/SEすべての音量を一括調整できます。
+
+      本プラグインはゲームアツマールでは使用できません。

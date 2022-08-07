@@ -500,6 +500,9 @@ declare class Scene_Options extends Scene_MenuBase {
   public create(): void;
   public terminate(): void;
   public createOptionsWindow(): void;
+  public optionsWindowRect(): Rectangle;
+  public maxCommands(): number;
+  public maxVisibleCommands(): number;
 }
 
 //-----------------------------------------------------------------------------
