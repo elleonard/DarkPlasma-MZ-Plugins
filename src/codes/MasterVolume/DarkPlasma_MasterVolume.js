@@ -24,7 +24,9 @@ function ConfigManager_MasterVolumeMixIn(configManager) {
   const _applyData = configManager.applyData;
   configManager.applyData = function (config) {
     _applyData.call(this, config);
-    this.masterVolume = config.masterVolume ? this.readVolume(config, 'masterVolume') : settings.defaultVolume;
+    this.masterVolume = Number.isFinite(config.masterVolume)
+      ? this.readVolume(config, 'masterVolume')
+      : settings.defaultVolume;
   };
 }
 
