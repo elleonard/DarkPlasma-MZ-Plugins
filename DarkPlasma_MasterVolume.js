@@ -1,10 +1,11 @@
-// DarkPlasma_MasterVolume 1.0.0
+// DarkPlasma_MasterVolume 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/07 1.0.0 公開
+ * 2022/08/07 1.0.1 マスターボリューム0で保存するとデフォルトに戻される不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -32,7 +33,7 @@
  * @default 20
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * オプション画面にマスターボリュームを追加します。
  * BGM/BGS/ME/SEすべての音量を一括調整できます。
  *
@@ -80,7 +81,9 @@
     const _applyData = configManager.applyData;
     configManager.applyData = function (config) {
       _applyData.call(this, config);
-      this.masterVolume = config.masterVolume ? this.readVolume(config, 'masterVolume') : settings.defaultVolume;
+      this.masterVolume = Number.isFinite(config.masterVolume)
+        ? this.readVolume(config, 'masterVolume')
+        : settings.defaultVolume;
     };
   }
 
