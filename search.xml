@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>マスターボリュームを設定する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マスターボリューム設定オプションを追加します。</p><p>本プラグインはゲームアツマールでは使用できません。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="master-volume.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MasterVolume.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+          <category> オプション </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>イベントのページごとに当たり判定を拡張する</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/07/11/area-event/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/07/11/area-event/</url>
