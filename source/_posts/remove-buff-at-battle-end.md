@@ -18,7 +18,7 @@ tags:
 ただし、逃走行動によって戦闘から途中離脱したバトラーにかかっていた強化・弱体は継続してしまいます。
 本プラグインでは、逃走行動によって離脱したメンバーも含めて、全バトラーの強化・弱体を戦闘終了時に解除するかどうかを設定します。
 
-詳しくは[【RPGツクールMV/MZ】行動による逃走とその仕様](https://elleonard.github.io/nplus_doc/2022/08/13/engineering/rmmz/escape-action/)にて解説しています。
+詳しくは[【RPGツクールMV/MZ】行動による逃走とその仕様](https://elleonard.github.io/nplus_doc/2022/08/13/engineering/rmmz/escape-by-action/)にて解説しています。
 
 # ダウンロードリンク
 
