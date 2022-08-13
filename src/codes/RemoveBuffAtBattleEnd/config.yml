@@ -1,0 +1,35 @@
+DarkPlasma_RemoveBuffAtBattleEnd:
+  name: DarkPlasma_RemoveBuffAtBattleEnd
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/08/13
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '戦闘終了時に強化・弱体を解除するかどうか'
+  parameters:
+    - param: removeBuffAtBattleEnd
+      text:
+        ja: 戦闘終了で強化・弱体を解除
+      desc:
+        ja: 戦闘終了時、逃走したバトラー含む全バトラーの強化・弱体を解除します。
+      type: boolean
+      default: true
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      戦闘終了時に全バトラーの強化・弱体を解除するかどうかを設定します。
+
+      MZデフォルトの仕様では、行動による逃走で戦闘を離脱したアクターの強化・弱体は
+      戦闘終了時に解除されません。
+      本プラグインでは、逃走したバトラーを含めて全バトラーの強化・弱体を
+      解除するか否かを設定します。

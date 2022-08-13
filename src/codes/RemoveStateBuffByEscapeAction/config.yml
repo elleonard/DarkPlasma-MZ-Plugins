@@ -1,0 +1,36 @@
+DarkPlasma_RemoveStateBuffByEscapeAction:
+  name: DarkPlasma_RemoveStateBuffByEscapeAction
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/08/13
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '逃走行動によってステート・強化・弱体解除'
+  parameters:
+    - param: removeBuffByEscapeAction
+      text:
+        ja: 逃走行動で強化・弱体を解除
+      desc:
+        ja: 逃走行動したバトラーの強化・弱体をその場で解除します。
+      type: boolean
+      default: false
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      特殊効果 逃げるの効果を持つ行動によって逃走した際、
+      ステートや強化・弱体を解除するかどうかを設定します。
+
+      メモ欄に <removeByEscapeAction:false> と記述した場合、
+      対象のステートは逃走行動によって解除されません。
+
+      逃走行動によってステートが解除される際、解除用メッセージを表示しません。
