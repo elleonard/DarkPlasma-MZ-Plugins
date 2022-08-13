@@ -4,6 +4,62 @@
   
     
     <entry>
+      <title>戦闘終了時に強化・弱体を解除するかどうか</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/08/13/remove-buff-at-battle-end/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/08/13/remove-buff-at-battle-end/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>戦闘終了時に強化・弱体を解除するかどうかを設定します。</p><h1 id="解説"><a href="#解説" class="headerlink" title="解説"></a>解説</h1><p>デフォルトの仕様では、戦闘終了時に戦闘に参加しているバトラー全員の強化・弱体を解除します。<br>ただし、逃走行動によって戦闘から途中離脱したバトラーにかかっていた強化・弱体は継続してしまいます。<br>本プラグインでは、逃走行動によって離脱したメンバーも含めて、全バトラーの強化・弱体を戦闘終了時に解除するかどうかを設定します。</p><p>詳しくは<a href="https://elleonard.github.io/nplus_doc/2022/08/13/engineering/rmmz/escape-action/">【RPGツクールMV/MZ】行動による逃走とその仕様</a>にて解説しています。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RemoveBuffAtBattleEnd.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_RemoveBuffAtBattleEnd.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> 強化・弱体 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>逃走行動によってステート・強化・弱体解除</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/08/13/remove-state-by-escape/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/08/13/remove-state-by-escape/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>逃走行動によってステート・強化・弱体を解除するかどうかを設定します。</p><h1 id="解説"><a href="#解説" class="headerlink" title="解説"></a>解説</h1><p>逃走行動によって戦闘を離脱したバトラーは、その時点ですべてのステートが解除されます。<br>強化・弱体は解除されず、戦闘終了後にも残り続けてしまいます。<br>そのため、本プラグインはステートや強化・弱体に逃走行動によって解除するかどうかを設定します。</p><p>詳しくは<a href="https://elleonard.github.io/nplus_doc/2022/08/13/engineering/rmmz/escape-action/">【RPGツクールMV/MZ】行動による逃走とその仕様</a>にて解説しています。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="使用例"></p><p>逃走行動によって暗闇ステートを解除しない設定です。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RemoveStateBuffByEscapeAction.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_RemoveStateBuffByEscapeAction.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> ステート </tag>
+            
+            <tag> 強化・弱体 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>マスターボリュームを設定する</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/</url>
