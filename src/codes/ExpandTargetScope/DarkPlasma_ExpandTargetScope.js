@@ -1,6 +1,42 @@
 import { settings } from './_build/DarkPlasma_ExpandTargetScope_parameters';
 
 /**
+ * @param {Game_Temp.prototype} gameTemp
+ */
+function Game_Temp_ExpandTargetScopeMixIn(gameTemp) {
+  const _initialize = gameTemp.initialize;
+  gameTemp.initialize = function () {
+    _initialize.call(this);
+    this._syncSelectionEffectRequestedBattlers = [];
+  };
+
+  /**
+   * @param {Game_Battler} battler
+   */
+  gameTemp.requestSyncSelectionEffect = function (battler) {
+    this._syncSelectionEffectRequestedBattlers.push(battler);
+  };
+
+  /**
+   * @param {Game_Battler} battler
+   */
+  gameTemp.isSyncSelectionEffectRequested = function (battler) {
+    this._syncSelectionEffectRequestedBattlers.includes(battler);
+  };
+
+  /**
+   * @param {Game_Battler} battler
+   */
+  gameTemp.processSyncSelectionEffect = function (battler) {
+    this._syncSelectionEffectRequestedBattlers = this._syncSelectionEffectRequestedBattlers.filter(
+      (b) => b !== battler
+    );
+  };
+}
+
+Game_Temp_ExpandTargetScopeMixIn(Game_Temp.prototype);
+
+/**
  * @param {Game_Action.prototype} gameAction
  */
 function Game_Action_ExpandTargetScopeMixIn(gameAction) {
@@ -78,7 +114,7 @@ Game_Action_ExpandTargetScopeMixIn(Game_Action.prototype);
 
 Game_Unit.prototype.selectAll = function () {
   this.aliveMembers().forEach((member) => member.select());
-  this.aliveMembers().forEach((member) => member.requestSyncSelectionEffect());
+  this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
 };
 
 const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
@@ -89,18 +125,6 @@ Game_BattlerBase.prototype.skillMpCost = function (skill) {
     return Math.floor((value * settings.mpCostRateForAll) / 100);
   }
   return value;
-};
-
-Game_Battler.prototype.requestSyncSelectionEffect = function () {
-  this._syncSelectionEffectRequested = true;
-};
-
-Game_Battler.prototype.isSyncSelectionEffectRequested = function () {
-  return this._syncSelectionEffectRequested;
-};
-
-Game_Battler.prototype.syncSelectionEffect = function () {
-  this._syncSelectionEffectRequested = false;
 };
 
 /**
@@ -163,9 +187,9 @@ Scene_Battle_ExpandScopeTargetMixIn(Scene_Battle.prototype);
 const _Sprite_Battler_updateSelectionEffect = Sprite_Battler.prototype.updateSelectionEffect;
 Sprite_Battler.prototype.updateSelectionEffect = function () {
   if (this._battler.isSelected()) {
-    if (this._battler.isSyncSelectionEffectRequested()) {
+    if ($gameTemp.isSyncSelectionEffectRequested(this._battler)) {
       this._selectionEffectCount = 0;
-      this._battler.syncSelectionEffect();
+      $gameTemp.processSyncSelectionEffect(this._battler);
     }
   }
   _Sprite_Battler_updateSelectionEffect.call(this);
