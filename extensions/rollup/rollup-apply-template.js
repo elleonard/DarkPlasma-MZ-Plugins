@@ -9,9 +9,12 @@ export default function applyTemplate(options = {}) {
     async renderChunk(code, chunk) {
       if (chunk.facadeModuleId) {
         const name = path.basename(chunk.facadeModuleId, '.js');
-        const header = fs.readFileSync(path.resolve(chunk.facadeModuleId, '..', '_build', `${name}_header.js`), 'utf-8');
+        const header = fs.readFileSync(
+          path.resolve(chunk.facadeModuleId, '..', '_build', `${name}_header.js`),
+          'utf-8'
+        );
 
-        code = wrapperToLambda(code);
+        code = removeTripleSlash(wrapperToLambda(code));
 
         return template({
           name,
@@ -31,6 +34,15 @@ export default function applyTemplate(options = {}) {
  * @param {string} code コード
  * @return {string}
  */
-function wrapperToLambda (code) {
+function wrapperToLambda(code) {
   return code.replace(/^\(function \(\) {/, '(() => {').replace(/}\(\)\);$/, '})();');
+}
+
+/**
+ * トリプルスラッシュディレクティブを除去する
+ * @param {string} code
+ * @return {string}
+ */
+function removeTripleSlash(code) {
+  return code.replace(/\/\/\/ <.*\/>\n/gi, '');
 }
