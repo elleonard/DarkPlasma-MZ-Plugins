@@ -3,6 +3,9 @@ DarkPlasma_CustomKeyHandler:
   year: 2021
   license: MIT
   histories:
+    - date: 2022/08/16
+      version: 1.2.0
+      description: 'キー有効チェックの仕組みを追加'
     - date: 2022/01/07
       version: 1.1.0
       description: 'ハンドラ名をキー名とは別に設定可能にする'
@@ -28,8 +31,13 @@ DarkPlasma_CustomKeyHandler:
       本プラグインは単体では機能しません。
       本プラグインを必要とする別のプラグインと一緒に利用してください。
 
+      以下、プラグイン開発者向け
       (例) shiftキーハンドラをすべての選択可能ウィンドウにハンドラ名hogeで追加する:
       Window_CustomKeyHandlerMixIn("shift", Window_Selectable.prototype, "hoge");
       ハンドラ名は省略するとキー名と同じになります。
       このウィンドウに対して、 window.setHandler("hoge", method) などとして
       ハンドラを追加することで、shiftキーでその操作を行わせることができます。
+
+      キーの有効状態をチェックしたい場合、
+      対象ウィンドウクラスの isCustomKeyEnabled メソッドをフックし、
+      keyが"hoge"の際に評価する条件式を記述してください。

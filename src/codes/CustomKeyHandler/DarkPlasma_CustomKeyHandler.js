@@ -1,11 +1,13 @@
-class CustomKeyMethods {
+class CustomKeyMethod {
   /**
    * @param {() => boolean} isTriggered
    * @param {() => void} process
+   * @param {() => boolean} isEnabled
    */
-  constructor(isTriggered, process) {
+  constructor(isTriggered, process, isEnabled) {
     this._isTriggered = isTriggered;
     this._process = process;
+    this._isEnabled = isEnabled;
   }
 
   isTriggered() {
@@ -14,6 +16,10 @@ class CustomKeyMethods {
 
   process(self) {
     this._process(self);
+  }
+
+  isEnabled(self) {
+    return this._isEnabled(self);
   }
 }
 
@@ -31,21 +37,26 @@ function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {
       _processHandling.call(this);
       if (this.isOpenAndActive()) {
         const customKeyMethod = this.customKeyMethods.find((method) => method.isTriggered());
-        if (customKeyMethod) {
+        if (customKeyMethod && customKeyMethod.isEnabled(this)) {
           return customKeyMethod.process(this);
         }
       }
     };
   }
 
+  windowClass.isCustomKeyEnabled = function (key) {
+    return true;
+  };
+
   windowClass.customKeyMethods.push(
-    new CustomKeyMethods(
+    new CustomKeyMethod(
       () => Input.isTriggered(key),
       (self) => {
         self.playCursorSound();
         self.updateInputData();
         self.callHandler(handlerName || key);
-      }
+      },
+      (self) => self.isCustomKeyEnabled(key)
     )
   );
 }
