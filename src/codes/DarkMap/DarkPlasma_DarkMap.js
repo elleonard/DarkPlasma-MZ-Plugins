@@ -1,3 +1,5 @@
+/// <reference path="./DarkMap.d.ts" />
+//@ts-check
 import { isMapMetaDataAvailable } from '../../common/mapMetaData';
 import { settings } from './_build/DarkPlasma_DarkMap_parameters';
 
@@ -6,7 +8,7 @@ import { settings } from './_build/DarkPlasma_DarkMap_parameters';
  */
 function Game_Map_DarkMapMixIn(gameMap) {
   gameMap.isDark = function () {
-    return isMapMetaDataAvailable() && $dataMap.meta.dark;
+    return isMapMetaDataAvailable() && !!$dataMap.meta.dark;
   };
 
   gameMap.lightEvents = function () {
@@ -21,21 +23,21 @@ Game_Map_DarkMapMixIn(Game_Map.prototype);
  */
 function Game_Event_DarKMapMixIn(gameEvent) {
   gameEvent.hasLight = function () {
-    return this.event() && this.event().meta.light;
+    return this.event() && !!this.event().meta.light;
   };
 
   gameEvent.lightRadius = function () {
     if (!this.hasLight()) {
       return 0;
     }
-    return this.event().meta.lightRadius ? Number(this.event().lightRadius) : settings.lightRadius;
+    return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : settings.lightRadius;
   };
 
   gameEvent.lightColor = function () {
     if (!this.hasLight()) {
       return null;
     }
-    return this.event().meta.lightColor || lightColor();
+    return String(this.event().meta.lightColor || lightColor());
   };
 }
 
@@ -83,8 +85,10 @@ function Spriteset_Map_DarkMapMixIn(spritesetMap) {
   };
 
   spritesetMap.createDarknessLayer = function () {
-    this._darknessLayer = new DarknessLayer();
-    this.addChild(this._darknessLayer);
+    if (this instanceof Spriteset_Map) {
+      this._darknessLayer = new DarknessLayer();
+      this.addChild(this._darknessLayer);
+    }
   };
 }
 
@@ -100,7 +104,7 @@ class DarknessLayer extends PIXI.Container {
 
   createBitmap() {
     this._bitmap = new Bitmap(this._width, this._height);
-    const sprite = new Sprite(this.viewport);
+    const sprite = new Sprite(null);
     sprite.bitmap = this._bitmap;
     sprite.opacity = 255;
     sprite.blendMode = 2;

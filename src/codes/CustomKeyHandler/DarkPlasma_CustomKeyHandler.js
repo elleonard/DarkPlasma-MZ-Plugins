@@ -1,8 +1,10 @@
+/// <reference path="./CustomKeyHandler.d.ts" />
+//@ts-check
 class CustomKeyMethod {
   /**
    * @param {() => boolean} isTriggered
-   * @param {() => void} process
-   * @param {() => boolean} isEnabled
+   * @param {(Window_Selectable) => void} process
+   * @param {(Window_Selectable) => boolean} isEnabled
    */
   constructor(isTriggered, process, isEnabled) {
     this._isTriggered = isTriggered;
@@ -25,7 +27,7 @@ class CustomKeyMethod {
 
 /**
  * @param {string} key キー
- * @param {Window_Base.prototype} windowClass
+ * @param {Window_Selectable.prototype} windowClass
  * @param {string} handlerName
  */
 function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {

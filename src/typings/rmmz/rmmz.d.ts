@@ -1,3 +1,4 @@
+/// <reference path="./lib/pixi.js.d.ts" />
 /// <reference path="./lib/effekseer.d.ts" />
 /// <reference path="./lib/fpsmeter.d.ts" />
 /// <reference path="./lib/localforage.d.ts" />

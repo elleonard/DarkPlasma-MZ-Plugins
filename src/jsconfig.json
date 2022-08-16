@@ -2,5 +2,5 @@
   "compilerOptions": {
     "target": "es6"
   },
-  "include": ["./*", "./**/*.js", "./rmmz/*.js", "./typings/rmmz/*"]
+  "include": ["./*", "./**/*.js", "./src/codes/*.d.ts", "./rmmz/*.js", "./typings/rmmz/*"]
 }
