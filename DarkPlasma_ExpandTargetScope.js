@@ -1,10 +1,11 @@
-// DarkPlasma_ExpandTargetScope 1.2.2
+// DarkPlasma_ExpandTargetScope 1.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/16 1.2.2 余計なセーブデータ拡張を排除
+ * 2022/08/16 1.3.0 メニュー画面でも全体化する機能を追加
+ *            1.2.2 余計なセーブデータ拡張を排除
  * 2022/05/09 1.2.1 全体化できないスキルが全体化される不具合を修正
  * 2022/01/05 1.2.0 元々全体を対象とするスキルの対象選択スキップ設定を追加
  * 2022/01/03 1.1.0 DarkPlasma_ExpandTargetScopeButtonに対応
@@ -29,6 +30,9 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_CustomKeyHandler
  *
  * @param switchScopeButton
  * @text 全体化ボタン
@@ -59,13 +63,18 @@
  * @default false
  *
  * @help
- * version: 1.2.2
+ * version: 1.3.0
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
  *
  * 以下のように記述すると、全体化時のアニメーションが n に差し替えられます。
  * <expandedAnimationId:n>
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_CustomKeyHandler version:1.2.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
  */
 
 (() => {
@@ -214,9 +223,46 @@
   };
 
   /**
+   * @param {Scene_ItemBase.prototype} sceneItemBase
+   */
+  function Scene_ItemBase_ExpandScopeTargetMixIn(sceneItemBase) {
+    const _createActorWindow = sceneItemBase.createActorWindow;
+    sceneItemBase.createActorWindow = function () {
+      _createActorWindow.call(this);
+      this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScope.bind(this));
+    };
+
+    sceneItemBase.toggleTargetScope = function () {
+      this._actorWindow.toggleCursorAll();
+    };
+
+    const _itemTargetActors = sceneItemBase.itemTargetActors;
+    sceneItemBase.itemTargetActors = function () {
+      if (this._actorWindow.canToggleScope() && this._actorWindow.cursorAll()) {
+        return $gameParty.members();
+      }
+      return _itemTargetActors.call(this);
+    };
+  }
+
+  Scene_ItemBase_ExpandScopeTargetMixIn(Scene_ItemBase.prototype);
+
+  /**
    * @param {Scene_Battle.prototype} sceneBattle
    */
   function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle) {
+    const _createActorWindow = sceneBattle.createActorWindow;
+    sceneBattle.createActorWindow = function () {
+      _createActorWindow.call(this);
+      this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeActor.bind(this));
+    };
+
+    const _createEnemyWindow = sceneBattle.createEnemyWindow;
+    sceneBattle.createEnemyWindow = function () {
+      _createEnemyWindow.call(this);
+      this._enemyWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeEnemy.bind(this));
+    };
+
     const _startActorSelection = sceneBattle.startActorSelection;
     sceneBattle.startActorSelection = function () {
       _startActorSelection.call(this);
@@ -266,6 +312,14 @@
       }
       _onEnemyOk.call(this);
     };
+
+    sceneBattle.toggleTargetScopeActor = function () {
+      this._actorWindow.toggleCursorAll();
+    };
+
+    sceneBattle.toggleTargetScopeEnemy = function () {
+      this._enemyWindow.toggleCursorAll();
+    };
   }
 
   Scene_Battle_ExpandScopeTargetMixIn(Scene_Battle.prototype);
@@ -282,33 +336,51 @@
   };
 
   /**
-   * @param {Window_BattleActor.prototype|Window_BattleEnemy.prototype} windowClass
+   * @param {Window_MenuActor.prototype} windowClass
    */
-  function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass) {
-    windowClass.processExpandScope = function () {
-      if (!$gameParty.inBattle()) {
-        return false;
-      }
-      const action = BattleManager.inputtingAction();
-      if (action.canExpandScope() && Input.isTriggered(settings.switchScopeButton) && !this.cursorFixed()) {
-        this.toggleCursorAll();
-        return true;
-      }
-      return false;
+  function Window_MenuActor_ExpandTargetScopeMixIn(windowClass) {
+    const _selectForItem = windowClass.selectForItem;
+    windowClass.selectForItem = function (item) {
+      _selectForItem.call(this, item);
+      this._currentAction = new Game_Action($gameParty.menuActor());
+      this._currentAction.setItemObject(item);
     };
 
     windowClass.toggleCursorAll = function () {
       this.setCursorAll(!this._cursorAll);
+      this.forceSelect(0);
     };
 
-    const _processHandling = windowClass.processHandling;
-    windowClass.processHandling = function () {
-      if (this.isOpenAndActive()) {
-        if (this.processExpandScope()) {
-          return;
-        }
+    windowClass.canToggleScope = function () {
+      return this._currentAction && this._currentAction.canExpandScope() && !this.cursorFixed();
+    };
+
+    const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
+    windowClass.isCustomKeyEnabled = function (key) {
+      if (key === settings.switchScopeButton) {
+        return this.canToggleScope();
       }
-      return _processHandling.call(this);
+      return _isCustomKeyEnabled.call(this, key);
+    };
+  }
+
+  Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_MenuActor.prototype);
+  Window_MenuActor_ExpandTargetScopeMixIn(Window_MenuActor.prototype);
+
+  /**
+   * @param {Window_BattleActor.prototype|Window_BattleEnemy.prototype} windowClass
+   */
+  function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass) {
+    windowClass.toggleCursorAll = function () {
+      this.setCursorAll(!this._cursorAll);
+    };
+
+    const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
+    windowClass.isCustomKeyEnabled = function (key) {
+      if (key === settings.switchScopeButton) {
+        return $gameParty.inBattle() && BattleManager.inputtingAction().canExpandScope() && !this.cursorFixed();
+      }
+      return _isCustomKeyEnabled.call(this, key);
     };
 
     /**
@@ -338,6 +410,8 @@
     };
   }
 
+  Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleActor.prototype);
+  Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleEnemy.prototype);
   Window_BattleTarget_ExpandTargetScopeMixIn(Window_BattleActor.prototype);
   Window_BattleTarget_ExpandTargetScopeMixIn(Window_BattleEnemy.prototype);
 
