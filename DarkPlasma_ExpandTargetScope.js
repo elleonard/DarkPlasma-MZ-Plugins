@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.2.1
+// DarkPlasma_ExpandTargetScope 1.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/16 1.2.2 余計なセーブデータ拡張を排除
  * 2022/05/09 1.2.1 全体化できないスキルが全体化される不具合を修正
  * 2022/01/05 1.2.0 元々全体を対象とするスキルの対象選択スキップ設定を追加
  * 2022/01/03 1.1.0 DarkPlasma_ExpandTargetScopeButtonに対応
@@ -58,7 +59,7 @@
  * @default false
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -84,6 +85,42 @@
     mpCostRateForAll: Number(pluginParameters.mpCostRateForAll || 100),
     skipTargetSelectionForAll: String(pluginParameters.skipTargetSelectionForAll || false) === 'true',
   };
+
+  /**
+   * @param {Game_Temp.prototype} gameTemp
+   */
+  function Game_Temp_ExpandTargetScopeMixIn(gameTemp) {
+    const _initialize = gameTemp.initialize;
+    gameTemp.initialize = function () {
+      _initialize.call(this);
+      this._syncSelectionEffectRequestedBattlers = [];
+    };
+
+    /**
+     * @param {Game_Battler} battler
+     */
+    gameTemp.requestSyncSelectionEffect = function (battler) {
+      this._syncSelectionEffectRequestedBattlers.push(battler);
+    };
+
+    /**
+     * @param {Game_Battler} battler
+     */
+    gameTemp.isSyncSelectionEffectRequested = function (battler) {
+      this._syncSelectionEffectRequestedBattlers.includes(battler);
+    };
+
+    /**
+     * @param {Game_Battler} battler
+     */
+    gameTemp.processSyncSelectionEffect = function (battler) {
+      this._syncSelectionEffectRequestedBattlers = this._syncSelectionEffectRequestedBattlers.filter(
+        (b) => b !== battler
+      );
+    };
+  }
+
+  Game_Temp_ExpandTargetScopeMixIn(Game_Temp.prototype);
 
   /**
    * @param {Game_Action.prototype} gameAction
@@ -163,7 +200,7 @@
 
   Game_Unit.prototype.selectAll = function () {
     this.aliveMembers().forEach((member) => member.select());
-    this.aliveMembers().forEach((member) => member.requestSyncSelectionEffect());
+    this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
   };
 
   const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
@@ -174,18 +211,6 @@
       return Math.floor((value * settings.mpCostRateForAll) / 100);
     }
     return value;
-  };
-
-  Game_Battler.prototype.requestSyncSelectionEffect = function () {
-    this._syncSelectionEffectRequested = true;
-  };
-
-  Game_Battler.prototype.isSyncSelectionEffectRequested = function () {
-    return this._syncSelectionEffectRequested;
-  };
-
-  Game_Battler.prototype.syncSelectionEffect = function () {
-    this._syncSelectionEffectRequested = false;
   };
 
   /**
@@ -248,9 +273,9 @@
   const _Sprite_Battler_updateSelectionEffect = Sprite_Battler.prototype.updateSelectionEffect;
   Sprite_Battler.prototype.updateSelectionEffect = function () {
     if (this._battler.isSelected()) {
-      if (this._battler.isSyncSelectionEffectRequested()) {
+      if ($gameTemp.isSyncSelectionEffectRequested(this._battler)) {
         this._selectionEffectCount = 0;
-        this._battler.syncSelectionEffect();
+        $gameTemp.processSyncSelectionEffect(this._battler);
       }
     }
     _Sprite_Battler_updateSelectionEffect.call(this);
