@@ -74,6 +74,13 @@ Bitmap.prototype.fillGradientCircle = function (centerX, centerY, radius, lightC
   context.restore();
 };
 
+class Spriteset_Map_Extends extends Spriteset_Map {
+  createDarknessLayer() {
+    this._darknessLayer = new DarknessLayer();
+    this.addChild(this._darknessLayer);
+  }
+}
+
 /**
  * @param {Spriteset_Map.prototype} spritesetMap
  */
@@ -85,10 +92,7 @@ function Spriteset_Map_DarkMapMixIn(spritesetMap) {
   };
 
   spritesetMap.createDarknessLayer = function () {
-    if (this instanceof Spriteset_Map) {
-      this._darknessLayer = new DarknessLayer();
-      this.addChild(this._darknessLayer);
-    }
+    Spriteset_Map_Extends.prototype.createDarknessLayer.call(this);
   };
 }
 
