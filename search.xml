@@ -160,7 +160,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップイベント実行中に使用できないアイテム・スキルを実現します。</p><p>重要なイベントでメニューを開かせるが、コモンイベント実行のアイテムを使うとメニューが閉じてイベントが進んでしまう、という場合にどうぞ。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップイベント実行中に使用できないアイテム・スキルを実現します。</p><p>重要なイベントでメニューを開かせるが、コモンイベント実行のアイテムを使うとメニューが閉じてイベントが進んでしまう、という場合にどうぞ。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_UnusableItemWithMapEvent.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
       
       
       <categories>
@@ -426,7 +426,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>単体を対象とするスキルやアイテムの対象を全体化可能にします。<br>全体化可能に設定した行動は、対象選択の際に特定のキーを押すことで対象範囲を切り替えることができます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="expand-target-scope-setting.png" alt="設定例" title="設定例"></p><p>ファイアⅠを全体化可能にし、全体化した際のアニメーションを70番に変更する設定です。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScopeButton.js">対象範囲切り替えボタンプラグイン</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>単体を対象とするスキルやアイテムの対象を全体化可能にします。<br>全体化可能に設定した行動は、対象選択の際に特定のキーを押すことで対象範囲を切り替えることができます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="expand-target-scope-setting.png" alt="設定例" title="設定例"></p><p>ファイアⅠを全体化可能にし、全体化した際のアニメーションを70番に変更する設定です。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScope.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScopeButton.js">対象範囲切り替えボタンプラグイン</a></li></ul>]]></content>
       
       
       <categories>
