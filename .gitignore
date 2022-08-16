@@ -1,7 +1,6 @@
 _dist/
 node_modules/
 **/_build/*
-!**/_build/*.d.ts
 
 src/excludes/
 release/

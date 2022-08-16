@@ -12,10 +12,12 @@
     "format": "run-s clean lintAll prettierAll",
     "prettier": "prettier --write",
     "prettierAll": "prettier --write ./src/**/DarkPlasma_*.js",
-    "build": "run-s clean \"build:target:config {@}\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
+    "build": "run-s clean \"build:target:config:js {@}\" \"build:target:config:declaration ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
     "buildAll": "run-s clean build:*",
     "build:config": "node ./scripts/generateFromConfig",
-    "build:target:config": "node ./scripts/generateFromConfig -f",
+    "build:target:config": "run-s \"build:target:config:js {@}\" \"build:target:config:declaration ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\"",
+    "build:target:config:js": "node ./scripts/generateFromConfig -f",
+    "build:target:config:declaration": "tsc --declaration --allowJs --emitDeclarationOnly",
     "build:js": "rollup -c",
     "build:target:js": "rollup -c",
     "build:format": "prettier --write ./_dist/**/*.js",
@@ -28,8 +30,9 @@
     "generate:config": "node ./scripts/generateConfig",
     "clean": "run-p clean:*",
     "clean:dist": "rimraf ./_dist",
-    "buildTs": "run-s clean \"build:target:config {@}\" \"buildTsc ./src/codes/{@}\" \"prettier ./src/codes/{@}/DarkPlasma_{@}.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
-    "buildTsc": "tsc --rootDir"
+    "buildTs": "run-s clean \"build:target:config {@}\" \"buildConfigTsc ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"buildTsc ./src/codes/{@}\" \"prettier ./src/codes/{@}/DarkPlasma_{@}.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
+    "buildTsc": "tsc --rootDir",
+    "buildConfigTsc": "tsc --declaration --allowJs --emitDeclarationOnly"
   },
   "husky": {
     "hooks": {
