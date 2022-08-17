@@ -14,25 +14,12 @@ async function generateFromConfig(file) {
   for (let key of Object.keys(config)) {
     const currentConfig = config[key];
     fs.writeFileSync(path.resolve(distDir, `${key}_header.js`), generateHeader(currentConfig));
-    if (!key.endsWith('_Test')) {
-      const parameterReader = await generateParameterReader(currentConfig);
-      fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
-      const parameterReaderFunction = await generateParameterReaderFunction(currentConfig);
-      fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
-      const pluginCommands = await generatePluginCommand(currentConfig);
-      fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
-      /**
-       * テストプラグインがいる場合、パラメータをコピーする
-       */
-      const testDir = path.resolve(file, '..', '..', '..', 'tests', `${key.slice(key.indexOf('_') + 1)}_Test`);
-      const testDistDir = path.resolve(testDir, '_build');
-      if (fs.existsSync(testDir)) {
-        const testConfig = loadConfig(path.resolve(testDir, 'config.yml'))[`${key}_Test`];
-        const testParameterReader = await generateParameterReader(currentConfig, true, testConfig);
-        mkdirp.sync(testDistDir);
-        fs.writeFileSync(path.resolve(testDistDir, `${key}_Test_parameters.js`), testParameterReader);
-      }
-    }
+    const parameterReader = await generateParameterReader(currentConfig);
+    fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
+    const parameterReaderFunction = await generateParameterReaderFunction(currentConfig);
+    fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
+    const pluginCommands = await generatePluginCommand(currentConfig);
+    fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
   }
 
   console.log(`build config: ${file}`);
