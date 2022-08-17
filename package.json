@@ -12,12 +12,16 @@
     "format": "run-s clean lintAll prettierAll",
     "prettier": "prettier --write",
     "prettierAll": "prettier --write ./src/**/DarkPlasma_*.js",
-    "build": "run-s clean \"build:config:js {@}\" \"build:config:declaration ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
-    "buildAll": "run-s clean build:*",
+    "build": "run-s clean \"build:config:js {@}\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
+    "buildTs": "run-s clean \"build:config:js {@}\" \"build:config:declaration ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"build:target:ts ./src/codes/{@}\" \"prettier ./src/codes/{@}/DarkPlasma_{@}.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
+    "buildAll": "run-s clean buildAll:* build:format build:copy",
+    "buildAll:config":"node ./scripts/generateFromConfig",
     "build:config": "run-s \"build:config:js {2}\" \"build:config:declaration ./src/codes/{2}/_build/DarkPlasma_{2}_parameters.js\" --",
     "build:config:js": "node ./scripts/generateFromConfig -f",
     "build:config:declaration": "tsc --declaration --allowJs --emitDeclarationOnly",
-    "build:js": "rollup -c",
+    "buildAll:ts": "tsc --rootDir ./src",
+    "buildAll:js": "rollup -c",
+    "build:target:ts": "tsc --rootDir",
     "build:target:js": "rollup -c",
     "build:format": "prettier --write ./_dist/**/*.js",
     "build:copy": "node ./scripts/copyToProject",
@@ -28,10 +32,7 @@
     "generate": "node ./scripts/generateDirectory",
     "generate:config": "node ./scripts/generateConfig",
     "clean": "run-p clean:*",
-    "clean:dist": "rimraf ./_dist",
-    "buildTs": "run-s clean \"build:target:config {@}\" \"buildConfigTsc ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"buildTsc ./src/codes/{@}\" \"prettier ./src/codes/{@}/DarkPlasma_{@}.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
-    "buildTsc": "tsc --rootDir",
-    "buildConfigTsc": "tsc --declaration --allowJs --emitDeclarationOnly"
+    "clean:dist": "rimraf ./_dist"
   },
   "husky": {
     "hooks": {
