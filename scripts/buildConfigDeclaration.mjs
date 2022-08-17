@@ -1,3 +1,5 @@
+await $`git fetch origin release`;
+
 /**
  * releaseブランチの最新コミットのコメントから、最後にビルドされたmasterのコミットIDを取得する
  */
