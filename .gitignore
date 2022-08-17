@@ -1,6 +1,8 @@
 _dist/
 node_modules/
-_build/
+**/_build/*
+
+DarkPlasma_*.js
 
 src/excludes/
 release/

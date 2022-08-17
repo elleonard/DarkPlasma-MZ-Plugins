@@ -845,6 +845,6 @@ declare class PluginManager {
   public static makeUrl(filename: string): string;
   public static checkErrors(): void;
   public static throwLoadError(): void;
-  public static registerCommand(pluginName: string, commandName: string, func: Function): void;
+  public static registerCommand(pluginName: string, commandName: string, func: (args: {[key: string]: string|true}) => void): void;
   public static callCommand(self: Game_Interpreter, pluginName: string, commandName: string, args: any): void;
 }

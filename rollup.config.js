@@ -17,7 +17,6 @@ const targetJsList = (() => {
     : [
         glob.sync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
         glob.sync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
-        glob.sync(path.join(__dirname, 'src', 'tests', '*', `DarkPlasma*_Test.js`)),
       ].flat();
 })();
 
