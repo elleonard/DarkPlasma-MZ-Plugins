@@ -16,6 +16,7 @@
     "buildTs": "run-s clean \"build:config:js {@}\" \"build:config:declaration ./src/codes/{@}/_build/DarkPlasma_{@}_parameters.js\" \"build:target:ts ./src/codes/{@}\" \"prettier ./src/codes/{@}/DarkPlasma_{@}.js\" \"build:target:js --environment TARGET:{@}\" build:format build:copy --",
     "buildAll": "run-s clean buildAll:* build:format build:copy",
     "buildAll:config": "node ./scripts/generateFromConfig",
+    "buildAll:configTs": "zx ./scripts/buildConfigDeclaration.mjs",
     "buildAll:ts": "tsc --rootDir ./src",
     "buildAll:js": "rollup -c",
     "build:config": "run-s \"build:config:js {2}\" \"build:config:declaration ./src/codes/{2}/_build/DarkPlasma_{2}_parameters.js\" \"build:config:declaration ./src/codes/{2}/_build/DarkPlasma_{2}_commands.js\" --",
@@ -66,6 +67,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.26.10",
     "typescript": "^4.7.4",
-    "yaml": "^1.10.0"
+    "yaml": "^1.10.0",
+    "zx": "^7.0.8"
   }
 }
