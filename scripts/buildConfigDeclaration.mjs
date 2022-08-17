@@ -3,12 +3,12 @@ await $`git fetch origin release`;
 /**
  * releaseブランチの最新コミットのコメントから、最後にビルドされたmasterのコミットIDを取得する
  */
-const lastBuildCommit = await $`git log --first-parent origin/release --pretty=oneline -n 1 | awk \"{print $2}\"`;
+const lastBuildCommit = await $`git log --first-parent origin/release --pretty=oneline -n 1`;
 
 /**
  * 差分検出
  */
-const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim()} HEAD --name-only`;
+const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().split(" ")[1]} HEAD --name-only`;
 
 /**
  * ひとまず、全ビルドはcodesのみ対象とする
