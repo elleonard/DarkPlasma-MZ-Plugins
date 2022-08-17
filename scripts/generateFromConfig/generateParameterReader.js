@@ -5,24 +5,21 @@ const { SYMBOL_TYPE } = require('./parameterSymbolType');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-function generateParameterReader(config, isTest, testConfig) {
+function generateParameterReader(config) {
   const parameters = configToParameters(config, SYMBOL_TYPE.PLUGIN_PARAMETERS);
-  const testParameters = configToParameters(testConfig, SYMBOL_TYPE.TEST_PLUGIN_PARAMETERS);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
-    const pluginParameterPath = isTest ? '../../../common/testPluginParameters' : '../../../common/pluginParameters';
-    const code = `import { ${isTest ? `testPluginParameters,` : ``}pluginParameters } from '${pluginParameterPath}';
+    const pluginParameterPath = '../../../common/pluginParameters';
+    const code = `import { pluginParameters } from '${pluginParameterPath}';
     
     export const settings = {
       ${parameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
     };
-    
-    ${testParametersToCode(testParameters)}
     `;
 
-    return prettier.format(isTest ? code + targetVersionCode(config) : code, options);
+    return prettier.format(code, options);
   });
 }
 
@@ -56,18 +53,6 @@ function configToParameters(config, symbolType) {
           };
         })
     : [];
-}
-
-function testParametersToCode(testParameters) {
-  return testParameters.length > 0
-    ? `export const testSettings = {
-    ${testParameters.map((parameter) => `${parameter.name}: ${parameter.parser}`).join(',\n')}
-  };`
-    : '';
-}
-
-function targetVersionCode(config) {
-  return `export const targetPluginVersion = "${config.histories[0].version}";`;
 }
 
 module.exports = {

@@ -6,7 +6,6 @@ const YAML = require('yaml');
 const srcPluginDirs = [
   path.join(__dirname, '..', '..', '_dist', 'codes', 'DarkPlasma_*.js'),
   path.join(__dirname, '..', '..', '_dist', 'excludes', 'DarkPlasma_*.js'),
-  path.join(__dirname, '..', '..', '_dist', 'tests', 'DarkPlasma_*.js'),
 ];
 const isWatch = process.argv.some((n) => n === '-w');
 

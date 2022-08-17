@@ -7,7 +7,6 @@ const { generateFromConfig } = require('./generateFromConfig');
 const globPaths = [
   path.resolve(__dirname, '..', '..', 'src', 'codes', '**', 'config.yml'),
   path.resolve(__dirname, '..', '..', 'src', 'excludes', '**', 'config.yml'),
-  path.resolve(__dirname, '..', '..', 'src', 'tests', '**', 'config.yml'),
 ];
 const isWatch = process.argv.some((n) => n === '-w');
 const targetDir = (() => {
