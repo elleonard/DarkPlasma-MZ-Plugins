@@ -20,6 +20,7 @@ jobs:
         with:
           ref: master
           path: stage
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v2.1.2
         with:
