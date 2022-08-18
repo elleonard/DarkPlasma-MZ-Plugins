@@ -1,29 +1,21 @@
-await $`git fetch origin release`;
-
-/**
- * releaseブランチの最新コミットのコメントから、最後にビルドされたmasterのコミットIDを取得する
- */
-const lastBuildCommit = await $`git log --first-parent origin/release --pretty=oneline -n 1`;
-
-/**
- * 差分検出
- */
-const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().split(" ")[1]} HEAD --name-only`;
-
+const targets = await glob(["./src/codes"]);
+console.log(targets);
 /**
  * ひとまず、全ビルドはcodesのみ対象とする
  */
-const buildTargets = [...new Set(diffFiles.stdout.split('\n')
+const buildTargets = [...new Set(targets
   .filter(path => path.startsWith("src/codes"))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
 
-const globPaths = await Promise.all(buildTargets.map(target => {
-  return [
-    glob(`./src/codes/${target}/_build/*_commands.js`),
-    glob(`./src/codes/${target}/_build/*_parameters.js`),
-    glob(`./src/codes/${target}/_build/*_parametersOf.js`),
-  ];
-}).flat());
+const globPaths = await Promise.all(buildTargets
+  .filter(target => fs.existsSync(`./src/codes/${target}/DarkPlasma_${target}.ts`))
+  .map(target => {
+    return [
+      glob(`./src/codes/${target}/_build/*_commands.js`),
+      glob(`./src/codes/${target}/_build/*_parameters.js`),
+      glob(`./src/codes/${target}/_build/*_parametersOf.js`),
+    ];
+  }).flat());
 
 await Promise
   .all(globPaths.map(globPath => {

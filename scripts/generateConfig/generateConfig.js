@@ -3,6 +3,7 @@ const path = require('path');
 const ejs = require('ejs');
 
 const templatePath = path.resolve(__dirname, '..', '..', 'src', 'templates', 'config.ejs');
+const tsconfigTemplatePath = path.resolve(__dirname, '..', '..', 'tsconfig_template.json');
 
 async function generateConfig(destDir) {
   fs.open(path.resolve(destDir, 'config.yml'), 'wx', (err, fd) => {
@@ -45,6 +46,7 @@ async function generateConfig(destDir) {
       if (err) console.error(`generate ts failed.`);
       fs.appendFile(tsFile, `/// <reference path="../../typings/rmmz/rmmz.d.ts" />`);
     });
+    fs.copyFileSync(tsconfigTemplatePath, `${destDir}/tsconfig.json`);
   });
 }
 
