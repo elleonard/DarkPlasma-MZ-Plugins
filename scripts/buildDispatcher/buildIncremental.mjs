@@ -14,7 +14,11 @@ const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().sp
  * ひとまず、インクリメンタルビルドはcodesのみ対象とする
  */
 const codePath = path.resolve(__dirname, '..', '..', 'src', 'codes').replaceAll('\\', '/');
-const configBuildTargets = await glob([`${codePath}/`]);
+const configTargets = await glob([`${codePath}/`]);
+const configBuildTargets = [...new Set(configTargets
+  .filter(path => /src\/codes\/.+\/config\.yml$/.test(path))
+  .map(path => /src\/codes\/(.+)\/config\.yml$/.exec(path)[1]))];
+
 const configPaths = await Promise.all(configBuildTargets
   .filter(target => fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`))
   .map(target => {
