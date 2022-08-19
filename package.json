@@ -13,7 +13,7 @@
     "prettier": "prettier --write",
     "prettierAll": "prettier --write ./src/**/DarkPlasma_*.js",
     "build": "zx ./scripts/buildDispatcher/build.mjs",
-    "buildIncremental": "run-s buildAll:config buildIncremental",
+    "buildIncremental": "run-s buildAll:config buildIncremental:main",
     "buildIncremental:main": "zx ./scripts/buildDispatcher/buildIncremental.mjs",
     "buildAll": "run-s buildAll:* build:format build:copy",
     "buildAll:config": "node ./scripts/generateFromConfig",

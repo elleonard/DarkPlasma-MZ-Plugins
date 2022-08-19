@@ -33,11 +33,12 @@ await Promise
 const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   .filter(path => path.startsWith("src/codes"))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
-for (target of buildTargets) {
-  if (fs.existsSync(`./src/codes/${target}/DarkPlasma_${target}.ts`)) {
-    fs.copyFileSync('./tsconfig_template.json', `${path}/tsconfig.json`);
-    await $`yarn tsc -b ${path}`;
-    await $`yarn prettier ${path}/DarkPlasma_${target}.js`;
+for (let target of buildTargets) {
+  const targetPath = `./src/codes/${target}`;
+  if (fs.existsSync(`./${targetPath}/DarkPlasma_${target}.ts`)) {
+    fs.copyFileSync('./tsconfig_template.json', `${targetPath}/tsconfig.json`);
+    await $`yarn tsc -b ${targetPath}`;
+    await $`yarn prettier ${targetPath}/DarkPlasma_${target}.js`;
   }
   await $`yarn rollup -c  --environment TARGET:${target} ${argv.exclude ? "-e" : ""}`;
   await $`yarn build:format`;
