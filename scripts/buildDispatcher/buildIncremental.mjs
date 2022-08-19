@@ -13,20 +13,21 @@ const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().sp
 /**
  * ひとまず、インクリメンタルビルドはcodesのみ対象とする
  */
-const configBuildTargets = await glob('./src/codes/*');
+const codePath = path.resolve(__dirname, '..', '..', 'src', 'codes').replaceAll('\\', '/');
+const configBuildTargets = await glob([`${codePath}/`]);
 const configPaths = await Promise.all(configBuildTargets
-  .filter(target => fs.existsSync(`./src/codes/${target}/DarkPlasma_${target}.ts`))
+  .filter(target => fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`))
   .map(target => {
     return [
-      glob(`./src/codes/${target}/_build/*_commands.js`),
-      glob(`./src/codes/${target}/_build/*_parameters.js`),
-      glob(`./src/codes/${target}/_build/*_parametersOf.js`),
+      glob(`${codePath}/${target}/_build/*_commands.js`),
+      glob(`${codePath}/${target}/_build/*_parameters.js`),
+      glob(`${codePath}/${target}/_build/*_parametersOf.js`),
     ];
   }).flat());
 
 await Promise
   .all(configPaths.map(globPath => {
-    return $`yarn tsc --declaration --allowJs --emitDeclarationOnly ${globPath}`;
+    return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
   }));
 
 
@@ -34,11 +35,11 @@ const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   .filter(path => path.startsWith("src/codes"))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
 for (let target of buildTargets) {
-  const targetPath = `./src/codes/${target}`;
-  if (fs.existsSync(`./${targetPath}/DarkPlasma_${target}.ts`)) {
+  const targetPath = `${codePath}/${target}`;
+  if (fs.existsSync(`${targetPath}/DarkPlasma_${target}.ts`)) {
     fs.copyFileSync('./tsconfig_template.json', `${targetPath}/tsconfig.json`);
-    await $`yarn tsc -b ${targetPath}`;
-    await $`yarn prettier ${targetPath}/DarkPlasma_${target}.js`;
+    await $([`yarn tsc -b`, ` ${targetPath}`], '');
+    await $([`yarn prettier`, ` ${targetPath}/DarkPlasma_${target}.js`], '');
   }
   await $`yarn rollup -c  --environment TARGET:${target} ${argv.exclude ? "-e" : ""}`;
   await $`yarn build:format`;
