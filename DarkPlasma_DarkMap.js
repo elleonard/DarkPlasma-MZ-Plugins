@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 1.0.1
+// DarkPlasma_DarkMap 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/19 1.0.2 typescript移行
  * 2022/03/31 1.0.1 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/11/19 1.0.0 公開
  */
@@ -34,7 +35,7 @@
  * @default 200
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -101,41 +102,34 @@
    */
   function Game_Map_DarkMapMixIn(gameMap) {
     gameMap.isDark = function () {
-      return isMapMetaDataAvailable() && $dataMap.meta.dark;
+      return isMapMetaDataAvailable() && !!$dataMap.meta.dark;
     };
-
     gameMap.lightEvents = function () {
       return this.events().filter((event) => event.hasLight());
     };
   }
-
   Game_Map_DarkMapMixIn(Game_Map.prototype);
-
   /**
    * @param {Game_Event.prototype} gameEvent
    */
   function Game_Event_DarKMapMixIn(gameEvent) {
     gameEvent.hasLight = function () {
-      return this.event() && this.event().meta.light;
+      return this.event() && !!this.event().meta.light;
     };
-
     gameEvent.lightRadius = function () {
       if (!this.hasLight()) {
         return 0;
       }
-      return this.event().meta.lightRadius ? Number(this.event().lightRadius) : settings.lightRadius;
+      return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : settings.lightRadius;
     };
-
     gameEvent.lightColor = function () {
       if (!this.hasLight()) {
         return null;
       }
-      return this.event().meta.lightColor || lightColor();
+      return String(this.event().meta.lightColor || lightColor());
     };
   }
-
   Game_Event_DarKMapMixIn(Game_Event.prototype);
-
   function darkColor() {
     return `#${(
       (1 << 24) +
@@ -147,7 +141,6 @@
       .toString(16)
       .slice(1)}`;
   }
-
   function lightColor() {
     return `#${(
       (1 << 24) +
@@ -158,7 +151,6 @@
       .toString(16)
       .slice(1)}`;
   }
-
   Bitmap.prototype.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
     const context = this._context;
     const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
@@ -171,7 +163,6 @@
     context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
     context.restore();
   };
-
   /**
    * @param {Spriteset_Map.prototype} spritesetMap
    */
@@ -181,26 +172,22 @@
       _createLowerLayer.call(this);
       this.createDarknessLayer();
     };
-
     spritesetMap.createDarknessLayer = function () {
       this._darknessLayer = new DarknessLayer();
       this.addChild(this._darknessLayer);
     };
   }
-
   Spriteset_Map_DarkMapMixIn(Spriteset_Map.prototype);
-
   class DarknessLayer extends PIXI.Container {
     constructor() {
       super();
       this._width = Graphics.width;
       this._height = Graphics.height;
-      this.createBitmap();
-    }
-
-    createBitmap() {
       this._bitmap = new Bitmap(this._width, this._height);
-      const sprite = new Sprite(this.viewport);
+      this.createSprite();
+    }
+    createSprite() {
+      const sprite = new Sprite(null);
       sprite.bitmap = this._bitmap;
       sprite.opacity = 255;
       sprite.blendMode = 2;
@@ -208,7 +195,6 @@
       sprite.y = 0;
       this.addChild(sprite);
     }
-
     update() {
       if ($gameMap.isDark()) {
         this._bitmap.fillRect(0, 0, this._width, this._height, darkColor());
