@@ -24,8 +24,18 @@ yarn buildAll
 ## 個別ビルド
 
 ```bash
-yarn build (ビルド対象)
+yarn build --target (ビルド対象)
 ```
+
+### 個別ビルド用オプション
+
+|option|required?|description|
+|:----------|:--|:---|
+|--target &lt;BuildTarget&gt;|yes|ビルド対象を指定します。|
+|--ts|no|ビルド対象がtypescriptである場合に指定します。|
+|--exclude|no|excludesディレクトリ以下の対象をビルドします。|
+|--configOnly|no|config.ymlのみビルドします。|
+|--noFinalize|no|ビルド後の成果物のフォーマットとコピーを行いません。|
 
 # 動作確認したい
 
