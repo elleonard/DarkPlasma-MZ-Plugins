@@ -225,8 +225,8 @@ declare class Window_Selectable extends Window_Base {
   public isCursorMovable(): boolean;
 
   public cursorDown(wrap: boolean): void;
-  public cursorUp(): void;
-  public cursorRight(): void;
+  public cursorUp(wrap: boolean): void;
+  public cursorRight(wrap: boolean): void;
   public cursorLeft(wrap: boolean): void;
   public cursorPagedown(): void;
   public cursorPageup(): void;
@@ -720,11 +720,11 @@ declare class Window_StatusBase extends Window_Selectable {
 
   public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
   public drawActorFace(actor: Game_Actor, x: number, y: number, width: number, height: number): void;
-  public drawActorName(actor: Game_Actor, x: number, y: number, width: ?number): void;
-  public drawActorClass(actor: Game_Actor, x: number, y: number, width: ?number): void;
-  public drawActorNickname(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
-  public drawActorIcons(actor: Game_Actor, x: number, y: number, width: ?number): void;
+  public drawActorIcons(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorSimpleStatus(actor: Game_Actor, x: number, y: number): void;
   public actorSlotName(actor: Game_Actor, index: number): string;
 }
@@ -1057,16 +1057,18 @@ declare class Window_NameInput extends Window_Selectable {
 
   public initialize(...args: any[]): void;
 
-  public windowHeight(): number;
+  public setEditWindow(editWindow: Window_NameEdit): void;
+
   public table(): ReadonlyArray<string>[];
   public maxCols(): number;
   public maxItems(): number;
+  public itemWidth(): number;
+  public groupSpacing(): number;
   public character(): string;
   public isPageChange(): boolean;
   public isOk(): boolean;
   public itemRect(index: number): Rectangle; /* Window_NameEdit.Rectangle */
-
-  public refresh(): void;
+  public drawItem(index: number): void;
 
   public updateCursor(): void;
   public isCursorMovable(): boolean;
