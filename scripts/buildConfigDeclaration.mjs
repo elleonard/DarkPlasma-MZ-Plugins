@@ -1,5 +1,4 @@
 const targets = await glob(["./src/codes"]);
-console.log(targets);
 /**
  * ひとまず、全ビルドはcodesのみ対象とする
  */
