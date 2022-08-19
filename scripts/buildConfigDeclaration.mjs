@@ -5,8 +5,8 @@ const targets = await glob([`${codePath}/`]);
  * ひとまず、全ビルドはcodesのみ対象とする
  */
 const buildTargets = [...new Set(targets
-  .filter(path => path.includes("src/codes"))
-  .map(path => /src\/codes\/(.+)\/.*/.exec(path)[1]))];
+  .filter(path => /src\/codes\/.+\/config\.yml$/.test(path))
+  .map(path => /src\/codes\/(.+)\/config\.yml$/.exec(path)[1]))];
 
 const globPaths = await Promise.all(buildTargets
   .filter(target => fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`))
