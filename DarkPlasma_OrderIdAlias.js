@@ -1,9 +1,10 @@
-// DarkPlasma_OrderIdAlias 1.1.1
+// DarkPlasma_OrderIdAlias 1.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/21 1.1.2 typescript移行
  * 2022/05/14 1.1.1 リファクタ
  * 2021/07/27 1.1.0 スキルの並び順設定をデフォルトのままにする設定を追加
  * 2021/07/05 1.0.3 MZ 1.3.2に対応
@@ -27,7 +28,7 @@
  * @default false
  *
  * @help
- * version: 1.1.1
+ * version: 1.1.2
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
  *
@@ -64,23 +65,38 @@
     sortSkillById: String(pluginParameters.sortSkillById || false) === 'true',
   };
 
-  const _DataManager_extractMetadata = DataManager.extractMetadata;
-  DataManager.extractMetadata = function (data) {
-    _DataManager_extractMetadata.call(this, data);
-    data.orderId = Number(data.meta.OrderId || data.id);
-  };
-
-  const _Window_ItemList_makeItemList = Window_ItemList.prototype.makeItemList;
-  Window_ItemList.prototype.makeItemList = function () {
-    _Window_ItemList_makeItemList.call(this);
-    this._data.sort(orderIdSort);
-  };
-
-  const _Window_SkillList_makeItemList = Window_SkillList.prototype.makeItemList;
-  Window_SkillList.prototype.makeItemList = function () {
-    _Window_SkillList_makeItemList.call(this);
-    if (settings.sortSkillById) {
-      this._data.sort(orderIdSort);
+  function DataManager_OrderIdAliasMixIn() {
+    const _extractMetadata = DataManager.extractMetadata;
+    DataManager.extractMetadata = function (data) {
+      _extractMetadata.call(this, data);
+      if (isOrderIdHolder(data)) {
+        extractOrderId(data);
+      }
+    };
+    function isOrderIdHolder(data) {
+      return !!data.id;
     }
-  };
+    function extractOrderId(data) {
+      data.orderId = Number(data.meta.OrderId || data.id);
+    }
+  }
+  DataManager_OrderIdAliasMixIn();
+  function Window_ItemList_OrderIdAliasMixIn(windowClass) {
+    const _makeItemList = windowClass.makeItemList;
+    windowClass.makeItemList = function () {
+      _makeItemList.call(this);
+      this._data.sort(orderIdSort);
+    };
+  }
+  Window_ItemList_OrderIdAliasMixIn(Window_ItemList.prototype);
+  function Window_SkillList_OrderIdAliasMixIn(windowClass) {
+    const _makeItemList = windowClass.makeItemList;
+    windowClass.makeItemList = function () {
+      _makeItemList.call(this);
+      if (settings.sortSkillById) {
+        this._data.sort(orderIdSort);
+      }
+    };
+  }
+  Window_SkillList_OrderIdAliasMixIn(Window_SkillList.prototype);
 })();
