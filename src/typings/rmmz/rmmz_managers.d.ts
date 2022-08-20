@@ -99,7 +99,7 @@ declare class DataManager {
 }
 
 declare namespace DataManager {
-  type NoteHolder = { note: string; meta?: { [name: string]: string } };
+  type NoteHolder = MZ.Actor | MZ.Class | MZ.Enemy | MZ.Item | MZ.Weapon | MZ.Armor | MZ.Skill | MZ.State | MZ.Map | MZ.Event;
   type Item = MZ.Skill | MZ.Item | MZ.Weapon | MZ.Armor;
   type GlobalInfo = SaveFileInfo[];
 

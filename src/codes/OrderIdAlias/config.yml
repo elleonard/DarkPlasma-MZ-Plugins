@@ -3,6 +3,9 @@ DarkPlasma_OrderIdAlias:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/08/21
+      version: 1.1.2
+      description: 'typescript移行'
     - date: 2022/05/14
       version: 1.1.1
       description: 'リファクタ'
