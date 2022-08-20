@@ -1,9 +1,10 @@
-// DarkPlasma_HighlightNewItem 1.0.5
+// DarkPlasma_HighlightNewItem 1.0.6
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/21 1.0.6 typescript移行
  * 2021/09/19 1.0.5 同じIDの別種別のアイテムが新しく入手した扱いになる不具合を修正
  * 2021/09/11 1.0.4 特定のクラスを操作するプラグインとの競合を修正
  * 2021/09/06 1.0.3 外した装備が新しく入手した扱いになる不具合を修正
@@ -27,7 +28,7 @@
  * @default 2
  *
  * @help
- * version: 1.0.5
+ * version: 1.0.6
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
@@ -64,9 +65,7 @@
       return result;
     };
   }
-
   Game_Actor_HighlightNewItemMixIn(Game_Actor.prototype);
-
   /**
    * @param {Game_Party.prototype} gameParty
    */
@@ -76,13 +75,11 @@
       _initAllItems.call(this);
       this.initializeNewItems();
     };
-
     gameParty.initializeNewItems = function () {
       this._newItemIds = [];
       this._newWeaponIds = [];
       this._newArmorIds = [];
     };
-
     const _gainItem = gameParty.gainItem;
     gameParty.gainItem = function (item, amount, includeEquip) {
       _gainItem.call(this, item, amount, includeEquip);
@@ -94,7 +91,6 @@
         }
       }
     };
-
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
      */
@@ -116,7 +112,6 @@
         this._newArmorIds = this._newArmorIds.filter((id) => id && id !== item.id);
       }
     };
-
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
      */
@@ -132,7 +127,6 @@
         this._newArmorIds.push(item.id);
       }
     };
-
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
      * @return {boolean}
@@ -148,21 +142,18 @@
         : this.newArmorIds();
       return this.hasItem(item, false) && newItemIds.includes(item.id);
     };
-
     gameParty.newItemIds = function () {
       if (!this._newItemIds) {
         this._newItemIds = [];
       }
       return this._newItemIds;
     };
-
     gameParty.newWeaponIds = function () {
       if (!this._newWeaponIds) {
         this._newWeaponIds = [];
       }
       return this._newWeaponIds;
     };
-
     gameParty.newArmorIds = function () {
       if (!this._newArmorIds) {
         this._newArmorIds = [];
@@ -170,9 +161,7 @@
       return this._newArmorIds;
     };
   }
-
   Game_Party_HighlightNewItemMixIn(Game_Party.prototype);
-
   /**
    * @param {Window_ItemList.prototype} windowClass
    */
@@ -185,7 +174,6 @@
         _drawItemName.call(this, item, x, y, width);
       }
     };
-
     /**
      * 新しいアイテムを描画する
      * 色を変えるため、描画中は resetTextColor を上書きする
@@ -202,25 +190,22 @@
       this.resetTextColor = resetTextColor;
       this.resetTextColor();
     };
-
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
      * @return {boolean}
      */
     windowClass.isNewItem = function (item) {
-      return $gameParty.hasItemAsNew(item);
+      return !!item && !DataManager.isSkill(item) && $gameParty.hasItemAsNew(item);
     };
-
     const _select = windowClass.select;
     windowClass.select = function (index) {
       _select.call(this, index);
       const item = this.item();
-      if (item && this.isNewItem(item)) {
+      if (this.isNewItem(item)) {
         $gameParty.touchItem(item);
         this.refresh();
       }
     };
   }
-
   Window_ItemList_HighlightNewItemMixIn(Window_ItemList.prototype);
 })();
