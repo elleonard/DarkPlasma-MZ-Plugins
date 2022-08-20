@@ -3,23 +3,26 @@ DarkPlasma_HighlightNewItem:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/09/19'
-      version: '1.0.5'
+    - date: 2022/08/21
+      version: 1.0.6
+      description: 'typescript移行'
+    - date: 2021/09/19
+      version: 1.0.5
       description: '同じIDの別種別のアイテムが新しく入手した扱いになる不具合を修正'
-    - date: '2021/09/11'
-      version: '1.0.4'
+    - date: 2021/09/11
+      version: 1.0.4
       description: '特定のクラスを操作するプラグインとの競合を修正'
-    - date: '2021/09/06'
-      version: '1.0.3'
+    - date: 2021/09/06
+      version: 1.0.3
       description: '外した装備が新しく入手した扱いになる不具合を修正'
-    - date: '2021/09/06'
-      version: '1.0.2'
+    - date: 2021/09/06
+      version: 1.0.2
       description: '装備のつけ外しでエラーになる不具合を修正'
-    - date: '2021/09/05'
-      version: '1.0.1'
+    - date: 2021/09/05
+      version: 1.0.1
       description: '売却時に入手した扱いになってしまう不具合を修正'
-    - date: '2021/09/05'
-      version: '1.0.0'
+    - date: 2021/09/05
+      version: 1.0.0
       description: '公開'
 
   locates:

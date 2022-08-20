@@ -1216,7 +1216,7 @@ declare class Game_Actor extends Game_Battler {
   public isEquipChangeOk(slotId: number): void;
   public changeEquip(slotId: number, item: MZ.Weapon | MZ.Armor | null): void;
   public forceChangeEquip(slotId: number, item: MZ.Weapon | MZ.Armor | null): void;
-  public tradeItemWithParty(newItem: DataManager.Item, oldItem: DataManager.Item): boolean;
+  public tradeItemWithParty(newItem: MZ.Item|MZ.Weapon|MZ.Armor, oldItem: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
   public changeEquipById(etypeId: number, itemId: number): void;
   public isEquipped(item: MZ.Weapon | MZ.Armor): boolean;
   public discardEquip(item: MZ.Weapon | MZ.Armor): void;
@@ -1512,7 +1512,7 @@ declare class Game_Party extends Game_Unit {
   public numItems(item: MZ.Item | MZ.Weapon | MZ.Armor): number;
   public maxItems(item: MZ.Item | MZ.Weapon | MZ.Armor): number;
   public hasMaxItems(item: MZ.Item | MZ.Weapon | MZ.Armor): boolean;
-  public hasItem(item: MZ.Item | MZ.Weapon | MZ.Armor, includeEquip?: boolean): boolean;
+  public hasItem(item: MZ.Item | MZ.Weapon | MZ.Armor | null, includeEquip?: boolean): boolean;
   public isAnyMemberEquipped(item: MZ.Weapon | MZ.Armor): boolean;
   public gainItem(item: MZ.Item | MZ.Weapon | MZ.Armor, amount: number, includeEquip: boolean): void;
   public discardMembersEquip(item: MZ.Weapon | MZ.Armor, amount: number): void;

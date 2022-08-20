@@ -1,11 +1,12 @@
+/// <reference path="./HighlightNewItem.d.ts" />
 import { settings } from './_build/DarkPlasma_HighlightNewItem_parameters';
 
 /**
  * @param {Game_Actor.prototype} gameActor
  */
-function Game_Actor_HighlightNewItemMixIn(gameActor) {
+function Game_Actor_HighlightNewItemMixIn(gameActor: Game_Actor) {
   const _tradeItemWithParty = gameActor.tradeItemWithParty;
-  gameActor.tradeItemWithParty = function (newItem, oldItem) {
+  gameActor.tradeItemWithParty = function (this: Game_Actor, newItem, oldItem) {
     const result = _tradeItemWithParty.call(this, newItem, oldItem);
     if (result && oldItem) {
       /**
@@ -22,21 +23,21 @@ Game_Actor_HighlightNewItemMixIn(Game_Actor.prototype);
 /**
  * @param {Game_Party.prototype} gameParty
  */
-function Game_Party_HighlightNewItemMixIn(gameParty) {
+function Game_Party_HighlightNewItemMixIn(gameParty: Game_Party) {
   const _initAllItems = gameParty.initAllItems;
-  gameParty.initAllItems = function () {
+  gameParty.initAllItems = function (this: Game_Party) {
     _initAllItems.call(this);
     this.initializeNewItems();
   };
 
-  gameParty.initializeNewItems = function () {
+  gameParty.initializeNewItems = function (this: Game_Party) {
     this._newItemIds = [];
     this._newWeaponIds = [];
     this._newArmorIds = [];
   };
 
   const _gainItem = gameParty.gainItem;
-  gameParty.gainItem = function (item, amount, includeEquip) {
+  gameParty.gainItem = function (this: Game_Party, item, amount, includeEquip) {
     _gainItem.call(this, item, amount, includeEquip);
     if (item) {
       if (amount > 0) {
@@ -50,7 +51,7 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
-  gameParty.touchItem = function (item) {
+  gameParty.touchItem = function (this: Game_Party, item) {
     if (DataManager.isItem(item)) {
       if (!this._newItemIds) {
         this._newItemIds = [];
@@ -72,7 +73,7 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
-  gameParty.addNewItems = function (item) {
+  gameParty.addNewItems = function (this: Game_Party, item) {
     if (this.hasItemAsNew(item)) {
       return;
     }
@@ -89,7 +90,7 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    * @return {boolean}
    */
-  gameParty.hasItemAsNew = function (item) {
+  gameParty.hasItemAsNew = function (this: Game_Party, item) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
@@ -101,21 +102,21 @@ function Game_Party_HighlightNewItemMixIn(gameParty) {
     return this.hasItem(item, false) && newItemIds.includes(item.id);
   };
 
-  gameParty.newItemIds = function () {
+  gameParty.newItemIds = function (this: Game_Party) {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
     return this._newItemIds;
   };
 
-  gameParty.newWeaponIds = function () {
+  gameParty.newWeaponIds = function (this: Game_Party) {
     if (!this._newWeaponIds) {
       this._newWeaponIds = [];
     }
     return this._newWeaponIds;
   };
 
-  gameParty.newArmorIds = function () {
+  gameParty.newArmorIds = function (this: Game_Party) {
     if (!this._newArmorIds) {
       this._newArmorIds = [];
     }
@@ -128,11 +129,11 @@ Game_Party_HighlightNewItemMixIn(Game_Party.prototype);
 /**
  * @param {Window_ItemList.prototype} windowClass
  */
-function Window_ItemList_HighlightNewItemMixIn(windowClass) {
+function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
   const _drawItemName = windowClass.drawItemName;
-  windowClass.drawItemName = function (item, x, y, width) {
+  windowClass.drawItemName = function (this: Window_ItemList, item, x, y, width) {
     if (this.isNewItem(item)) {
-      this.drawNewItemName(item, x, y, width);
+      this.drawNewItemName(item, x, y, width!);
     } else {
       _drawItemName.call(this, item, x, y, width);
     }
@@ -146,7 +147,7 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass) {
    * @param {number} y Y座標
    * @param {number} width 幅
    */
-  windowClass.drawNewItemName = function (item, x, y, width) {
+  windowClass.drawNewItemName = function (this: Window_ItemList, item, x, y, width) {
     const resetTextColor = this.resetTextColor;
     this.resetTextColor = () => {};
     this.changeTextColor(ColorManager.textColor(settings.newItemColor));
@@ -159,15 +160,15 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
    * @return {boolean}
    */
-  windowClass.isNewItem = function (item) {
-    return $gameParty.hasItemAsNew(item);
+  windowClass.isNewItem = function (item): item is MZ.Item|MZ.Weapon|MZ.Armor {
+    return !!item && !DataManager.isSkill(item) && $gameParty.hasItemAsNew(item);
   };
 
   const _select = windowClass.select;
-  windowClass.select = function (index) {
+  windowClass.select = function (this: Window_ItemList, index) {
     _select.call(this, index);
     const item = this.item();
-    if (item && this.isNewItem(item)) {
+    if (this.isNewItem(item)) {
       $gameParty.touchItem(item);
       this.refresh();
     }
