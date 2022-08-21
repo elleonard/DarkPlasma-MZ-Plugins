@@ -3,6 +3,9 @@ DarkPlasma_CustomKeyHandler:
   year: 2021
   license: MIT
   histories:
+    - date: 2022/08/21
+      version: 1.2.1
+      description: 'typescript移行'
     - date: 2022/08/16
       version: 1.2.0
       description: 'キー有効チェックの仕組みを追加'

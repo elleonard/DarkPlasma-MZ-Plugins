@@ -18,27 +18,35 @@ declare class Window_Base extends Window {
   public _closing: boolean;
   public _dimmerSprite: Sprite | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
+  /**
+   * コード的にはoptionsが渡されているが、親クラスで握りつぶされている
+   */
+  public destroy(): void;
+
+  public checkRectObject(rect: Rectangle): void;
 
   public lineHeight(): number;
-  public standardFontFace(): string;
-  public standardFontSize(): number;
-  public standardPadding(): number;
-  public textPadding(): number;
-  public standardBackOpacity(): number;
+  public itemWidth(): number;
+  public itemHeight(): number;
+  public itemPadding(): number;
+
+  public baseTextRect(): Rectangle;
 
   public loadWindowskin(): void;
 
   public updatePadding(): void;
   public updateBackOpacity(): void;
 
-  public contentsWidth(): number;
-  public contentsHeight(): number;
   public fittingHeight(numLines: number): number;
 
   public updateTone(): void;
 
   public createContents(): void;
+  public destroyContents(): void;
+  public contentsWidth(): number;
+  public contentsHeight(): number;
+
   public resetFontSettings(): void;
   public resetTextColor(): void;
 
@@ -59,25 +67,13 @@ declare class Window_Base extends Window {
   public textColor(n: number): string;
   public normalColor(): string;
   public systemColor(): string;
-  public crisisColor(): string;
-  public deathColor(): string;
-  public gaugeBackColor(): string;
-  public hpGaugeColor1(): string;
-  public hpGaugeColor2(): string;
-  public mpGaugeColor1(): string;
-  public mpGaugeColor2(): string;
-  public mpCostColor(): string;
-  public powerUpColor(): string;
-  public powerDownColor(): string;
-  public tpGaugeColor1(): string;
-  public tpGaugeColor2(): string;
-  public tpCostColor(): string;
-  public pendingColor(): string;
 
   public translucentOpacity(): number;
   public changeTextColor(color: string): void;
+  public changeOutlineColor(color: string): void;
   public changePaintOpacity(enabled: boolean): void;
 
+  public drawRect(x: number, y: number, width: number, height: number): void;
   public drawText(text: string, x: number, y: number, maxWidth: number, align?: string): void;
   public textWidth(text: string): number;
   public drawTextEx(text: string, x: number, y: number): number;
@@ -85,6 +81,8 @@ declare class Window_Base extends Window {
   public createTextState(text: string, x: number, y: number, width: number): Window_Base.TextState;
   public processAllText(textState: Window_Base.TextState): void;
   public flushTextState(textState: Window_Base.TextState): void;
+
+  public createTextBuffer(rtl: boolean): string;
 
   public convertEscapeCharacters(text: string): string;
   public actorName(n: number): string;
@@ -96,54 +94,32 @@ declare class Window_Base extends Window {
   public obtainEscapeCode(textState: Window_Base.TextState): string;
   public obtainEscapeParam(textState: Window_Base.TextState): number;
   public processEscapeCharacter(code: string, textState: Window_Base.TextState): void;
+  public processColorChange(colorIndex: number): void;
   public processDrawIcon(iconIndex: number, textState: Window_Base.TextState): void;
 
   public makeFontBigger(): void;
   public makeFontSmaller(): void;
   public calcTextHeight(textState: Window_Base.TextState, all: boolean): number;
 
+  public maxFontSizeInLine(line: string): number;
+
   public drawIcon(iconIndex: number, x: number, y: number): void;
   public drawFace(faceName: string, faceIndex: number, x: number, y: number, width?: number, height?: number): void;
   public drawCharacter(characterName: string, characterIndex: number, x: number, y: number): void;
-  public drawGauge(x: number, y: number, width: number, rate: number, color1: string, color2: string): void;
-  public hpColor(actor: Game_Actor): string;
-  public mpColor(actor: Game_Actor): string;
-  public tpColor(actor: Game_Actor): string;
-  public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
-  public drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void;
-  public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
-  public drawActorIcons(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawCurrentAndMax(
-    current: number,
-    max: number,
-    x: number,
-    y: number,
-    width: number,
-    color1: string,
-    color2: string
-  ): void;
-  public drawActorHp(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorMp(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorTp(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorSimpleStatus(actor: Game_Actor, x: number, y: number, width: number): void;
   public drawItemName(item: DataManager.Item | null, x: number, y: number, width?: number): void;
   public drawCurrencyValue(value: number, unit: string, x: number, y: number, width: number): void;
-
-  public paramchangeTextColor(change: number): string;
+  public drawGauge(x: number, y: number, width: number, rate: number, color1: string, color2: string): void;
 
   public setBackgroundType(type: number): void;
   public showBackgroundDimmer(): void;
+  public createDimmerSprite(): void;
   public hideBackgroundDimmer(): void;
   public updateBackgroundDimmer(): void;
   public refreshDimmerBitmap(): void;
-  public dimColor1(): string;
-  public dimColor2(): string;
 
-  public canvasToLocalX(x: number): number;
-  public canvasToLocalY(y: number): number;
+  public playCursorSound(): void;
+  public playOkSound(): void;
+  public playBuzzerSound(): void;
 }
 
 declare namespace Window_Base {
@@ -1490,21 +1466,23 @@ declare class Window_BattleStatus extends Window_Selectable {
 
   public initialize(...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
-  public numVisibleRows(): number;
-  public maxItems(): number;
-
-  public refresh(): void;
+  public extraHeight(): number;
+  public actor(index: number): Game_Actor;
+  public selectActor(actor: Game_Actor): void;
+  public preparePartyRefresh(): void;
+  public performPartyRefresh(): void;
 
   public drawItem(index: number): void;
-  public basicAreaRect(index: number): Rectangle;
-  public gaugeAreaRect(index: number): Rectangle;
-  public gaugeAreaWidth(): number;
-  public drawBasicArea(rect: Rectangle, actor: Game_Actor): void;
-  public drawGaugeArea(rect: Rectangle, actor: Game_Actor): void;
-  public drawGaugeAreaWithTp(rect: Rectangle, actor: Game_Actor): void;
-  public drawGaugeAreaWithoutTp(rect: Rectangle, actor: Game_Actor): void;
+  public drawItemImage(index: number);
+  public drawItemStatus(index: number): void;
+
+  public faceRect(index: number): Rectangle;
+  public nameX(rect: Rectangle): number;
+  public nameY(rect: Rectangle): number;
+  public statusIconX(rect: Rectangle): number;
+  public statusIconY(rect: Rectangle): number;
+  public basicGaugesX(rect: Rectangle): number;
+  public basicGaugesY(rect: Rectangle): number;
 }
 
 //-----------------------------------------------------------------------------
@@ -1514,13 +1492,11 @@ declare class Window_BattleStatus extends Window_Selectable {
 declare class Window_BattleActor extends Window_BattleStatus {
   public constructor(x: number, y: number);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public show(): void;
   public hide(): void;
   public select(index: number): void;
-
-  public actor(): Game_Actor;
 }
 
 //-----------------------------------------------------------------------------

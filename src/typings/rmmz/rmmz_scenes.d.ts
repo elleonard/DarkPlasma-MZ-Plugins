@@ -795,10 +795,10 @@ declare class Scene_Battle extends Scene_Base {
   public commandCancel(): void;
   public selectNextCommand(): void;
   public selectPreviousCommand(): void;
-  public selectActorSelection(): void;
+  public startActorSelection(): void;
   public onActorOk(): void;
   public onActorCancel(): void;
-  public selectEnemySelection(): void;
+  public startEnemySelection(): void;
   public onEnemyOk(): void;
   public onEnemyCancel(): void;
   public onSkillOk(): void;

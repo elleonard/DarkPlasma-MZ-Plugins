@@ -1,39 +1,41 @@
+/// <reference path="./CustomKeyHandler.d.ts" />
+
 class CustomKeyMethod {
   /**
    * @param {() => boolean} isTriggered
-   * @param {() => void} process
-   * @param {() => boolean} isEnabled
+   * @param {(Window_Selectable) => void} process
+   * @param {(Window_Selectable) => boolean} isEnabled
    */
-  constructor(isTriggered, process, isEnabled) {
+  constructor(isTriggered: () => boolean, process: (self: Window_Selectable) => void, isEnabled: (self: Window_Selectable) => boolean) {
     this._isTriggered = isTriggered;
     this._process = process;
     this._isEnabled = isEnabled;
   }
 
-  isTriggered() {
+  isTriggered(): boolean {
     return this._isTriggered();
   }
 
-  process(self) {
+  process(self: Window_Selectable): void {
     this._process(self);
   }
 
-  isEnabled(self) {
+  isEnabled(self: Window_Selectable): boolean {
     return this._isEnabled(self);
   }
 }
 
 /**
  * @param {string} key キー
- * @param {Window_Base.prototype} windowClass
- * @param {string} handlerName
+ * @param {Window_Selectable.prototype} windowClass
+ * @param {?string} handlerName
  */
-function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {
+function Window_CustomKeyHandlerMixIn(key: string, windowClass: Window_Selectable, handlerName?: string): void {
   if (!windowClass.customKeyMethods) {
     windowClass.customKeyMethods = [];
 
     const _processHandling = windowClass.processHandling;
-    windowClass.processHandling = function () {
+    windowClass.processHandling = function (this: Window_Selectable) {
       _processHandling.call(this);
       if (this.isOpenAndActive()) {
         const customKeyMethod = this.customKeyMethods.find((method) => method.isTriggered());
@@ -61,4 +63,4 @@ function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {
   );
 }
 
-window.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
+globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
