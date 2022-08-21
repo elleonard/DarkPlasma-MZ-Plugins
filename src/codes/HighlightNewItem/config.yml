@@ -4,7 +4,9 @@ DarkPlasma_HighlightNewItem:
   license: MIT
   histories:
     - date: 2022/08/21
-      version: 1.0.6
+      version: 1.1.0
+      description: '新規入手アイテムを最上部に表示する設定を追加'
+    - version: 1.0.6
       description: 'typescript移行'
     - date: 2021/09/19
       version: 1.0.5
@@ -34,14 +36,22 @@ DarkPlasma_HighlightNewItem:
       text:
         ja: アイテム色
       desc:
-        ja: 新しく入手したアイテムの色番号
+        ja: 新しく入手したアイテムの色番号を指定します。
       type: number
       default: 2
+    - param: newItemToTop
+      text:
+        ja: 新規アイテムを最上部に
+      desc:
+        ja: ONの場合、新しく入手したアイテムを最上部に表示します。
+      type: boolean
+      default: false
   commands: []
   structures:
   dependencies:
     base: []
-    orderAfter: []
+    orderAfter:
+      - name: DarkPlasma_OrderIdAlias
     orderBefore: []
   help:
     ja: |
