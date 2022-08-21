@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>能力値を固定する特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、指定の能力値または追加能力値を固定する特徴を追加します。<br>この特徴による能力値の固定は、他の装備や特徴による能力値の増減を無視して適用されます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FixParameterTrait.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 職業 </tag>
+            
+            <tag> アクター </tag>
+            
+            <tag> ステート </tag>
+            
+            <tag> 能力値 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>戦闘終了時に強化・弱体を解除するかどうか</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/08/13/remove-buff-at-battle-end/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/08/13/remove-buff-at-battle-end/</url>
