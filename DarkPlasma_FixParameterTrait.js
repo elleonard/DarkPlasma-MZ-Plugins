@@ -1,10 +1,11 @@
-// DarkPlasma_FixParameterTrait 1.0.0
+// DarkPlasma_FixParameterTrait 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/21 1.0.0 公開
+ * 2022/08/21 1.0.1 追加能力値が指定値の100倍になる不具合を修正
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -18,11 +19,11 @@
  * @base DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * 能力値を固定する特徴を付与します。
  * 同一のパラメータについて、複数の固定値特徴を付与した場合の挙動は未定義です。
- * この能力値固定は、他の装備による能力値の増減を無視して最後に適用されます。
+ * この能力値固定は、他の装備や特徴による能力値の増減を無視して適用されます。
  *
  * 基本構文:
  * <fixParameter:[effect]:[value]>
@@ -166,11 +167,11 @@
     gameBattlerBase.fixedXParameter = function (xparamId) {
       const traits = this.traitsWithId(fixXParameterTraitId.id, xparamId);
       if (traits.length > 0) {
-        return traits[0].value;
+        return traits[0].value / 100;
       }
       const variableTraits = this.traitsWithId(fixXParameterVariableTraitId.id, xparamId);
       if (variableTraits.length > 0) {
-        return $gameVariables.value(variableTraits[0].value);
+        return $gameVariables.value(variableTraits[0].value) / 100;
       }
       throw Error(`不正な能力値固定特徴です。 paramId: ${xparamId}`);
     };
