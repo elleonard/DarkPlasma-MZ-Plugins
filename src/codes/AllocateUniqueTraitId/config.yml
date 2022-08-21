@@ -3,6 +3,9 @@ DarkPlasma_AllocateUniqueTraitId:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/08/21
+      version: 1.0.1
+      description: 'typescript移行'
     - date: 2022/05/28
       version: 1.0.0
       description: '公開'
