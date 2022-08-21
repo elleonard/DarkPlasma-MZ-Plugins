@@ -4,7 +4,9 @@ DarkPlasma_FixParameterTrait:
   license: MIT
   histories:
     - date: 2022/08/21
-      version: 1.0.0
+      version: 1.0.1
+      description: '追加能力値が指定値の100倍になる不具合を修正'
+    - version: 1.0.0
       description: '公開'
 
   locates:
@@ -25,7 +27,7 @@ DarkPlasma_FixParameterTrait:
       アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
       能力値を固定する特徴を付与します。
       同一のパラメータについて、複数の固定値特徴を付与した場合の挙動は未定義です。
-      この能力値固定は、他の装備による能力値の増減を無視して最後に適用されます。
+      この能力値固定は、他の装備や特徴による能力値の増減を無視して適用されます。
 
       基本構文:
       <fixParameter:[effect]:[value]>

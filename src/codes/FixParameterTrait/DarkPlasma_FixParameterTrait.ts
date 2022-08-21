@@ -129,11 +129,11 @@ function Game_BattlerBase_FixParameterTraitMixIn(gameBattlerBase: Game_BattlerBa
   gameBattlerBase.fixedXParameter = function (xparamId) {
     const traits = this.traitsWithId(fixXParameterTraitId.id, xparamId);
     if (traits.length > 0) {
-      return traits[0].value;
+      return traits[0].value/100;
     }
     const variableTraits = this.traitsWithId(fixXParameterVariableTraitId.id, xparamId);
     if (variableTraits.length > 0) {
-      return $gameVariables.value(variableTraits[0].value);
+      return $gameVariables.value(variableTraits[0].value)/100;
     }
     throw Error(`不正な能力値固定特徴です。 paramId: ${xparamId}`);
   };
