@@ -1,0 +1,59 @@
+DarkPlasma_FixParameterTrait:
+  name: DarkPlasma_FixParameterTrait
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/08/21
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '能力値を固定する特徴'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
+      能力値を固定する特徴を付与します。
+      同一のパラメータについて、複数の固定値特徴を付与した場合の挙動は未定義です。
+      この能力値固定は、他の装備による能力値の増減を無視して最後に適用されます。
+
+      基本構文:
+      <fixParameter:[effect]:[value]>
+      [effect]で指定したパラメータを、[value]に固定します。
+      [value]には半角数値の他、\V[x]表記が利用できます。(ネストは不可)
+
+      [effect]:
+        mhp: 最大HP
+        mmp: 最大MP
+        atk: 攻撃力
+        def: 防御力
+        mat: 魔法攻撃力
+        mdf: 魔法防御力
+        agi: 敏捷性
+        luk: 運
+        hit: 命中率
+        eva: 回避率
+        cri: 会心率
+        cev: 会心回避率
+        mev: 魔法回避率
+        mrf: 魔法反射率
+        cnt: 反撃率
+        hrg: HP再生率
+        mrg: MP再生率
+        trg: TP再生率
+      
+      複数パラメータの設定をする場合:
+      <fixParameter:
+        [effect1]:[value1]
+        [effect2]:[value2]
+      >
