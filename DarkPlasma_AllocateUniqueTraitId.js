@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueTraitId 1.0.0
+// DarkPlasma_AllocateUniqueTraitId 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/21 1.0.1 typescript移行
  * 2022/05/28 1.0.0 公開
  */
 
@@ -22,7 +23,7 @@
  * @default 71
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 特徴の特徴IDを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -67,13 +68,11 @@
   };
 
   let uniqueTraitId = settings.startIdOfUniqueTraitId;
-
   class UniqueTraitIdCache {
     constructor() {
       this._cache = {};
       this._cacheById = {};
     }
-
     /**
      * 独自のtraitIdを確保する
      * @param {string} pluginName プラグイン名
@@ -90,7 +89,6 @@
       }
       return this._cache[key];
     }
-
     /**
      * @param {string} pluginName プラグイン名
      * @param {number} localId プラグイン内で一意なID
@@ -99,37 +97,31 @@
     key(pluginName, localId) {
       return `${pluginName}_${localId}`;
     }
-
     traitIdOf(pluginName, localId) {
       const key = this.key(pluginName, localId);
       return this._cache[key] ? this._cache[key].id : undefined;
     }
-
     /**
      * 特徴名を取得する
      * @param {string} pluginName プラグイン名
      * @param {number} localId プラグイン内で一意なID
-     * @return {string}
+     * @return {?string}
      */
     nameOf(pluginName, localId) {
       const key = this.key(pluginName, localId);
       return this._cache[key] ? this._cache[key].name : undefined;
     }
-
     /**
      * 特徴名
      * @param {number} id 特徴ID
-     * @return {string}
+     * @return {?string}
      */
     nameByTraitId(id) {
       return this._cacheById[id] ? this._cacheById[id].name : undefined;
     }
   }
-
   const uniqueTraitIdCache = new UniqueTraitIdCache();
-
   globalThis.uniqueTraitIdCache = uniqueTraitIdCache;
-
   class UniqueTraitId {
     /**
      * @param {number} id 特徴ID
@@ -139,11 +131,9 @@
       this._id = id;
       this._name = name;
     }
-
     get id() {
       return this._id;
     }
-
     get name() {
       return this._name;
     }
