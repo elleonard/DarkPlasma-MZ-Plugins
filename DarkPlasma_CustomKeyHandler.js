@@ -1,9 +1,10 @@
-// DarkPlasma_CustomKeyHandler 1.2.0
+// DarkPlasma_CustomKeyHandler 1.2.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/21 1.2.1 typescript移行
  * 2022/08/16 1.2.0 キー有効チェックの仕組みを追加
  * 2022/01/07 1.1.0 ハンドラ名をキー名とは別に設定可能にする
  * 2021/10/10 1.0.0 初版
@@ -18,7 +19,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * shiftなどを押した際のハンドラを追加できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -42,37 +43,32 @@
   class CustomKeyMethod {
     /**
      * @param {() => boolean} isTriggered
-     * @param {() => void} process
-     * @param {() => boolean} isEnabled
+     * @param {(Window_Selectable) => void} process
+     * @param {(Window_Selectable) => boolean} isEnabled
      */
     constructor(isTriggered, process, isEnabled) {
       this._isTriggered = isTriggered;
       this._process = process;
       this._isEnabled = isEnabled;
     }
-
     isTriggered() {
       return this._isTriggered();
     }
-
     process(self) {
       this._process(self);
     }
-
     isEnabled(self) {
       return this._isEnabled(self);
     }
   }
-
   /**
    * @param {string} key キー
-   * @param {Window_Base.prototype} windowClass
-   * @param {string} handlerName
+   * @param {Window_Selectable.prototype} windowClass
+   * @param {?string} handlerName
    */
   function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {
     if (!windowClass.customKeyMethods) {
       windowClass.customKeyMethods = [];
-
       const _processHandling = windowClass.processHandling;
       windowClass.processHandling = function () {
         _processHandling.call(this);
@@ -84,11 +80,9 @@
         }
       };
     }
-
     windowClass.isCustomKeyEnabled = function (key) {
       return true;
     };
-
     windowClass.customKeyMethods.push(
       new CustomKeyMethod(
         () => Input.isTriggered(key),
@@ -101,6 +95,5 @@
       )
     );
   }
-
-  window.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
+  globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
 })();

@@ -1,9 +1,11 @@
-// DarkPlasma_ExpandTargetScope 1.3.0
+// DarkPlasma_ExpandTargetScope 1.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/21 1.3.1 typescript移行
+ *                  アクターコマンド入力決定後にキャンセルすると全体化MP消費率が全スキルに反映される不具合を修正
  * 2022/08/16 1.3.0 メニュー画面でも全体化する機能を追加
  *            1.2.2 余計なセーブデータ拡張を排除
  * 2022/05/09 1.2.1 全体化できないスキルが全体化される不具合を修正
@@ -63,7 +65,7 @@
  * @default false
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -72,7 +74,7 @@
  * <expandedAnimationId:n>
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_CustomKeyHandler version:1.2.0
+ * DarkPlasma_CustomKeyHandler version:1.2.1
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
  */
@@ -104,21 +106,18 @@
       _initialize.call(this);
       this._syncSelectionEffectRequestedBattlers = [];
     };
-
     /**
      * @param {Game_Battler} battler
      */
     gameTemp.requestSyncSelectionEffect = function (battler) {
       this._syncSelectionEffectRequestedBattlers.push(battler);
     };
-
     /**
      * @param {Game_Battler} battler
      */
     gameTemp.isSyncSelectionEffectRequested = function (battler) {
-      this._syncSelectionEffectRequestedBattlers.includes(battler);
+      return this._syncSelectionEffectRequestedBattlers.includes(battler);
     };
-
     /**
      * @param {Game_Battler} battler
      */
@@ -128,9 +127,7 @@
       );
     };
   }
-
   Game_Temp_ExpandTargetScopeMixIn(Game_Temp.prototype);
-
   /**
    * @param {Game_Action.prototype} gameAction
    */
@@ -141,33 +138,27 @@
       this._isExpandedScope = false;
       this._enableForAllRate = false;
     };
-
     gameAction.expandScope = function () {
       this._isExpandedScope = !this.isForAllByDefault();
     };
-
     gameAction.resetExpandScope = function () {
       this._isExpandedScope = false;
     };
-
     gameAction.canExpandScope = function () {
-      return this._item.object().meta.canExpandScope;
+      var _a;
+      return !!((_a = this._item.object()) === null || _a === void 0 ? void 0 : _a.meta.canExpandScope);
     };
-
     gameAction.isExpandedScope = function () {
       return this._isExpandedScope;
     };
-
     const _isForOne = gameAction.isForOne;
     gameAction.isForOne = function () {
       return _isForOne.call(this) && !this._isExpandedScope;
     };
-
     const _isForAll = gameAction.isForAll;
     gameAction.isForAll = function () {
       return _isForAll.call(this) || this._isExpandedScope;
     };
-
     /**
      * 元々から全体対象であるかどうか
      * @return {boolean}
@@ -175,18 +166,15 @@
     gameAction.isForAllByDefault = function () {
       return _isForAll.call(this);
     };
-
     const _needsSelection = gameAction.needsSelection;
     gameAction.needsSelection = function () {
       return _needsSelection.call(this) || (this.isForAll() && !settings.skipTargetSelectionForAll);
     };
-
     const _makeDamageValue = gameAction.makeDamageValue;
     gameAction.makeDamageValue = function (target, critical) {
       const value = _makeDamageValue.call(this, target, critical);
       return Math.floor(value * this.expandedScopeDamageRate());
     };
-
     /**
      * 全体化している場合、全体化ダメージ倍率を返す
      * 全体化していない場合、1を返す
@@ -204,24 +192,29 @@
       return this._enableForAllRate ? settings.damageRateForAll / 100 : 1;
     };
   }
-
   Game_Action_ExpandTargetScopeMixIn(Game_Action.prototype);
-
-  Game_Unit.prototype.selectAll = function () {
-    this.aliveMembers().forEach((member) => member.select());
-    this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
-  };
-
-  const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
-  Game_BattlerBase.prototype.skillMpCost = function (skill) {
-    const value = _Game_BattlerBase_skillMpCost.call(this, skill);
-    const action = this.currentAction();
-    if (action && action.isExpandedScope()) {
-      return Math.floor((value * settings.mpCostRateForAll) / 100);
-    }
-    return value;
-  };
-
+  function Game_Unit_ExpandTargetScopeMixIn(gameUnit) {
+    gameUnit.selectAll = function () {
+      this.aliveMembers().forEach((member) => member.select());
+      this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
+    };
+  }
+  Game_Unit_ExpandTargetScopeMixIn(Game_Unit.prototype);
+  function Game_Battler_ExpandTargetScopeMixIn(gameBattler) {
+    const _skillMpCost = gameBattler.skillMpCost;
+    gameBattler.skillMpCost = function (skill) {
+      const value = _skillMpCost.call(this, skill);
+      const action = this.currentAction();
+      if (action && action.isExpandedScope()) {
+        return Math.floor((value * settings.mpCostRateForAll) / 100);
+      }
+      return value;
+    };
+    gameBattler.resetAllActionsExpandedScope = function () {
+      this._actions.forEach((action) => action.resetExpandScope());
+    };
+  }
+  Game_Battler_ExpandTargetScopeMixIn(Game_Battler.prototype);
   /**
    * @param {Scene_ItemBase.prototype} sceneItemBase
    */
@@ -231,11 +224,9 @@
       _createActorWindow.call(this);
       this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScope.bind(this));
     };
-
     sceneItemBase.toggleTargetScope = function () {
       this._actorWindow.toggleCursorAll();
     };
-
     const _itemTargetActors = sceneItemBase.itemTargetActors;
     sceneItemBase.itemTargetActors = function () {
       if (this._actorWindow.canToggleScope() && this._actorWindow.cursorAll()) {
@@ -244,9 +235,7 @@
       return _itemTargetActors.call(this);
     };
   }
-
   Scene_ItemBase_ExpandScopeTargetMixIn(Scene_ItemBase.prototype);
-
   /**
    * @param {Scene_Battle.prototype} sceneBattle
    */
@@ -256,13 +245,17 @@
       _createActorWindow.call(this);
       this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeActor.bind(this));
     };
-
     const _createEnemyWindow = sceneBattle.createEnemyWindow;
     sceneBattle.createEnemyWindow = function () {
       _createEnemyWindow.call(this);
       this._enemyWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeEnemy.bind(this));
     };
-
+    const _startActorCommandSelection = sceneBattle.startActorCommandSelection;
+    sceneBattle.startActorCommandSelection = function () {
+      var _a;
+      _startActorCommandSelection.call(this);
+      (_a = BattleManager.actor()) === null || _a === void 0 ? void 0 : _a.resetAllActionsExpandedScope();
+    };
     const _startActorSelection = sceneBattle.startActorSelection;
     sceneBattle.startActorSelection = function () {
       _startActorSelection.call(this);
@@ -276,7 +269,6 @@
       }
       this._actorWindow.refreshCursor();
     };
-
     const _startEnemySelection = sceneBattle.startEnemySelection;
     sceneBattle.startEnemySelection = function () {
       _startEnemySelection.call(this);
@@ -290,7 +282,6 @@
       }
       this._enemyWindow.refreshCursor();
     };
-
     const _onActorOk = sceneBattle.onActorOk;
     sceneBattle.onActorOk = function () {
       const action = BattleManager.inputtingAction();
@@ -301,7 +292,6 @@
       }
       _onActorOk.call(this);
     };
-
     const _onEnemyOk = sceneBattle.onEnemyOk;
     sceneBattle.onEnemyOk = function () {
       const action = BattleManager.inputtingAction();
@@ -312,29 +302,27 @@
       }
       _onEnemyOk.call(this);
     };
-
     sceneBattle.toggleTargetScopeActor = function () {
       this._actorWindow.toggleCursorAll();
     };
-
     sceneBattle.toggleTargetScopeEnemy = function () {
       this._enemyWindow.toggleCursorAll();
     };
   }
-
   Scene_Battle_ExpandScopeTargetMixIn(Scene_Battle.prototype);
-
-  const _Sprite_Battler_updateSelectionEffect = Sprite_Battler.prototype.updateSelectionEffect;
-  Sprite_Battler.prototype.updateSelectionEffect = function () {
-    if (this._battler.isSelected()) {
-      if ($gameTemp.isSyncSelectionEffectRequested(this._battler)) {
-        this._selectionEffectCount = 0;
-        $gameTemp.processSyncSelectionEffect(this._battler);
+  function Sprite_Battler_ExpandTargetScopeMixIn(spriteBattler) {
+    const _updateSelectionEffect = spriteBattler.updateSelectionEffect;
+    spriteBattler.updateSelectionEffect = function () {
+      if (this._battler.isSelected()) {
+        if ($gameTemp.isSyncSelectionEffectRequested(this._battler)) {
+          this._selectionEffectCount = 0;
+          $gameTemp.processSyncSelectionEffect(this._battler);
+        }
       }
-    }
-    _Sprite_Battler_updateSelectionEffect.call(this);
-  };
-
+      _updateSelectionEffect.call(this);
+    };
+  }
+  Sprite_Battler_ExpandTargetScopeMixIn(Sprite_Battler.prototype);
   /**
    * @param {Window_MenuActor.prototype} windowClass
    */
@@ -345,16 +333,13 @@
       this._currentAction = new Game_Action($gameParty.menuActor());
       this._currentAction.setItemObject(item);
     };
-
     windowClass.toggleCursorAll = function () {
       this.setCursorAll(!this._cursorAll);
       this.forceSelect(0);
     };
-
     windowClass.canToggleScope = function () {
       return this._currentAction && this._currentAction.canExpandScope() && !this.cursorFixed();
     };
-
     const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
     windowClass.isCustomKeyEnabled = function (key) {
       if (key === settings.switchScopeButton) {
@@ -363,10 +348,8 @@
       return _isCustomKeyEnabled.call(this, key);
     };
   }
-
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_MenuActor.prototype);
   Window_MenuActor_ExpandTargetScopeMixIn(Window_MenuActor.prototype);
-
   /**
    * @param {Window_BattleActor.prototype|Window_BattleEnemy.prototype} windowClass
    */
@@ -374,29 +357,18 @@
     windowClass.toggleCursorAll = function () {
       this.setCursorAll(!this._cursorAll);
     };
-
     const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
     windowClass.isCustomKeyEnabled = function (key) {
+      var _a;
       if (key === settings.switchScopeButton) {
-        return $gameParty.inBattle() && BattleManager.inputtingAction().canExpandScope() && !this.cursorFixed();
+        return (
+          $gameParty.inBattle() &&
+          !!((_a = BattleManager.inputtingAction()) === null || _a === void 0 ? void 0 : _a.canExpandScope()) &&
+          !this.cursorFixed()
+        );
       }
       return _isCustomKeyEnabled.call(this, key);
     };
-
-    /**
-     * @return {Game_Unit}
-     */
-    windowClass.unit = function () {
-      return null;
-    };
-
-    /**
-     * @return {Game_Battler}
-     */
-    windowClass.currentTarget = function () {
-      return null;
-    };
-
     const _setCursorAll = windowClass.setCursorAll;
     windowClass.setCursorAll = function (cursorAll) {
       _setCursorAll.call(this, cursorAll);
@@ -409,12 +381,10 @@
       this.refreshCursor();
     };
   }
-
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleActor.prototype);
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleEnemy.prototype);
   Window_BattleTarget_ExpandTargetScopeMixIn(Window_BattleActor.prototype);
   Window_BattleTarget_ExpandTargetScopeMixIn(Window_BattleEnemy.prototype);
-
   /**
    * @param {Window_BattleActor.prototype} windowClass
    */
@@ -422,14 +392,11 @@
     windowClass.unit = function () {
       return $gameParty;
     };
-
     windowClass.currentTarget = function () {
       return this.actor(this.index());
     };
   }
-
   Window_BattleActor_ExpandTargetScopeMixIn(Window_BattleActor.prototype);
-
   /**
    * @param {Window_BattleEnemy.prototype} windowClass
    */
@@ -437,11 +404,9 @@
     windowClass.unit = function () {
       return $gameTroop;
     };
-
     windowClass.currentTarget = function () {
       return this.enemy();
     };
-
     const _refreshCursorForAll = windowClass.refreshCursorForAll;
     windowClass.refreshCursorForAll = function () {
       const maxItems = this.maxItems();
@@ -454,25 +419,26 @@
       }
     };
   }
-
   Window_BattleEnemy_ExpandScopeTargetMixIn(Window_BattleEnemy.prototype);
-
-  /**
-   * 全体化アニメーションのため上書き
-   * @param {Game_Battler} subject
-   * @param {Game_Action} action
-   * @param {Game_Battler[]} targets
-   */
-  Window_BattleLog.prototype.startAction = function (subject, action, targets) {
-    const item = action.item();
-    this.push('performActionStart', subject, action);
-    this.push('waitForMovement');
-    this.push('performAction', subject, action);
-    if (action.isExpandedScope() && item.meta.expandedAnimationId) {
-      this.push('showAnimation', subject, targets.clone(), item.meta.expandedAnimationId);
-    } else {
-      this.push('showAnimation', subject, targets.clone(), item.animationId);
-    }
-    this.displayAction(subject, item);
-  };
+  function Window_BattleLog_ExpandTargetScopeMixIn(windowClass) {
+    /**
+     * 全体化アニメーションのため上書き
+     * @param {Game_Battler} subject
+     * @param {Game_Action} action
+     * @param {Game_Battler[]} targets
+     */
+    windowClass.startAction = function (subject, action, targets) {
+      const item = action.item();
+      this.push('performActionStart', subject, action);
+      this.push('waitForMovement');
+      this.push('performAction', subject, action);
+      if (action.isExpandedScope() && item.meta.expandedAnimationId) {
+        this.push('showAnimation', subject, targets.clone(), item.meta.expandedAnimationId);
+      } else {
+        this.push('showAnimation', subject, targets.clone(), item.animationId);
+      }
+      this.displayAction(subject, item);
+    };
+  }
+  Window_BattleLog_ExpandTargetScopeMixIn(Window_BattleLog.prototype);
 })();
