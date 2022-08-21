@@ -20,7 +20,7 @@
     "buildAll:configTs": "zx ./scripts/buildConfigDeclaration.mjs",
     "buildAll:ts": "tsc --rootDir ./src",
     "buildAll:js": "rollup -c",
-    "build:config": "run-s \"build:config:js {2}\" \"build:config:declaration ./src/codes/{2}/_build/DarkPlasma_{2}_parameters.js\" \"build:config:declaration ./src/codes/{2}/_build/DarkPlasma_{2}_commands.js\" --",
+    "build:config": "zx ./scripts/buildDispatcher/build.mjs --configOnly --ts",
     "build:config:js": "node ./scripts/generateFromConfig -f",
     "build:config:declaration": "tsc --declaration --allowJs --emitDeclarationOnly",
     "build:target:ts": "tsc -b",
