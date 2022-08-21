@@ -51,7 +51,7 @@ function Game_Party_HighlightNewItemMixIn(gameParty: Game_Party) {
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
-  gameParty.touchItem = function (this: Game_Party, item) {
+  gameParty.touchItem = function (this: Game_Party, item: MZ.Item | MZ.Weapon | MZ.Armor) {
     if (DataManager.isItem(item)) {
       if (!this._newItemIds) {
         this._newItemIds = [];
@@ -73,7 +73,7 @@ function Game_Party_HighlightNewItemMixIn(gameParty: Game_Party) {
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    */
-  gameParty.addNewItems = function (this: Game_Party, item) {
+  gameParty.addNewItems = function (this: Game_Party, item: MZ.Item | MZ.Weapon | MZ.Armor) {
     if (this.hasItemAsNew(item)) {
       return;
     }
@@ -90,15 +90,15 @@ function Game_Party_HighlightNewItemMixIn(gameParty: Game_Party) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item アイテムデータ
    * @return {boolean}
    */
-  gameParty.hasItemAsNew = function (this: Game_Party, item) {
+  gameParty.hasItemAsNew = function (this: Game_Party, item: MZ.Item | MZ.Weapon | MZ.Armor): boolean {
     if (!this._newItemIds) {
       this._newItemIds = [];
     }
     const newItemIds = DataManager.isItem(item)
       ? this.newItemIds()
       : DataManager.isWeapon(item)
-      ? this.newWeaponIds()
-      : this.newArmorIds();
+        ? this.newWeaponIds()
+        : this.newArmorIds();
     return this.hasItem(item, false) && newItemIds.includes(item.id);
   };
 
@@ -130,6 +130,16 @@ Game_Party_HighlightNewItemMixIn(Game_Party.prototype);
  * @param {Window_ItemList.prototype} windowClass
  */
 function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
+  const _initialize = windowClass.initialize;
+  windowClass.initialize = function (rect) {
+    _initialize.call(this, rect);
+    if (settings.newItemToTop) {
+      this._newItemsForSort = $gameParty.newItemIds().map(itemId => $dataItems[itemId]);
+      this._newWeaponsForSort = $gameParty.newWeaponIds().map(weaponId => $dataWeapons[weaponId]);
+      this._newArmorsForSort = $gameParty.newArmorIds().map(armorId => $dataArmors[armorId]);
+    }
+  };
+
   const _drawItemName = windowClass.drawItemName;
   windowClass.drawItemName = function (this: Window_ItemList, item, x, y, width) {
     if (this.isNewItem(item)) {
@@ -147,9 +157,9 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
    * @param {number} y Y座標
    * @param {number} width 幅
    */
-  windowClass.drawNewItemName = function (this: Window_ItemList, item, x, y, width) {
+  windowClass.drawNewItemName = function (this: Window_ItemList, item: MZ.Item | MZ.Weapon | MZ.Armor, x: number, y: number, width: number): void {
     const resetTextColor = this.resetTextColor;
-    this.resetTextColor = () => {};
+    this.resetTextColor = () => { };
     this.changeTextColor(ColorManager.textColor(settings.newItemColor));
     _drawItemName.call(this, item, x, y, width);
     this.resetTextColor = resetTextColor;
@@ -160,7 +170,7 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
    * @return {boolean}
    */
-  windowClass.isNewItem = function (item): item is MZ.Item|MZ.Weapon|MZ.Armor {
+  windowClass.isNewItem = function (item: MZ.Item | MZ.Weapon | MZ.Armor): item is MZ.Item | MZ.Weapon | MZ.Armor {
     return !!item && !DataManager.isSkill(item) && $gameParty.hasItemAsNew(item);
   };
 
@@ -173,6 +183,36 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
       this.refresh();
     }
   };
+
+  windowClass.isNewItemForSort = function (this: Window_ItemList, item: MZ.Item | MZ.Weapon | MZ.Armor): boolean {
+    return DataManager.isItem(item)
+      ? this._newItemsForSort.includes(item)
+      : DataManager.isWeapon(item)
+        ? this._newWeaponsForSort.includes(item)
+        : this._newArmorsForSort.includes(item);
+  };
+
+  if (settings.newItemToTop) {
+    const _makeItemList = windowClass.makeItemList;
+    windowClass.makeItemList = function (this: Window_ItemList): void {
+      _makeItemList.call(this);
+      this._data.sort((a, b) => {
+        if (a === null && b === null) {
+          return 0;
+        } else if (a === null) {
+          return 1;
+        } else if (b === null) {
+          return -1;
+        }
+        if (this.isNewItemForSort(a)) {
+          return -1;
+        } else if (this.isNewItemForSort(b)) {
+          return 1;
+        }
+        return 0;
+      });
+    };
+  }
 }
 
 Window_ItemList_HighlightNewItemMixIn(Window_ItemList.prototype);
