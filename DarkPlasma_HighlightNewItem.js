@@ -1,10 +1,11 @@
-// DarkPlasma_HighlightNewItem 1.0.6
+// DarkPlasma_HighlightNewItem 1.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/08/21 1.0.6 typescript移行
+ * 2022/08/21 1.1.0 新規入手アイテムを最上部に表示する設定を追加
+ *            1.0.6 typescript移行
  * 2021/09/19 1.0.5 同じIDの別種別のアイテムが新しく入手した扱いになる不具合を修正
  * 2021/09/11 1.0.4 特定のクラスを操作するプラグインとの競合を修正
  * 2021/09/06 1.0.3 外した装備が新しく入手した扱いになる不具合を修正
@@ -21,17 +22,28 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @orderAfter DarkPlasma_OrderIdAlias
+ *
  * @param newItemColor
- * @desc 新しく入手したアイテムの色番号
+ * @desc 新しく入手したアイテムの色番号を指定します。
  * @text アイテム色
  * @type number
  * @default 2
  *
+ * @param newItemToTop
+ * @desc ONの場合、新しく入手したアイテムを最上部に表示します。
+ * @text 新規アイテムを最上部に
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.0.6
+ * version: 1.1.0
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
+ *
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_OrderIdAlias
  */
 
 (() => {
@@ -47,6 +59,7 @@
 
   const settings = {
     newItemColor: Number(pluginParameters.newItemColor || 2),
+    newItemToTop: String(pluginParameters.newItemToTop || false) === 'true',
   };
 
   /**
@@ -166,6 +179,15 @@
    * @param {Window_ItemList.prototype} windowClass
    */
   function Window_ItemList_HighlightNewItemMixIn(windowClass) {
+    const _initialize = windowClass.initialize;
+    windowClass.initialize = function (rect) {
+      _initialize.call(this, rect);
+      if (settings.newItemToTop) {
+        this._newItemsForSort = $gameParty.newItemIds().map((itemId) => $dataItems[itemId]);
+        this._newWeaponsForSort = $gameParty.newWeaponIds().map((weaponId) => $dataWeapons[weaponId]);
+        this._newArmorsForSort = $gameParty.newArmorIds().map((armorId) => $dataArmors[armorId]);
+      }
+    };
     const _drawItemName = windowClass.drawItemName;
     windowClass.drawItemName = function (item, x, y, width) {
       if (this.isNewItem(item)) {
@@ -206,6 +228,34 @@
         this.refresh();
       }
     };
+    windowClass.isNewItemForSort = function (item) {
+      return DataManager.isItem(item)
+        ? this._newItemsForSort.includes(item)
+        : DataManager.isWeapon(item)
+        ? this._newWeaponsForSort.includes(item)
+        : this._newArmorsForSort.includes(item);
+    };
+    if (settings.newItemToTop) {
+      const _makeItemList = windowClass.makeItemList;
+      windowClass.makeItemList = function () {
+        _makeItemList.call(this);
+        this._data.sort((a, b) => {
+          if (a === null && b === null) {
+            return 0;
+          } else if (a === null) {
+            return 1;
+          } else if (b === null) {
+            return -1;
+          }
+          if (this.isNewItemForSort(a)) {
+            return -1;
+          } else if (this.isNewItemForSort(b)) {
+            return 1;
+          }
+          return 0;
+        });
+      };
+    }
   }
   Window_ItemList_HighlightNewItemMixIn(Window_ItemList.prototype);
 })();
