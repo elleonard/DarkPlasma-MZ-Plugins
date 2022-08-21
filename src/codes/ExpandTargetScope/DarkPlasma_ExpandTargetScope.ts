@@ -1,11 +1,12 @@
+/// <reference path="./ExpandTargetScope.d.ts" />
 import { settings } from './_build/DarkPlasma_ExpandTargetScope_parameters';
 
 /**
  * @param {Game_Temp.prototype} gameTemp
  */
-function Game_Temp_ExpandTargetScopeMixIn(gameTemp) {
+function Game_Temp_ExpandTargetScopeMixIn(gameTemp: Game_Temp) {
   const _initialize = gameTemp.initialize;
-  gameTemp.initialize = function () {
+  gameTemp.initialize = function (this: Game_Temp) {
     _initialize.call(this);
     this._syncSelectionEffectRequestedBattlers = [];
   };
@@ -13,21 +14,21 @@ function Game_Temp_ExpandTargetScopeMixIn(gameTemp) {
   /**
    * @param {Game_Battler} battler
    */
-  gameTemp.requestSyncSelectionEffect = function (battler) {
+  gameTemp.requestSyncSelectionEffect = function (this: Game_Temp, battler: Game_Battler) {
     this._syncSelectionEffectRequestedBattlers.push(battler);
   };
 
   /**
    * @param {Game_Battler} battler
    */
-  gameTemp.isSyncSelectionEffectRequested = function (battler) {
-    this._syncSelectionEffectRequestedBattlers.includes(battler);
+  gameTemp.isSyncSelectionEffectRequested = function (this: Game_Temp, battler: Game_Battler) {
+    return this._syncSelectionEffectRequestedBattlers.includes(battler);
   };
 
   /**
    * @param {Game_Battler} battler
    */
-  gameTemp.processSyncSelectionEffect = function (battler) {
+  gameTemp.processSyncSelectionEffect = function (this: Game_Temp, battler: Game_Battler) {
     this._syncSelectionEffectRequestedBattlers = this._syncSelectionEffectRequestedBattlers.filter(
       (b) => b !== battler
     );
@@ -39,37 +40,37 @@ Game_Temp_ExpandTargetScopeMixIn(Game_Temp.prototype);
 /**
  * @param {Game_Action.prototype} gameAction
  */
-function Game_Action_ExpandTargetScopeMixIn(gameAction) {
+function Game_Action_ExpandTargetScopeMixIn(gameAction: Game_Action) {
   const _clear = gameAction.clear;
-  gameAction.clear = function () {
+  gameAction.clear = function (this: Game_Action) {
     _clear.call(this);
     this._isExpandedScope = false;
     this._enableForAllRate = false;
   };
 
-  gameAction.expandScope = function () {
+  gameAction.expandScope = function (this: Game_Action) {
     this._isExpandedScope = !this.isForAllByDefault();
   };
 
-  gameAction.resetExpandScope = function () {
+  gameAction.resetExpandScope = function (this: Game_Action) {
     this._isExpandedScope = false;
   };
 
-  gameAction.canExpandScope = function () {
-    return this._item.object().meta.canExpandScope;
+  gameAction.canExpandScope = function (this: Game_Action) {
+    return !!this._item.object()?.meta.canExpandScope;
   };
 
-  gameAction.isExpandedScope = function () {
+  gameAction.isExpandedScope = function (this: Game_Action) {
     return this._isExpandedScope;
   };
 
   const _isForOne = gameAction.isForOne;
-  gameAction.isForOne = function () {
+  gameAction.isForOne = function (this: Game_Action) {
     return _isForOne.call(this) && !this._isExpandedScope;
   };
 
   const _isForAll = gameAction.isForAll;
-  gameAction.isForAll = function () {
+  gameAction.isForAll = function (this: Game_Action) {
     return _isForAll.call(this) || this._isExpandedScope;
   };
 
@@ -77,17 +78,17 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction) {
    * 元々から全体対象であるかどうか
    * @return {boolean}
    */
-  gameAction.isForAllByDefault = function () {
+  gameAction.isForAllByDefault = function (this: Game_Action): boolean {
     return _isForAll.call(this);
   };
 
   const _needsSelection = gameAction.needsSelection;
-  gameAction.needsSelection = function () {
+  gameAction.needsSelection = function (this: Game_Action) {
     return _needsSelection.call(this) || (this.isForAll() && !settings.skipTargetSelectionForAll);
   };
 
   const _makeDamageValue = gameAction.makeDamageValue;
-  gameAction.makeDamageValue = function (target, critical) {
+  gameAction.makeDamageValue = function (this: Game_Action, target, critical) {
     const value = _makeDamageValue.call(this, target, critical);
     return Math.floor(value * this.expandedScopeDamageRate());
   };
@@ -97,7 +98,7 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction) {
    * 全体化していない場合、1を返す
    * @return {number}
    */
-  gameAction.expandedScopeDamageRate = function () {
+  gameAction.expandedScopeDamageRate = function (this: Game_Action): number {
     /**
      * 全体化済み かつ 敵残数2以上なら全体化倍率を有効化
      * 単純に同条件で倍率をかけると、全体化攻撃で残り1体になった場合、最後の1体に倍率がかからない
@@ -112,38 +113,50 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction) {
 
 Game_Action_ExpandTargetScopeMixIn(Game_Action.prototype);
 
-Game_Unit.prototype.selectAll = function () {
-  this.aliveMembers().forEach((member) => member.select());
-  this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
-};
+function Game_Unit_ExpandTargetScopeMixIn(gameUnit: Game_Unit) {
+  gameUnit.selectAll = function (this: Game_Unit) {
+    this.aliveMembers().forEach((member) => member.select());
+    this.aliveMembers().forEach((member) => $gameTemp.requestSyncSelectionEffect(member));
+  };
+}
 
-const _Game_BattlerBase_skillMpCost = Game_BattlerBase.prototype.skillMpCost;
-Game_BattlerBase.prototype.skillMpCost = function (skill) {
-  const value = _Game_BattlerBase_skillMpCost.call(this, skill);
-  const action = this.currentAction();
-  if (action && action.isExpandedScope()) {
-    return Math.floor((value * settings.mpCostRateForAll) / 100);
-  }
-  return value;
-};
+Game_Unit_ExpandTargetScopeMixIn(Game_Unit.prototype);
+
+function Game_Battler_ExpandTargetScopeMixIn(gameBattler: Game_Battler) {
+  const _skillMpCost = gameBattler.skillMpCost;
+  gameBattler.skillMpCost = function (this: Game_Battler, skill: MZ.Skill) {
+    const value = _skillMpCost.call(this, skill);
+    const action = this.currentAction();
+    if (action && action.isExpandedScope()) {
+      return Math.floor((value * settings.mpCostRateForAll) / 100);
+    }
+    return value;
+  };
+
+  gameBattler.resetAllActionsExpandedScope = function (this: Game_Battler) {
+    this._actions.forEach(action => action.resetExpandScope());
+  };
+}
+
+Game_Battler_ExpandTargetScopeMixIn(Game_Battler.prototype);
 
 /**
  * @param {Scene_ItemBase.prototype} sceneItemBase
  */
-function Scene_ItemBase_ExpandScopeTargetMixIn(sceneItemBase) {
+function Scene_ItemBase_ExpandScopeTargetMixIn(sceneItemBase: Scene_ItemBase) {
   const _createActorWindow = sceneItemBase.createActorWindow;
-  sceneItemBase.createActorWindow = function () {
+  sceneItemBase.createActorWindow = function (this: Scene_ItemBase) {
     _createActorWindow.call(this);
-    this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScope.bind(this));
+    this._actorWindow!.setHandler(settings.switchScopeButton, this.toggleTargetScope.bind(this));
   };
 
-  sceneItemBase.toggleTargetScope = function () {
-    this._actorWindow.toggleCursorAll();
+  sceneItemBase.toggleTargetScope = function (this: Scene_ItemBase) {
+    this._actorWindow!.toggleCursorAll();
   };
 
   const _itemTargetActors = sceneItemBase.itemTargetActors;
-  sceneItemBase.itemTargetActors = function () {
-    if (this._actorWindow.canToggleScope() && this._actorWindow.cursorAll()) {
+  sceneItemBase.itemTargetActors = function (this: Scene_ItemBase) {
+    if (this._actorWindow!.canToggleScope() && this._actorWindow!.cursorAll()) {
       return $gameParty.members();
     }
     return _itemTargetActors.call(this);
@@ -155,24 +168,30 @@ Scene_ItemBase_ExpandScopeTargetMixIn(Scene_ItemBase.prototype);
 /**
  * @param {Scene_Battle.prototype} sceneBattle
  */
-function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle) {
+function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle: Scene_Battle) {
   const _createActorWindow = sceneBattle.createActorWindow;
-  sceneBattle.createActorWindow = function () {
+  sceneBattle.createActorWindow = function (this: Scene_Battle) {
     _createActorWindow.call(this);
     this._actorWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeActor.bind(this));
   };
 
   const _createEnemyWindow = sceneBattle.createEnemyWindow;
-  sceneBattle.createEnemyWindow = function () {
+  sceneBattle.createEnemyWindow = function (this: Scene_Battle) {
     _createEnemyWindow.call(this);
     this._enemyWindow.setHandler(settings.switchScopeButton, this.toggleTargetScopeEnemy.bind(this));
   };
 
+  const _startActorCommandSelection = sceneBattle.startActorCommandSelection;
+  sceneBattle.startActorCommandSelection = function(this: Scene_Battle) {
+    _startActorCommandSelection.call(this);
+    BattleManager.actor()?.resetAllActionsExpandedScope();
+  };
+
   const _startActorSelection = sceneBattle.startActorSelection;
-  sceneBattle.startActorSelection = function () {
+  sceneBattle.startActorSelection = function (this: Scene_Battle) {
     _startActorSelection.call(this);
     const action = BattleManager.inputtingAction();
-    if (action.isForAllByDefault()) {
+    if (action!.isForAllByDefault()) {
       this._actorWindow.setCursorAll(true);
       this._actorWindow.setCursorFixed(true);
     } else {
@@ -183,10 +202,10 @@ function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle) {
   };
 
   const _startEnemySelection = sceneBattle.startEnemySelection;
-  sceneBattle.startEnemySelection = function () {
+  sceneBattle.startEnemySelection = function (this: Scene_Battle) {
     _startEnemySelection.call(this);
     const action = BattleManager.inputtingAction();
-    if (action.isForAllByDefault()) {
+    if (action!.isForAllByDefault()) {
       this._enemyWindow.setCursorAll(true);
       this._enemyWindow.setCursorFixed(true);
     } else {
@@ -197,71 +216,75 @@ function Scene_Battle_ExpandScopeTargetMixIn(sceneBattle) {
   };
 
   const _onActorOk = sceneBattle.onActorOk;
-  sceneBattle.onActorOk = function () {
+  sceneBattle.onActorOk = function (this: Scene_Battle) {
     const action = BattleManager.inputtingAction();
     if (this._actorWindow.cursorAll()) {
-      action.expandScope();
+      action!.expandScope();
     } else {
-      action.resetExpandScope();
+      action!.resetExpandScope();
     }
     _onActorOk.call(this);
   };
 
   const _onEnemyOk = sceneBattle.onEnemyOk;
-  sceneBattle.onEnemyOk = function () {
+  sceneBattle.onEnemyOk = function (this: Scene_Battle) {
     const action = BattleManager.inputtingAction();
     if (this._enemyWindow.cursorAll()) {
-      action.expandScope();
+      action!.expandScope();
     } else {
-      action.resetExpandScope();
+      action!.resetExpandScope();
     }
     _onEnemyOk.call(this);
   };
 
-  sceneBattle.toggleTargetScopeActor = function () {
+  sceneBattle.toggleTargetScopeActor = function (this: Scene_Battle) {
     this._actorWindow.toggleCursorAll();
   };
 
-  sceneBattle.toggleTargetScopeEnemy = function () {
+  sceneBattle.toggleTargetScopeEnemy = function (this: Scene_Battle) {
     this._enemyWindow.toggleCursorAll();
   };
 }
 
 Scene_Battle_ExpandScopeTargetMixIn(Scene_Battle.prototype);
 
-const _Sprite_Battler_updateSelectionEffect = Sprite_Battler.prototype.updateSelectionEffect;
-Sprite_Battler.prototype.updateSelectionEffect = function () {
-  if (this._battler.isSelected()) {
-    if ($gameTemp.isSyncSelectionEffectRequested(this._battler)) {
-      this._selectionEffectCount = 0;
-      $gameTemp.processSyncSelectionEffect(this._battler);
+function Sprite_Battler_ExpandTargetScopeMixIn(spriteBattler: Sprite_Battler) {
+  const _updateSelectionEffect = spriteBattler.updateSelectionEffect;
+  spriteBattler.updateSelectionEffect = function (this: Sprite_Battler) {
+    if (this._battler!.isSelected()) {
+      if ($gameTemp.isSyncSelectionEffectRequested(this._battler!)) {
+        this._selectionEffectCount = 0;
+        $gameTemp.processSyncSelectionEffect(this._battler!);
+      }
     }
-  }
-  _Sprite_Battler_updateSelectionEffect.call(this);
-};
+    _updateSelectionEffect.call(this);
+  };
+}
+
+Sprite_Battler_ExpandTargetScopeMixIn(Sprite_Battler.prototype);
 
 /**
  * @param {Window_MenuActor.prototype} windowClass
  */
-function Window_MenuActor_ExpandTargetScopeMixIn(windowClass) {
+function Window_MenuActor_ExpandTargetScopeMixIn(windowClass: Window_MenuActor) {
   const _selectForItem = windowClass.selectForItem;
-  windowClass.selectForItem = function (item) {
+  windowClass.selectForItem = function (this: Window_MenuActor, item) {
     _selectForItem.call(this, item);
     this._currentAction = new Game_Action($gameParty.menuActor());
     this._currentAction.setItemObject(item);
   };
 
-  windowClass.toggleCursorAll = function () {
+  windowClass.toggleCursorAll = function (this: Window_MenuActor) {
     this.setCursorAll(!this._cursorAll);
     this.forceSelect(0);
   };
 
-  windowClass.canToggleScope = function () {
+  windowClass.canToggleScope = function (this: Window_MenuActor) {
     return this._currentAction && this._currentAction.canExpandScope() && !this.cursorFixed();
   };
 
   const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
-  windowClass.isCustomKeyEnabled = function (key) {
+  windowClass.isCustomKeyEnabled = function (this: Window_MenuActor, key) {
     if (key === settings.switchScopeButton) {
       return this.canToggleScope();
     }
@@ -275,35 +298,21 @@ Window_MenuActor_ExpandTargetScopeMixIn(Window_MenuActor.prototype);
 /**
  * @param {Window_BattleActor.prototype|Window_BattleEnemy.prototype} windowClass
  */
-function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass) {
-  windowClass.toggleCursorAll = function () {
+function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass: Window_BattleActor | Window_BattleEnemy) {
+  windowClass.toggleCursorAll = function (this: Window_BattleActor | Window_BattleEnemy) {
     this.setCursorAll(!this._cursorAll);
   };
 
   const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
-  windowClass.isCustomKeyEnabled = function (key) {
+  windowClass.isCustomKeyEnabled = function (this: Window_BattleActor | Window_BattleEnemy, key) {
     if (key === settings.switchScopeButton) {
-      return $gameParty.inBattle() && BattleManager.inputtingAction().canExpandScope() && !this.cursorFixed();
+      return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed();
     }
     return _isCustomKeyEnabled.call(this, key);
   };
 
-  /**
-   * @return {Game_Unit}
-   */
-  windowClass.unit = function () {
-    return null;
-  };
-
-  /**
-   * @return {Game_Battler}
-   */
-  windowClass.currentTarget = function () {
-    return null;
-  };
-
   const _setCursorAll = windowClass.setCursorAll;
-  windowClass.setCursorAll = function (cursorAll) {
+  windowClass.setCursorAll = function (this: Window_BattleActor | Window_BattleEnemy, cursorAll) {
     _setCursorAll.call(this, cursorAll);
     if (cursorAll) {
       this.unit().selectAll();
@@ -323,12 +332,12 @@ Window_BattleTarget_ExpandTargetScopeMixIn(Window_BattleEnemy.prototype);
 /**
  * @param {Window_BattleActor.prototype} windowClass
  */
-function Window_BattleActor_ExpandTargetScopeMixIn(windowClass) {
-  windowClass.unit = function () {
+function Window_BattleActor_ExpandTargetScopeMixIn(windowClass: Window_BattleActor) {
+  windowClass.unit = function (this: Window_BattleActor) {
     return $gameParty;
   };
 
-  windowClass.currentTarget = function () {
+  windowClass.currentTarget = function (this: Window_BattleActor) {
     return this.actor(this.index());
   };
 }
@@ -338,17 +347,17 @@ Window_BattleActor_ExpandTargetScopeMixIn(Window_BattleActor.prototype);
 /**
  * @param {Window_BattleEnemy.prototype} windowClass
  */
-function Window_BattleEnemy_ExpandScopeTargetMixIn(windowClass) {
-  windowClass.unit = function () {
+function Window_BattleEnemy_ExpandScopeTargetMixIn(windowClass: Window_BattleEnemy) {
+  windowClass.unit = function (this: Window_BattleEnemy) {
     return $gameTroop;
   };
 
-  windowClass.currentTarget = function () {
+  windowClass.currentTarget = function (this: Window_BattleEnemy) {
     return this.enemy();
   };
 
   const _refreshCursorForAll = windowClass.refreshCursorForAll;
-  windowClass.refreshCursorForAll = function () {
+  windowClass.refreshCursorForAll = function (this: Window_BattleEnemy) {
     const maxItems = this.maxItems();
     if (maxItems > 0) {
       const rect = this.itemRect(0);
@@ -362,21 +371,25 @@ function Window_BattleEnemy_ExpandScopeTargetMixIn(windowClass) {
 
 Window_BattleEnemy_ExpandScopeTargetMixIn(Window_BattleEnemy.prototype);
 
-/**
- * 全体化アニメーションのため上書き
- * @param {Game_Battler} subject
- * @param {Game_Action} action
- * @param {Game_Battler[]} targets
- */
-Window_BattleLog.prototype.startAction = function (subject, action, targets) {
-  const item = action.item();
-  this.push('performActionStart', subject, action);
-  this.push('waitForMovement');
-  this.push('performAction', subject, action);
-  if (action.isExpandedScope() && item.meta.expandedAnimationId) {
-    this.push('showAnimation', subject, targets.clone(), item.meta.expandedAnimationId);
-  } else {
-    this.push('showAnimation', subject, targets.clone(), item.animationId);
-  }
-  this.displayAction(subject, item);
-};
+function Window_BattleLog_ExpandTargetScopeMixIn(windowClass: Window_BattleLog) {
+  /**
+   * 全体化アニメーションのため上書き
+   * @param {Game_Battler} subject
+   * @param {Game_Action} action
+   * @param {Game_Battler[]} targets
+   */
+  windowClass.startAction = function (subject: Game_Battler, action: Game_Action, targets: Game_Battler[]): void {
+    const item = action.item() as MZ.Skill | MZ.Item;
+    this.push('performActionStart', subject, action);
+    this.push('waitForMovement');
+    this.push('performAction', subject, action);
+    if (action.isExpandedScope() && item.meta.expandedAnimationId) {
+      this.push('showAnimation', subject, targets.clone(), item.meta.expandedAnimationId);
+    } else {
+      this.push('showAnimation', subject, targets.clone(), item.animationId);
+    }
+    this.displayAction(subject, item);
+  };
+}
+
+Window_BattleLog_ExpandTargetScopeMixIn(Window_BattleLog.prototype);
