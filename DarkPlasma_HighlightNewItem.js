@@ -1,9 +1,10 @@
-// DarkPlasma_HighlightNewItem 1.1.0
+// DarkPlasma_HighlightNewItem 1.1.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/23 1.1.1 OrderEquipとの順序関係を明示
  * 2022/08/21 1.1.0 新規入手アイテムを最上部に表示する設定を追加
  *            1.0.6 typescript移行
  * 2021/09/19 1.0.5 同じIDの別種別のアイテムが新しく入手した扱いになる不具合を修正
@@ -23,6 +24,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @orderAfter DarkPlasma_OrderIdAlias
+ * @orderAfter DarkPlasma_OrderEquip
  *
  * @param newItemColor
  * @desc 新しく入手したアイテムの色番号を指定します。
@@ -37,13 +39,14 @@
  * @default false
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
  *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_OrderIdAlias
+ * DarkPlasma_OrderEquip
  */
 
 (() => {
