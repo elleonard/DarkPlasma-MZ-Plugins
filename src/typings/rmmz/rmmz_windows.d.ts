@@ -7,7 +7,7 @@
  * The superclass of all windows within the game.
  */
 declare class Window_Base extends Window {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public static _iconWidth: number;
   public static _iconHeight: number;
@@ -326,11 +326,11 @@ declare class Window_HorzCommand extends Window_Command {
  * The window for displaying the description of the selected item.
  */
 declare class Window_Help extends Window_Base {
-  public constructor(numLines?: number);
+  public constructor(rect: Rectangle);
 
   public _text: string;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setText(text: string): void;
   public clear(): void;
@@ -575,28 +575,30 @@ declare class Window_SkillList extends Window_Selectable {
 /**
  * The window for displaying parameter changes on the equipment screen.
  */
-declare class Window_EquipStatus extends Window_Base {
-  public constructor(x?: number, y?: number);
+declare class Window_EquipStatus extends Window_StatusBase {
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
   public _tempActor: Game_Actor | null;
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public windowHeight(): number;
-  public numVisibleRows(): number;
-  public setActor(actor: Game_Actor | null): void;
-
+  public initialize(rect: Rectangle, ...args: any[]): void;
+  public setActor(actor: Game_Actor|null): void;
+  public colSpacing(): number;
   public refresh(): void;
 
   public setTempActor(tempActor: Game_Actor | null): void;
+  public drawAllParams(): void;
 
   public drawItem(x: number, y: number, paramId: number): void;
   public drawParamName(x: number, y: number, paramId: number): void;
   public drawCurrentParam(x: number, y: number, paramId: number): void;
   public drawRightArrow(x: number, y: number): void;
   public drawNewParam(x: number, y: number, paramId: number): void;
+
+  public rightArrowWidth(): number;
+  public paramWidth(): number;
+  public paramX(): number;
+  public paramY(index: number): number;
 }
 
 //-----------------------------------------------------------------------------
@@ -695,7 +697,7 @@ declare class Window_StatusBase extends Window_Selectable {
   public gaugeLineHeight(): number;
 
   public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
-  public drawActorFace(actor: Game_Actor, x: number, y: number, width: number, height: number): void;
+  public drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void;
   public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
