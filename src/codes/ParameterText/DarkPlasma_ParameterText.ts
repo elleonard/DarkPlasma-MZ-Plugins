@@ -1,3 +1,4 @@
+/// <reference path="./ParameterText.d.ts" />
 import { settings } from './_build/DarkPlasma_ParameterText_parameters';
 
 const TEXT_MANAGER_PARAM_ID = {
@@ -46,7 +47,7 @@ DataManager.onLoad = function (object) {
  * @param {number} paramId パラメータID
  * @return {string}
  */
-TextManager.xparam = function (paramId) {
+TextManager.xparam = function (paramId: number): string {
   return paramNames.extraParamNames[paramId] || '';
 };
 
@@ -55,6 +56,6 @@ TextManager.xparam = function (paramId) {
  * @param {number} paramId パラメータID
  * @return {string}
  */
-TextManager.sparam = function (paramId) {
+TextManager.sparam = function (paramId: number): string {
   return paramNames.specialParamNames[paramId] || '';
 };

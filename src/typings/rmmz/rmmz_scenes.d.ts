@@ -450,9 +450,18 @@ declare class Scene_Equip extends Scene_MenuBase {
 
   public create(): void;
   public createStatusWindow(): void;
+  public statusWindowRect(): Rectangle;
   public createCommandWindow(): void;
+  public commandWindowRect(): Rectangle;
   public createSlotWindow(): void;
+  public slotWindowRect(): Rectangle;
   public createItemWindow(): void;
+  public itemWindowRect(): Rectangle;
+  public statusWidth(): number;
+
+  public needsPageButtons(): boolean;
+  public arePageButtonsEnabled(): boolean;
+
   public refreshActor(): void;
 
   public commandEquip(): void;
@@ -462,8 +471,11 @@ declare class Scene_Equip extends Scene_MenuBase {
   public onSlotOk(): void;
   public onSlotCancel(): void;
   public onItemOk(): void;
+  public executeEquipChange(): void;
   public onItemCancel(): void;
   public onActorChange(): void;
+
+  public hideItemWindow(): void;
 }
 
 //-----------------------------------------------------------------------------
