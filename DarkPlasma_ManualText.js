@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.4.0
+// DarkPlasma_ManualText 1.4.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/27 1.4.1 typescript移行
  * 2022/07/02 1.4.0 マニュアルの行間設定を追加
  * 2022/04/24 1.3.0 公開
  * 2022/03/14 1.2.0 マニュアル設定ごとにrefreshしないように修正
@@ -27,7 +28,7 @@
  * @default 12
  *
  * @help
- * version: 1.4.0
+ * version: 1.4.1
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -108,78 +109,72 @@
         this.contents.fontSize = this.manualFontSize();
         this.changeTextColor(ColorManager.textColor(6));
         this.manualTexts().forEach((text, index) => {
-          this.drawText(text, this.manualX(), this.manualY(index));
+          this.drawText(text, this.manualX(), this.manualY(index), this.innerWidth);
         });
         this.resetFontSettings();
       }
     };
-
     windowClass.manualX = function () {
       const maxWidth = this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0);
       return this.innerWidth - maxWidth;
     };
-
     windowClass.manualY = function (index) {
       return this.innerHeight - this.manualLineHeight() * (this.manualTexts().length - index) + this.manualOffsetY();
     };
-
     windowClass.setManualOffsetY = function (offset) {
       this._manualOffsetY = offset;
     };
-
     windowClass.manualOffsetY = function () {
       return this._manualOffsetY || -settings.linePadding;
     };
-
     windowClass.manualLineHeight = function () {
       return this.manualFontSize() + this.manualPadding();
     };
-
     windowClass.setManualPadding = function (padding) {
       this._manualPadding = padding;
     };
-
     windowClass.manualPadding = function () {
       return this._manualPadding || settings.linePadding;
     };
-
     windowClass.initManualTexts = function () {
       this._manualTexts = [];
     };
-
     windowClass.addManualText = function (text) {
       if (!this._manualTexts) {
         this.initManualTexts();
       }
       this._manualTexts.push(text);
     };
-
     windowClass.manualTexts = function () {
       return this._manualTexts;
     };
-
     windowClass.setManualFontSize = function (fontSize) {
       this._manualFontSize = fontSize;
     };
-
     windowClass.manualFontSize = function () {
       if (!this._manualFontSize) {
         this._manualFontSize = 21;
       }
       return this._manualFontSize;
     };
-
     windowClass.isManualVisible = function () {
       return this._isManualVisible;
     };
-
     windowClass.setIsManualVisible = function (visible) {
       if (this._isManualVisible !== visible) {
         this._isManualVisible = visible;
         this.refresh();
       }
     };
+    const _refresh = windowClass.refresh;
+    windowClass.refresh = function () {
+      if (_refresh) {
+        _refresh.call(this);
+      }
+      /**
+       * drawManualは各利用元から呼び出される
+       */
+    };
   }
-
   globalThis.Window_ManualTextMixIn = Window_ManualTextMixIn;
 })();
