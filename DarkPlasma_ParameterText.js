@@ -1,9 +1,10 @@
-// DarkPlasma_ParameterText 1.0.4
+// DarkPlasma_ParameterText 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/08/27 1.0.5 typescript移行
  * 2021/07/05 1.0.4 MZ 1.3.2に対応
  * 2021/06/22 1.0.3 サブフォルダからの読み込みに対応
  * 2020/09/08 1.0.2 rollup構成へ移行
@@ -110,7 +111,7 @@
  * @default 経験獲得率
  *
  * @help
- * version: 1.0.4
+ * version: 1.0.5
  * 本プラグインは他のプラグインから参照されることを前提としたベースプラグインです。
  * 追加能力値及び特殊能力値の表記テキストを返す関数を提供します。
  *
@@ -155,7 +156,6 @@
     HIT: 8,
     EVASION: 9,
   };
-
   const paramNames = {
     extraParamNames: [
       '',
@@ -182,7 +182,6 @@
       settings.specialParamNameExperienceRate,
     ],
   };
-
   const _DataManager_onLoad = DataManager.onLoad;
   DataManager.onLoad = function (object) {
     _DataManager_onLoad.call(this, object);
@@ -191,7 +190,6 @@
       paramNames.extraParamNames[1] = TextManager.param(TEXT_MANAGER_PARAM_ID.EVASION);
     }
   };
-
   /**
    * 追加能力値のテキストを返す
    * @param {number} paramId パラメータID
@@ -200,7 +198,6 @@
   TextManager.xparam = function (paramId) {
     return paramNames.extraParamNames[paramId] || '';
   };
-
   /**
    * 特殊能力値のテキストを返す
    * @param {number} paramId パラメータID
