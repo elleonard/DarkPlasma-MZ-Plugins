@@ -1,15 +1,16 @@
+/// <reference path="./ManualText.d.ts" />
 import { settings } from './_build/DarkPlasma_ManualText_parameters';
 
 /**
  * @param {Window_Base.prototype} windowClass
  */
-function Window_ManualTextMixIn(windowClass) {
+function Window_ManualTextMixIn(windowClass: Window_Base) {
   windowClass.drawManual = function () {
     if (this.isManualVisible()) {
       this.contents.fontSize = this.manualFontSize();
       this.changeTextColor(ColorManager.textColor(6));
       this.manualTexts().forEach((text, index) => {
-        this.drawText(text, this.manualX(), this.manualY(index));
+        this.drawText(text, this.manualX(), this.manualY(index), this.innerWidth);
       });
       this.resetFontSettings();
     }
@@ -79,6 +80,16 @@ function Window_ManualTextMixIn(windowClass) {
       this._isManualVisible = visible;
       this.refresh();
     }
+  };
+
+  const _refresh = windowClass.refresh;
+  windowClass.refresh = function() {
+    if (_refresh) {
+      _refresh.call(this);
+    }
+    /**
+     * drawManualは各利用元から呼び出される
+     */
   };
 }
 
