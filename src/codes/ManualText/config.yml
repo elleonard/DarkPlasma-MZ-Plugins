@@ -3,6 +3,9 @@ DarkPlasma_ManualText:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/08/27
+      version: 1.4.1
+      description: 'typescript移行'
     - date: 2022/07/02
       version: 1.4.0
       description: 'マニュアルの行間設定を追加'
