@@ -272,8 +272,6 @@ declare class Scene_MenuBase extends Scene_Base {
   public initialize(...args: any[]): void;
 
   public create(): void;
-  public actor(): Game_Actor;
-  public updateActor(): void;
 
   public helpAreaTop(): number;
   public helpAreaBottom(): number;
@@ -282,9 +280,20 @@ declare class Scene_MenuBase extends Scene_Base {
   public mainAreaBottom(): number;
   public mainAreaHeight(): number;
 
+  public actor(): Game_Actor;
+  public updateActor(): void;
+
   public createBackground(): void;
   public setBackgroundOpacity(opacity: number): void;
   public createHelpWindow(): void;
+  public helpWindowRect(): Rectangle;
+  public createButtons(): void;
+  public needsCancelButton(): boolean;
+  public createCancelButton(): void;
+  public needsPageButtons(): boolean;
+  public createPageButtons(): void;
+  public updatePageButtons(): void;
+  public arePageButtonsEnabled(): boolean;
 
   public nextActor(): void;
   public previousActor(): void;

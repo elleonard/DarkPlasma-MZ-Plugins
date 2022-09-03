@@ -7,7 +7,7 @@
  * The superclass of all windows within the game.
  */
 declare class Window_Base extends Window {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public static _iconWidth: number;
   public static _iconHeight: number;
@@ -139,7 +139,7 @@ declare namespace Window_Base {
  * The window class with cursor movement and scroll functions.
  */
 declare class Window_Selectable extends Window_Base {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public _index: number;
   public _cursorFixed: boolean;
@@ -326,11 +326,11 @@ declare class Window_HorzCommand extends Window_Command {
  * The window for displaying the description of the selected item.
  */
 declare class Window_Help extends Window_Base {
-  public constructor(numLines?: number);
+  public constructor(rect: Rectangle);
 
   public _text: string;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setText(text: string): void;
   public clear(): void;
@@ -343,13 +343,11 @@ declare class Window_Help extends Window_Base {
  * The window for displaying the party's gold.
  */
 declare class Window_Gold extends Window_Base {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle);
 
   public initialize(...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
-
+  public colSpacing(): number;
   public refresh(): void;
 
   public value(): number;
@@ -575,28 +573,30 @@ declare class Window_SkillList extends Window_Selectable {
 /**
  * The window for displaying parameter changes on the equipment screen.
  */
-declare class Window_EquipStatus extends Window_Base {
-  public constructor(x?: number, y?: number);
+declare class Window_EquipStatus extends Window_StatusBase {
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
   public _tempActor: Game_Actor | null;
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public windowHeight(): number;
-  public numVisibleRows(): number;
-  public setActor(actor: Game_Actor | null): void;
-
+  public initialize(rect: Rectangle, ...args: any[]): void;
+  public setActor(actor: Game_Actor|null): void;
+  public colSpacing(): number;
   public refresh(): void;
 
   public setTempActor(tempActor: Game_Actor | null): void;
+  public drawAllParams(): void;
 
   public drawItem(x: number, y: number, paramId: number): void;
   public drawParamName(x: number, y: number, paramId: number): void;
   public drawCurrentParam(x: number, y: number, paramId: number): void;
   public drawRightArrow(x: number, y: number): void;
   public drawNewParam(x: number, y: number, paramId: number): void;
+
+  public rightArrowWidth(): number;
+  public paramWidth(): number;
+  public paramX(): number;
+  public paramY(index: number): number;
 }
 
 //-----------------------------------------------------------------------------
@@ -695,7 +695,7 @@ declare class Window_StatusBase extends Window_Selectable {
   public gaugeLineHeight(): number;
 
   public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
-  public drawActorFace(actor: Game_Actor, x: number, y: number, width: number, height: number): void;
+  public drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void;
   public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
   public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
@@ -779,8 +779,8 @@ declare class Window_Options extends Window_Command {
   public volumeStatusText(value: number): string;
 
   public processOk(): void;
-  public cursorRight(wrap: boolean): void;
-  public cursorLeft(wrap: boolean): void;
+  public cursorRight(): void;
+  public cursorLeft(): void;
   public volumeOffset(): number;
   public changeValue(symbol: string, value: number): void;
 
@@ -1084,30 +1084,41 @@ declare class Window_NameBox extends Window_Base {
  * The window used for the event command [Show Choices].
  */
 declare class Window_ChoiceList extends Window_Command {
-  public constructor(messageWindow: Window_Message);
+  public constructor();
 
   public _messageWindow: Window_Message;
   public _background: number;
+  public _canRepeat: boolean;
 
   public initialize(...args: any[]): void;
 
+  public setMessageWindow(messageWindow: Window_Message): void;
+  public createCancelButton(): void;
+
   public start(): void;
+  public update(): void;
+  public updateCancelButton(): void;
+
   public selectDefault(): void;
 
   public updatePlacement(): void;
   public updateBackground(): void;
 
-  public windowWidth(): number;
-  public numVisibleRows(): number;
-  public maxChoiceWidth(): number;
-  public textWidthEx(text: string): number;
-  public contentsHeight(): number;
+  public placeCancelButton(): void;
 
+  public windowX(): number;
+  public windowY(): number;
+  public windowWidth(): number;
+  public windowHeight(): number;
+
+  public numVisibleRows(): number;
+  public maxLines(): number;
+  public maxChoiceWidth(): number;
   public makeCommandList(): void;
   public drawItem(index: number): void;
-
   public isCancelEnabled(): boolean;
-  public isOkTriggered(): boolean;
+  public needsCancelButton(): boolean;
+
   public callOkHandler(): void;
   public callCancelHandler(): void;
 }
@@ -1117,14 +1128,17 @@ declare class Window_ChoiceList extends Window_Command {
  * The window used for the event command [Input Number].
  */
 declare class Window_NumberInput extends Window_Selectable {
-  public constructor(messageWindow: Window_Message);
+  public constructor();
 
   public _messageWindow: Window_Message;
   public _number: number;
   public _maxDigits: number;
+  public _canRepeat: boolean;
   public _buttons: Sprite_Button[];
 
   public initialize(...args: any[]): void;
+
+  public setMessageWindow(messageWindow: Window_Message): void;
 
   public start(): void;
   public updatePlacement(): void;
@@ -1133,23 +1147,23 @@ declare class Window_NumberInput extends Window_Selectable {
   public windowHeight(): number;
   public maxCols(): number;
   public maxItems(): number;
-  public spacing(): number;
   public itemWidth(): number;
+  public itemRect(): Rectangle;
+
+  public isScrollEnabled(): boolean;
+  public isHoverEnabled(): boolean;
 
   public createButtons(): void;
   public placeButtons(): void;
-  public updateButtonsVisiblity(): void;
-  public showButtons(): void;
-  public hideButtons(): void;
+  public totalButtonWidth(): number;
+  public buttonSpacing(): number;
   public buttonY(): number;
-
   public update(): void;
   public processDigitChange(): void;
   public changeDigit(up: boolean): void;
   public isTouchOkEnabled(): boolean;
   public isOkEnabled(): boolean;
   public isCancelEnabled(): boolean;
-  public isOkTriggered(): boolean;
   public processOk(): void;
   public drawItem(index: number): void;
   public onButtonUp(): void;
@@ -1162,21 +1176,22 @@ declare class Window_NumberInput extends Window_Selectable {
  * The window used for the event command [Select Item].
  */
 declare class Window_EventItem extends Window_ItemList {
-  public constructor(messageWindow: Window_Message);
+  public constructor(rect: Rectangle);
 
   public _messageWindow: Window_Message;
 
   public initialize(...args: any[]): void;
 
-  public windowHeight(): number;
-  public numVisibleRows(): number;
-
+  public setMessageWindow(messageWindow: Window_Message): void;
+  public createCancelButton(): void;
   public start(): void;
+  public update(): void;
+  public updateCancelButton(): void;
   public updatePlacement(): void;
-
+  public placeCancelButton(): void;
   public includes(item: MZ.Item): boolean;
+  public needsNumber(): boolean;
   public isEnabled(item: MZ.Item): boolean;
-
   public onOk(): void;
   public onCancel(): void;
 }
@@ -1186,7 +1201,7 @@ declare class Window_EventItem extends Window_ItemList {
  * The window for displaying text messages.
  */
 declare class Window_Message extends Window_Base {
-  public constructor();
+  public constructor(rect: Rectangle);
 
   public _background: number;
   public _positionType: number;
@@ -1194,9 +1209,11 @@ declare class Window_Message extends Window_Base {
   public _faceBitmap: Bitmap | null;
   public _textState: Window_Base.TextState | null;
   public _goldWindow: Window_Gold;
+  public _nameBoxWindow: Window_NameBox;
   public _choiceWindow: Window_ChoiceList;
-  public _numberWindow: Window_NumberInput;
-  public _itemWindow: Window_EventItem;
+  public _numberInputWindow: Window_NumberInput;
+  public _eventItemWindow: Window_EventItem;
+
   public _showFast: boolean;
   public _lineShowFast: boolean;
   public _pauseSkip: boolean;
@@ -1204,20 +1221,21 @@ declare class Window_Message extends Window_Base {
   public initialize(...args: any[]): void;
   public initMembers(): void;
 
-  public subWindows(): Window_Base[];
-  public createSubWindows(): void;
-
-  public windowWidth(): number;
-  public windowHeight(): number;
+  public setGoldWindow(goldWindow: Window_Gold): void;
+  public setNameBoxWindow(nameBoxWindow: Window_NameBox): void;
+  public setChoiceListWindow(choiceListWindow: Window_ChoiceList): void;
+  public setNumberInputWindow(numberInputWindow: Window_NumberInput): void;
+  public setEventItemWindow(eventItemWindow: Window_EventItem): void;
 
   public clearFlags(): void;
-
-  public numVisibleRows(): number;
-
   public update(): void;
+
   public checkToNotClose(): void;
+  public synchronizeNameBox(): void;
   public canStart(): boolean;
+
   public startMessage(): void;
+  public newLineX(): number;
   public updatePlacement(): void;
   public updateBackground(): void;
   public terminateMessage(): void;
@@ -1226,6 +1244,10 @@ declare class Window_Message extends Window_Base {
   public updateInput(): boolean;
   public isAnySubWindowActive(): boolean;
   public updateMessage(): boolean;
+
+  public shouldBreakHere(textState: Window_Base.TextState): boolean;
+  public canBreakHere(textState: Window_Base.TextState): boolean;
+
   public onEndOfText(): void;
   public startInput(): boolean;
   public isTriggered(): boolean;
@@ -1233,10 +1255,11 @@ declare class Window_Message extends Window_Base {
   public areSettingsChanged(): boolean;
   public updateShowFast(): void;
   public newPage(textState: Window_Base.TextState): void;
+  public updateSpeakerName(): void;
   public loadMessageFace(): void;
   public drawMessageFace(): void;
-  public newLineX(): number;
 
+  public processControlCharacter(textState: Window_Base.TextState, c: string): void;
   public processNewLine(textState: Window_Base.TextState): void;
   public processNewPage(textState: Window_Base.TextState): void;
   public isEndOfText(textState: Window_Base.TextState): boolean;
@@ -1244,6 +1267,7 @@ declare class Window_Message extends Window_Base {
   public processEscapeCharacter(code: string, textState: Window_Base.TextState): void;
   public startWait(count: number): void;
   public startPause(): void;
+  public isWaiting(): boolean;
 }
 
 //-----------------------------------------------------------------------------
