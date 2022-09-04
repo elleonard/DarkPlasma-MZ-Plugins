@@ -25,12 +25,30 @@ declare class Sprite_Base extends Sprite {
   public isAnimationPlaying(): boolean;
 }
 
+declare class Sprite_Clickable extends Sprite {
+  public _pressed: boolean;
+  public _hovered: boolean;
+
+  public initialize(...args: any[]): void;
+
+  public update(): void;
+  public processTouch(): void;
+  public isPressed(): boolean;
+  public isClickEnabled(): boolean;
+  public isBeingTouched(): boolean;
+  public hitTest(x: number, y: number): boolean;
+  public onMouseEnter(): void;
+  public onMouseExit(): void;
+  public onPress(): void;
+  public onClick(): void;
+}
+
 //-----------------------------------------------------------------------------
 /**
  * The sprite for displaying a button.
  */
-declare class Sprite_Button extends Sprite {
-  public constructor();
+declare class Sprite_Button extends Sprite_Clickable {
+  public constructor(buttonType: string);
 
   public _touching: boolean;
   public _coldFrame: Rectangle | null;
@@ -39,20 +57,21 @@ declare class Sprite_Button extends Sprite {
 
   public initialize(...args: any[]): void;
 
+  public setupFrames(): void;
+  public blockWidth(): number;
+  public blockHeight(): number;
+  public loadButtonImage(): void;
+  public buttonData(): { x: number, w: number };
+
   public update(): void;
+  public checkBitmap(): void;
   public updateFrame(): void;
+  public updateOpacity(): void;
 
   public setColdFrame(x: number, y: number, width: number, height: number): void;
   public setHotFrame(x: number, y: number, width: number, height: number): void;
   public setClickHandler(method: () => void | null): void;
-  public callClickHandler(): void;
-
-  public processTouch(): void;
-
-  public isActive(): boolean;
-  public isButtonTouched(): boolean;
-  public canvasToLocalX(x: number): number;
-  public canvasToLocalY(y: number): number;
+  public onClick(): void;
 }
 
 //-----------------------------------------------------------------------------

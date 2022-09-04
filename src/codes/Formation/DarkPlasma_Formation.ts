@@ -1,76 +1,73 @@
+/// <reference path="./Formation.d.ts" />
 import { pluginName } from '../../common/pluginName';
 import { settings } from './_build/DarkPlasma_Formation_parameters';
+import { command_openFormationScene } from './_build/DarkPlasma_Formation_commands';
 
 /**
  * デフォルトのキャラグラサイズ
  * @type {number}
  */
-const DEFAULT_CHARACTER_SIZE = 48;
+const DEFAULT_CHARACTER_SIZE: number = 48;
 
 /**
  * 待機ウィンドウの上下パディング幅
  * @type {number}
  */
-const WAITING_WINDOW_PADDING = 36;
+const WAITING_WINDOW_PADDING: number = 36;
 
-const PLUGIN_COMMANDS = {
-  OPEN_FORMATION_SCENE: 'openFormationScene',
-};
-
-PluginManager.registerCommand(pluginName, PLUGIN_COMMANDS.OPEN_FORMATION_SCENE, function () {
+PluginManager.registerCommand(pluginName, command_openFormationScene, function () {
   SceneManager.push(Scene_Formation);
 });
 
 SceneManager.isPreviousSceneExtendsMenuBase = function () {
-  return new this._previousClass() instanceof Scene_MenuBase;
+  return !!this._previousClass && new this._previousClass() instanceof Scene_MenuBase;
 };
 
-const _Game_Temp_initialize = Game_Temp.prototype.initialize;
-Game_Temp.prototype.initialize = function () {
-  _Game_Temp_initialize.call(this);
-  this._needsFormationBattleMemberWindowRefresh = false;
-  this._needsFormationWaitingMemberWindowRefresh = false;
-};
+function Game_Temp_FormationMixIn(gameTemp: Game_Temp) {
+  const _initialize = gameTemp.initialize;
+  gameTemp.initialize = function () {
+    _initialize.call(this);
+    this._needsFormationBattleMemberWindowRefresh = false;
+    this._needsFormationWaitingMemberWindowRefresh = false;
+  };
+  
+  const _requestBattleRefresh = gameTemp.requestBattleRefresh;
+  gameTemp.requestBattleRefresh = function () {
+    _requestBattleRefresh.call(this);
+    this.requestFormationMemberWindowsRefresh();
+  };
+  
+  gameTemp.requestFormationMemberWindowsRefresh = function () {
+    this._needsFormationBattleMemberWindowRefresh = true;
+    this._needsFormationWaitingMemberWindowRefresh = true;
+  };
+  
+  gameTemp.clearFormationBattleMemberWindowRefreshRequest = function () {
+    this._needsFormationBattleMemberWindowRefresh = false;
+  };
+  
+  gameTemp.clearFormationWaitingMemberWindowRefreshRequest = function () {
+    this._needsFormationWaitingMemberWindowRefresh = false;
+  };
+  
+  gameTemp.isFormationBattleMemberWindowRefreshRequested = function () {
+    return this._needsFormationBattleMemberWindowRefresh;
+  };
+  
+  gameTemp.isFormationWaitingMemberWindowRefreshRequested = function () {
+    return this._needsFormationWaitingMemberWindowRefresh;
+  };
+}
 
-const _Game_Temp_requestBattleRefresh = Game_Temp.prototype.requestBattleRefresh;
-Game_Temp.prototype.requestBattleRefresh = function () {
-  _Game_Temp_requestBattleRefresh.call(this);
-  this.requestFormationMemberWindowsRefresh();
-};
+Game_Temp_FormationMixIn(Game_Temp.prototype);
 
-Game_Temp.prototype.requestFormationMemberWindowsRefresh = function () {
-  this._needsFormationBattleMemberWindowRefresh = true;
-  this._needsFormationWaitingMemberWindowRefresh = true;
-};
-
-Game_Temp.prototype.clearFormationBattleMemberWindowRefreshRequest = function () {
-  this._needsFormationBattleMemberWindowRefresh = false;
-};
-
-Game_Temp.prototype.clearFormationWaitingMemberWindowRefreshRequest = function () {
-  this._needsFormationWaitingMemberWindowRefresh = false;
-};
-
-Game_Temp.prototype.isFormationBattleMemberWindowRefreshRequested = function () {
-  return this._needsFormationBattleMemberWindowRefresh;
-};
-
-Game_Temp.prototype.isFormationWaitingMemberWindowRefreshRequested = function () {
-  return this._needsFormationWaitingMemberWindowRefresh;
-};
-
-/**
- * @template {Scene_Base} TScene
- * @param {TScene} sceneClass
- * @return {TScene}
- * @mixin
- */
-function Scene_FormationMixIn(sceneClass) {
+function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_FormationMixInClass {
   return class extends sceneClass {
+    _selectWindowLayer: WindowLayer = new WindowLayer();
     /**
      * @return {Rectangle}
      */
-    helpWindowRect() {
+    helpWindowRect(): Rectangle {
       if (settings.showHelpWindow) {
         const width = ConfigManager.touchUI
           ? Graphics.boxWidth -
@@ -87,7 +84,7 @@ function Scene_FormationMixIn(sceneClass) {
     /**
      * @return {Rectangle}
      */
-    statusWindowRect() {
+    statusWindowRect(): Rectangle {
       return new Rectangle(
         0,
         this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
@@ -96,18 +93,18 @@ function Scene_FormationMixIn(sceneClass) {
       );
     }
 
-    formationStatusWindowWidth() {
+    formationStatusWindowWidth(): number {
       return Graphics.boxWidth;
     }
 
-    formationStatusWindowHeight() {
+    formationStatusWindowHeight(): number {
       return this.calcWindowHeight(4, false);
     }
 
     /**
      * @return {Rectangle}
      */
-    battleMemberWindowRect() {
+    battleMemberWindowRect(): Rectangle {
       return new Rectangle(
         0,
         this.formationHelpWindow().height,
@@ -116,7 +113,7 @@ function Scene_FormationMixIn(sceneClass) {
       );
     }
 
-    battleMemberWindowWidth() {
+    battleMemberWindowWidth(): number {
       const characterSpacing = Window_FormationBattleMember.prototype.spacing();
       return settings.characterHeight > DEFAULT_CHARACTER_SIZE
         ? (settings.characterWidth + characterSpacing) * $gameParty.maxBattleMembers()
@@ -126,7 +123,7 @@ function Scene_FormationMixIn(sceneClass) {
     /**
      * @return {Rectangle}
      */
-    waitingMemberWindowRect() {
+    waitingMemberWindowRect(): Rectangle {
       return new Rectangle(
         this.formationBattleMemberWindow().width,
         this.formationHelpWindow().height,
@@ -135,13 +132,45 @@ function Scene_FormationMixIn(sceneClass) {
       );
     }
 
-    waitingMemberWindowHeight() {
+    waitingMemberWindowHeight(): number {
       return settings.characterHeight > DEFAULT_CHARACTER_SIZE
         ? settings.characterHeight + WAITING_WINDOW_PADDING
         : settings.characterHeight * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
     }
 
-    setupFormationSelectWindow() {
+    cancelButtonWidth(): number {
+      return 0;
+    }
+
+    formationHelpWindow(): Window_Help {
+      return new Window_Help(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationBattleMemberWindow(): Window_FormationBattleMember {
+      return new Window_FormationBattleMember(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationWaitingMemberWindow(): Window_FormationWaitingMember {
+      return new Window_FormationWaitingMember(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationSelectWindow(): Window_FormationSelect {
+      return new Window_FormationSelect(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationStatusWindow(): Window_FormationStatus {
+      return new Window_FormationStatus(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationStatusParamsWindow(): Window_StatusParams {
+      return new Window_StatusParams(new Rectangle(0, 0, 0, 0));
+    }
+
+    formationEquipStatusWindow(): Window_StatusEquip {
+      return new Window_StatusEquip(new Rectangle(0, 0, 0, 0));
+    }
+
+    setupFormationSelectWindow(): void {
       this.formationSelectWindow().setStatusWindow(this.formationStatusWindow());
       this.formationSelectWindow().setBattleMemberWindow(this.formationBattleMemberWindow());
       this.formationSelectWindow().setWaitingMemberWindow(this.formationWaitingMemberWindow());
@@ -153,7 +182,6 @@ function Scene_FormationMixIn(sceneClass) {
       /**
        * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
        */
-      this._selectWindowLayer = new WindowLayer();
       this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
       this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
       this.addChild(this._selectWindowLayer);
@@ -163,7 +191,7 @@ function Scene_FormationMixIn(sceneClass) {
     /**
      * @return {Rectangle}
      */
-    selectWindowRect() {
+    selectWindowRect(): Rectangle {
       return new Rectangle(
         0,
         this.formationWaitingMemberWindow().y,
@@ -172,7 +200,7 @@ function Scene_FormationMixIn(sceneClass) {
       );
     }
 
-    onFormationOk() {
+    onFormationOk(): void {
       const index = this.formationSelectWindow().index();
       const pendingIndex = this.formationSelectWindow().pendingIndex();
       if (pendingIndex >= 0) {
@@ -185,7 +213,7 @@ function Scene_FormationMixIn(sceneClass) {
       this.formationSelectWindow().activate();
     }
 
-    onFormationCancel() {
+    onFormationCancel(): void {
       if (this.formationSelectWindow().pendingIndex() >= 0) {
         this.formationSelectWindow().setPendingIndex(-1);
         this.formationSelectWindow().activate();
@@ -193,12 +221,25 @@ function Scene_FormationMixIn(sceneClass) {
         this.quitFromFormation();
       }
     }
+
+    quitFromFormation(): void {}
   };
 }
 
 globalThis.Scene_FormationMixIn = Scene_FormationMixIn;
 
 class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
+  _backgroundSprite: Sprite|null = null;
+  _cancelButton: Sprite_Button|null = null;
+
+  _selectWindow: Window_FormationSelect|null = null;
+  _helpWindow: Window_Help|null = null;
+  _statusWindow: Window_FormationStatus|null = null;
+  _statusParamsWindow: Window_StatusParams|null = null;
+  _equipWindow: Window_StatusEquip|null = null;
+  _battleMemberWindow: Window_FormationBattleMember|null = null;
+  _waitingMemberWindow: Window_FormationWaitingMember|null = null;
+
   create() {
     super.create();
     this.createBackground();
@@ -215,7 +256,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
 
   start() {
     super.start();
-    this._selectWindow.activate();
+    this._selectWindow!.activate();
   }
 
   createBackground() {
@@ -228,8 +269,10 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
     }
   }
 
-  setBackgroundOpacity(opacity) {
-    this._backgroundSprite.opacity = opacity;
+  setBackgroundOpacity(opacity: number) {
+    if (this._backgroundSprite) {
+      this._backgroundSprite.opacity = opacity;
+    }
   }
 
   createHelpWindow() {
@@ -247,7 +290,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
       this._cancelButton = new Sprite_Button('cancel');
       this._cancelButton.x = Graphics.boxWidth - this.cancelButtonWidth() - settings.cancelButtonRightMergin;
       this._cancelButton.y = this.buttonY();
-      this.addWindow(this._cancelButton);
+      this.addChild(this._cancelButton);
     }
   }
 
@@ -256,7 +299,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationHelpWindow() {
-    return this._helpWindow;
+    return this._helpWindow!;
   }
 
   createStatusWindow() {
@@ -265,7 +308,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationStatusWindow() {
-    return this._statusWindow;
+    return this._statusWindow!;
   }
 
   createStatusParamsWindow() {
@@ -292,7 +335,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationStatusParamsWindow() {
-    return this._statusParamsWindow;
+    return this._statusParamsWindow!;
   }
 
   createStatusEquipWindow() {
@@ -302,15 +345,15 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
 
   equipStatusWindowRect() {
     return new Rectangle(
-      this._statusParamsWindow.width,
-      this._statusParamsWindow.y,
-      Graphics.boxWidth - this._statusParamsWindow.width,
-      this._statusParamsWindow.height
+      this._statusParamsWindow!.width,
+      this._statusParamsWindow!.y,
+      Graphics.boxWidth - this._statusParamsWindow!.width,
+      this._statusParamsWindow!.height
     );
   }
 
   formationEquipStatusWindow() {
-    return this._equipWindow;
+    return this._equipWindow!;
   }
 
   createBattleMemberWindow() {
@@ -319,7 +362,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationBattleMemberWindow() {
-    return this._battleMemberWindow;
+    return this._battleMemberWindow!;
   }
 
   createWaitingMemberWindow() {
@@ -328,7 +371,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationWaitingMemberWindow() {
-    return this._waitingMemberWindow;
+    return this._waitingMemberWindow!;
   }
 
   createSelectWindow() {
@@ -337,7 +380,7 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 
   formationSelectWindow() {
-    return this._selectWindow;
+    return this._selectWindow!;
   }
 
   quitFromFormation() {
@@ -346,9 +389,15 @@ class Scene_Formation extends Scene_FormationMixIn(Scene_Base) {
   }
 }
 
+type _Scene_Formation = typeof Scene_Formation;
+declare global {
+  var Scene_Formation: _Scene_Formation;
+}
 globalThis.Scene_Formation = Scene_Formation;
 
 class Window_FormationStatus extends Window_SkillStatus {
+  _topFaceBitmap: Bitmap|null = null;
+  _topFaceIsVisible: boolean = false;
   loadFaceImages() {
     super.loadFaceImages();
     /**
@@ -380,13 +429,14 @@ class Window_FormationStatus extends Window_SkillStatus {
 }
 
 class Window_DrawActorCharacter extends Window_StatusBase {
-  initialize(rect) {
+  _bitmapsMustBeRedraw: Bitmap[];
+  initialize(rect: Rectangle) {
     super.initialize(rect);
     this._bitmapsMustBeRedraw = [];
     this.refresh();
   }
 
-  drawActorCharacter(actor, x, y) {
+  drawActorCharacter(actor: Game_Actor, x: number, y: number) {
     super.drawActorCharacter(actor, x, y);
     const bitmap = ImageManager.loadCharacter(actor.characterName());
     if (!bitmap.isReady()) {
@@ -394,7 +444,7 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     }
   }
 
-  drawActorCharacterLeft(actor, x, y) {
+  drawActorCharacterLeft(actor: Game_Actor, x: number, y: number) {
     const bitmap = ImageManager.loadCharacter(actor.characterName());
     const big = ImageManager.isBigCharacter(actor.characterName());
     const pw = bitmap.width / (big ? 3 : 12);
@@ -408,7 +458,7 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     }
   }
 
-  members() {
+  members(): Game_Actor[] {
     return [];
   }
 
@@ -428,7 +478,7 @@ class Window_DrawActorCharacter extends Window_StatusBase {
     return settings.characterHeight + 8;
   }
 
-  itemRect(index) {
+  itemRect(index: number) {
     const x = this.x + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
     const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
     return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
@@ -516,32 +566,42 @@ class Window_FormationWaitingMember extends Window_DrawActorCharacter {
 }
 
 class Window_FormationSelect extends Window_Selectable {
-  initialize(rect) {
+  _pendingIndex: number = -1;
+  _pendingCursorSprite: Sprite|null = null;
+  _pendingCursorRect: Rectangle = new Rectangle(0, 0, 0, 0);
+
+  _statusWindow: Window_FormationStatus|null = null;
+  _battleMemberWindow: Window_FormationBattleMember|null = null;
+  _waitingMemberWindow: Window_FormationWaitingMember|null = null;
+  _statusParamsWindow: Window_StatusParams|null = null;
+  _equipWindow: Window_StatusEquip|null = null;
+
+  initialize(rect: Rectangle) {
     super.initialize(rect);
     this.setBackgroundType(2);
-    this._pendingIndex = -1;
-    this._pendingCursorSprite = new Sprite();
-    this._pendingCursorRect = new Rectangle();
-    this.addChild(this._pendingCursorSprite);
+    if (!this._pendingCursorSprite) {
+      this._pendingCursorSprite = new Sprite();
+      this.addChild(this._pendingCursorSprite);
+    }
   }
 
-  setStatusWindow(statusWindow) {
+  setStatusWindow(statusWindow: Window_FormationStatus) {
     this._statusWindow = statusWindow;
   }
 
-  setBattleMemberWindow(battleMemberWindow) {
+  setBattleMemberWindow(battleMemberWindow: Window_FormationBattleMember) {
     this._battleMemberWindow = battleMemberWindow;
   }
 
-  setWaitingMemberWindow(waitingMemberWindow) {
+  setWaitingMemberWindow(waitingMemberWindow: Window_FormationWaitingMember) {
     this._waitingMemberWindow = waitingMemberWindow;
   }
 
-  setStatusParamsWindow(statusParamsWindow) {
+  setStatusParamsWindow(statusParamsWindow: Window_StatusParams) {
     this._statusParamsWindow = statusParamsWindow;
   }
 
-  setEquipWindow(equipWindow) {
+  setEquipWindow(equipWindow: Window_StatusEquip) {
     this._equipWindow = equipWindow;
   }
 
@@ -553,34 +613,30 @@ class Window_FormationSelect extends Window_Selectable {
     return $gameParty.allMembers().length;
   }
 
+  public isHorizontal(): boolean {
+    return true;
+  }
+
   isSelectBattleMember() {
     return this.index() < $gameParty.battleMembers().length;
   }
 
   isSelectUpperLineBattleMember() {
-    return !this.useTallCharacter() && this.index() < this._battleMemberWindow.maxCols();
+    return !this.useTallCharacter() && this.index() < this._battleMemberWindow!.maxCols();
   }
 
   isSelectLowerLineBattleMember() {
     return (
       !this.useTallCharacter() &&
-      this.index() >= this._battleMemberWindow.maxCols() &&
+      this.index() >= this._battleMemberWindow!.maxCols() &&
       this.index() < $gameParty.battleMembers().length
-    );
-  }
-
-  isSelectLeftLineWaitingMember() {
-    return (
-      !this.useTallCharacter() &&
-      this.index() < $gameParty.battleMembers().length &&
-      this.index() % this._battleMemberWindow.maxCols() === 0
     );
   }
 
   isSelectRightLineBattleMember() {
     const maxCols = this.isSelectUpperLineBattleMember()
-      ? Math.ceil(this._battleMemberWindow.maxCols())
-      : Math.floor(this._battleMemberWindow.maxCols());
+      ? Math.ceil(this._battleMemberWindow!.maxCols())
+      : Math.floor(this._battleMemberWindow!.maxCols());
     return (
       !this.useTallCharacter() &&
       this.index() < $gameParty.battleMembers().length &&
@@ -592,14 +648,14 @@ class Window_FormationSelect extends Window_Selectable {
     return (
       !this.useTallCharacter() &&
       this.index() >= $gameParty.battleMembers().length &&
-      this.index() < $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
+      this.index() < $gameParty.battleMembers().length + this._waitingMemberWindow!.maxCols()
     );
   }
 
   isSelectLowerLineWaitingMember() {
     return (
       !this.useTallCharacter() &&
-      this.index() >= $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
+      this.index() >= $gameParty.battleMembers().length + this._waitingMemberWindow!.maxCols()
     );
   }
 
@@ -607,7 +663,7 @@ class Window_FormationSelect extends Window_Selectable {
     return (
       !this.useTallCharacter() &&
       this.index() >= $gameParty.battleMembers().length &&
-      (this.index() - $gameParty.battleMembers().length) % this._waitingMemberWindow.maxCols() === 0
+      (this.index() - $gameParty.battleMembers().length) % this._waitingMemberWindow!.maxCols() === 0
     );
   }
 
@@ -615,57 +671,57 @@ class Window_FormationSelect extends Window_Selectable {
    * デフォルトよりも背の高いキャラグラを使用しているか
    * @return {boolean}
    */
-  useTallCharacter() {
+  useTallCharacter(): boolean {
     return settings.characterHeight > DEFAULT_CHARACTER_SIZE;
   }
 
   cursorDown() {
     if (this.isSelectUpperLineBattleMember()) {
-      if (this.index() + Math.ceil(this._battleMemberWindow.maxCols()) < $gameParty.battleMembers().length) {
-        this.select(this.index() + Math.ceil(this._battleMemberWindow.maxCols()));
-      } else if ($gameParty.battleMembers().length > Math.ceil(this._battleMemberWindow.maxCols())) {
+      if (this.index() + Math.ceil(this._battleMemberWindow!.maxCols()) < $gameParty.battleMembers().length) {
+        this.select(this.index() + Math.ceil(this._battleMemberWindow!.maxCols()));
+      } else if ($gameParty.battleMembers().length > Math.ceil(this._battleMemberWindow!.maxCols())) {
         this.select($gameParty.battleMembers().length - 1);
       }
     } else if (
       this.isSelectUpperLineWaitingMember() &&
-      this.index() + this._waitingMemberWindow.maxCols() < this.maxItems()
+      this.index() + this._waitingMemberWindow!.maxCols() < this.maxItems()
     ) {
-      this.select(this.index() + this._waitingMemberWindow.maxCols());
+      this.select(this.index() + this._waitingMemberWindow!.maxCols());
     }
   }
 
   cursorUp() {
     if (this.isSelectLowerLineBattleMember()) {
-      this.select(this.index() - Math.floor(this._battleMemberWindow.maxCols()));
+      this.select(this.index() - Math.floor(this._battleMemberWindow!.maxCols()));
     } else if (this.isSelectLowerLineWaitingMember()) {
-      this.select(this.index() - this._waitingMemberWindow.maxCols());
+      this.select(this.index() - this._waitingMemberWindow!.maxCols());
     }
   }
 
-  cursorRight(wrap) {
+  cursorRight() {
     if (this.isSelectRightLineBattleMember() && this.maxItems() > $gameParty.battleMembers().length) {
       if (
         this.isSelectLowerLineBattleMember() &&
-        this.maxItems() > $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
+        this.maxItems() > $gameParty.battleMembers().length + this._waitingMemberWindow!.maxCols()
       ) {
-        this.select($gameParty.battleMembers().length + this._waitingMemberWindow.maxCols());
+        this.select($gameParty.battleMembers().length + this._waitingMemberWindow!.maxCols());
       } else {
         this.select($gameParty.battleMembers().length);
       }
     } else {
-      super.cursorRight(wrap);
+      super.cursorRight(true);
     }
   }
 
-  cursorLeft(wrap) {
+  cursorLeft() {
     if (this.isSelectLeftLineWaitingMember()) {
       if (this.isSelectUpperLineWaitingMember()) {
-        this.select(Math.ceil(this._battleMemberWindow.maxCols()) - 1);
+        this.select(Math.ceil(this._battleMemberWindow!.maxCols()) - 1);
       } else {
         this.select($gameParty.battleMembers().length - 1);
       }
     } else {
-      super.cursorLeft(wrap);
+      super.cursorLeft(true);
     }
   }
 
@@ -673,7 +729,7 @@ class Window_FormationSelect extends Window_Selectable {
     return $gameParty.allMembers()[this.index()];
   }
 
-  select(index) {
+  select(index: number) {
     super.select(index);
     if (this._statusWindow) {
       this._statusWindow.setActor(this.actor());
@@ -704,11 +760,11 @@ class Window_FormationSelect extends Window_Selectable {
     return !$gameParty.isAllDead();
   }
 
-  itemRect(index) {
+  itemRect(index: number) {
     if (index < $gameParty.battleMembers().length) {
-      return this._battleMemberWindow.itemRect(index);
+      return this._battleMemberWindow!.itemRect(index);
     } else {
-      return this._waitingMemberWindow.itemRect(index - $gameParty.battleMembers().length);
+      return this._waitingMemberWindow!.itemRect(index - $gameParty.battleMembers().length);
     }
   }
 
@@ -716,7 +772,7 @@ class Window_FormationSelect extends Window_Selectable {
     return this._pendingIndex;
   }
 
-  setPendingIndex(pendingIndex) {
+  setPendingIndex(pendingIndex: number) {
     this._pendingIndex = pendingIndex;
     this.drawPendingItemBackGround();
   }
@@ -734,6 +790,16 @@ class Window_FormationSelect extends Window_Selectable {
   }
 }
 
+type _Window_FormationStatus = typeof Window_FormationStatus;
+type _Window_FormationBattleMember = typeof Window_FormationBattleMember;
+type _Window_FormationWaitinMember = typeof Window_FormationWaitingMember;
+type _Window_FormationSelect = typeof Window_FormationSelect;
+declare global {
+  var Window_FormationStatus: _Window_FormationStatus;
+  var Window_FormationBattleMember: _Window_FormationBattleMember;
+  var Window_FormationWaitingMember: _Window_FormationWaitinMember;
+  var Window_FormationSelect: _Window_FormationSelect;
+}
 globalThis.Window_FormationStatus = Window_FormationStatus;
 globalThis.Window_FormationBattleMember = Window_FormationBattleMember;
 globalThis.Window_FormationWaitingMember = Window_FormationWaitingMember;
