@@ -620,6 +620,9 @@ declare class Scene_GameEnd extends Scene_MenuBase {
 /**
  * The scene class of the shop screen.
  */
+declare interface Shop_Goods {
+
+}
 declare class Scene_Shop extends Scene_MenuBase {
   public constructor();
 
@@ -638,16 +641,26 @@ declare class Scene_Shop extends Scene_MenuBase {
 
   public initialize(...args: any[]): void;
 
-  public prepare(goods: number[][], purchaseOnly: boolean): void;
+  public prepare(goods: Shop_Goods[], purchaseOnly: boolean): void;
   public create(): void;
   public createGoldWindow(): void;
+  public goldWindowRect(): Rectangle;
   public createCommandWindow(): void;
+  public commandWindowRect(): Rectangle;
   public createDummyWindow(): void;
+  public dummyWindowRect(): Rectangle;
   public createNumberWindow(): void;
+  public numberWindowRect(): Rectangle;
   public createStatusWindow(): void;
+  public statusWindowRect(): Rectangle;
   public createBuyWindow(): void;
+  public buyWindowRect(): Rectangle;
   public createCategoryWindow(): void;
+  public categoryWindowRect(): Rectangle;
   public createSellWindow(): void;
+  public sellWindowRect(): Rectangle;
+
+  public statusWidth(): number;
 
   public activateBuyWindow(): void;
   public activateSellWindow(): void;

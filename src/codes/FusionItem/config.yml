@@ -3,6 +3,9 @@ DarkPlasma_FusionItem:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/09/04
+      version: 1.2.2
+      description: 'typescript移行'
     - date: 2022/07/03
       version: 1.2.1
       description: 'コマンドウィンドウのコマンド表示幅変更'

@@ -819,14 +819,13 @@ declare class Window_SavefileList extends Window_Selectable {
  * The window for selecting buy/sell on the shop screen.
  */
 declare class Window_ShopCommand extends Window_HorzCommand {
-  public constructor(width: number, purchaseOnly: boolean);
+  public constructor(rect: Rectangle);
 
-  public _windowWidth: number;
   public _purchaseOnly: boolean;
 
   public initialize(...args: any[]): void;
 
-  public windowWidth(): number;
+  public setPurchaseOnly(purchaseOnly: boolean): void;
   public maxCols(): number;
 
   public makeCommandList(): void;
@@ -837,9 +836,9 @@ declare class Window_ShopCommand extends Window_HorzCommand {
  * The window for selecting an item to buy on the shop screen.
  */
 declare class Window_ShopBuy extends Window_Selectable {
-  public constructor(x: number, y: number, height: number, shopGoods: number[][]);
+  public constructor(rect: Rectangle);
 
-  public _shopGoods: number[][];
+  public _shopGoods: Shop_Goods[];
   public _money: number;
   public _data: (MZ.Item | MZ.Weapon | MZ.Armor)[];
   public _price: number[];
@@ -847,9 +846,11 @@ declare class Window_ShopBuy extends Window_Selectable {
 
   public initialize(...args: any[]): void;
 
-  public windowWidth(): number;
+  public setupGoods(shopGoods: number[][]): void;
+
   public maxItems(): number;
   public item(): MZ.Item | MZ.Weapon | MZ.Armor;
+  public itemAt(index: number): MZ.Item|MZ.Weapon|MZ.Armor|null;
   public setMoney(money: number): void;
   public isCurrentItemEnabled(): boolean;
   public price(item: MZ.Item | MZ.Weapon | MZ.Armor): number;
@@ -857,8 +858,11 @@ declare class Window_ShopBuy extends Window_Selectable {
 
   public refresh(): void;
   public makeItemList(): void;
+  public goodsToItem(goods: number[]): MZ.Item|MZ.Weapon|MZ.Armor|null;
 
   public drawItem(index: number): void;
+
+  public priceWidth(): number;
 
   public setStatusWindow(statusWindow: Window_ShopStatus | null): void;
   public updateHelp(): void;
@@ -936,7 +940,7 @@ declare class Window_ShopNumber extends Window_Selectable {
 /**
  * The window for displaying number of items in possession and the actor's
  */ declare class Window_ShopStatus extends Window_Base {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
   public _pageIndex: number;
@@ -966,7 +970,6 @@ declare class Window_ShopNumber extends Window_Selectable {
 
   public isPageChangeEnabled(): boolean;
   public isPageChangeRequested(): boolean;
-  public isTouchedInsideFrame(): boolean;
   public changePage(): void;
 }
 
