@@ -3,6 +3,10 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/09/04
+      version: 1.4.0
+      description: 'typescript移行'
+    - description: '左右キーでカーソルをラップするように修正'
     - date: 2022/08/02
       version: 1.3.3
       description: 'リファクタ'

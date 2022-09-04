@@ -200,10 +200,10 @@ declare class Window_Selectable extends Window_Base {
   public isOpenAndActive(): boolean;
   public isCursorMovable(): boolean;
 
-  public cursorDown(wrap: boolean): void;
-  public cursorUp(wrap: boolean): void;
-  public cursorRight(wrap: boolean): void;
-  public cursorLeft(wrap: boolean): void;
+  public cursorDown(wrap?: boolean): void;
+  public cursorUp(wrap?: boolean): void;
+  public cursorRight(wrap?: boolean): void;
+  public cursorLeft(wrap?: boolean): void;
   public cursorPagedown(): void;
   public cursorPageup(): void;
   public isScrollEnabled(): boolean;
@@ -522,8 +522,8 @@ declare class Window_SkillType extends Window_Command {
 /**
  * The window for displaying the skill user's status on the skill screen.
  */
-declare class Window_SkillStatus extends Window_Base {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+declare class Window_SkillStatus extends Window_StatusBase {
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
 
@@ -679,7 +679,7 @@ declare class Window_EquipItem extends Window_ItemList {
  * The window for displaying full status on the status screen.
  */
 declare class Window_StatusBase extends Window_Selectable {
-  public constructor();
+  public constructor(rect: Rectangle);
 
   public _additionalSprites: any;
 
@@ -729,7 +729,7 @@ declare class Window_Status extends Window_StatusBase {
 }
 
 declare class Window_StatusParams extends Window_StatusBase {
-  public constructor();
+  public constructor(rect: Rectangle);
   public _actor: Game_Actor;
 
   public initialize(rect: Rectangle): void;
@@ -742,7 +742,7 @@ declare class Window_StatusParams extends Window_StatusBase {
 }
 
 declare class Window_StatusEquip extends Window_StatusBase {
-  public constructor();
+  public constructor(rect: Rectangle);
   public _actor: Game_Actor;
 
   public initialize(rect: Rectangle): void;

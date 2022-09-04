@@ -502,6 +502,21 @@ declare class Scene_Status extends Scene_MenuBase {
   public initialize(...args: any[]): void;
 
   public create(): void;
+  public helpAreaHeight(): number;
+  public createProfileWindow(): void;
+  public profileWindowRect(): Rectangle;
+  public createStatusWindow(): void;
+  public stattusWindowRect(): Rectangle;
+  public createStatusParamsWindow(): void;
+  public statusParamsWindowRect(): Rectangle;
+  public createStatusEquipWindow(): void;
+  public statusEquipWindowRect(): Rectangle;
+  public statusParamsWidth(): number;
+  public statusParamsHeight(): number;
+  public profileHeight(): number;
+
+  public start(): void;
+  public needsPageButtons(): boolean;
   public refreshActor(): void;
 
   public onActorChange(): void;
