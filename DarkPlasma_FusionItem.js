@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.2.1
+// DarkPlasma_FusionItem 1.2.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/04 1.2.2 typescript移行
  * 2022/07/03 1.2.1 コマンドウィンドウのコマンド表示幅変更
  * 2022/04/22 1.2.0 条件カスタマイズ用にクラス定義をグローバルに公開
  * 2022/03/14 1.1.0 レイアウト用にクラス定義をグローバルに公開
@@ -43,7 +44,7 @@
  * @type number[]
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -391,7 +392,6 @@
       item.base.condition.threshold
     );
   }
-
   PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
     const parsedArgs = parseArgs_fusionShop(args);
     const goods = parsedArgs.presetIds
@@ -406,7 +406,6 @@
     SceneManager.push(Scene_FusionItem);
     SceneManager.prepareNextScene(goods);
   });
-
   class FusionItemMaterial {
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} data
@@ -419,16 +418,13 @@
       this._data = data;
       this._count = count;
     }
-
     get data() {
       return this._data;
     }
-
     get count() {
       return this._count;
     }
   }
-
   class FusionItemGoods {
     /**
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} result
@@ -446,19 +442,15 @@
       this._variableId = variableId;
       this._threshold = threshold;
     }
-
     get result() {
       return this._result;
     }
-
     get materials() {
       return this._materials;
     }
-
     get gold() {
       return this._gold;
     }
-
     /**
      * @return {boolean}
      */
@@ -469,9 +461,7 @@
       );
     }
   }
-
   globalThis.FusionItemGoods = FusionItemGoods;
-
   /**
    * @param {Game_Party.prototype} gameParty
    */
@@ -484,7 +474,6 @@
     gameParty.numUsableItemsForFusion = function (item) {
       return settings.useEquip ? this.numItemsWithEquip(item) : this.numItems(item);
     };
-
     /**
      * 所持＋装備しているアイテムの数
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -493,28 +482,30 @@
     gameParty.numItemsWithEquip = function (item) {
       return this.numItems(item) + this.numEquippedItem(item);
     };
-
     /**
      * 装備しているアイテムの数
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
      * @return {number}
      */
     gameParty.numEquippedItem = function (item) {
-      return this.members().reduce((result, actor) => result + actor.equips().filter((equip) => equip === item), 0)
-        .length;
+      return this.members().reduce(
+        (result, actor) => result + actor.equips().filter((equip) => equip === item).length,
+        0
+      );
     };
   }
-
   Game_Party_FusionItemMixIn(Game_Party.prototype);
-
   class Scene_FusionItem extends Scene_Shop {
+    constructor() {
+      super(...arguments);
+      this._materials = [];
+    }
     /**
      * @param {FusionItemGoods[]} goods
      */
     prepare(goods) {
       super.prepare(goods, true);
     }
-
     /**
      * 融合する やめるの2択しかないので、ゲームパッド・キーボード操作の場合は不要
      * タッチ操作対応しようとするとボタン表示が面倒なので、コマンドウィンドウで済ませる
@@ -528,13 +519,11 @@
       this._commandWindow.setHandler('cancel', this.popScene.bind(this));
       this.addWindow(this._commandWindow);
     }
-
     createStatusWindow() {
       const rect = this.statusWindowRect();
       this._statusWindow = new Window_FusionShopStatus(rect);
       this.addWindow(this._statusWindow);
     }
-
     createBuyWindow() {
       const rect = this.buyWindowRect();
       this._buyWindow = new Window_FusionShopBuy(rect);
@@ -546,52 +535,47 @@
       this._buyWindow.setHandler('cancel', this.onBuyCancel.bind(this));
       this.addWindow(this._buyWindow);
     }
-
     onBuyOk() {
       this._materials = this._buyWindow.materials();
       super.onBuyOk();
     }
-
     onBuyCancel() {
       this._commandWindow.activate();
       this._dummyWindow.show();
       this._statusWindow.setItem(null);
       this._helpWindow.clear();
     }
-
     doBuy(number) {
       super.doBuy(number);
       this._materials.forEach((material) => {
         $gameParty.loseItem(material.data, material.count * number, settings.useEquip);
       });
     }
-
     maxBuy() {
       const max = super.maxBuy();
       return this._materials.reduce((prev, current) => {
         return Math.min(prev, Math.floor($gameParty.numUsableItemsForFusion(current.data) / current.count));
       }, max);
     }
-
     buyingPrice() {
       return this._buyWindow.price();
     }
   }
-
   globalThis.Scene_FusionItem = Scene_FusionItem;
-
   class Window_FusionShopCommand extends Window_ShopCommand {
     makeCommandList() {
       this.addCommand(settings.commandName, 'buy');
       this.addCommand(TextManager.cancel, 'cancel');
     }
-
     maxCols() {
       return 2;
     }
   }
-
   class Window_FusionShopStatus extends Window_ShopStatus {
+    constructor() {
+      super(...arguments);
+      this._materials = [];
+    }
     refresh() {
       this.contents.clear();
       if (this._item) {
@@ -600,7 +584,6 @@
         this.drawMaterials(x, this.lineHeight());
       }
     }
-
     /**
      * @param {FusionItemMaterial[]} materials
      */
@@ -608,11 +591,9 @@
       this._materials = materials;
       this.refresh();
     }
-
     materialLineHeight() {
       return this.lineHeight();
     }
-
     drawMaterials(x, y) {
       if (this._materials) {
         const width = this.innerWidth - this.itemPadding() - x;
@@ -634,17 +615,20 @@
       }
     }
   }
-
   globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
-
   class Window_FusionShopBuy extends Window_ShopBuy {
+    constructor() {
+      super(...arguments);
+      this._shopGoods = [];
+      this._materials = [];
+      this._statusWindow = null;
+    }
     /**
      * @return {FusionItemMaterial[]}
      */
     materials() {
       return this.materialsAt(this.index());
     }
-
     /**
      * @param {number} index
      * @return {FusionItemMaterial[]}
@@ -652,11 +636,9 @@
     materialsAt(index) {
       return this._materials && index >= 0 ? this._materials[index] : [];
     }
-
     isCurrentItemEnabled() {
       return this.isEnabled(this.index());
     }
-
     /**
      * 元の実装は同一アイテムに対して複数の価格設定があることを考慮していないため、上書きする
      * @return {number}
@@ -664,7 +646,6 @@
     price() {
       return this.priceAt(this.index());
     }
-
     /**
      * @param {number} index
      * @return {number}
@@ -672,21 +653,20 @@
     priceAt(index) {
       return this._price[index] || 0;
     }
-
     /**
      * @param {number} index
      * @return {boolean}
      */
+    //@ts-ignore
     isEnabled(index) {
       const item = this.itemAt(index);
       const materials = this.materialsAt(index);
       return (
-        item &&
+        !!item &&
         this.priceAt(index) <= this._money &&
         materials.every((material) => $gameParty.numUsableItemsForFusion(material.data) >= material.count)
       );
     }
-
     makeItemList() {
       this._data = [];
       this._price = [];
@@ -699,7 +679,6 @@
           this._materials.push(goods.materials);
         });
     }
-
     drawItem(index) {
       const item = this.itemAt(index);
       const price = this.priceAt(index);
@@ -709,10 +688,9 @@
       const nameWidth = rect.width - priceWidth;
       this.changePaintOpacity(this.isEnabled(index));
       this.drawItemName(item, rect.x, rect.y, nameWidth);
-      this.drawText(price, priceX, rect.y, priceWidth, 'right');
+      this.drawText(`${price}`, priceX, rect.y, priceWidth, 'right');
       this.changePaintOpacity(true);
     }
-
     updateHelp() {
       super.updateHelp();
       if (this._statusWindow) {
