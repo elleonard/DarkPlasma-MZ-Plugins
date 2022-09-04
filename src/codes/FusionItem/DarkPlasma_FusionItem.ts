@@ -1,3 +1,4 @@
+/// <reference path="./FusionItem.d.ts" />
 import { pluginName } from '../../common/pluginName';
 import { command_fusionShop, parseArgs_fusionShop } from './_build/DarkPlasma_FusionItem_commands';
 import { settings } from './_build/DarkPlasma_FusionItem_parameters';
@@ -7,7 +8,7 @@ import { settings } from './_build/DarkPlasma_FusionItem_parameters';
  * @param {object} item
  * @returns
  */
-function toFusionItemGood(data, item) {
+function toFusionItemGood(data: MZ.Item | MZ.Weapon | MZ.Armor, item: FusionItem.Settings.PresetItem) {
   return new FusionItemGoods(
     data,
     item.base.materialItems
@@ -28,12 +29,12 @@ function toFusionItemGood(data, item) {
 PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
   const parsedArgs = parseArgs_fusionShop(args);
   const goods = parsedArgs.presetIds
-    .map((presetId) => {
-      const preset = settings.presets.find((preset) => preset.id === presetId);
+    .map((presetId: number) => {
+      const preset = settings.presets.find((preset: FusionItem.Settings.Preset) => preset.id === presetId);
       return preset.items
-        .map((item) => toFusionItemGood($dataItems[item.result], item))
-        .concat(preset.weapons.map((weapon) => toFusionItemGood($dataWeapons[weapon.result], weapon)))
-        .concat(preset.armors.map((armor) => toFusionItemGood($dataArmors[armor.result], armor)));
+        .map((item: FusionItem.Settings.PresetItem) => toFusionItemGood($dataItems[item.result], item))
+        .concat(preset.weapons.map((weapon: FusionItem.Settings.PresetItem) => toFusionItemGood($dataWeapons[weapon.result], weapon)))
+        .concat(preset.armors.map((armor: FusionItem.Settings.PresetItem) => toFusionItemGood($dataArmors[armor.result], armor)));
     })
     .flat();
   SceneManager.push(Scene_FusionItem);
@@ -41,11 +42,13 @@ PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
 });
 
 class FusionItemMaterial {
+  _data: MZ.Item | MZ.Weapon | MZ.Armor;
+  _count: number;
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} data
    * @param {number} count
    */
-  constructor(data, count) {
+  constructor(data: MZ.Item | MZ.Weapon | MZ.Armor, count: number) {
     if (!data) {
       throw Error('素材情報が不正です');
     }
@@ -63,6 +66,12 @@ class FusionItemMaterial {
 }
 
 class FusionItemGoods {
+  _result: MZ.Item | MZ.Weapon | MZ.Armor;
+  _materials: FusionItemMaterial[];
+  _gold: number;
+  _switchId: number;
+  _variableId: number;
+  _threshold: number;
   /**
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} result
    * @param {FusionItemMaterial[]} materials
@@ -71,7 +80,7 @@ class FusionItemGoods {
    * @param {number} variableId
    * @param {number} threshold
    */
-  constructor(result, materials, gold, switchId, variableId, threshold) {
+  constructor(result: MZ.Item | MZ.Weapon | MZ.Armor, materials: FusionItemMaterial[], gold: number, switchId: number, variableId: number, threshold: number) {
     this._result = result;
     this._materials = materials;
     this._gold = gold;
@@ -95,7 +104,7 @@ class FusionItemGoods {
   /**
    * @return {boolean}
    */
-  isValid() {
+  isValid(): boolean {
     return (
       (!this._switchId || $gameSwitches.value(this._switchId)) &&
       (!this._variableId || $gameVariables.value(this._variableId) > this._threshold)
@@ -103,12 +112,16 @@ class FusionItemGoods {
   }
 }
 
+type _FusionItemGoods = typeof FusionItemGoods;
+declare global {
+  var FusionItemGoods: _FusionItemGoods;
+}
 globalThis.FusionItemGoods = FusionItemGoods;
 
 /**
  * @param {Game_Party.prototype} gameParty
  */
-function Game_Party_FusionItemMixIn(gameParty) {
+function Game_Party_FusionItemMixIn(gameParty: Game_Party) {
   /**
    * アイテム融合に使用して良いアイテムの数
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -123,7 +136,7 @@ function Game_Party_FusionItemMixIn(gameParty) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
    * @return {number}
    */
-  gameParty.numItemsWithEquip = function (item) {
+  gameParty.numItemsWithEquip = function (item: MZ.Item | MZ.Weapon | MZ.Armor): number {
     return this.numItems(item) + this.numEquippedItem(item);
   };
 
@@ -132,19 +145,22 @@ function Game_Party_FusionItemMixIn(gameParty) {
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
    * @return {number}
    */
-  gameParty.numEquippedItem = function (item) {
-    return this.members().reduce((result, actor) => result + actor.equips().filter((equip) => equip === item), 0)
-      .length;
-  };
+  gameParty.numEquippedItem = function (item: MZ.Item | MZ.Weapon | MZ.Armor): number {
+    return this.members()
+      .reduce((result: number, actor: Game_Actor) => result + actor.equips().filter((equip) => equip === item).length, 0);
+    };
 }
 
 Game_Party_FusionItemMixIn(Game_Party.prototype);
 
 class Scene_FusionItem extends Scene_Shop {
+  _materials: FusionItemMaterial[] = [];
+  //@ts-ignore
+  _buyWindow: Window_FusionShopBuy;
   /**
    * @param {FusionItemGoods[]} goods
    */
-  prepare(goods) {
+  prepare(goods: FusionItemGoods[]) {
     super.prepare(goods, true);
   }
 
@@ -192,7 +208,7 @@ class Scene_FusionItem extends Scene_Shop {
     this._helpWindow.clear();
   }
 
-  doBuy(number) {
+  doBuy(number: number) {
     super.doBuy(number);
     this._materials.forEach((material) => {
       $gameParty.loseItem(material.data, material.count * number, settings.useEquip);
@@ -211,6 +227,10 @@ class Scene_FusionItem extends Scene_Shop {
   }
 }
 
+type _Scene_FusionItem = typeof Scene_FusionItem;
+declare global {
+  var Scene_FusionItem: _Scene_FusionItem;
+}
 globalThis.Scene_FusionItem = Scene_FusionItem;
 
 class Window_FusionShopCommand extends Window_ShopCommand {
@@ -225,6 +245,7 @@ class Window_FusionShopCommand extends Window_ShopCommand {
 }
 
 class Window_FusionShopStatus extends Window_ShopStatus {
+  _materials: FusionItemMaterial[] = [];
   refresh() {
     this.contents.clear();
     if (this._item) {
@@ -237,7 +258,7 @@ class Window_FusionShopStatus extends Window_ShopStatus {
   /**
    * @param {FusionItemMaterial[]} materials
    */
-  setMaterials(materials) {
+  setMaterials(materials: FusionItemMaterial[]) {
     this._materials = materials;
     this.refresh();
   }
@@ -246,7 +267,7 @@ class Window_FusionShopStatus extends Window_ShopStatus {
     return this.lineHeight();
   }
 
-  drawMaterials(x, y) {
+  drawMaterials(x: number, y: number) {
     if (this._materials) {
       const width = this.innerWidth - this.itemPadding() - x;
       this.changeTextColor(ColorManager.systemColor());
@@ -268,13 +289,20 @@ class Window_FusionShopStatus extends Window_ShopStatus {
   }
 }
 
+type _Window_FusionShopStatus = typeof Window_FusionShopStatus;
+declare global {
+  var Window_FusionShopStatus: _Window_FusionShopStatus;
+}
 globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
 
 class Window_FusionShopBuy extends Window_ShopBuy {
+  _shopGoods: FusionItemGoods[] = [];
+  _materials: FusionItemMaterial[][] = [];
+  _statusWindow: Window_FusionShopStatus|null = null;
   /**
    * @return {FusionItemMaterial[]}
    */
-  materials() {
+  materials(): FusionItemMaterial[] {
     return this.materialsAt(this.index());
   }
 
@@ -282,7 +310,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
    * @param {number} index
    * @return {FusionItemMaterial[]}
    */
-  materialsAt(index) {
+  materialsAt(index: number): FusionItemMaterial[] {
     return this._materials && index >= 0 ? this._materials[index] : [];
   }
 
@@ -294,7 +322,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
    * 元の実装は同一アイテムに対して複数の価格設定があることを考慮していないため、上書きする
    * @return {number}
    */
-  price() {
+  price(): number {
     return this.priceAt(this.index());
   }
 
@@ -302,7 +330,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
    * @param {number} index
    * @return {number}
    */
-  priceAt(index) {
+  priceAt(index: number): number {
     return this._price[index] || 0;
   }
 
@@ -310,11 +338,12 @@ class Window_FusionShopBuy extends Window_ShopBuy {
    * @param {number} index
    * @return {boolean}
    */
-  isEnabled(index) {
+  //@ts-ignore
+  isEnabled(index: number): boolean {
     const item = this.itemAt(index);
     const materials = this.materialsAt(index);
     return (
-      item &&
+      !!item &&
       this.priceAt(index) <= this._money &&
       materials.every((material) => $gameParty.numUsableItemsForFusion(material.data) >= material.count)
     );
@@ -333,7 +362,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
       });
   }
 
-  drawItem(index) {
+  drawItem(index: number) {
     const item = this.itemAt(index);
     const price = this.priceAt(index);
     const rect = this.itemLineRect(index);
@@ -342,7 +371,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     const nameWidth = rect.width - priceWidth;
     this.changePaintOpacity(this.isEnabled(index));
     this.drawItemName(item, rect.x, rect.y, nameWidth);
-    this.drawText(price, priceX, rect.y, priceWidth, 'right');
+    this.drawText(`${price}`, priceX, rect.y, priceWidth, 'right');
     this.changePaintOpacity(true);
   }
 
