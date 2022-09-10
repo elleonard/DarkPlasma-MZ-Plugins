@@ -29,6 +29,8 @@ declare interface Scene_Equip {
   onFilterClose(): void;
   onFilterTraitOk(): void;
   onFilterEffectCancel(): void;
+
+  isFilterMode(): boolean;
 }
 
 declare interface Window_EquipFilter extends Window_Selectable {

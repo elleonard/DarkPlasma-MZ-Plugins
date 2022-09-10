@@ -115,6 +115,10 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._itemWindow.select(0);
     this._itemWindow.scrollTo(0, 0);
   };
+
+  sceneEquip.isFilterMode = function () {
+    return this._filterTraitWindow.active || this._filterEffectWindow.active;
+  };
   
   sceneEquip.onFilterTraitOk = function () {
     this._filterTraitWindow.deactivate();
