@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/09/10
+      version: 4.5.1
+      description: 'typescript移行'
     - date: 2022/07/24
       version: 4.5.0
       description: '敵キャラ画像のスケール設定メモタグを追加'
@@ -524,6 +527,13 @@ DarkPlasma_EnemyBook:
           ja: Y座標
           en: position y
         type: number
+  dependencies:
+    base:
+      - name: DarkPlasma_CustomKeyHandler
+        version: 1.2.1
+    orderAfter:
+      - name: DarkPlasma_CustomKeyHandler
+    orderBefore: []
   help:
     ja: |
       このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
