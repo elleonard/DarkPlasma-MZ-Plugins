@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.4.0
+// DarkPlasma_Formation 1.4.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/10 1.4.1 FormationInBattleと組み合わせて戦闘開始時にエラーで停止する不具合を修正
  * 2022/09/04 1.4.0 typescript移行
  *                  左右キーでカーソルをラップするように修正
  * 2022/08/02 1.3.3 リファクタ
@@ -81,7 +82,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.4.0
+ * version: 1.4.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -166,10 +167,6 @@
   Game_Temp_FormationMixIn(Game_Temp.prototype);
   function Scene_FormationMixIn(sceneClass) {
     return class extends sceneClass {
-      constructor() {
-        super(...arguments);
-        this._selectWindowLayer = new WindowLayer();
-      }
       /**
        * @return {Rectangle}
        */
@@ -272,6 +269,7 @@
         /**
          * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
          */
+        this._selectWindowLayer = new WindowLayer();
         this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
         this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
         this.addChild(this._selectWindowLayer);
