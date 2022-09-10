@@ -1,3 +1,4 @@
+/// <reference path="./EnemyBook.d.ts" />
 import { Scene_BookLayoutMixIn } from '../../common/scene/bookLayoutMixIn';
 import { LabelAndValueText } from '../../common/object/labelAndValueText';
 import { pluginName } from './../../common/pluginName';
@@ -6,7 +7,7 @@ import { Window_LabelAndValueTexts } from '../../common/window/labelAndValueText
 import { Scene_Battle_InputtingWindowMixIn } from '../../common/scene/battleInputtingWindow';
 import { orderIdSort } from '../../common/orderIdSort';
 
-const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
+const STATUS_NAMES: ('mhp'|'mmp'|'atk'|'def'|'mat'|'mdf'|'agi'|'luk')[] = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
 const PLUGIN_COMMAND_NAME = {
   OPEN: 'open enemyBook',
@@ -26,15 +27,15 @@ const DROP_RATE_FORMAT = {
  * @param {MZ.Enemy} enemy エネミーデータ
  * @return {boolean}
  */
-function isRegisterableEnemy(enemy) {
-  return enemy && enemy.name && enemy.meta.book !== 'no';
+function isRegisterableEnemy(enemy: MZ.Enemy): boolean {
+  return !!enemy && !!enemy.name && enemy.meta.book !== 'no';
 }
 
 /**
  * 図鑑登録可能なエネミー一覧
  * @return {MZ.Enemy[]}
  */
-function registerableEnemies() {
+function registerableEnemies(): MZ.Enemy[] {
   return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy)).sort(orderIdSort);
 }
 
@@ -59,10 +60,11 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function ()
 });
 
 class EnemyBook {
+  _pages: (EnemyBookPage|null)[];
   /**
    * @param {EnemyBookPage[]} pages ページ一覧
    */
-  constructor(pages) {
+  constructor(pages: (EnemyBookPage|null)[]) {
     this._pages = pages;
   }
 
@@ -70,7 +72,7 @@ class EnemyBook {
    * 初期状態（何も登録されていない）図鑑を返す
    * @return {EnemyBook}
    */
-  static initialBook() {
+  static initialBook(): EnemyBook {
     return new EnemyBook(
       $dataEnemies.map((enemy) => {
         return isRegisterableEnemy(enemy)
@@ -158,9 +160,9 @@ class EnemyBook {
    * 登録済みかどうか
    * @param {MZ.Enemy} enemy 敵データ
    */
-  isRegistered(enemy) {
+  isRegistered(enemy: MZ.Enemy): boolean {
     if (enemy && this._pages[enemy.id]) {
-      return this._pages[enemy.id].isRegistered;
+      return this._pages[enemy.id]!.isRegistered;
     }
     return false;
   }
@@ -170,9 +172,9 @@ class EnemyBook {
    * @param {MZ.Enemy} enemy 敵データ
    * @param {number} index ドロップアイテム番号
    */
-  isDropItemRegistered(enemy, index) {
+  isDropItemRegistered(enemy: MZ.Enemy, index: number) {
     if (enemy && this._pages[enemy.id]) {
-      return this._pages[enemy.id].isDropItemRegistered(index);
+      return this._pages[enemy.id]!.isDropItemRegistered(index);
     }
     return false;
   }
@@ -181,9 +183,9 @@ class EnemyBook {
    * 図鑑に指定したエネミーを登録する
    * @param {number} enemyId 敵ID
    */
-  register(enemyId) {
+  register(enemyId: number) {
     if (this._pages[enemyId]) {
-      this._pages[enemyId].register();
+      this._pages[enemyId]!.register();
     }
   }
 
@@ -192,9 +194,9 @@ class EnemyBook {
    * @param {number} enemyId 敵ID
    * @param {number} index ドロップアイテム番号
    */
-  registerDropItem(enemyId, index) {
+  registerDropItem(enemyId: number, index: number) {
     if (this._pages[enemyId]) {
-      this._pages[enemyId].registerDropItem(index);
+      this._pages[enemyId]!.registerDropItem(index);
     }
   }
 
@@ -202,9 +204,9 @@ class EnemyBook {
    * 図鑑から指定したエネミーを登録解除する
    * @param {number} enemyId 敵ID
    */
-  unregister(enemyId) {
+  unregister(enemyId: number) {
     if (this._pages[enemyId]) {
-      this._pages[enemyId].unregister();
+      this._pages[enemyId]!.unregister();
     }
   }
 
@@ -226,16 +228,18 @@ class EnemyBook {
    * 図鑑を白紙に戻す
    */
   clear() {
-    this._pages.filter((page) => page).forEach((page) => page.unregister());
+    this._pages.filter((page) => page).forEach((page) => page!.unregister());
   }
 }
 
 class EnemyBookPage {
+  _isRegistered: boolean;
+  _dropItems: boolean[];
   /**
    * @param {boolean} isRegistered 登録フラグ
    * @param {boolean[]} dropItems ドロップアイテムごとに登録フラグ
    */
-  constructor(isRegistered, dropItems) {
+  constructor(isRegistered: boolean, dropItems: boolean[]) {
     this._isRegistered = isRegistered;
     this._dropItems = dropItems;
   }
@@ -244,15 +248,11 @@ class EnemyBookPage {
     return this._isRegistered;
   }
 
-  isDropItemRegistered(index) {
+  isDropItemRegistered(index: number) {
     return this._dropItems[index];
   }
 
-  /**
-   * @param {MZ.Enemy} enemy
-   * @return {boolean}
-   */
-  registeredDropItemCount(enemy) {
+  registeredDropItemCount(enemy: MZ.Enemy): number {
     return this._dropItems.filter((dropItem, index) => dropItem && enemy.dropItems[index].kind > 0).length;
   }
 
@@ -260,7 +260,7 @@ class EnemyBookPage {
     this._isRegistered = true;
   }
 
-  registerDropItem(index) {
+  registerDropItem(index: number) {
     this._dropItems[index] = true;
   }
 
@@ -270,20 +270,25 @@ class EnemyBookPage {
   }
 }
 
-window[EnemyBook.name] = EnemyBook;
-window[EnemyBookPage.name] = EnemyBookPage;
-
 /**
  * 敵図鑑情報
  * Game_Systemからのみ直接アクセスされる
  * @type {EnemyBook}
  */
-let enemyBook = null;
+let enemyBook: EnemyBook|null = null;
+
+function enemyBookInstance(): EnemyBook {
+  if (!enemyBook) {
+    enemyBook = EnemyBook.initialBook();
+  }
+  return enemyBook;
+}
 
 /**
  * エネミー図鑑シーン
  */
 class Scene_EnemyBook extends Scene_BookLayoutMixIn(Scene_MenuBase) {
+  _enemyBookWindows: EnemyBookWindows;
   create() {
     super.create();
     this.createEnemyBookWindows();
@@ -301,9 +306,11 @@ class Scene_EnemyBook extends Scene_BookLayoutMixIn(Scene_MenuBase) {
   }
 }
 
-window[Scene_EnemyBook.name] = Scene_EnemyBook;
-
 class EnemyBookWindows {
+  _isInBattle: boolean;
+  _percentWindow: Window_EnemyBookPercent;
+  _indexWindow: Window_EnemyBookIndex;
+  _statusWindow: Window_EnemyBookStatus;
   /**
    * @param {function} cancelHandler キャンセル時の挙動
    * @param {WindowLayer} parentLayer 親レイヤー
@@ -312,7 +319,14 @@ class EnemyBookWindows {
    * @param {Rectangle} statusWindowRect
    * @param {boolean} isInBattle
    */
-  constructor(cancelHandler, parentLayer, percentWindowRect, indexWindowRect, statusWindowRect, isInBattle) {
+  constructor(
+    cancelHandler: () => void,
+    parentLayer: WindowLayer,
+    percentWindowRect: Rectangle,
+    indexWindowRect: Rectangle,
+    statusWindowRect: Rectangle,
+    isInBattle: boolean
+  ) {
     this._isInBattle = isInBattle;
     this._percentWindow = new Window_EnemyBookPercent(percentWindowRect);
     this._indexWindow = new Window_EnemyBookIndex(indexWindowRect, isInBattle);
@@ -367,13 +381,20 @@ class Window_EnemyBookPercent extends Window_LabelAndValueTexts {
   }
 }
 
-globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
-
 /**
  * エネミー図鑑目次
  */
 class Window_EnemyBookIndex extends Window_Selectable {
-  initialize(rect, isInBattle) {
+  _statusWindow: Window_EnemyBookStatus;
+
+  _isInBattle: boolean;
+  _battlerEnemyIndexes: number[];
+  _list: MZ.Enemy[];
+
+  static lastTopRow: number;
+  static lastIndex: number;
+
+  initialize(rect: Rectangle, isInBattle: boolean) {
     super.initialize(rect);
     this._isInBattle = isInBattle;
     this.refresh();
@@ -386,7 +407,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
             .filter((index) => index >= 0)
         )
       ).sort((a, b) => a - b);
-      const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : null;
+      const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : -1;
       if (firstIndex >= 0) {
         this.setTopRow(firstIndex);
         this.select(firstIndex);
@@ -401,21 +422,21 @@ class Window_EnemyBookIndex extends Window_Selectable {
   /**
    * @return {number}
    */
-  maxCols() {
+  maxCols(): number {
     return 1;
   }
 
   /**
    * @return {number}
    */
-  maxItems() {
+  maxItems(): number {
     return this._list ? this._list.length : 0;
   }
 
   /**
    * @param {Window_EnemyBookStatus} statusWindow ステータスウィンドウ
    */
-  setStatusWindow(statusWindow) {
+  setStatusWindow(statusWindow: Window_EnemyBookStatus) {
     this._statusWindow = statusWindow;
     this.updateStatus();
   }
@@ -453,7 +474,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
   /**
    * @return {boolean}
    */
-  isCurrentItemEnabled() {
+  isCurrentItemEnabled(): boolean {
     return this.isEnabled(this.index());
   }
 
@@ -461,7 +482,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
    * @param {number} index インデックス
    * @return {boolean}
    */
-  isEnabled(index) {
+  isEnabled(index: number): boolean {
     const enemy = this._list[index];
     return $gameSystem.isInEnemyBook(enemy);
   }
@@ -469,10 +490,10 @@ class Window_EnemyBookIndex extends Window_Selectable {
   /**
    * @param {number} index インデックス
    */
-  drawItem(index) {
+  drawItem(index: number) {
     const enemy = this._list[index];
     const rect = this.itemRect(index);
-    let name;
+    let name: string;
     if ($gameSystem.isInEnemyBook(enemy)) {
       if (this.mustHighlight(enemy)) {
         this.changeTextColor(ColorManager.textColor(settings.highlightColor));
@@ -492,7 +513,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
    * @param {MZ.Enemy} enemy
    * @return {boolean}
    */
-  mustHighlight(enemy) {
+  mustHighlight(enemy: MZ.Enemy): boolean {
     return this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id);
   }
 
@@ -546,20 +567,23 @@ class Window_EnemyBookIndex extends Window_Selectable {
 Window_EnemyBookIndex.lastTopRow = 0;
 Window_EnemyBookIndex.lastIndex = 0;
 
-globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
-
 /**
  * 図鑑ステータスウィンドウ
  */
 class Window_EnemyBookStatus extends Window_Base {
-  initialize(rect) {
+  _enemy: MZ.Enemy|null;
+  _enemySprite: Sprite;
+
+  _weakLines: number;
+  _resistLines: number;
+  initialize(rect: Rectangle) {
     super.initialize(rect);
     this._enemy = null;
-    this.setupEnemySprite(this.width, this.height);
+    this.setupEnemySprite();
     this.refresh();
   }
 
-  setupEnemySprite(width, height) {
+  setupEnemySprite() {
     this._enemySprite = new Sprite();
     this._enemySprite.anchor.x = 0.5;
     this._enemySprite.anchor.y = 0.5;
@@ -576,7 +600,7 @@ class Window_EnemyBookStatus extends Window_Base {
   /**
    * @param {MZ.Enemy} enemy 敵キャラ情報
    */
-  setEnemy(enemy) {
+  setEnemy(enemy: MZ.Enemy) {
     if (this._enemy !== enemy) {
       this._enemy = enemy;
       this.refresh();
@@ -588,7 +612,7 @@ class Window_EnemyBookStatus extends Window_Base {
     /**
      * データベースで拡大率が設定されていない場合は自動調整
      */
-    if (this._enemySprite.bitmap && !this._enemy.meta.scaleInBook) {
+    if (this._enemySprite.bitmap && this._enemy && !this._enemy.meta.scaleInBook) {
       const bitmapHeight = this._enemySprite.bitmap.height;
       const contentsHeight = this.contents.height;
       let scale = 1;
@@ -610,12 +634,11 @@ class Window_EnemyBookStatus extends Window_Base {
     }
 
     const name = enemy.battlerName;
-    const hue = enemy.battlerHue;
     let bitmap;
     if ($gameSystem.isSideView()) {
-      bitmap = ImageManager.loadSvEnemy(name, hue);
+      bitmap = ImageManager.loadSvEnemy(name);
     } else {
-      bitmap = ImageManager.loadEnemy(name, hue);
+      bitmap = ImageManager.loadEnemy(name);
     }
     this._enemySprite.bitmap = bitmap;
     if (enemy.meta.scaleInBook) {
@@ -626,13 +649,13 @@ class Window_EnemyBookStatus extends Window_Base {
     this._enemySprite.setHue(enemy.battlerHue);
 
     this.resetTextColor();
-    this.drawText(enemy.name, 0, 0);
+    this.drawText(enemy.name, 0, 0, 0);
 
     this.drawPage();
   }
 
   drawPage() {
-    const enemy = this._enemy;
+    const enemy = this._enemy!;
     const lineHeight = this.lineHeight();
     this.drawLevel(this.contentsWidth() / 2 + this.itemPadding() / 2, 0);
     this.drawStatus(this.contentsWidth() / 2 + this.itemPadding() / 2, lineHeight + this.itemPadding());
@@ -657,12 +680,11 @@ class Window_EnemyBookStatus extends Window_Base {
       );
     }
 
-    const descWidth = 480;
     if (enemy.meta.desc1) {
-      this.drawTextEx(enemy.meta.desc1, this.descriptionX(), this.descriptionY(), descWidth);
+      this.drawTextEx(String(enemy.meta.desc1), this.descriptionX(), this.descriptionY());
     }
     if (enemy.meta.desc2) {
-      this.drawTextEx(enemy.meta.desc2, this.descriptionX(), this.descriptionY() + lineHeight, descWidth);
+      this.drawTextEx(String(enemy.meta.desc2), this.descriptionX(), this.descriptionY() + lineHeight);
     }
   }
 
@@ -685,13 +707,13 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} x X座標
    * @param {number} y Y座標
    */
-  drawLevel(x, y) {
+  drawLevel(x: number, y: number) {
     const enemy = this._enemy;
-    if (enemy.level) {
+    if (enemy && enemy.level) {
       this.changeTextColor(this.systemColor());
       this.drawText(`Lv.`, x, y, 160);
       this.resetTextColor();
-      this.drawText(enemy.level, x + 160, y, 60, 'right');
+      this.drawText(`${enemy.level}`, x + 160, y, 60, 'right');
     }
   }
 
@@ -700,14 +722,14 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} x X座標
    * @param {number} y Y座標
    */
-  drawStatus(x, y) {
+  drawStatus(x: number, y: number) {
     const lineHeight = this.lineHeight();
-    const enemy = this._enemy;
+    const enemy = this._enemy!;
     [...Array(8).keys()].forEach((i) => {
       this.changeTextColor(this.systemColor());
       this.drawText(TextManager.param(i), x, y, 160);
       this.resetTextColor();
-      this.drawText(enemy.params[i], x + 160, y, 60, 'right');
+      this.drawText(`${enemy.params[i]}`, x + 160, y, 60, 'right');
       y += lineHeight;
     });
   }
@@ -717,20 +739,20 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} x X座標
    * @param {number} y Y座標
    */
-  drawExpAndGold(x, y) {
-    const enemy = this._enemy;
+  drawExpAndGold(x: number, y: number) {
+    const enemy = this._enemy!;
     this.resetTextColor();
-    this.drawText(enemy.exp, x, y);
-    x += this.textWidth(enemy.exp) + 6;
+    this.drawText(`${enemy.exp}`, x, y, 0);
+    x += this.textWidth(`${enemy.exp}`) + 6;
     this.changeTextColor(this.systemColor());
-    this.drawText(TextManager.expA, x, y);
+    this.drawText(TextManager.expA, x, y, 0);
     x += this.textWidth(TextManager.expA + '  ');
 
     this.resetTextColor();
-    this.drawText(enemy.gold, x, y);
-    x += this.textWidth(enemy.gold) + 6;
+    this.drawText(`${enemy.gold}`, x, y, 0);
+    x += this.textWidth(`${enemy.gold}`) + 6;
     this.changeTextColor(this.systemColor());
-    this.drawText(TextManager.currencyUnit, x, y);
+    this.drawText(TextManager.currencyUnit, x, y, 0);
   }
 
   /**
@@ -739,8 +761,8 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y Y座標
    * @param {number} rewardsWidth 報酬欄の横幅
    */
-  drawDropItems(x, y, rewardsWidth) {
-    const enemy = this._enemy;
+  drawDropItems(x: number, y: number, rewardsWidth: number) {
+    const enemy = this._enemy!;
     const lineHeight = this.lineHeight();
     const displayDropRate = settings.displayDropRate;
     enemy.dropItems.forEach((dropItems, index) => {
@@ -774,7 +796,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y Y座標
    * @param {number} width 横幅
    */
-  drawDropRate(denominator, x, y, width) {
+  drawDropRate(denominator: number, x: number, y: number, width: number) {
     if (!settings.displayDropRate || !denominator) {
       return;
     }
@@ -794,8 +816,8 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} elementId 属性ID
    * @return {number}
    */
-  elementRate(elementId) {
-    return this._enemy.traits
+  elementRate(elementId: number) {
+    return this._enemy!.traits
       .filter((trait) => trait.code === Game_BattlerBase.TRAIT_ELEMENT_RATE && trait.dataId === elementId)
       .reduce((r, trait) => r * trait.value, 1);
   }
@@ -805,14 +827,14 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} stateId ステートID
    * @return {number}
    */
-  stateRate(stateId) {
-    const isNoEffect = this._enemy.traits.find(
+  stateRate(stateId: number) {
+    const isNoEffect = this._enemy!.traits.find(
       (trait) => trait.code === Game_BattlerBase.TRAIT_STATE_RESIST && trait.dataId === stateId
     );
     if (isNoEffect) {
       return 0;
     }
-    return this._enemy.traits
+    return this._enemy!.traits
       .filter((trait) => trait.code === Game_BattlerBase.TRAIT_STATE_RATE && trait.dataId === stateId)
       .reduce((r, trait) => r * trait.value, 1);
   }
@@ -822,9 +844,9 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} statusId ステータスID
    * @return {number}
    */
-  debuffRate(statusId) {
+  debuffRate(statusId: number) {
     return (
-      this._enemy.traits
+      this._enemy!.traits
         .filter((trait) => trait.code === Game_BattlerBase.TRAIT_DEBUFF_RATE && trait.dataId === statusId)
         .reduce((r, trait) => r * trait.value, 1) * 100
     );
@@ -839,7 +861,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y Y座標
    * @param {number} width 横幅
    */
-  drawWeakElementsAndStates(x, y, width) {
+  drawWeakElementsAndStates(x: number, y: number, width: number) {
     const targetIcons = $dataSystem.elements
       .map((_, index) => index)
       .filter((elementId) => this.elementRate(elementId) > 1)
@@ -883,7 +905,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} stateId ステートID
    * @return {boolean}
    */
-  isExcludedWeakState(stateId) {
+  isExcludedWeakState(stateId: number) {
     return settings.excludeWeakStates.includes(stateId);
   }
 
@@ -892,7 +914,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y Y座標
    * @param {number} width 横幅
    */
-  drawResistElementsAndStates(x, y, width) {
+  drawResistElementsAndStates(x: number, y: number, width: number) {
     const targetIcons = $dataSystem.elements
       .map((_, index) => index)
       .filter((elementId) => {
@@ -954,7 +976,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y
    * @param {number} width
    */
-  drawNoEffectsLabel(x, y, width) {
+  drawNoEffectsLabel(x: number, y: number, width: number) {
     this.changeTextColor(this.systemColor());
     this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
   }
@@ -964,7 +986,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} y Y座標
    * @param {number} width 横幅
    */
-  drawNoEffectElementsAndStates(x, y, width) {
+  drawNoEffectElementsAndStates(x: number, y: number, width: number) {
     const targetIcons = $dataSystem.elements
       .map((_, index) => index)
       .filter((elementId) => this.elementRate(elementId) <= 0)
@@ -996,73 +1018,75 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} stateId ステートID
    * @return {boolean}
    */
-  isExcludedResistState(stateId) {
+  isExcludedResistState(stateId: number): boolean {
     return settings.excludeResistStates.includes(stateId);
   }
 }
 
-globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
-
-const _Game_System_initialize = Game_System.prototype.initialize;
-Game_System.prototype.initialize = function () {
-  _Game_System_initialize.call(this);
-  enemyBook = EnemyBook.initialBook();
-};
-
-const _Game_System_onBeforeSave = Game_System.prototype.onBeforeSave;
-Game_System.prototype.onBeforeSave = function () {
-  _Game_System_onBeforeSave.call(this);
-  this._enemyBook = enemyBook;
-};
-
-const _Game_System_onAfterLoad = Game_System.prototype.onAfterLoad;
-Game_System.prototype.onAfterLoad = function () {
-  _Game_System_onAfterLoad.call(this);
-  if (this._enemyBook) {
-    enemyBook = this._enemyBook;
-    if ($gameSystem.versionId() !== $dataSystem.versionId) {
-      enemyBook.flexPage();
-    }
-  } else {
+function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
+  const _initialize = gameSystem.initialize;
+  gameSystem.initialize = function () {
+    _initialize.call(this);
     enemyBook = EnemyBook.initialBook();
-  }
-};
+  };
+  
+  const _onBeforeSave = gameSystem.onBeforeSave;
+  gameSystem.onBeforeSave = function () {
+    _onBeforeSave.call(this);
+    this._enemyBook = enemyBookInstance();
+  };
+  
+  const _Game_System_onAfterLoad = gameSystem.onAfterLoad;
+  gameSystem.onAfterLoad = function () {
+    _Game_System_onAfterLoad.call(this);
+    if (this._enemyBook) {
+      enemyBook = this._enemyBook;
+      if ($gameSystem.versionId() !== $dataSystem.versionId) {
+        enemyBookInstance().flexPage();
+      }
+    } else {
+      enemyBook = EnemyBook.initialBook();
+    }
+  };
+  
+  gameSystem.addToEnemyBook = function (enemyId) {
+    enemyBookInstance().register(enemyId);
+  };
+  
+  gameSystem.addDropItemToEnemyBook = function (enemyId, dropIndex) {
+    enemyBookInstance().registerDropItem(enemyId, dropIndex);
+  };
+  
+  gameSystem.removeFromEnemyBook = function (enemyId) {
+    enemyBookInstance().unregister(enemyId);
+  };
+  
+  gameSystem.completeEnemyBook = function () {
+    enemyBookInstance().complete();
+  };
+  
+  gameSystem.clearEnemyBook = function () {
+    enemyBookInstance().clear();
+  };
+  
+  gameSystem.isInEnemyBook = function (enemy) {
+    return enemyBookInstance().isRegistered(enemy);
+  };
+  
+  gameSystem.isInEnemyBookDrop = function (enemy, dropIndex) {
+    return enemyBookInstance().isDropItemRegistered(enemy, dropIndex);
+  };
+  
+  gameSystem.percentCompleteEnemy = function () {
+    return enemyBookInstance().percentRegisteredEnemy();
+  };
+  
+  gameSystem.percentCompleteDrop = function () {
+    return enemyBookInstance().percentRegisteredDropItem();
+  };
+}
 
-Game_System.prototype.addToEnemyBook = function (enemyId) {
-  enemyBook.register(enemyId);
-};
-
-Game_System.prototype.addDropItemToEnemyBook = function (enemyId, dropIndex) {
-  enemyBook.registerDropItem(enemyId, dropIndex);
-};
-
-Game_System.prototype.removeFromEnemyBook = function (enemyId) {
-  enemyBook.unregister(enemyId);
-};
-
-Game_System.prototype.completeEnemyBook = function () {
-  enemyBook.complete();
-};
-
-Game_System.prototype.clearEnemyBook = function () {
-  enemyBook.clear();
-};
-
-Game_System.prototype.isInEnemyBook = function (enemy) {
-  return enemyBook.isRegistered(enemy);
-};
-
-Game_System.prototype.isInEnemyBookDrop = function (enemy, dropIndex) {
-  return enemyBook.isDropItemRegistered(enemy, dropIndex);
-};
-
-Game_System.prototype.percentCompleteEnemy = function () {
-  return enemyBook.percentRegisteredEnemy();
-};
-
-Game_System.prototype.percentCompleteDrop = function () {
-  return enemyBook.percentRegisteredDropItem();
-};
+Game_System_EnemyBookMixIn(Game_System.prototype);
 
 const _Game_Troop_setup = Game_Troop.prototype.setup;
 Game_Troop.prototype.setup = function (troopId) {
@@ -1094,10 +1118,11 @@ Game_Enemy.prototype.dropItemLots = function (dropItem) {
  * ドロップアイテムリスト生成メソッド 上書き
  */
 Game_Enemy.prototype.makeDropItems = function () {
-  return this.enemy().dropItems.reduce((accumlator, dropItem, index) => {
-    if (this.dropItemLots(dropItem)) {
+  return this.enemy().dropItems.reduce((accumlator: (MZ.Item|MZ.Weapon|MZ.Armor)[], dropItem, index) => {
+    const dropItemObject = this.itemObject(dropItem.kind, dropItem.dataId);
+    if (dropItemObject && this.dropItemLots(dropItem)) {
       $gameSystem.addDropItemToEnemyBook(this.enemy().id, index);
-      return accumlator.concat(this.itemObject(dropItem.kind, dropItem.dataId));
+      return accumlator.concat(dropItemObject);
     } else {
       return accumlator;
     }
@@ -1107,7 +1132,7 @@ Game_Enemy.prototype.makeDropItems = function () {
 /**
  * @param {Scene_Battle.prototype} sceneBattle
  */
-function Scene_Battle_EnemyBookMixIn(sceneBattle) {
+function Scene_Battle_EnemyBookMixIn(sceneBattle: Scene_Battle) {
   const _createWindowLayer = sceneBattle.createWindowLayer;
   sceneBattle.createWindowLayer = function () {
     _createWindowLayer.call(this);
@@ -1196,28 +1221,28 @@ function Scene_Battle_EnemyBookMixIn(sceneBattle) {
 Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
 Scene_Battle_EnemyBookMixIn(Scene_Battle.prototype);
 
-const _Window_PartyCommand_processHandling = Window_PartyCommand.prototype.processHandling;
-Window_PartyCommand.prototype.processHandling = function () {
-  _Window_PartyCommand_processHandling.call(this);
-  if (this.isOpenAndActive()) {
-    if (Input.isTriggered(settings.openKeyInBattle)) {
-      this.processEnemyBook();
-    }
-  }
-};
+Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_PartyCommand.prototype, 'enemyBook');
+Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_ActorCommand.prototype, 'enemyBook');
 
-const _Window_ActorCommand_processHandling = Window_ActorCommand.prototype.processHandling;
-Window_ActorCommand.prototype.processHandling = function () {
-  _Window_ActorCommand_processHandling.call(this);
-  if (this.isOpenAndActive()) {
-    if (Input.isTriggered(settings.openKeyInBattle)) {
-      this.processEnemyBook();
-    }
-  }
-};
+type _EnemyBook = typeof EnemyBook;
+type _EnemyBookPage = typeof EnemyBookPage;
+type _Scene_EnemyBook = typeof Scene_EnemyBook;
+type _Window_EnemyBookPercent = typeof Window_EnemyBookPercent;
+type _Window_EnemyBookIndex = typeof Window_EnemyBookIndex;
+type _Window_EnemyBookStatus = typeof Window_EnemyBookStatus;
 
-Window_Command.prototype.processEnemyBook = function () {
-  SoundManager.playCursor();
-  this.updateInputData();
-  this.callHandler('enemyBook');
-};
+declare global {
+  var EnemyBook: _EnemyBook;
+  var EnemyBookPage: _EnemyBookPage;
+  var Scene_EnemyBook: _Scene_EnemyBook;
+  var Window_EnemyBookPercent: _Window_EnemyBookPercent;
+  var Window_EnemyBookIndex: _Window_EnemyBookIndex;
+  var Window_EnemyBookStatus: _Window_EnemyBookStatus;
+}
+
+globalThis.EnemyBook = EnemyBook;
+globalThis.EnemyBookPage = EnemyBookPage;
+globalThis.Scene_EnemyBook = Scene_EnemyBook;
+globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
+globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
+globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;

@@ -7,7 +7,7 @@
  * The superclass of all windows within the game.
  */
 declare class Window_Base extends Window {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public static _iconWidth: number;
   public static _iconHeight: number;
@@ -139,7 +139,7 @@ declare namespace Window_Base {
  * The window class with cursor movement and scroll functions.
  */
 declare class Window_Selectable extends Window_Base {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _index: number;
   public _cursorFixed: boolean;
@@ -149,7 +149,7 @@ declare class Window_Selectable extends Window_Base {
   public _doubleTouch: boolean;
   public _canRepeat: boolean;
 
-  public initialize(rect: Rectangle): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public index(): number;
   public cursorFixed(): boolean;
