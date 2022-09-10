@@ -1,9 +1,10 @@
-// DarkPlasma_CustomKeyHandler 1.2.1
+// DarkPlasma_CustomKeyHandler 1.2.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/10 1.2.2 isCustomKeyEnabledを初回のみ定義するよう修正
  * 2022/08/21 1.2.1 typescript移行
  * 2022/08/16 1.2.0 キー有効チェックの仕組みを追加
  * 2022/01/07 1.1.0 ハンドラ名をキー名とは別に設定可能にする
@@ -19,7 +20,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * shiftなどを押した際のハンドラを追加できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -80,9 +81,11 @@
         }
       };
     }
-    windowClass.isCustomKeyEnabled = function (key) {
-      return true;
-    };
+    if (!windowClass.isCustomKeyEnabled) {
+      windowClass.isCustomKeyEnabled = function (key) {
+        return true;
+      };
+    }
     windowClass.customKeyMethods.push(
       new CustomKeyMethod(
         () => Input.isTriggered(key),
