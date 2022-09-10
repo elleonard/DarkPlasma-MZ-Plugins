@@ -63,7 +63,7 @@ Game_Temp_FormationMixIn(Game_Temp.prototype);
 
 function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_FormationMixInClass {
   return class extends sceneClass {
-    _selectWindowLayer: WindowLayer = new WindowLayer();
+    _selectWindowLayer: WindowLayer;
     /**
      * @return {Rectangle}
      */
@@ -182,6 +182,7 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
       /**
        * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
        */
+      this._selectWindowLayer = new WindowLayer();
       this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
       this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
       this.addChild(this._selectWindowLayer);

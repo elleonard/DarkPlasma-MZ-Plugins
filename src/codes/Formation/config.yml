@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/09/10
+      version: 1.4.1
+      description: 'FormationInBattleと組み合わせて戦闘開始時にエラーで停止する不具合を修正'
     - date: 2022/09/04
       version: 1.4.0
       description: 'typescript移行'
