@@ -1,4 +1,4 @@
-/// <reference path="./FiIterEquip.d.ts" />
+/// <reference path="./FilterEquip.d.ts" />
 import { settings } from './_build/DarkPlasma_FilterEquip_parameters';
 
 function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
