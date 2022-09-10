@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.5.0
+// DarkPlasma_EnemyBook 4.5.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/10 4.5.1 typescript移行
  * 2022/07/24 4.5.0 敵キャラ画像のスケール設定メモタグを追加
  *            4.4.0 敵キャラ画像表示位置設定を追加
  * 2022/07/18 4.3.1 リファクタ
@@ -51,6 +52,9 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_CustomKeyHandler
  *
  * @param unknownData
  * @text 未確認要素表示名
@@ -221,7 +225,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.5.0
+ * version: 4.5.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -237,6 +241,11 @@
  *   <scaleInBook:80> # 図鑑上の画像の拡大率
  *
  * DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_CustomKeyHandler version:1.2.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
  */
 /*~struct~DebuffStatusIcons:
  * @param mhp
@@ -326,6 +335,9 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_CustomKeyHandler
+ * @orderAfter DarkPlasma_CustomKeyHandler
  *
  * @param unknownData
  * @text Unknown Data
@@ -495,7 +507,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.5.0
+ * version: 4.5.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -511,6 +523,11 @@
  *   <scaleInBook:80> # Enemy image scale in book
  *
  * You can control order of enemies by using DarkPlasma_OrderIdAlias.
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_CustomKeyHandler version:1.2.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
  */
 /*~struct~DebuffStatusIconsEn:
  * @param mhp
@@ -877,7 +894,6 @@
   }
 
   const STATUS_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
-
   const PLUGIN_COMMAND_NAME = {
     OPEN: 'open enemyBook',
     ADD: 'add to enemyBook',
@@ -885,21 +901,18 @@
     COMPLETE: 'complete enemyBook',
     CLEAR: 'clear enemyBook',
   };
-
   const DROP_RATE_FORMAT = {
     PERCENT: 0,
     FRACTION: 1,
   };
-
   /**
    * 図鑑登録可能かどうか
    * @param {MZ.Enemy} enemy エネミーデータ
    * @return {boolean}
    */
   function isRegisterableEnemy(enemy) {
-    return enemy && enemy.name && enemy.meta.book !== 'no';
+    return !!enemy && !!enemy.name && enemy.meta.book !== 'no';
   }
-
   /**
    * 図鑑登録可能なエネミー一覧
    * @return {MZ.Enemy[]}
@@ -907,27 +920,21 @@
   function registerableEnemies() {
     return $dataEnemies.filter((enemy) => isRegisterableEnemy(enemy)).sort(orderIdSort);
   }
-
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.OPEN, function () {
     SceneManager.push(Scene_EnemyBook);
   });
-
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.ADD, function (args) {
     $gameSystem.addToEnemyBook(Number(args.id));
   });
-
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.REMOVE, function (args) {
     $gameSystem.removeFromEnemyBook(Number(args.id));
   });
-
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.COMPLETE, function () {
     $gameSystem.completeEnemyBook();
   });
-
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function () {
     $gameSystem.clearEnemyBook();
   });
-
   class EnemyBook {
     /**
      * @param {EnemyBookPage[]} pages ページ一覧
@@ -935,7 +942,6 @@
     constructor(pages) {
       this._pages = pages;
     }
-
     /**
      * 初期状態（何も登録されていない）図鑑を返す
      * @return {EnemyBook}
@@ -952,7 +958,6 @@
         })
       );
     }
-
     flexPage() {
       /**
        * エネミーが増減していた場合、ページ数をあわせる
@@ -987,7 +992,6 @@
             ))
         );
     }
-
     /**
      * エネミー登録率を百分率で返す
      * @return {number}
@@ -1002,7 +1006,6 @@
       }).length;
       return (100 * registeredEnemyCount) / registerableEnemyCount;
     }
-
     /**
      * ドロップアイテム登録率を百分率で返す
      * @return {number}
@@ -1023,7 +1026,6 @@
       }, 0);
       return (100 * registeredDropItemCount) / registerableDropItemCount;
     }
-
     /**
      * 登録済みかどうか
      * @param {MZ.Enemy} enemy 敵データ
@@ -1034,7 +1036,6 @@
       }
       return false;
     }
-
     /**
      * ドロップアイテムが登録済みかどうか
      * @param {MZ.Enemy} enemy 敵データ
@@ -1046,7 +1047,6 @@
       }
       return false;
     }
-
     /**
      * 図鑑に指定したエネミーを登録する
      * @param {number} enemyId 敵ID
@@ -1056,7 +1056,6 @@
         this._pages[enemyId].register();
       }
     }
-
     /**
      * 図鑑に指定したエネミーのドロップアイテムを登録する
      * @param {number} enemyId 敵ID
@@ -1067,7 +1066,6 @@
         this._pages[enemyId].registerDropItem(index);
       }
     }
-
     /**
      * 図鑑から指定したエネミーを登録解除する
      * @param {number} enemyId 敵ID
@@ -1077,7 +1075,6 @@
         this._pages[enemyId].unregister();
       }
     }
-
     /**
      * 図鑑を完成させる
      */
@@ -1091,7 +1088,6 @@
         });
       });
     }
-
     /**
      * 図鑑を白紙に戻す
      */
@@ -1099,7 +1095,6 @@
       this._pages.filter((page) => page).forEach((page) => page.unregister());
     }
   }
-
   class EnemyBookPage {
     /**
      * @param {boolean} isRegistered 登録フラグ
@@ -1109,47 +1104,38 @@
       this._isRegistered = isRegistered;
       this._dropItems = dropItems;
     }
-
     get isRegistered() {
       return this._isRegistered;
     }
-
     isDropItemRegistered(index) {
       return this._dropItems[index];
     }
-
-    /**
-     * @param {MZ.Enemy} enemy
-     * @return {boolean}
-     */
     registeredDropItemCount(enemy) {
       return this._dropItems.filter((dropItem, index) => dropItem && enemy.dropItems[index].kind > 0).length;
     }
-
     register() {
       this._isRegistered = true;
     }
-
     registerDropItem(index) {
       this._dropItems[index] = true;
     }
-
     unregister() {
       this._isRegistered = false;
       this._dropItems = this._dropItems.map((_) => false);
     }
   }
-
-  window[EnemyBook.name] = EnemyBook;
-  window[EnemyBookPage.name] = EnemyBookPage;
-
   /**
    * 敵図鑑情報
    * Game_Systemからのみ直接アクセスされる
    * @type {EnemyBook}
    */
   let enemyBook = null;
-
+  function enemyBookInstance() {
+    if (!enemyBook) {
+      enemyBook = EnemyBook.initialBook();
+    }
+    return enemyBook;
+  }
   /**
    * エネミー図鑑シーン
    */
@@ -1158,7 +1144,6 @@
       super.create();
       this.createEnemyBookWindows();
     }
-
     createEnemyBookWindows() {
       this._enemyBookWindows = new EnemyBookWindows(
         this.popScene.bind(this),
@@ -1170,9 +1155,6 @@
       );
     }
   }
-
-  window[Scene_EnemyBook.name] = Scene_EnemyBook;
-
   class EnemyBookWindows {
     /**
      * @param {function} cancelHandler キャンセル時の挙動
@@ -1193,38 +1175,31 @@
       parentLayer.addChild(this._statusWindow);
       this._indexWindow.setStatusWindow(this._statusWindow);
     }
-
     close() {
       this._percentWindow.hide();
       this._indexWindow.hide();
       this._indexWindow.deactivate();
       this._statusWindow.hide();
     }
-
     open() {
       this._percentWindow.show();
       this._indexWindow.show();
       this._indexWindow.activate();
       this._statusWindow.show();
     }
-
     isActive() {
       return this._indexWindow.active;
     }
-
     get indexWindow() {
       return this._indexWindow;
     }
-
     get statusWindow() {
       return this._statusWindow;
     }
-
     get percentWindow() {
       return this._percentWindow;
     }
   }
-
   /**
    * 登録率表示ウィンドウ
    */
@@ -1236,9 +1211,6 @@
       ];
     }
   }
-
-  globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
-
   /**
    * エネミー図鑑目次
    */
@@ -1256,7 +1228,7 @@
               .filter((index) => index >= 0)
           )
         ).sort((a, b) => a - b);
-        const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : null;
+        const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : -1;
         if (firstIndex >= 0) {
           this.setTopRow(firstIndex);
           this.select(firstIndex);
@@ -1267,21 +1239,18 @@
       }
       this.activate();
     }
-
     /**
      * @return {number}
      */
     maxCols() {
       return 1;
     }
-
     /**
      * @return {number}
      */
     maxItems() {
       return this._list ? this._list.length : 0;
     }
-
     /**
      * @param {Window_EnemyBookStatus} statusWindow ステータスウィンドウ
      */
@@ -1289,19 +1258,16 @@
       this._statusWindow = statusWindow;
       this.updateStatus();
     }
-
     update() {
       super.update();
       this.updateStatus();
     }
-
     updateStatus() {
       if (this._statusWindow) {
         const enemy = this._list[this.index()];
         this._statusWindow.setEnemy(enemy);
       }
     }
-
     makeItemList() {
       if (this._list) {
         return;
@@ -1313,20 +1279,17 @@
           .concat(this._list.filter((enemy) => $gameTroop.members().every((gameEnemy) => gameEnemy.enemy() !== enemy)));
       }
     }
-
     refresh() {
       this.makeItemList();
       this.createContents();
       this.drawAllItems();
     }
-
     /**
      * @return {boolean}
      */
     isCurrentItemEnabled() {
       return this.isEnabled(this.index());
     }
-
     /**
      * @param {number} index インデックス
      * @return {boolean}
@@ -1335,7 +1298,6 @@
       const enemy = this._list[index];
       return $gameSystem.isInEnemyBook(enemy);
     }
-
     /**
      * @param {number} index インデックス
      */
@@ -1356,7 +1318,6 @@
       this.changePaintOpacity(true);
       this.resetTextColor();
     }
-
     /**
      * ハイライトすべきか
      * @param {MZ.Enemy} enemy
@@ -1365,26 +1326,21 @@
     mustHighlight(enemy) {
       return this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id);
     }
-
     processHandling() {
       super.processHandling();
       if (this.active && $gameParty.inBattle() && Input.isTriggered(settings.openKeyInBattle)) {
         this.processCancel();
       }
     }
-
     processOk() {}
-
     processCancel() {
       super.processCancel();
       Window_EnemyBookIndex.lastTopRow = this.topRow();
       Window_EnemyBookIndex.lastIndex = this.index();
     }
-
     battlerEnemyIsInBook() {
       return this._battlerEnemyIndexes && this._battlerEnemyIndexes.length > 0;
     }
-
     cursorPagedown() {
       if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
         this.selectNextBattlerEnemy();
@@ -1392,7 +1348,6 @@
         super.cursorPagedown();
       }
     }
-
     cursorPageup() {
       if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
         this.selectPreviousBattlerEnemy();
@@ -1400,24 +1355,18 @@
         super.cursorPageup();
       }
     }
-
     selectNextBattlerEnemy() {
       const nextIndex = this._battlerEnemyIndexes.find((index) => index > this.index()) || this._battlerEnemyIndexes[0];
       this.smoothSelect(nextIndex);
     }
-
     selectPreviousBattlerEnemy() {
       const candidates = this._battlerEnemyIndexes.filter((index) => index < this.index());
       const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
       this.smoothSelect(prevIndex);
     }
   }
-
   Window_EnemyBookIndex.lastTopRow = 0;
   Window_EnemyBookIndex.lastIndex = 0;
-
-  globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
-
   /**
    * 図鑑ステータスウィンドウ
    */
@@ -1425,11 +1374,10 @@
     initialize(rect) {
       super.initialize(rect);
       this._enemy = null;
-      this.setupEnemySprite(this.width, this.height);
+      this.setupEnemySprite();
       this.refresh();
     }
-
-    setupEnemySprite(width, height) {
+    setupEnemySprite() {
       this._enemySprite = new Sprite();
       this._enemySprite.anchor.x = 0.5;
       this._enemySprite.anchor.y = 0.5;
@@ -1437,12 +1385,10 @@
       this._enemySprite.y = settings.enemyImageView.y;
       this.addChildToBack(this._enemySprite);
     }
-
     contentsHeight() {
       const maxHeight = this.height;
       return maxHeight - this.itemPadding() * 2;
     }
-
     /**
      * @param {MZ.Enemy} enemy 敵キャラ情報
      */
@@ -1452,13 +1398,12 @@
         this.refresh();
       }
     }
-
     update() {
       super.update();
       /**
        * データベースで拡大率が設定されていない場合は自動調整
        */
-      if (this._enemySprite.bitmap && !this._enemy.meta.scaleInBook) {
+      if (this._enemySprite.bitmap && this._enemy && !this._enemy.meta.scaleInBook) {
         const bitmapHeight = this._enemySprite.bitmap.height;
         const contentsHeight = this.contents.height;
         let scale = 1;
@@ -1469,23 +1414,19 @@
         this._enemySprite.scale.y = scale;
       }
     }
-
     refresh() {
       const enemy = this._enemy;
       this.contents.clear();
-
       if (!enemy || !$gameSystem.isInEnemyBook(enemy)) {
         this._enemySprite.bitmap = null;
         return;
       }
-
       const name = enemy.battlerName;
-      const hue = enemy.battlerHue;
       let bitmap;
       if ($gameSystem.isSideView()) {
-        bitmap = ImageManager.loadSvEnemy(name, hue);
+        bitmap = ImageManager.loadSvEnemy(name);
       } else {
-        bitmap = ImageManager.loadEnemy(name, hue);
+        bitmap = ImageManager.loadEnemy(name);
       }
       this._enemySprite.bitmap = bitmap;
       if (enemy.meta.scaleInBook) {
@@ -1494,26 +1435,19 @@
         this._enemySprite.scale.y = scale / 100;
       }
       this._enemySprite.setHue(enemy.battlerHue);
-
       this.resetTextColor();
-      this.drawText(enemy.name, 0, 0);
-
+      this.drawText(enemy.name, 0, 0, 0);
       this.drawPage();
     }
-
     drawPage() {
       const enemy = this._enemy;
       const lineHeight = this.lineHeight();
       this.drawLevel(this.contentsWidth() / 2 + this.itemPadding() / 2, 0);
       this.drawStatus(this.contentsWidth() / 2 + this.itemPadding() / 2, lineHeight + this.itemPadding());
-
       this.drawExpAndGold(this.itemPadding(), lineHeight * 9 + this.itemPadding());
-
       const rewardsWidth = this.contentsWidth() / 2;
       const dropItemWidth = rewardsWidth;
-
       this.drawDropItems(0, lineHeight * 6 + this.itemPadding(), dropItemWidth);
-
       const weakAndResistWidth = this.contentsWidth() / 2;
       this._weakLines = 1;
       this._resistLines = 1;
@@ -1526,30 +1460,25 @@
           weakAndResistWidth
         );
       }
-
-      const descWidth = 480;
       if (enemy.meta.desc1) {
-        this.drawTextEx(enemy.meta.desc1, this.descriptionX(), this.descriptionY(), descWidth);
+        this.drawTextEx(String(enemy.meta.desc1), this.descriptionX(), this.descriptionY());
       }
       if (enemy.meta.desc2) {
-        this.drawTextEx(enemy.meta.desc2, this.descriptionX(), this.descriptionY() + lineHeight, descWidth);
+        this.drawTextEx(String(enemy.meta.desc2), this.descriptionX(), this.descriptionY() + lineHeight);
       }
     }
-
     /**
      * @return {number}
      */
     descriptionX() {
       return settings.devideResistAndNoEffect ? this.contentsWidth() / 2 + this.itemPadding() / 2 : 0;
     }
-
     /**
      * @return {number}
      */
     descriptionY() {
       return this.itemPadding() + this.lineHeight() * 14;
     }
-
     /**
      * レベルを描画する
      * @param {number} x X座標
@@ -1557,14 +1486,13 @@
      */
     drawLevel(x, y) {
       const enemy = this._enemy;
-      if (enemy.level) {
+      if (enemy && enemy.level) {
         this.changeTextColor(this.systemColor());
         this.drawText(`Lv.`, x, y, 160);
         this.resetTextColor();
-        this.drawText(enemy.level, x + 160, y, 60, 'right');
+        this.drawText(`${enemy.level}`, x + 160, y, 60, 'right');
       }
     }
-
     /**
      * ステータスを描画する
      * @param {number} x X座標
@@ -1577,11 +1505,10 @@
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.param(i), x, y, 160);
         this.resetTextColor();
-        this.drawText(enemy.params[i], x + 160, y, 60, 'right');
+        this.drawText(`${enemy.params[i]}`, x + 160, y, 60, 'right');
         y += lineHeight;
       });
     }
-
     /**
      * 経験値とゴールドを描画する
      * @param {number} x X座標
@@ -1590,19 +1517,17 @@
     drawExpAndGold(x, y) {
       const enemy = this._enemy;
       this.resetTextColor();
-      this.drawText(enemy.exp, x, y);
-      x += this.textWidth(enemy.exp) + 6;
+      this.drawText(`${enemy.exp}`, x, y, 0);
+      x += this.textWidth(`${enemy.exp}`) + 6;
       this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.expA, x, y);
+      this.drawText(TextManager.expA, x, y, 0);
       x += this.textWidth(TextManager.expA + '  ');
-
       this.resetTextColor();
-      this.drawText(enemy.gold, x, y);
-      x += this.textWidth(enemy.gold) + 6;
+      this.drawText(`${enemy.gold}`, x, y, 0);
+      x += this.textWidth(`${enemy.gold}`) + 6;
       this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.currencyUnit, x, y);
+      this.drawText(TextManager.currencyUnit, x, y, 0);
     }
-
     /**
      * ドロップアイテムを描画する
      * @param {number} x X座標
@@ -1636,7 +1561,6 @@
         }
       });
     }
-
     /**
      * ドロップ率を描画する
      * @param {number} denominator 確率
@@ -1658,7 +1582,6 @@
           break;
       }
     }
-
     /**
      * 指定した属性の有効度を返す
      * @param {number} elementId 属性ID
@@ -1669,7 +1592,6 @@
         .filter((trait) => trait.code === Game_BattlerBase.TRAIT_ELEMENT_RATE && trait.dataId === elementId)
         .reduce((r, trait) => r * trait.value, 1);
     }
-
     /**
      * 指定したステートの有効度を返す
      * @param {number} stateId ステートID
@@ -1686,7 +1608,6 @@
         .filter((trait) => trait.code === Game_BattlerBase.TRAIT_STATE_RATE && trait.dataId === stateId)
         .reduce((r, trait) => r * trait.value, 1);
     }
-
     /**
      * 指定したステータスの弱体有効度を返す
      * @param {number} statusId ステータスID
@@ -1699,11 +1620,9 @@
           .reduce((r, trait) => r * trait.value, 1) * 100
       );
     }
-
     maxIconsPerLine() {
       return 16;
     }
-
     /**
      * @param {number} x X座標
      * @param {number} y Y座標
@@ -1736,7 +1655,6 @@
         );
       this.changeTextColor(this.systemColor());
       this.drawText(settings.weakElementAndStateLabel, x, y, width);
-
       const iconBaseY = y + this.lineHeight();
       targetIcons.forEach((icon, index) => {
         this.drawIcon(
@@ -1747,7 +1665,6 @@
       });
       this._weakLines = Math.floor(targetIcons.length / (this.maxIconsPerLine() + 1)) + 1;
     }
-
     /**
      * 弱点に表示しないステートかどうか
      * @param {number} stateId ステートID
@@ -1756,7 +1673,6 @@
     isExcludedWeakState(stateId) {
       return settings.excludeWeakStates.includes(stateId);
     }
-
     /**
      * @param {number} x X座標
      * @param {number} y Y座標
@@ -1807,7 +1723,6 @@
         );
       this.changeTextColor(this.systemColor());
       this.drawText(settings.resistElementAndStateLabel, x, y, width);
-
       const iconBaseY = y + this.lineHeight();
       targetIcons.forEach((icon, index) => {
         this.drawIcon(
@@ -1818,7 +1733,6 @@
       });
       this._resistLines = Math.floor(targetIcons.length / (this.maxIconsPerLine() + 1)) + 1;
     }
-
     /**
      * @param {number} x
      * @param {number} y
@@ -1828,7 +1742,6 @@
       this.changeTextColor(this.systemColor());
       this.drawText(settings.noEffectElementAndStateLabel, x, y, width);
     }
-
     /**
      * @param {number} x X座標
      * @param {number} y Y座標
@@ -1850,7 +1763,6 @@
           }).map((statusName) => settings.debuffStatusIcons[statusName].large)
         );
       this.drawNoEffectsLabel(x, y, width);
-
       const iconBaseY = y + this.lineHeight();
       targetIcons.forEach((icon, index) => {
         this.drawIcon(
@@ -1860,7 +1772,6 @@
         );
       });
     }
-
     /**
      * 耐性リストに表示しないステートかどうか
      * @param {number} stateId ステートID
@@ -1870,70 +1781,58 @@
       return settings.excludeResistStates.includes(stateId);
     }
   }
-
-  globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
-
-  const _Game_System_initialize = Game_System.prototype.initialize;
-  Game_System.prototype.initialize = function () {
-    _Game_System_initialize.call(this);
-    enemyBook = EnemyBook.initialBook();
-  };
-
-  const _Game_System_onBeforeSave = Game_System.prototype.onBeforeSave;
-  Game_System.prototype.onBeforeSave = function () {
-    _Game_System_onBeforeSave.call(this);
-    this._enemyBook = enemyBook;
-  };
-
-  const _Game_System_onAfterLoad = Game_System.prototype.onAfterLoad;
-  Game_System.prototype.onAfterLoad = function () {
-    _Game_System_onAfterLoad.call(this);
-    if (this._enemyBook) {
-      enemyBook = this._enemyBook;
-      if ($gameSystem.versionId() !== $dataSystem.versionId) {
-        enemyBook.flexPage();
-      }
-    } else {
+  function Game_System_EnemyBookMixIn(gameSystem) {
+    const _initialize = gameSystem.initialize;
+    gameSystem.initialize = function () {
+      _initialize.call(this);
       enemyBook = EnemyBook.initialBook();
-    }
-  };
-
-  Game_System.prototype.addToEnemyBook = function (enemyId) {
-    enemyBook.register(enemyId);
-  };
-
-  Game_System.prototype.addDropItemToEnemyBook = function (enemyId, dropIndex) {
-    enemyBook.registerDropItem(enemyId, dropIndex);
-  };
-
-  Game_System.prototype.removeFromEnemyBook = function (enemyId) {
-    enemyBook.unregister(enemyId);
-  };
-
-  Game_System.prototype.completeEnemyBook = function () {
-    enemyBook.complete();
-  };
-
-  Game_System.prototype.clearEnemyBook = function () {
-    enemyBook.clear();
-  };
-
-  Game_System.prototype.isInEnemyBook = function (enemy) {
-    return enemyBook.isRegistered(enemy);
-  };
-
-  Game_System.prototype.isInEnemyBookDrop = function (enemy, dropIndex) {
-    return enemyBook.isDropItemRegistered(enemy, dropIndex);
-  };
-
-  Game_System.prototype.percentCompleteEnemy = function () {
-    return enemyBook.percentRegisteredEnemy();
-  };
-
-  Game_System.prototype.percentCompleteDrop = function () {
-    return enemyBook.percentRegisteredDropItem();
-  };
-
+    };
+    const _onBeforeSave = gameSystem.onBeforeSave;
+    gameSystem.onBeforeSave = function () {
+      _onBeforeSave.call(this);
+      this._enemyBook = enemyBookInstance();
+    };
+    const _Game_System_onAfterLoad = gameSystem.onAfterLoad;
+    gameSystem.onAfterLoad = function () {
+      _Game_System_onAfterLoad.call(this);
+      if (this._enemyBook) {
+        enemyBook = this._enemyBook;
+        if ($gameSystem.versionId() !== $dataSystem.versionId) {
+          enemyBookInstance().flexPage();
+        }
+      } else {
+        enemyBook = EnemyBook.initialBook();
+      }
+    };
+    gameSystem.addToEnemyBook = function (enemyId) {
+      enemyBookInstance().register(enemyId);
+    };
+    gameSystem.addDropItemToEnemyBook = function (enemyId, dropIndex) {
+      enemyBookInstance().registerDropItem(enemyId, dropIndex);
+    };
+    gameSystem.removeFromEnemyBook = function (enemyId) {
+      enemyBookInstance().unregister(enemyId);
+    };
+    gameSystem.completeEnemyBook = function () {
+      enemyBookInstance().complete();
+    };
+    gameSystem.clearEnemyBook = function () {
+      enemyBookInstance().clear();
+    };
+    gameSystem.isInEnemyBook = function (enemy) {
+      return enemyBookInstance().isRegistered(enemy);
+    };
+    gameSystem.isInEnemyBookDrop = function (enemy, dropIndex) {
+      return enemyBookInstance().isDropItemRegistered(enemy, dropIndex);
+    };
+    gameSystem.percentCompleteEnemy = function () {
+      return enemyBookInstance().percentRegisteredEnemy();
+    };
+    gameSystem.percentCompleteDrop = function () {
+      return enemyBookInstance().percentRegisteredDropItem();
+    };
+  }
+  Game_System_EnemyBookMixIn(Game_System.prototype);
   const _Game_Troop_setup = Game_Troop.prototype.setup;
   Game_Troop.prototype.setup = function (troopId) {
     _Game_Troop_setup.call(this, troopId);
@@ -1943,37 +1842,33 @@
       }
     }, this);
   };
-
   const _Game_Enemy_appear = Game_Enemy.prototype.appear;
   Game_Enemy.prototype.appear = function () {
     _Game_Enemy_appear.call(this);
     $gameSystem.addToEnemyBook(this._enemyId);
   };
-
   const _Game_Enemy_transform = Game_Enemy.prototype.transform;
   Game_Enemy.prototype.transform = function (enemyId) {
     _Game_Enemy_transform.call(this, enemyId);
     $gameSystem.addToEnemyBook(enemyId);
   };
-
   Game_Enemy.prototype.dropItemLots = function (dropItem) {
     return dropItem.kind > 0 && Math.random() * dropItem.denominator < this.dropItemRate();
   };
-
   /**
    * ドロップアイテムリスト生成メソッド 上書き
    */
   Game_Enemy.prototype.makeDropItems = function () {
     return this.enemy().dropItems.reduce((accumlator, dropItem, index) => {
-      if (this.dropItemLots(dropItem)) {
+      const dropItemObject = this.itemObject(dropItem.kind, dropItem.dataId);
+      if (dropItemObject && this.dropItemLots(dropItem)) {
         $gameSystem.addDropItemToEnemyBook(this.enemy().id, index);
-        return accumlator.concat(this.itemObject(dropItem.kind, dropItem.dataId));
+        return accumlator.concat(dropItemObject);
       } else {
         return accumlator;
       }
     }, []);
   };
-
   /**
    * @param {Scene_Battle.prototype} sceneBattle
    */
@@ -1983,7 +1878,6 @@
       _createWindowLayer.call(this);
       this.createEnemyBookWindowLayer();
     };
-
     sceneBattle.createEnemyBookWindowLayer = function () {
       if (settings.enableInBattle) {
         this._enemyBookLayer = new WindowLayer();
@@ -1992,7 +1886,6 @@
         this.addChild(this._enemyBookLayer);
       }
     };
-
     const _createAllWindows = sceneBattle.createAllWindows;
     sceneBattle.createAllWindows = function () {
       _createAllWindows.call(this);
@@ -2000,7 +1893,6 @@
         this.createEnemyBookWindows();
       }
     };
-
     const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
     sceneBattle.createPartyCommandWindow = function () {
       _createPartyCommandWindow.call(this);
@@ -2008,7 +1900,6 @@
         this._partyCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
       }
     };
-
     const _createActorCommandWindow = sceneBattle.createActorCommandWindow;
     sceneBattle.createActorCommandWindow = function () {
       _createActorCommandWindow.call(this);
@@ -2016,12 +1907,10 @@
         this._actorCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
       }
     };
-
     const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
     sceneBattle.isAnyInputWindowActive = function () {
       return _isAnyInputWindowActive.call(this) || (settings.enableInBattle && this._enemyBookWindows.isActive());
     };
-
     sceneBattle.createEnemyBookWindows = function () {
       this._enemyBookWindows = new EnemyBookWindows(
         this.closeEnemyBook.bind(this),
@@ -2033,19 +1922,15 @@
       );
       this.closeEnemyBook();
     };
-
     sceneBattle.percentWindowHeight = function () {
       return Scene_EnemyBook.prototype.percentWindowHeight.call(this);
     };
-
     sceneBattle.indexWindowWidth = function () {
       return Scene_EnemyBook.prototype.indexWindowWidth.call(this);
     };
-
     sceneBattle.indexWindowHeight = function () {
       return Scene_EnemyBook.prototype.indexWindowHeight.call(this);
     };
-
     sceneBattle.closeEnemyBook = function () {
       this._enemyBookWindows.close();
       if (this._returnFromEnemyBook) {
@@ -2053,7 +1938,6 @@
         this._returnFromEnemyBook = null;
       }
     };
-
     sceneBattle.openEnemyBook = function () {
       this._returnFromEnemyBook = this.inputtingWindow();
       if (this._returnFromEnemyBook) {
@@ -2062,33 +1946,14 @@
       this._enemyBookWindows.open();
     };
   }
-
   Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
   Scene_Battle_EnemyBookMixIn(Scene_Battle.prototype);
-
-  const _Window_PartyCommand_processHandling = Window_PartyCommand.prototype.processHandling;
-  Window_PartyCommand.prototype.processHandling = function () {
-    _Window_PartyCommand_processHandling.call(this);
-    if (this.isOpenAndActive()) {
-      if (Input.isTriggered(settings.openKeyInBattle)) {
-        this.processEnemyBook();
-      }
-    }
-  };
-
-  const _Window_ActorCommand_processHandling = Window_ActorCommand.prototype.processHandling;
-  Window_ActorCommand.prototype.processHandling = function () {
-    _Window_ActorCommand_processHandling.call(this);
-    if (this.isOpenAndActive()) {
-      if (Input.isTriggered(settings.openKeyInBattle)) {
-        this.processEnemyBook();
-      }
-    }
-  };
-
-  Window_Command.prototype.processEnemyBook = function () {
-    SoundManager.playCursor();
-    this.updateInputData();
-    this.callHandler('enemyBook');
-  };
+  Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_PartyCommand.prototype, 'enemyBook');
+  Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_ActorCommand.prototype, 'enemyBook');
+  globalThis.EnemyBook = EnemyBook;
+  globalThis.EnemyBookPage = EnemyBookPage;
+  globalThis.Scene_EnemyBook = Scene_EnemyBook;
+  globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
+  globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
+  globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
 })();
