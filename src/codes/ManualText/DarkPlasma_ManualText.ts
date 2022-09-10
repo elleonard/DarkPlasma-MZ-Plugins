@@ -24,7 +24,7 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
   };
 
   windowClass.manualY = function (index) {
-    return this.innerHeight - this.manualLineHeight() * (Math.floor((this.manualTexts().length+1)/this.manualCols()) - (index%this.manualCols()))+ this.manualOffsetY();
+    return this.innerHeight - this.manualLineHeight() * (index%this.manualRows() + 1) + this.manualOffsetY();
   };
 
   windowClass.setManualOffsetY = function (offset) {
@@ -53,6 +53,10 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
 
   windowClass.setManualCols = function (cols) {
     this._manualCols = cols;
+  };
+
+  windowClass.manualRows = function () {
+    return this._manualRows || 2;
   };
 
   windowClass.manualWidth = function () {
