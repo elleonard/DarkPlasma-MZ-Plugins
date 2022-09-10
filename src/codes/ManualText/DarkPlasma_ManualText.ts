@@ -24,7 +24,7 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
   };
 
   windowClass.manualY = function (index) {
-    return this.innerHeight - this.manualLineHeight() * (Math.floor(this.manualTexts().length/this.manualCols()) - (index%this.manualCols()))+ this.manualOffsetY();
+    return this.innerHeight - this.manualLineHeight() * (Math.floor((this.manualTexts().length+1)/this.manualCols()) - (index%this.manualCols()))+ this.manualOffsetY();
   };
 
   windowClass.setManualOffsetY = function (offset) {
