@@ -100,3 +100,9 @@ DarkPlasma_ManualText:
 
       setIsManualVisible: (isVisible: boolean) => void
       操作説明テキストの可視状態を変更します。
+
+      setManualCols(cols: number) => void
+      操作説明テキストの表示列数を設定します。
+
+      setManualWidth(width: number) => void
+      操作説明テキストの表示幅を設定します。
