@@ -29,6 +29,7 @@ declare interface Game_Enemy {
 type Scene_BookLayoutMixIn = import("../../common/scene/bookLayoutMixIn").Scene_BookLayoutMixInClass;
 
 declare interface Scene_EnemyBook extends Scene_BookLayoutMixIn {
+  _enemyBookWindows: EnemyBookWindows;
   createEnemyBookWindows(): void;
 }
 
@@ -47,10 +48,14 @@ declare interface Window_EnemyBookIndex extends Window_Selectable {
 }
 
 declare interface Window_EnemyBookStatus extends Window_Base {
+  _enemy: MZ.Enemy|null;
+  _enemySprite: Sprite;
   drawPage(): void;
   drawStatus(x: number, y: number): void;
   isExcludedResistState(stateId: number): boolean;
+  stateRate(stateId: number): number;
   drawNoEffectElementsAndStates(x: number, y: number, width: number): void;
+  drawNoEffectsLabel(x: number, y: number, width: number): void;
 }
 
 declare interface Window_Command {

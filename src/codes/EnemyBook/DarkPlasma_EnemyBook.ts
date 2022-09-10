@@ -691,14 +691,14 @@ class Window_EnemyBookStatus extends Window_Base {
   /**
    * @return {number}
    */
-  descriptionX() {
+  descriptionX(): number {
     return settings.devideResistAndNoEffect ? this.contentsWidth() / 2 + this.itemPadding() / 2 : 0;
   }
 
   /**
    * @return {number}
    */
-  descriptionY() {
+  descriptionY(): number {
     return this.itemPadding() + this.lineHeight() * 14;
   }
 
@@ -816,7 +816,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} elementId 属性ID
    * @return {number}
    */
-  elementRate(elementId: number) {
+  elementRate(elementId: number): number {
     return this._enemy!.traits
       .filter((trait) => trait.code === Game_BattlerBase.TRAIT_ELEMENT_RATE && trait.dataId === elementId)
       .reduce((r, trait) => r * trait.value, 1);
@@ -827,7 +827,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} stateId ステートID
    * @return {number}
    */
-  stateRate(stateId: number) {
+  stateRate(stateId: number): number {
     const isNoEffect = this._enemy!.traits.find(
       (trait) => trait.code === Game_BattlerBase.TRAIT_STATE_RESIST && trait.dataId === stateId
     );
@@ -844,7 +844,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} statusId ステータスID
    * @return {number}
    */
-  debuffRate(statusId: number) {
+  debuffRate(statusId: number): number {
     return (
       this._enemy!.traits
         .filter((trait) => trait.code === Game_BattlerBase.TRAIT_DEBUFF_RATE && trait.dataId === statusId)
@@ -905,7 +905,7 @@ class Window_EnemyBookStatus extends Window_Base {
    * @param {number} stateId ステートID
    * @return {boolean}
    */
-  isExcludedWeakState(stateId: number) {
+  isExcludedWeakState(stateId: number): boolean {
     return settings.excludeWeakStates.includes(stateId);
   }
 
