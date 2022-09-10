@@ -1,144 +1,154 @@
+/// <reference path="./FiIterEquip.d.ts" />
 import { settings } from './_build/DarkPlasma_FilterEquip_parameters';
 
-const _Scene_Equip_create = Scene_Equip.prototype.create;
-Scene_Equip.prototype.create = function () {
-  _Scene_Equip_create.call(this);
-  this.createFilterWindows();
-};
+function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
+  const _create = sceneEquip.create;
+  sceneEquip.create = function () {
+    _create.call(this);
+    this.createFilterWindows();
+  };
+  
+  const _createItemWindow = sceneEquip.createItemWindow;
+  sceneEquip.createItemWindow = function () {
+    _createItemWindow.call(this);
+    this._itemWindow.setHandler('shift', this.onFilterOpen.bind(this));
+  };
+  
+  /**
+   * 装備の絞り込み機能用のウィンドウを生成する
+   */
+  sceneEquip.createFilterWindows = function () {
+    this._filterWindowLayer = new WindowLayer();
+    this._filterWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+    this._filterWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+    this.addChild(this._filterWindowLayer);
+  
+    this._filterTraitWindow = new Window_EquipFilterTrait(this.equipFilterTraitWindowRect());
+    this._filterTraitWindow.setHandler('ok', this.onFilterTraitOk.bind(this));
+    this._filterTraitWindow.setHandler('shift', this.onFilterClose.bind(this));
+    this._filterTraitWindow.setHandler('cancel', this.onFilterClose.bind(this));
+    this._filterTraitWindow.setItemWindow(this._itemWindow);
+    this._filterTraitWindow.hide();
+    this._filterWindowLayer.addChild(this._filterTraitWindow);
+  
+    this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
+    this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
+    this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
+    this._filterEffectWindow.setItemWindow(this._itemWindow);
+    this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
+    this._filterEffectWindow.hide();
+    this._filterWindowLayer.addChild(this._filterEffectWindow);
+  
+    this.refreshFilter();
+  };
+  
+  sceneEquip.equipFilterTraitWindowRect = function () {
+    const y = this._statusWindow.paramY(0);
+    return new Rectangle(0, y, this._statusWindow.width / 2, Graphics.boxHeight - y - this._helpWindow.height);
+  };
+  
+  sceneEquip.equipFilterEffectWindowRect = function () {
+    return new Rectangle(
+      this._filterTraitWindow.width,
+      this._filterTraitWindow.y,
+      this._filterTraitWindow.width,
+      this._filterTraitWindow.height
+    );
+  };
+  
+  /**
+   * 絞り込み用データの更新
+   */
+  sceneEquip.refreshFilter = function (this: Scene_Equip) {
+    this._filters = this.actor()
+      .equipSlots()
+      .map((etypeId: number) => {
+        const equips: (MZ.Weapon|MZ.Armor)[] = $gameParty.allItems()
+          .filter((item): item is MZ.Weapon|MZ.Armor => !DataManager.isItem(item) && this.actor().canEquip(item) && item.etypeId === etypeId);
+        return this.equipFilterBuilder(equips).build();
+      });
+  };
+  
+  /**
+   * 絞り込み用データビルダー
+   * @param {MZ.Weapon[]|MZ.Armor[]} equips 装備データ一覧
+   * @return {EquipFilterBuilder}
+   */
+  sceneEquip.equipFilterBuilder = function (equips: (MZ.Weapon|MZ.Armor)[]): EquipFilterBuilder {
+    return new EquipFilterBuilder(equips);
+  };
+  
+  const _onActorChange = sceneEquip.onActorChange;
+  sceneEquip.onActorChange = function () {
+    this.refreshFilter();
+    this._filterTraitWindow.setFilter(this._filters[0]);
+    this._filterEffectWindow.setFilter(this._filters[0]);
+    _onActorChange.call(this);
+  };
+  
+  const _executeEquipChange = sceneEquip.executeEquipChange;
+  sceneEquip.executeEquipChange = function () {
+    _executeEquipChange.call(this);
+    this.refreshFilter();
+  };
+  
+  /**
+   * 絞り込みモード開始
+   */
+  sceneEquip.onFilterOpen = function () {
+    this._itemWindow.deactivate();
+    const slotId = this._slotWindow.index();
+    this._filterTraitWindow.setFilter(this._filters[slotId]);
+    this._filterTraitWindow.show();
+    this._filterTraitWindow.activate();
+    this._filterTraitWindow.select(0);
+    this._filterTraitWindow.scrollTo(0, 0);
+  };
+  
+  /**
+   * 絞り込みモード終了
+   */
+  sceneEquip.onFilterClose = function () {
+    this._filterTraitWindow.hide();
+    this._filterEffectWindow.hide();
+    this._itemWindow.activate();
+    this._itemWindow.select(0);
+    this._itemWindow.scrollTo(0, 0);
+  };
 
-const _Scene_Equip_createItemWindow = Scene_Equip.prototype.createItemWindow;
-Scene_Equip.prototype.createItemWindow = function () {
-  _Scene_Equip_createItemWindow.call(this);
-  this._itemWindow.setHandler('shift', this.onFilterOpen.bind(this));
-};
+  sceneEquip.isFilterMode = function () {
+    return this._filterTraitWindow.active || this._filterEffectWindow.active;
+  };
+  
+  sceneEquip.onFilterTraitOk = function () {
+    this._filterTraitWindow.deactivate();
+    const slotId = this._slotWindow.index();
+    this._filterEffectWindow.setFilter(this._filters[slotId]);
+    this._filterEffectWindow.show();
+    this._filterEffectWindow.activate();
+    this._filterEffectWindow.select(0);
+    this._filterEffectWindow.scrollTo(0, 0);
+  };
+  
+  sceneEquip.onFilterEffectCancel = function () {
+    this._filterEffectWindow.hide();
+    this._filterTraitWindow.activate();
+  };
+  
+  const _onSlotOk = sceneEquip.onSlotOk;
+  sceneEquip.onSlotOk = function (this: Scene_Equip) {
+    this._itemWindow.setFilter(this._filters[this._slotWindow.index()]);
+    _onSlotOk.call(this);
+  };
+  
+  const _onItemCancel = sceneEquip.onItemCancel;
+  sceneEquip.onItemCancel = function () {
+    _onItemCancel.call(this);
+    this._filters[this._slotWindow.index()].allOff();
+  };
+}
 
-/**
- * 装備の絞り込み機能用のウィンドウを生成する
- */
-Scene_Equip.prototype.createFilterWindows = function () {
-  this._filterWindowLayer = new WindowLayer();
-  this._filterWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-  this._filterWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-  this.addChild(this._filterWindowLayer);
-
-  this._filterTraitWindow = new Window_EquipFilterTrait(this.equipFilterTraitWindowRect());
-  this._filterTraitWindow.setHandler('ok', this.onFilterTraitOk.bind(this));
-  this._filterTraitWindow.setHandler('shift', this.onFilterClose.bind(this));
-  this._filterTraitWindow.setHandler('cancel', this.onFilterClose.bind(this));
-  this._filterTraitWindow.setItemWindow(this._itemWindow);
-  this._filterTraitWindow.hide();
-  this._filterWindowLayer.addChild(this._filterTraitWindow);
-
-  this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
-  this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
-  this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
-  this._filterEffectWindow.setItemWindow(this._itemWindow);
-  this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
-  this._filterEffectWindow.hide();
-  this._filterWindowLayer.addChild(this._filterEffectWindow);
-
-  this.refreshFilter();
-};
-
-Scene_Equip.prototype.equipFilterTraitWindowRect = function () {
-  const y = this._statusWindow.paramY(0);
-  return new Rectangle(0, y, this._statusWindow.width / 2, Graphics.boxHeight - y - this._helpWindow.height);
-};
-
-Scene_Equip.prototype.equipFilterEffectWindowRect = function () {
-  return new Rectangle(
-    this._filterTraitWindow.width,
-    this._filterTraitWindow.y,
-    this._filterTraitWindow.width,
-    this._filterTraitWindow.height
-  );
-};
-
-/**
- * 絞り込み用データの更新
- */
-Scene_Equip.prototype.refreshFilter = function () {
-  this._filters = this.actor()
-    .equipSlots()
-    .map((etypeId) => {
-      const equips = $gameParty.allItems().filter((item) => this.actor().canEquip(item) && item.etypeId === etypeId);
-      return this.equipFilterBuilder(equips).build();
-    });
-};
-
-/**
- * 絞り込み用データビルダー
- * @param {MZ.Weapon[]|MZ.Armor[]} equips 装備データ一覧
- * @return {EquipFilterBuilder}
- */
-Scene_Equip.prototype.equipFilterBuilder = function (equips) {
-  return new EquipFilterBuilder(equips);
-};
-
-const _Scene_Equip_onActorChange = Scene_Equip.prototype.onActorChange;
-Scene_Equip.prototype.onActorChange = function () {
-  this.refreshFilter();
-  this._filterTraitWindow.setFilter(this._filters[0], this.actor().equipSlots()[0]);
-  this._filterEffectWindow.setFilter(this._filters[0], this.actor().equipSlots()[0]);
-  _Scene_Equip_onActorChange.call(this);
-};
-
-const _Scene_Equip_executeEquipChange = Scene_Equip.prototype.executeEquipChange;
-Scene_Equip.prototype.executeEquipChange = function () {
-  _Scene_Equip_executeEquipChange.call(this);
-  this.refreshFilter();
-};
-
-/**
- * 絞り込みモード開始
- */
-Scene_Equip.prototype.onFilterOpen = function () {
-  this._itemWindow.deactivate();
-  const slotId = this._slotWindow.index();
-  this._filterTraitWindow.setFilter(this._filters[slotId], this.actor().equipSlots()[slotId]);
-  this._filterTraitWindow.show();
-  this._filterTraitWindow.activate();
-  this._filterTraitWindow.select(0);
-  this._filterTraitWindow.scrollTo(0, 0);
-};
-
-/**
- * 絞り込みモード終了
- */
-Scene_Equip.prototype.onFilterClose = function () {
-  this._filterTraitWindow.hide();
-  this._filterEffectWindow.hide();
-  this._itemWindow.activate();
-  this._itemWindow.select(0);
-  this._itemWindow.scrollTo(0, 0);
-};
-
-Scene_Equip.prototype.onFilterTraitOk = function () {
-  this._filterTraitWindow.deactivate();
-  const slotId = this._slotWindow.index();
-  this._filterEffectWindow.setFilter(this._filters[slotId], this.actor().equipSlots()[slotId]);
-  this._filterEffectWindow.show();
-  this._filterEffectWindow.activate();
-  this._filterEffectWindow.select(0);
-  this._filterEffectWindow.scrollTo(0, 0);
-};
-
-Scene_Equip.prototype.onFilterEffectCancel = function () {
-  this._filterEffectWindow.hide();
-  this._filterTraitWindow.activate();
-};
-
-const _Scene_Equip_onSlotOk = Scene_Equip.prototype.onSlotOk;
-Scene_Equip.prototype.onSlotOk = function () {
-  this._itemWindow.setFilter(this._filters[this._slotWindow.index()]);
-  _Scene_Equip_onSlotOk.call(this);
-};
-
-const _Scene_Equip_onItemCancel = Scene_Equip.prototype.onItemCancel;
-Scene_Equip.prototype.onItemCancel = function () {
-  _Scene_Equip_onItemCancel.call(this);
-  this._filters[this._slotWindow.index()].allOff();
-};
+Scene_Equip_FilterEquipMixIn(Scene_Equip.prototype);
 
 /**
  * 独自dataIdの定義用
@@ -155,7 +165,7 @@ const uniqueDataIds = {
 /**
  * 独自dataIdのキャッシュ
  */
-const uniqueDataIdCache = {};
+const uniqueDataIdCache: { [key: string]: number } = {};
 
 const TRAIT_NAMES = {
   [Game_BattlerBase.TRAIT_ELEMENT_RATE]: settings.traitName.elementRate,
@@ -188,8 +198,8 @@ const TRAIT_NAMES = {
  * @param {number} traitId 特徴ID
  * @return {string}
  */
-function traitName(traitId) {
-  return TRAIT_NAMES[traitId] || uniqueTraitIdCache.nameByTraitId(traitId);
+function traitName(traitId: number): string {
+  return TRAIT_NAMES[traitId] || uniqueTraitIdCache.nameByTraitId(traitId) || '';
 }
 
 /**
@@ -197,7 +207,7 @@ function traitName(traitId) {
  * @param {MZ.Trait} trait
  * @return {boolean}
  */
-function hasNoEffectTrait(trait) {
+function hasNoEffectTrait(trait: MZ.Trait): boolean {
   const defaultValue = (() => {
     switch (trait.code) {
       case Game_BattlerBase.TRAIT_ELEMENT_RATE:
@@ -218,21 +228,25 @@ function hasNoEffectTrait(trait) {
 }
 
 class EquipFilterBuilder {
+  _equips: (MZ.Weapon|MZ.Armor)[];
+  _equipToTraitsRules: ((equip: MZ.Weapon|MZ.Armor) => MZ.Trait[])[];
+  _traitToEffectNameRules: ((traitId: number, dataId: number) => string|null)[];
+  _traitIdList: number[];
   /**
-   * @param {MZ.Weapon[]|MZ.Armor[]} equips 装備
+   * @param {(MZ.Weapon|MZ.Armor)[]} equips 装備
    */
-  constructor(equips) {
+  constructor(equips: (MZ.Weapon|MZ.Armor)[]) {
     this._equips = equips;
     this._equipToTraitsRules = [this.equipToTraitsDefaultRule];
     this._traitToEffectNameRules = [this.traitToEffectNameDefaultRule];
-    this._traitList = this.defaultTraitList();
+    this._traitIdList = this.defaultTraitList();
   }
 
   /**
    * 装備を絞り込み用trait配列に変換するルールを追加する
    * @param {(equip: MZ.Weapon|MZ.Armor) => MZ.Trait[]} ruleFunction
    */
-  withEquipToTraitsRule(ruleFunction) {
+  withEquipToTraitsRule(ruleFunction: ((equip: MZ.Weapon|MZ.Armor) => MZ.Trait[])) {
     this._equipToTraitsRules.push(ruleFunction);
     return this;
   }
@@ -241,7 +255,7 @@ class EquipFilterBuilder {
    * 指定した特徴ID及び効果IDから、効果名を返すルールを追加する
    * @param {(traitId: number, dataId: number) => string|null} ruleFunction
    */
-  withTraitToEffectNameRule(ruleFunction) {
+  withTraitToEffectNameRule(ruleFunction: (traitId: number, dataId: number) => string|null) {
     this._traitToEffectNameRules.push(ruleFunction);
     return this;
   }
@@ -250,8 +264,8 @@ class EquipFilterBuilder {
    * 独自に特徴IDを追加する
    * @param {number} traitId 特徴ID
    */
-  withTrait(traitId) {
-    this._traitList.push(traitId);
+  withTrait(traitId: number) {
+    this._traitIdList.push(traitId);
     return this;
   }
 
@@ -259,21 +273,21 @@ class EquipFilterBuilder {
    * 表示対象外とする特徴IDを指定する
    * @param {number} traitId 特徴ID
    */
-  withoutTrait(traitId) {
-    this._traitList = this._traitList.filter((trait) => trait.id !== traitId);
+  withoutTrait(traitId: number) {
+    this._traitIdList = this._traitIdList.filter((id) => id !== traitId);
     return this;
   }
 
   /**
    * @return {EquipFilter}
    */
-  build() {
-    const effects = [
-      ...new Map(
+  build(): EquipFilter {
+    const effects: MZ.Trait[] = [
+      ...new Map<string, MZ.Trait>(
         this._equips
-          .reduce((result, equip) => result.concat(this.equipToTraits(equip)), [])
-          .filter((effect) => !hasNoEffectTrait(effect))
-          .map((effect) => [`${effect.code}:${effect.dataId}`, effect])
+          .reduce((result: MZ.Trait[], equip: MZ.Weapon|MZ.Armor) => result.concat(this.equipToTraits(equip)), [])
+          .filter((trait: MZ.Trait) => !hasNoEffectTrait(trait))
+          .map((trait: MZ.Trait) => [`${trait.code}:${trait.dataId}`, trait])
       ).values(),
     ];
 
@@ -291,15 +305,15 @@ class EquipFilterBuilder {
    * 表示する可能性のある特徴IDリスト
    * @return {number[]}
    */
-  traitList() {
-    return this._traitList;
+  traitList(): number[] {
+    return this._traitIdList;
   }
 
   /**
    * 特徴IDリストの基本セット
    * @return {number[]}
    */
-  defaultTraitList() {
+  defaultTraitList(): number[] {
     return [
       Game_BattlerBase.TRAIT_ELEMENT_RATE,
       Game_BattlerBase.TRAIT_DEBUFF_RATE,
@@ -332,7 +346,7 @@ class EquipFilterBuilder {
    * @param {MZ.Weapon|MZ.Armor} equip 装備
    * @return {MZ.Trait[]}
    */
-  equipToTraits(equip) {
+  equipToTraits(equip: MZ.Weapon|MZ.Armor): MZ.Trait[] {
     return this._equipToTraitsRules.map((func) => func(equip)).reduce((result, traits) => result.concat(traits), []);
   }
 
@@ -341,7 +355,7 @@ class EquipFilterBuilder {
    * @param {MZ.Weapon|MZ.Armor} equip 装備
    * @return {MZ.Trait[]}
    */
-  equipToTraitsDefaultRule(equip) {
+  equipToTraitsDefaultRule(equip: MZ.Weapon|MZ.Armor): MZ.Trait[] {
     return equip
       ? equip.traits.map((trait) => {
           return {
@@ -359,7 +373,7 @@ class EquipFilterBuilder {
    * @param {number} traitId 特徴ID
    * @return {EquipFilter_Trait|null}
    */
-  effectToFilterTrait(effects, traitId) {
+  effectToFilterTrait(effects: MZ.Trait[], traitId: number): EquipFilter_Trait|null {
     const effects_ = effects.filter((effect) => effect.code === traitId);
     if (effects_.length > 0) {
       return new EquipFilter_Trait(
@@ -368,7 +382,7 @@ class EquipFilterBuilder {
         effects_
           .sort((a, b) => a.dataId - b.dataId)
           .filter((effect) => this.traitToEffectName(traitId, effect.dataId))
-          .map((effect) => new EquipFilter_Effect(effect.dataId, this.traitToEffectName(traitId, effect.dataId)))
+          .map((effect) => new EquipFilter_Effect(effect.dataId, this.traitToEffectName(traitId, effect.dataId)!))
       );
     }
     return null;
@@ -380,7 +394,7 @@ class EquipFilterBuilder {
    * @param {number} dataId 効果ID
    * @return {string|null}
    */
-  traitToEffectName(traitId, dataId) {
+  traitToEffectName(traitId: number, dataId: number): string|null {
     return (
       this._traitToEffectNameRules
         .slice()
@@ -396,7 +410,7 @@ class EquipFilterBuilder {
    * @param {number} dataId 効果ID
    * @return {string|null}
    */
-  traitToEffectNameDefaultRule(traitId, dataId) {
+  traitToEffectNameDefaultRule(traitId: number, dataId: number): string|null {
     switch (traitId) {
       case Game_BattlerBase.TRAIT_ELEMENT_RATE:
       case Game_BattlerBase.TRAIT_ATTACK_ELEMENT:
@@ -452,7 +466,7 @@ class EquipFilterBuilder {
    * @param {number} id ID
    * @return {number}
    */
-  static allocateUniqueTraitId(pluginName, traitName, id) {
+  static allocateUniqueTraitId(pluginName: string, traitName: string, id: number): number {
     return uniqueTraitIdCache.allocate(pluginName, id, traitName).id;
   }
 
@@ -463,7 +477,7 @@ class EquipFilterBuilder {
    * @param {number} id ID
    * @return {number}
    */
-  static allocateUniqueDataId(pluginName, traitId, id) {
+  static allocateUniqueDataId(pluginName: string, traitId: number, id: number): number {
     const base = uniqueDataIds[traitId];
     if (!base) {
       throw new Error(`traitId: ${traitId} is not supported.`);
@@ -478,14 +492,15 @@ class EquipFilterBuilder {
   }
 }
 
-window.EquipFilterBuilder = EquipFilterBuilder;
 
 class EquipFilter {
+  _traits: EquipFilter_Trait[];
+  _equipToTraits: (equip: MZ.Weapon|MZ.Armor) => MZ.Trait[];
   /**
    *
    * @param {(MZ.Weapon|MZ.Armor) => MZ.Trait} equipToTraits 装備から特徴への変換
    */
-  constructor(equipToTraits) {
+  constructor(equipToTraits: (equip: MZ.Weapon|MZ.Armor) => MZ.Trait[]) {
     /**
      * @type {EquipFilter_Trait[]}
      */
@@ -496,7 +511,7 @@ class EquipFilter {
   /**
    * @return {EquipFilter_Trait[]}
    */
-  get traits() {
+  get traits(): EquipFilter_Trait[] {
     return this._traits;
   }
 
@@ -507,7 +522,7 @@ class EquipFilter {
   /**
    * @param {EquipFilter_Trait} trait 絞り込み用特徴
    */
-  addTrait(trait) {
+  addTrait(trait: EquipFilter_Trait) {
     this._traits.push(trait);
   }
 
@@ -515,7 +530,7 @@ class EquipFilter {
    * @param {number} index
    * @returns {string[]}
    */
-  effectNames(index) {
+  effectNames(index: number): string[] {
     return index >= 0 && index < this._traits.length ? this._traits[index].effectNames : [];
   }
 
@@ -523,7 +538,7 @@ class EquipFilter {
    * 特徴に対する絞り込みON/OFFの切り替え
    * @param {number} index 特徴インデックス
    */
-  toggleTrait(index) {
+  toggleTrait(index: number) {
     this._traits[index].toggle();
   }
 
@@ -549,7 +564,7 @@ class EquipFilter {
    * @param {number} traitIndex 特徴インデックス
    * @param {number} effectIndex 効果インデックス
    */
-  toggleEffect(traitIndex, effectIndex) {
+  toggleEffect(traitIndex: number, effectIndex: number) {
     this._traits[traitIndex].toggleEffect(effectIndex);
   }
 
@@ -557,7 +572,7 @@ class EquipFilter {
    * 指定した特徴の効果をすべて表示する
    * @param {number} traitIndex 特徴インデックス
    */
-  allOffEffect(traitIndex) {
+  allOffEffect(traitIndex: number) {
     this._traits[traitIndex].allOff();
   }
 
@@ -566,7 +581,7 @@ class EquipFilter {
    * @param {number} traitIndex 特徴インデックス
    * @return {boolean}
    */
-  hasDataIdTrait(traitIndex) {
+  hasDataIdTrait(traitIndex: number): boolean {
     return traitIndex < this._traits.length && this._traits[traitIndex].effects.length > 0;
   }
 
@@ -575,7 +590,7 @@ class EquipFilter {
    * @param {MZ.Weapon|MZ.Armor} equip 装備データ
    * @return {boolean}
    */
-  isIncludedItem(equip) {
+  isIncludedItem(equip: MZ.Weapon|MZ.Armor): boolean {
     if (this._traits.every((trait) => !trait.isIncluded())) {
       // 全表示
       return true;
@@ -594,7 +609,7 @@ class EquipFilter {
    * @param {number} index 特徴インデックス
    * @return {boolean}
    */
-  isIncludedTrait(index) {
+  isIncludedTrait(index: number): boolean {
     return index < this._traits.length && this._traits[index].isIncluded();
   }
 
@@ -604,7 +619,7 @@ class EquipFilter {
    * @param {number} effectIndex 効果インデックス
    * @return {boolean}
    */
-  isIncludedEffect(traitIndex, effectIndex) {
+  isIncludedEffect(traitIndex: number, effectIndex: number): boolean {
     return (
       traitIndex >= 0 &&
       traitIndex < this._traits.length &&
@@ -615,12 +630,16 @@ class EquipFilter {
 }
 
 class EquipFilter_Trait {
+  _id: number;
+  _name: string;
+  _isIncluded: boolean;
+  _effects: EquipFilter_Effect[];
   /**
    * @param {number} id 特徴ID
    * @param {string} name 名前
    * @param {EquipFilter_Effect[]} effects 効果
    */
-  constructor(id, name, effects) {
+  constructor(id: number, name: string, effects: EquipFilter_Effect[]) {
     this._id = id;
     this._name = name;
     this._isIncluded = false;
@@ -651,7 +670,7 @@ class EquipFilter_Trait {
     this._isIncluded = false;
   }
 
-  toggleEffect(index) {
+  toggleEffect(index: number) {
     this._effects[index].toggle();
   }
 
@@ -667,7 +686,7 @@ class EquipFilter_Trait {
    * @param {MZ.Trait[]} itemTraits 特徴一覧
    * @return {boolean}
    */
-  hasTraitItem(itemTraits) {
+  hasTraitItem(itemTraits: MZ.Trait[]): boolean {
     return itemTraits.some((trait) => trait.code === this._id && !hasNoEffectTrait(trait));
   }
 
@@ -675,7 +694,7 @@ class EquipFilter_Trait {
    * @param {MZ.Trait[]} itemTraits 特徴一覧
    * @return {boolean}
    */
-  hasIncludedEffectItem(itemTraits) {
+  hasIncludedEffectItem(itemTraits: MZ.Trait[]): boolean {
     if (!itemTraits) {
       return true;
     }
@@ -685,11 +704,14 @@ class EquipFilter_Trait {
 }
 
 class EquipFilter_Effect {
+  _id: number;
+  _name: string;
+  _isIncluded: boolean;
   /**
    * @param {number} id 効果ID
    * @param {string} name 名前
    */
-  constructor(id, name) {
+  constructor(id: number, name: string) {
     this._id = id;
     this._name = name;
     this._isIncluded = false;
@@ -717,32 +739,33 @@ class EquipFilter_Effect {
 }
 
 class Window_EquipFilter extends Window_Selectable {
-  constructor(rect) {
+  _filter: EquipFilter|null;
+  _itemWindow: Window_EquipItem|null;
+  _data: string[];
+
+  constructor(rect: Rectangle) {
     super(rect);
     this._filter = null;
-    this._etypeId = null;
     this._itemWindow = null;
     this.refresh();
   }
 
   /**
    * @param {EquipFilter} filter フィルタ情報
-   * @param {number} etypeId 装備タイプID
    */
-  setFilter(filter, etypeId) {
+  setFilter(filter: EquipFilter) {
     this._filter = filter;
-    this._etypeId = etypeId;
     this.refresh();
   }
 
   /**
    * @param {Window_EquipItem} itemWindow 装備アイテムウィンドウ
    */
-  setItemWindow(itemWindow) {
+  setItemWindow(itemWindow: Window_EquipItem) {
     this._itemWindow = itemWindow;
   }
 
-  drawItem(index) {
+  drawItem(index: number) {
     const rect = this.itemLineRect(index);
     if (this.isFilterOn(index)) {
       this.changeTextColor(ColorManager.textColor(settings.selectedItemColor));
@@ -778,18 +801,18 @@ class Window_EquipFilter extends Window_Selectable {
     return true;
   }
 
-  isFilterOn(index) {
+  isFilterOn(index: number) {
     return false;
   }
 
   toggleFilter() {
-    this._itemWindow.select(0);
-    this._itemWindow.scrollTo(0, 0);
+    this._itemWindow?.select(0);
+    this._itemWindow?.scrollTo(0, 0);
   }
 
   allOff() {}
 
-  filterNameList() {
+  filterNameList(): string[] {
     return [];
   }
 
@@ -801,7 +824,7 @@ class Window_EquipFilter extends Window_Selectable {
     super.refresh();
   }
 
-  needsOkHandler(index) {
+  needsOkHandler(index: number) {
     return false;
   }
 }
@@ -813,27 +836,28 @@ class Window_EquipFilterTrait extends Window_EquipFilter {
 
   toggleFilter() {
     super.toggleFilter();
-    this._filter.toggleTrait(this.index());
+    this._filter?.toggleTrait(this.index());
   }
 
   allOff() {
-    this._filter.allOffTrait();
+    this._filter?.allOffTrait();
   }
 
-  isFilterOn(index) {
-    return this._filter && this._filter.isIncludedTrait(index);
+  isFilterOn(index: number) {
+    return !!this._filter && this._filter.isIncludedTrait(index);
   }
 
-  needsOkHandler(index) {
-    return this._filter && this._filter.hasDataIdTrait(index);
+  needsOkHandler(index: number) {
+    return !!this._filter && this._filter.hasDataIdTrait(index);
   }
 }
 
 class Window_EquipFilterEffect extends Window_EquipFilter {
+  _filterTraitWindow: Window_EquipFilterTrait;
   /**
    * @param {Window_EquipFilterTrait} filterTraitWindow 特徴ウィンドウ
    */
-  setFilterTraitWindow(filterTraitWindow) {
+  setFilterTraitWindow(filterTraitWindow: Window_EquipFilterTrait) {
     this._filterTraitWindow = filterTraitWindow;
   }
 
@@ -843,15 +867,15 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
 
   toggleFilter() {
     super.toggleFilter();
-    this._filter.toggleEffect(this._filterTraitWindow.index(), this.index());
+    this._filter?.toggleEffect(this._filterTraitWindow.index(), this.index());
   }
 
   allOff() {
-    this._filter.allOffEffect(this._filterTraitWindow.index());
+    this._filter?.allOffEffect(this._filterTraitWindow.index());
   }
 
-  isFilterOn(index) {
-    return this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);
+  isFilterOn(index: number) {
+    return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);
   }
 }
 
@@ -859,14 +883,26 @@ Window_CustomKeyHandlerMixIn('shift', Window_EquipItem.prototype);
 Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterTrait.prototype);
 Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterEffect.prototype);
 
-Window_EquipItem.prototype.setFilter = function (filter, etypeId) {
-  if (this.etypeId() !== etypeId) {
-    this._filter = filter;
-    this.refresh();
-  }
-};
+function Window_EquipItem_FilterEquipMixIn(windowClass: Window_EquipItem) {
+  windowClass.setFilter = function (filter) {
+    if (this._filter !== filter) {
+      this._filter = filter;
+      this.refresh();
+    }
+  };
+  
+  const _includes = windowClass.includes;
+  windowClass.includes = function (item) {
+    return _includes.call(this, item) && (!this._filter || this._filter.isIncludedItem(item));
+  };
+  
+}
 
-const _Window_EquipItem_includes = Window_EquipItem.prototype.includes;
-Window_EquipItem.prototype.includes = function (item) {
-  return _Window_EquipItem_includes.call(this, item) && (!this._filter || this._filter.isIncludedItem(item));
-};
+Window_EquipItem_FilterEquipMixIn(Window_EquipItem.prototype);
+
+type _EquipFilterBuilder = typeof EquipFilterBuilder;
+declare global {
+  var EquipFilterBuilder: _EquipFilterBuilder;
+}
+globalThis.EquipFilterBuilder = EquipFilterBuilder;
+

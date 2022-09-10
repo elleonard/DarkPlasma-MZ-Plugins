@@ -745,6 +745,7 @@ declare class Game_BattlerBase {
   public static readonly TRAIT_ATTACK_STATE: number;
   public static readonly TRAIT_ATTACK_SPEED: number;
   public static readonly TRAIT_ATTACK_TIMES: number;
+  public static readonly TRAIT_ATTACK_SKILL: number;
   public static readonly TRAIT_STYPE_ADD: number;
   public static readonly TRAIT_STYPE_SEAL: number;
   public static readonly TRAIT_SKILL_ADD: number;

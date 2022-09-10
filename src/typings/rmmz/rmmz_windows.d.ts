@@ -134,11 +134,74 @@ declare namespace Window_Base {
   }
 }
 
+declare class Window_Scrollable extends Window_Base {
+  public constructor(rect: Rectangle);
+
+  public _scrollX: number;
+  public _scrollY: number;
+  public _scrollBaseX: number;
+  public _scrollBaseY: number;
+  public _scrollTargetX: number;
+  public _scrollTargetY: number;
+  public _scrollDuration: number;
+  public _scrollAccelX: number;
+  public _scrollAccelY: number;
+  public _scrollTouching: boolean;
+  public _scrollLastTouchX: number;
+  public _scrollLastTouchY: number;
+  public _scrollLastCursorVisible: boolean;
+
+  public initialize(rect: Rectangle, ...any: any[]): void;
+  public clearScrollStatus(): void;
+
+  public scrollX(): number;
+  public scrollY(): number;
+  public scrollBaseX(): number;
+  public scrollBaseY(): number;
+
+  public scrollTo(x: number, y: number): void;
+  public scrollBy(x: number, y: number): void;
+  public smoothScrollTo(x: number, y: number): void;
+  public smoothScrollBy(x: number, y: number): void;
+
+  public setScrollAccel(x: number, y: number): void;
+
+  public overallWidth(): number;
+  public overallHeight(): number;
+  public maxScrollX(): number;
+  public maxScrollY(): number;
+  public scrollBlockWidth(): number;
+  public scrollBlockHeight(): number;
+
+  public smoothScrollDown(n: number): void;
+  public smoothScrollUp(n: number): void;
+
+  public update(): void;
+  public processWheelScroll(): void;
+  public processTouchScroll(): void;
+
+  public isWheelScrollEnabled(): boolean;
+  public isTouchScrollEnabled(): boolean;
+  public isScrollEnabled(): boolean;
+  public isTouchedInsideFrame(): boolean;
+
+  public onTOuchScrollStart(): void;
+  public onTouchScroll(): void;
+  public onTouchScrollEnd(): void;
+
+  public updateSmoothScroll(): void;
+  public updateScrollAccel(): void;
+  public updateArrows(): void;
+  public updateOrigin(): void;
+  public updateScrollBase(): void;
+  public paint(): void;
+}
+
 //-----------------------------------------------------------------------------
 /**
  * The window class with cursor movement and scroll functions.
  */
-declare class Window_Selectable extends Window_Base {
+declare class Window_Selectable extends Window_Scrollable {
   public constructor(rect: Rectangle, ...args: any[]);
 
   public _index: number;
@@ -653,18 +716,21 @@ declare class Window_EquipSlot extends Window_StatusBase {
  * The window for selecting an equipment item on the equipment screen.
  */
 declare class Window_EquipItem extends Window_ItemList {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
   public _slotId: number;
   public _statusWindow: Window_EquipStatus | null | undefined;
 
   public initialize(...args: any[]): void;
+  public maxCols(): number;
+  public colSpacing(): number;
 
   public setActor(actor: Game_Actor | null): void;
   public setSlotId(slotId: number): void;
 
   public includes(item: MZ.Weapon | MZ.Armor): boolean;
+  public etypeId(): number;
   public isEnabled(item: MZ.Weapon | MZ.Armor): boolean;
 
   public selectLast(): void;
