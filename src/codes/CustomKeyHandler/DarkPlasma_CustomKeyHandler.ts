@@ -46,9 +46,11 @@ function Window_CustomKeyHandlerMixIn(key: string, windowClass: Window_Selectabl
     };
   }
 
-  windowClass.isCustomKeyEnabled = function (key) {
-    return true;
-  };
+  if (!windowClass.isCustomKeyEnabled) {
+    windowClass.isCustomKeyEnabled = function (key) {
+      return true;
+    };
+  }
 
   windowClass.customKeyMethods.push(
     new CustomKeyMethod(
