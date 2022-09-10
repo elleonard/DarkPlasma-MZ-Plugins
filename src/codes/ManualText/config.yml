@@ -3,6 +3,9 @@ DarkPlasma_ManualText:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/09/10
+      version: 1.5.0
+      description: 'マニュアルの複数列表示に対応'
     - date: 2022/08/27
       version: 1.4.1
       description: 'typescript移行'
@@ -55,13 +58,13 @@ DarkPlasma_ManualText:
       drawManual: () => void
       操作説明テキストを描画します。
 
-      manualX: () => number
+      manualX: (index: number) => number
       操作説明テキストのX座標を返します。
 
-      manualY: () => number
+      manualY: (index: number) => number
       操作説明テキストのY座標を返します。
 
-      setManualOffsetY: (number) => void
+      setManualOffsetY: (offset: number) => void
       操作説明テキストのY座標オフセットを設定します。
 
       manualOffsetY: () => void
@@ -70,7 +73,7 @@ DarkPlasma_ManualText:
       manualLineHeight: () => number
       操作説明テキストの行の高さを返します。
 
-      setManualPadding: (number) => void
+      setManualPadding: (padding: number) => void
       操作説明テキストの行間を設定します。
 
       manualPadding: () => number
@@ -79,13 +82,13 @@ DarkPlasma_ManualText:
       initManualTexts: () => void
       操作説明テキストを初期化します。
 
-      addManualText: (string) => void
+      addManualText: (text: string) => void
       操作説明テキストを追加します。
 
       manualTexts: () => string[]
       操作説明テキスト一覧を返します。
 
-      setManualFontSize: (number) => void
+      setManualFontSize: (size: number) => void
       操作説明テキストのフォントサイズを設定します。
 
       manualFontSize: () => number
@@ -95,5 +98,5 @@ DarkPlasma_ManualText:
       isManualVisible: () => boolean
       操作説明テキストの可視状態を返します。
 
-      setIsManualVisible: (boolean) => void
+      setIsManualVisible: (isVisible: boolean) => void
       操作説明テキストの可視状態を変更します。

@@ -10,19 +10,21 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
       this.contents.fontSize = this.manualFontSize();
       this.changeTextColor(ColorManager.textColor(6));
       this.manualTexts().forEach((text, index) => {
-        this.drawText(text, this.manualX(), this.manualY(index), this.innerWidth);
+        this.drawText(text, this.manualX(index), this.manualY(index), this.manualWidth());
       });
       this.resetFontSettings();
     }
   };
 
-  windowClass.manualX = function () {
-    const maxWidth = this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0);
-    return this.innerWidth - maxWidth;
+  windowClass.manualX = function (index) {
+    const colsWidth = this.manualWidth() * this.manualCols() >= this.innerWidth
+      ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
+      : this.manualWidth();
+    return this.innerWidth - (colsWidth + this.manualPadding()) * (Math.floor(index / this.manualCols()) + 1);
   };
 
   windowClass.manualY = function (index) {
-    return this.innerHeight - this.manualLineHeight() * (this.manualTexts().length - index) + this.manualOffsetY();
+    return this.innerHeight - this.manualLineHeight() * (Math.floor(this.manualTexts().length/this.manualCols()) - (index%this.manualCols()))+ this.manualOffsetY();
   };
 
   windowClass.setManualOffsetY = function (offset) {
@@ -43,6 +45,22 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
 
   windowClass.manualPadding = function () {
     return this._manualPadding || settings.linePadding;
+  };
+
+  windowClass.manualCols = function () {
+    return this._manualCols || 1;
+  };
+
+  windowClass.setManualCols = function (cols) {
+    this._manualCols = cols;
+  };
+
+  windowClass.manualWidth = function () {
+    return this._manualWidth || this.innerWidth / this.manualCols();
+  };
+
+  windowClass.setManualWidth = function (width) {
+    this._manualWidth = width;
   };
 
   windowClass.initManualTexts = function () {
