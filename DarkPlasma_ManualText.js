@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.4.1
+// DarkPlasma_ManualText 1.5.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/10 1.5.0 マニュアルの複数列表示に対応
  * 2022/08/27 1.4.1 typescript移行
  * 2022/07/02 1.4.0 マニュアルの行間設定を追加
  * 2022/04/24 1.3.0 公開
@@ -28,7 +29,7 @@
  * @default 12
  *
  * @help
- * version: 1.4.1
+ * version: 1.5.0
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -41,13 +42,13 @@
  * drawManual: () => void
  * 操作説明テキストを描画します。
  *
- * manualX: () => number
+ * manualX: (index: number) => number
  * 操作説明テキストのX座標を返します。
  *
- * manualY: () => number
+ * manualY: (index: number) => number
  * 操作説明テキストのY座標を返します。
  *
- * setManualOffsetY: (number) => void
+ * setManualOffsetY: (offset: number) => void
  * 操作説明テキストのY座標オフセットを設定します。
  *
  * manualOffsetY: () => void
@@ -56,7 +57,7 @@
  * manualLineHeight: () => number
  * 操作説明テキストの行の高さを返します。
  *
- * setManualPadding: (number) => void
+ * setManualPadding: (padding: number) => void
  * 操作説明テキストの行間を設定します。
  *
  * manualPadding: () => number
@@ -65,13 +66,13 @@
  * initManualTexts: () => void
  * 操作説明テキストを初期化します。
  *
- * addManualText: (string) => void
+ * addManualText: (text: string) => void
  * 操作説明テキストを追加します。
  *
  * manualTexts: () => string[]
  * 操作説明テキスト一覧を返します。
  *
- * setManualFontSize: (number) => void
+ * setManualFontSize: (size: number) => void
  * 操作説明テキストのフォントサイズを設定します。
  *
  * manualFontSize: () => number
@@ -81,8 +82,14 @@
  * isManualVisible: () => boolean
  * 操作説明テキストの可視状態を返します。
  *
- * setIsManualVisible: (boolean) => void
+ * setIsManualVisible: (isVisible: boolean) => void
  * 操作説明テキストの可視状態を変更します。
+ *
+ * setManualCols(cols: number) => void
+ * 操作説明テキストの表示列数を設定します。
+ *
+ * setManualWidth(width: number) => void
+ * 操作説明テキストの表示幅を設定します。
  */
 
 (() => {
@@ -109,17 +116,25 @@
         this.contents.fontSize = this.manualFontSize();
         this.changeTextColor(ColorManager.textColor(6));
         this.manualTexts().forEach((text, index) => {
-          this.drawText(text, this.manualX(), this.manualY(index), this.innerWidth);
+          this.drawText(text, this.manualX(index), this.manualY(index), this.manualWidth());
         });
         this.resetFontSettings();
       }
     };
-    windowClass.manualX = function () {
-      const maxWidth = this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0);
-      return this.innerWidth - maxWidth;
+    windowClass.manualX = function (index) {
+      const colsWidth =
+        this.manualWidth() * this.manualCols() >= this.innerWidth
+          ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
+          : this.manualWidth();
+      return this.innerWidth - (colsWidth + this.manualPadding()) * (Math.floor(index / this.manualCols()) + 1);
     };
     windowClass.manualY = function (index) {
-      return this.innerHeight - this.manualLineHeight() * (this.manualTexts().length - index) + this.manualOffsetY();
+      return (
+        this.innerHeight -
+        this.manualLineHeight() *
+          (Math.floor(this.manualTexts().length / this.manualCols()) - (index % this.manualCols())) +
+        this.manualOffsetY()
+      );
     };
     windowClass.setManualOffsetY = function (offset) {
       this._manualOffsetY = offset;
@@ -135,6 +150,18 @@
     };
     windowClass.manualPadding = function () {
       return this._manualPadding || settings.linePadding;
+    };
+    windowClass.manualCols = function () {
+      return this._manualCols || 1;
+    };
+    windowClass.setManualCols = function (cols) {
+      this._manualCols = cols;
+    };
+    windowClass.manualWidth = function () {
+      return this._manualWidth || this.innerWidth / this.manualCols();
+    };
+    windowClass.setManualWidth = function (width) {
+      this._manualWidth = width;
     };
     windowClass.initManualTexts = function () {
       this._manualTexts = [];
