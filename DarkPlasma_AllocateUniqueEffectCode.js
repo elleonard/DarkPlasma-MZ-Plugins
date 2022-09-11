@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueEffectCode 1.0.0
+// DarkPlasma_AllocateUniqueEffectCode 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/11 1.0.1 typescript移行
  * 2022/07/17 1.0.0 公開
  */
 
@@ -22,7 +23,7 @@
  * @default 51
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 特徴の効果コードを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -59,13 +60,11 @@
   };
 
   let uniqueEffectCode = settings.startOfUniqueEffectCode;
-
   class UniqueEffectCodeCache {
     constructor() {
       this._cache = {};
       this._cacheById = {};
     }
-
     /**
      * @param {string} pluginName プラグイン名
      * @param {number} localId プラグイン内で一意なID
@@ -79,7 +78,6 @@
       }
       return this._cache[key];
     }
-
     /**
      * @param {string} pluginName プラグイン名
      * @param {number} localId プラグイン内で一意なID
@@ -88,7 +86,6 @@
     key(pluginName, localId) {
       return `${pluginName}_${localId}`;
     }
-
     /**
      * @param {string} pluginName
      * @param {number} localId
@@ -99,10 +96,8 @@
       return this._cache[key] ? this._cache[key].code : undefined;
     }
   }
-
   const uniqueEffectCodeCache = new UniqueEffectCodeCache();
   globalThis.uniqueEffectCodeCache = uniqueEffectCodeCache;
-
   class UniqueEffectCode {
     /**
      * @param {number} code 効果コードID
@@ -110,7 +105,6 @@
     constructor(code) {
       this._code = code;
     }
-
     get code() {
       return this._code;
     }
