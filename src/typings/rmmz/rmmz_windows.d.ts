@@ -1005,7 +1005,8 @@ declare class Window_ShopNumber extends Window_Selectable {
 //-----------------------------------------------------------------------------
 /**
  * The window for displaying number of items in possession and the actor's
- */ declare class Window_ShopStatus extends Window_Base {
+ */
+declare class Window_ShopStatus extends Window_StatusBase {
   public constructor(rect: Rectangle);
 
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;

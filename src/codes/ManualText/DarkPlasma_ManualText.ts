@@ -20,11 +20,11 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     const colsWidth = this.manualWidth() * this.manualCols() >= this.innerWidth
       ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
       : this.manualWidth();
-    return this.innerWidth - (colsWidth + this.manualPadding()) * (Math.floor(index / this.manualCols()) + 1);
+    return this.innerWidth - (colsWidth + this.manualPadding()) * (index % this.manualCols() + 1);
   };
 
   windowClass.manualY = function (index) {
-    return this.innerHeight - this.manualLineHeight() * (index%this.manualRows() + 1) + this.manualOffsetY();
+    return this.innerHeight - this.manualLineHeight() * (Math.floor(index / this.manualCols()) + 1) + this.manualOffsetY();
   };
 
   windowClass.setManualOffsetY = function (offset) {
@@ -53,10 +53,6 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
 
   windowClass.setManualCols = function (cols) {
     this._manualCols = cols;
-  };
-
-  windowClass.manualRows = function () {
-    return this._manualRows || 2;
   };
 
   windowClass.manualWidth = function () {

@@ -14,7 +14,6 @@ declare interface Window_Base {
   manualX(index: number): number;
   manualY(index: number): number;
   manualCols(): number;
-  manualRows(): number;
   manualWidth(): number;
 
   setManualOffsetY(offset: number): void;
@@ -23,7 +22,6 @@ declare interface Window_Base {
   setManualPadding(padding: number): void;
   manualPadding(): number;
   setManualCols(cols: number): void;
-  setManualRows(rows: number): void;
   setManualWidth(width: number): void;
 
   initManualTexts(): void;
