@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.5.2
+// DarkPlasma_ManualText 1.5.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/09/11 1.5.3 正しく表示されない不具合を修正
  * 2022/09/10 1.5.2 複数列表示時、正しく表示されない不具合を修正
  *            1.5.1 複数列表示時、表示数が奇数の場合に正しく表示されない不具合を修正
  *            1.5.0 マニュアルの複数列表示に対応
@@ -31,7 +32,7 @@
  * @default 12
  *
  * @help
- * version: 1.5.2
+ * version: 1.5.3
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -128,10 +129,12 @@
         this.manualWidth() * this.manualCols() >= this.innerWidth
           ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
           : this.manualWidth();
-      return this.innerWidth - (colsWidth + this.manualPadding()) * (Math.floor(index / this.manualCols()) + 1);
+      return this.innerWidth - (colsWidth + this.manualPadding()) * ((index % this.manualCols()) + 1);
     };
     windowClass.manualY = function (index) {
-      return this.innerHeight - this.manualLineHeight() * ((index % this.manualRows()) + 1) + this.manualOffsetY();
+      return (
+        this.innerHeight - this.manualLineHeight() * (Math.floor(index / this.manualCols()) + 1) + this.manualOffsetY()
+      );
     };
     windowClass.setManualOffsetY = function (offset) {
       this._manualOffsetY = offset;
@@ -153,9 +156,6 @@
     };
     windowClass.setManualCols = function (cols) {
       this._manualCols = cols;
-    };
-    windowClass.manualRows = function () {
-      return this._manualRows || 2;
     };
     windowClass.manualWidth = function () {
       return this._manualWidth || this.innerWidth / this.manualCols();
