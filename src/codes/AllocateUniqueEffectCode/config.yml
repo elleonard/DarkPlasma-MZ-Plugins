@@ -3,6 +3,9 @@ DarkPlasma_AllocateUniqueEffectCode:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/09/11
+      version: 1.0.1
+      description: 'typescript移行'
     - date: 2022/07/17
       version: 1.0.0
       description: '公開'

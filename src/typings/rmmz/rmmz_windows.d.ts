@@ -601,25 +601,25 @@ declare class Window_SkillStatus extends Window_StatusBase {
  * The window for selecting a skill on the skill screen.
  */
 declare class Window_SkillList extends Window_Selectable {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
   public _stypeId: number;
   public _data: MZ.Skill[];
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setActor(actor: Game_Actor): void;
   public setStypeId(stypeId: number): void;
   public maxCols(): number;
-  public spacing(): number;
+  public colSpacing(): number;
   public maxItems(): number;
   public item(): MZ.Skill | null;
+  public itemAt(): MZ.Skill|null;
   public isCurrentItemEnabled(): boolean;
 
-  public itemAt(index: number): MZ.Skill | null;
   public includes(item: MZ.Skill | null): boolean;
-  public isEnabled(item: MZ.Skill): void;
+  public isEnabled(item: MZ.Skill): boolean;
 
   public makeItemList(): void;
   public selectLast(): void;
