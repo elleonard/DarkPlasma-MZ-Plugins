@@ -469,6 +469,71 @@ declare class Sprite_Damage extends Sprite {
   public isPlaying(): boolean;
 }
 
+declare class Sprite_Gauge extends Sprite {
+  _battler: Game_Battler|null;
+  _statusType: string;
+  _value: number;
+  _maxValue: number;
+  _targetValue: number;
+  _targetMaxValue: number;
+  _duration: number;
+  _flashingCount: number;
+
+  public constructor();
+
+  public initialize(): void;
+  public initMembers(): void;
+  public destroy(): void;
+
+  public createBitmap(): void;
+  public bitmapWidth(): number;
+  public bitmapHeight(): number;
+  public textHeight(): number;
+  public gaugeHeight(): number;
+  public gaugeX(): number;
+  public labelY(): number;
+  public labelFontFace(): string;
+  public labelFontSize(): number;
+  public valueFontFace(): string;
+  public valueFontSize(): number;
+
+  public setup(battler: Game_Battler, statusType: string): void;
+  public update(): void;
+  public updateBitmap(): void;
+  public updateTargetValue(value: number, maxValue: number): void;
+  public smoothness(): number;
+  public updateGaugeAnimation(): void;
+  public updateFlashing(): void;
+  public flashingColor1(): number[];
+  public flashingColor2(): number[];
+
+  public isValid(): boolean;
+  public currentValue(): number;
+  public currentMaxValue(): number;
+  public label(): string;
+
+  public gaugeBackColor(): string;
+  public gaugeColor1(): string;
+  public gaugeColor2(): string;
+  public labelColor(): string;
+  public labelOutlineColor(): string;
+  public labelOutlineWidth(): number;
+  public valueColor(): string;
+  public valueOutlineColor(): string;
+  public valueOutlineWidth(): number;
+
+  public redraw(): void;
+  public drawGauge(): void;
+  public drawGaugeRect(x: number, y: number, width: number, height: number): void;
+  public gaugeRate(): number;
+  public drawLabel(): void;
+  public setupLabelFont(): void;
+  public measureLabelWidth(): number;
+  public labelOpacity(): number;
+  public drawValue(): void;
+  public setupValueFont(): void;
+}
+
 //-----------------------------------------------------------------------------
 /**
  * The sprite for displaying state icons.

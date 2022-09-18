@@ -44,7 +44,7 @@ async function generateConfig(destDir) {
     const tsFile = path.resolve(destDir, `DarkPlasma_${path.basename(destDir)}.ts`);
     fs.ensureFile(tsFile, (err) => {
       if (err) console.error(`generate ts failed.`);
-      fs.appendFile(tsFile, `/// <reference path="./${path.basename(destDir)}.ts" />`);
+      fs.appendFile(tsFile, `/// <reference path="./${path.basename(destDir)}.d.ts" />`);
     });
     fs.copyFileSync(tsconfigTemplatePath, `${destDir}/tsconfig.json`);
   });

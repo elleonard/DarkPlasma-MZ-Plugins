@@ -650,7 +650,7 @@ declare namespace SceneManager {
  * The static class that manages battle progress.
  */
 declare const BattleManager: BattleManager;
-declare interface BattleManager extends GenericBattleManager<Game_Battler, Game_Actor, Game_Action, Game_Item> {}
+declare interface BattleManager extends GenericBattleManager<Game_Battler, Game_Actor, Game_Action, MZ.Item|MZ.Weapon|MZ.Armor> {}
 
 declare interface GenericBattleManager<Battler, Actor extends Battler, Action, Item> {
   _phase: number;
