@@ -146,10 +146,10 @@ class TypedParameter {
           return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
         }
         /**
-         * オブジェクト内配列は、更にダブルクオートを2回エスケープする必要がある
+         * オブジェクト内配列は、更にダブルクオートを1回エスケープする必要がある
          */
         return `"${key}":${
-          withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${this.escapeDoubleQuote(this.escapeDoubleQuote(value.map((v) => `"${v}"`).join(',')))}]"`
+          withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${this.escapeDoubleQuote(value.map((v) => `"${v}"`).join(','))}]"`
         }`;
       }
       if (value && typeof value === 'object') {
