@@ -1,0 +1,161 @@
+DarkPlasma_StepImageAndSound:
+  name: DarkPlasma_StepImageAndSound
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/09/23
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '足跡画像を表示し、足音SEを再生する'
+  parameters:
+    - param: cellWidth
+      text:
+        ja: 足跡セル横幅
+      type: number
+      default: 48
+    - param: animationSpeed
+      text:
+        ja: 足跡再生スピード
+      type: number
+      default: 8
+    - param: stepOffset
+      text:
+        ja: 中心からのズレ
+      desc:
+        ja: 設定した値の半分ずつ、足跡画像がマップマスの中心からズレて表示されます。
+      type: number
+      default: 8
+    - param: audioDistance
+      text:
+        ja: 足音距離
+      desc:
+        ja: プレイヤー以外の足音が聞こえる距離を設定します。
+      type: number
+      default: 10
+    - param: excludeEventTag
+      text:
+        ja: 除外イベントタグ
+      desc:
+        ja: このメモタグのうちいずれか1つ以上が設定されたイベントは、足跡を表示せず足音も再生しません。
+      type: string[]
+      default: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  notes:
+    - param: ステップエフェクト0
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト1
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト2
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト3
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト4
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト5
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト6
+      dir: img/systems/
+      data: tilesets
+    - param: ステップエフェクト7
+      dir: img/systems/
+      data: tilesets
+    - param: ステップサウンド0
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド1
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド2
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド3
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド4
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド5
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド6
+      dir: audio/se/
+      data: tilesets
+    - param: ステップサウンド7
+      dir: audio/se/
+      data: tilesets
+    - param: StepEffect0
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect1
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect2
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect3
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect4
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect5
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect6
+      dir: img/systems/
+      data: tilesets
+    - param: StepEffect7
+      dir: img/systems/
+      data: tilesets
+    - param: StepSound0
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound1
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound2
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound3
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound4
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound5
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound6
+      dir: audio/se/
+      data: tilesets
+    - param: StepSound7
+      dir: audio/se/
+      data: tilesets
+  help:
+    ja: |
+      タイルセットの設定に応じて、足跡画像を表示したり、足音SEを再生します。
+
+      タイルセットに対して、メモ欄に地形タグごとに足跡画像と足音SEの設定を行います。
+
+      設定例:
+      <ステップエフェクト1:Footprint>
+      <ステップエフェクト設定1:0,12,fitAngle,fitStep,animeSpeed16>
+      <ステップサウンド1:sand>
+      <ステップサウンド設定1:30-50,130>
+
+      タイルセットのメモタグ設定は、YanaさんのStepEffect.jsと互換性があります。

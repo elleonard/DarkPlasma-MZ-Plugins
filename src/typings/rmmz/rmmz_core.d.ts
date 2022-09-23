@@ -1394,6 +1394,8 @@ declare class Sprite extends PIXI.Sprite {
   public _hidden: boolean;
 
   public spriteId: number;
+  // tilemap上でのソートで使う
+  public z: number;
 
   public static _emptyBaseTexture: PIXI.BaseTexture | null;
   // Number of the created objects.
