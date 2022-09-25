@@ -1,0 +1,53 @@
+DarkPlasma_SurpriseControlWithSymbolEncounter:
+  name: DarkPlasma_SurpriseControlWithSymbolEncounter
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/09/25
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'シンボルエンカウントにおける先制・不意打ちを制御する'
+  parameters:
+    - param: preemptiveRate
+      desc:
+        ja: 背後をとった際の先制攻撃率（％）
+      text:
+        ja: 先制攻撃率（％）
+      type: number
+      default: 100
+    - param: surpriseRate
+      desc:
+        ja: 背後をとられた際の不意打ち率（％）
+      text:
+        ja: 不意打ち率（％）
+      type: number
+      default: 100
+    - param: symbolTags
+      text:
+        ja: シンボルメモタグ
+      desc:
+        ja: このパラメータのいずれかのメモタグが設定されているイベントを敵シンボルとみなします。
+      type: string[]
+      default:
+        - se
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter:
+      - name: DarkPlasma_SurpriseControl
+    orderBefore: []
+  help:
+    ja: |
+      シンボルエンカウントシステムにおいて、先制・不意打ちを制御します。
+
+      敵シンボルとなるイベントには、
+      プラグインパラメータで指定したメモタグを設定してください。
+      例: <se>
+
+      対象イベントの実行において戦闘の処理があった場合、
+      プレイヤーとそのイベントの向きに応じて先制・不意打ちを発生させます。
