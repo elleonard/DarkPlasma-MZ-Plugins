@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>シンボルエンカウントにおける先制・不意打ち制御</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/09/25/surprise-control-with-symbol-encounter/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/09/25/surprise-control-with-symbol-encounter/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>シンボルエンカウントにおける先制・不意打ちを制御します。<br>プレイヤーが敵シンボルに後ろから接触すると先制、敵シンボルにプレイヤーが後ろから接触されると不意打ちを発生させます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SurpriseControlWithSymbolEncounter.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> イベント </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>能力値を固定する特徴</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/</url>
