@@ -106,7 +106,7 @@ declare class Window_Base extends Window {
   public drawIcon(iconIndex: number, x: number, y: number): void;
   public drawFace(faceName: string, faceIndex: number, x: number, y: number, width?: number, height?: number): void;
   public drawCharacter(characterName: string, characterIndex: number, x: number, y: number): void;
-  public drawItemName(item: DataManager.Item | null, x: number, y: number, width?: number): void;
+  public drawItemName(item: DataManager.DrawableItem | null, x: number, y: number, width?: number): void;
   public drawCurrencyValue(value: number, unit: string, x: number, y: number, width: number): void;
   public drawGauge(x: number, y: number, width: number, rate: number, color1: string, color2: string): void;
 

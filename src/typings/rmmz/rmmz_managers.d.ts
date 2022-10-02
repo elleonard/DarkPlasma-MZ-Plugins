@@ -101,6 +101,7 @@ declare class DataManager {
 declare namespace DataManager {
   type NoteHolder = MZ.Actor | MZ.Class | MZ.Enemy | MZ.Item | MZ.Weapon | MZ.Armor | MZ.Skill | MZ.State | MZ.Map | MZ.Event | MZ.Tileset;
   type Item = MZ.Skill | MZ.Item | MZ.Weapon | MZ.Armor;
+  type DrawableItem = Item | {iconIndex: number, name: string};
   type GlobalInfo = SaveFileInfo[];
 
   interface Error {
