@@ -3,6 +3,10 @@ DarkPlasma_StateBuffOnBattleStart:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/10/10
+      version: 3.1.0
+      description: '特徴化'
+    - description: 'typescript移行'
     - date: 2022/07/18
       version: 3.0.0
       description: 'スキルをメモタグの対象外に変更 ステートをメモタグの対象に変更'
@@ -111,6 +115,13 @@ DarkPlasma_StateBuffOnBattleStart:
           ja: 持続ターン
         type: number
         default: 3
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueTraitId
+    orderBefore: []
   help:
     ja: |
       任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
