@@ -1,9 +1,11 @@
-// DarkPlasma_StateBuffOnBattleStart 3.0.0
+// DarkPlasma_StateBuffOnBattleStart 3.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/10 3.1.0 特徴化
+ *                  typescript移行
  * 2022/07/18 3.0.0 スキルをメモタグの対象外に変更 ステートをメモタグの対象に変更
  *                  ランダム設定を追加
  *            2.0.3 リファクタ
@@ -21,6 +23,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
+ *
  * @param stateOnBattleStart
  * @text 戦闘開始時ステート
  * @type struct<StateOnBattleStart>[]
@@ -32,7 +37,7 @@
  * @default []
  *
  * @help
- * version: 3.0.0
+ * version: 3.1.0
  * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
  * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかります。
  *
@@ -58,6 +63,11 @@
  * <BuffOnBattleStartRandom>
  * BuffOnBattleStartIdメモタグで指定したIDの中から
  * ランダムに1つ選択してかかる
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_AllocateUniqueTraitId
  */
 /*~struct~StateOnBattleStart:
  * @param id
@@ -160,35 +170,48 @@
     }),
   };
 
+  function hasTraits(data) {
+    return 'traits' in data;
+  }
+
+  const localTraitId = 1;
+  const stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, '戦闘開始時ステート');
+  const buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 1, '戦闘開始時強化・弱体');
+  const stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
+    pluginName,
+    localTraitId + 2,
+    '戦闘開始時ランダムステート'
+  );
+  const buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
+    pluginName,
+    localTraitId + 3,
+    '戦闘開始時ランダム強化・弱体'
+  );
   class StateOnBattleStart {
     constructor(id, stateId, turn) {
       this._id = id;
       this._stateId = stateId;
       this._turn = turn;
     }
-
     /**
-     * @param {object} object オブジェクト
+     * @param {StateOnBattleStartSetting} object オブジェクト
      * @return {StateOnBattleStart}
      */
     static fromObject(object) {
       return new StateOnBattleStart(object.id, object.stateId, object.turn);
     }
-
     /**
      * @return {number}
      */
     get id() {
       return this._id;
     }
-
     /**
      * @return {number}
      */
     get stateId() {
       return this._stateId;
     }
-
     /**
      * @return {number}
      */
@@ -196,7 +219,6 @@
       return this._turn;
     }
   }
-
   class BuffOnBattleStart {
     constructor(id, paramId, buffStep, turn) {
       this._id = id;
@@ -204,36 +226,31 @@
       this._buffStep = buffStep;
       this._turn = turn;
     }
-
     /**
-     * @param {object} object オブジェクト
+     * @param {BuffOnBattleStartSetting} object オブジェクト
      * @return {BuffOnBattleStart}
      */
     static fromObject(object) {
       return new BuffOnBattleStart(object.id, object.paramId, object.buffStep, object.turn);
     }
-
     /**
      * @return {number}
      */
     get id() {
       return this._id;
     }
-
     /**
      * @return {number}
      */
     get paramId() {
       return this._paramId;
     }
-
     /**
      * @return {number}
      */
     get buffStep() {
       return this._buffStep;
     }
-
     /**
      * @return {number}
      */
@@ -241,13 +258,11 @@
       return this._turn;
     }
   }
-
   class StateBuffOnBattleStartManager {
     constructor() {
       this._states = settings.stateOnBattleStart.map((object) => StateOnBattleStart.fromObject(object));
       this._buffs = settings.buffOnBattleStart.map((object) => BuffOnBattleStart.fromObject(object));
     }
-
     /**
      * IDから戦闘開始時ステートを取得する
      * @param {number[]} ids IDリスト
@@ -256,7 +271,6 @@
     statesFromIds(ids) {
       return this._states.filter((state) => ids.includes(state.id));
     }
-
     /**
      * IDから戦闘開始時バフを取得する
      * @param {number[]} ids IDリスト
@@ -266,9 +280,7 @@
       return this._buffs.filter((buff) => ids.includes(buff.id));
     }
   }
-
   const stateBuffOnBattleStartManager = new StateBuffOnBattleStartManager();
-
   /**
    * @param {typeof DataManager} dataManager
    */
@@ -276,46 +288,39 @@
     const _extractMetadata = dataManager.extractMetadata;
     dataManager.extractMetadata = function (data) {
       _extractMetadata.call(this, data);
-      if (data.meta.StateOnBattleStartId) {
-        data.stateOnBattleStartIds = data.meta.StateOnBattleStartId.split(',').map((id) => Number(id));
+      if (hasTraits(data)) {
+        if (data.meta.StateOnBattleStartId) {
+          String(data.meta.StateOnBattleStartId)
+            .split(',')
+            .map((id) => Number(id))
+            .forEach((id) =>
+              data.traits.push({
+                code: data.meta.StateOnBattleStartRandom
+                  ? stateOnBattleStartRandomTraitId.id
+                  : stateOnBattleStartTraitId.id,
+                dataId: id,
+                value: 0,
+              })
+            );
+        }
+        if (data.meta.BuffOnBattleStartId) {
+          String(data.meta.BuffOnBattleStartId)
+            .split(',')
+            .map((id) => Number(id))
+            .forEach((id) =>
+              data.traits.push({
+                code: data.meta.BuffOnBattleStartRandom
+                  ? buffOnBattleStartRandomTraitId.id
+                  : buffOnBattleStartTraitId.id,
+                dataId: id,
+                value: 0,
+              })
+            );
+        }
       }
-      if (data.meta.BuffOnBattleStartId) {
-        data.buffOnBattleStartIds = data.meta.BuffOnBattleStartId.split(',').map((id) => Number(id));
-      }
-    };
-
-    /**
-     * 対象オブジェクトの戦闘開始時ステート設定ID一覧
-     * @param {MZ.Actor|MZ.Class|MZ.Skill|MZ.Weapon|MZ.Armor|MZ.Enemy} data
-     * @return {number[]}
-     */
-    dataManager.stateOnBattleStartIds = function (data) {
-      if (!data || !data.stateOnBattleStartIds) {
-        return [];
-      }
-      return data.meta.StateOnBattleStartRandom
-        ? [data.stateOnBattleStartIds[Math.randomInt(data.stateOnBattleStartIds.length)]]
-        : data.stateOnBattleStartIds;
-    };
-
-    /**
-     * 対象オブジェクトの戦闘開始時強化・弱体設定ID一覧
-     * @param {MZ.Actor|MZ.Class|MZ.Skill|MZ.Weapon|MZ.Armor|MZ.Enemy} data
-     * @return {number[]}
-     */
-    dataManager.buffOnBattleStartIds = function (data) {
-      if (!data || !data.buffOnBattleStartIds) {
-        return [];
-      }
-
-      return data.meta.BuffOnBattleStartRandom
-        ? [data.buffOnBattleStartIds[Math.randomInt(data.buffOnBattleStartIds.length)]]
-        : data.buffOnBattleStartIds;
     };
   }
-
   DataManager_StateBuffOnBattleStartMixIn(DataManager);
-
   /**
    * @param {Game_Battler.prototype} gameBattler
    */
@@ -350,27 +355,37 @@
         }
       });
     };
-
     /**
      * 戦闘開始時ステート一覧
      * @return {StateOnBattleStart[]}
      */
     gameBattler.statesOnBattleStart = function () {
+      /**
+       * 特徴の付与されたオブジェクト内でランダムに選択する
+       */
+      const randomIds = this.traitObjects()
+        .filter((object) => object.traits.some((trait) => trait.code === stateOnBattleStartRandomTraitId.id))
+        .map((object) => {
+          const traits = object.traits.filter((trait) => trait.code === stateOnBattleStartRandomTraitId.id);
+          return traits[Math.randomInt(traits.length - 1)].dataId;
+        });
       return stateBuffOnBattleStartManager.statesFromIds(
-        this.traitObjects().flatMap((object) => DataManager.stateOnBattleStartIds(object))
+        this.traitsSet(stateOnBattleStartTraitId.id).concat(randomIds)
       );
     };
-
     /**
      * 戦闘開始時強化・弱体一覧
      * @return {StateOnBattleStart[]}
      */
     gameBattler.buffsOnBattleStart = function () {
-      return stateBuffOnBattleStartManager.buffsFromIds(
-        this.traitObjects().flatMap((object) => DataManager.buffOnBattleStartIds(object))
-      );
+      const randomIds = this.traitObjects()
+        .filter((object) => object.traits.some((trait) => trait.code === buffOnBattleStartRandomTraitId.id))
+        .map((object) => {
+          const traits = object.traits.filter((trait) => trait.code === buffOnBattleStartRandomTraitId.id);
+          return traits[Math.randomInt(traits.length - 1)].dataId;
+        });
+      return stateBuffOnBattleStartManager.buffsFromIds(this.traitsSet(buffOnBattleStartTraitId.id).concat(randomIds));
     };
   }
-
   Game_Battler_StateBuffOnBattleStartMixIn(Game_Battler.prototype);
 })();
