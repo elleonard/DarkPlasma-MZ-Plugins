@@ -7,8 +7,11 @@ import { hasTraits } from '../../common/data/hasTraits';
 const localTraitId = 1;
 const stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, "戦闘開始時ステート");
 const buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 1, "戦闘開始時強化・弱体");
-const stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 2, "戦闘開始時ランダムステート");
-const buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 3, "戦闘開始時ランダム強化・弱体");
+/**
+ * 名前が口語的になるが、文字サイズを考えると仕方ない
+ */
+const stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 2, "開幕ランダムステート");
+const buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 3, "開幕ランダム強化・弱体");
 
 class StateOnBattleStart {
   _id: number;
@@ -237,3 +240,16 @@ function Game_Battler_StateBuffOnBattleStartMixIn(gameBattler: Game_Battler) {
 }
 
 Game_Battler_StateBuffOnBattleStartMixIn(Game_Battler.prototype);
+
+function Scene_Equip_StateBuffOnBattleStartMixIn(sceneEquip: Scene_Equip) {
+  const _EquipFilterBuilder = sceneEquip.equipFilterBuilder;
+  sceneEquip.equipFilterBuilder = function (equips) {
+    return _EquipFilterBuilder.call(this, equips)
+      .withTrait(stateOnBattleStartTraitId.id)
+      .withTrait(buffOnBattleStartTraitId.id)
+      .withTrait(stateOnBattleStartRandomTraitId.id)
+      .withTrait(buffOnBattleStartRandomTraitId.id);
+  };
+}
+
+Scene_Equip_StateBuffOnBattleStartMixIn(Scene_Equip.prototype);

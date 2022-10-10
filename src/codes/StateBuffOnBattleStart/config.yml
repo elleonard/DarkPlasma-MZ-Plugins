@@ -4,7 +4,9 @@ DarkPlasma_StateBuffOnBattleStart:
   license: MIT
   histories:
     - date: 2022/10/10
-      version: 3.1.0
+      version: 3.2.0
+      description: 'FilterEquipに対応'
+    - version: 3.1.0
       description: '特徴化'
     - description: 'typescript移行'
     - date: 2022/07/18
@@ -121,6 +123,7 @@ DarkPlasma_StateBuffOnBattleStart:
         version: 1.0.1
     orderAfter:
       - name: DarkPlasma_AllocateUniqueTraitId
+      - name: DarkPlasma_FilterEquip
     orderBefore: []
   help:
     ja: |

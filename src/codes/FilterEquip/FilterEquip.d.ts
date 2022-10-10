@@ -6,6 +6,7 @@
 
 declare interface EquipFilterBuilder {
   build(): EquipFilter;
+  withTrait(traitId: number): EquipFilterBuilder;
 }
 
 declare interface EquipFilter {

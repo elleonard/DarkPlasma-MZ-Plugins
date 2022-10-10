@@ -1,5 +1,6 @@
 /// <reference path="../../typings/rmmz/rmmz.d.ts" />
-/// <reference path="../../codes/AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../FilterEquip/FilterEquip.d.ts" />
 
 type StateOnBattleStartSetting = {
   id: number;
