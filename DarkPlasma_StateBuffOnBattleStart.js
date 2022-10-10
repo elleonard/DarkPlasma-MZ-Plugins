@@ -1,10 +1,11 @@
-// DarkPlasma_StateBuffOnBattleStart 3.1.0
+// DarkPlasma_StateBuffOnBattleStart 3.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/10/10 3.1.0 特徴化
+ * 2022/10/10 3.2.0 FilterEquipに対応
+ *            3.1.0 特徴化
  *                  typescript移行
  * 2022/07/18 3.0.0 スキルをメモタグの対象外に変更 ステートをメモタグの対象に変更
  *                  ランダム設定を追加
@@ -25,6 +26,7 @@
  *
  * @base DarkPlasma_AllocateUniqueTraitId
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_FilterEquip
  *
  * @param stateOnBattleStart
  * @text 戦闘開始時ステート
@@ -37,7 +39,7 @@
  * @default []
  *
  * @help
- * version: 3.1.0
+ * version: 3.2.0
  * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
  * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかります。
  *
@@ -68,6 +70,7 @@
  * DarkPlasma_AllocateUniqueTraitId version:1.0.1
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_AllocateUniqueTraitId
+ * DarkPlasma_FilterEquip
  */
 /*~struct~StateOnBattleStart:
  * @param id
@@ -177,15 +180,18 @@
   const localTraitId = 1;
   const stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, '戦闘開始時ステート');
   const buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 1, '戦闘開始時強化・弱体');
+  /**
+   * 名前が口語的になるが、文字サイズを考えると仕方ない
+   */
   const stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
     pluginName,
     localTraitId + 2,
-    '戦闘開始時ランダムステート'
+    '開幕ランダムステート'
   );
   const buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
     pluginName,
     localTraitId + 3,
-    '戦闘開始時ランダム強化・弱体'
+    '開幕ランダム強化・弱体'
   );
   class StateOnBattleStart {
     constructor(id, stateId, turn) {
@@ -388,4 +394,16 @@
     };
   }
   Game_Battler_StateBuffOnBattleStartMixIn(Game_Battler.prototype);
+  function Scene_Equip_StateBuffOnBattleStartMixIn(sceneEquip) {
+    const _EquipFilterBuilder = sceneEquip.equipFilterBuilder;
+    sceneEquip.equipFilterBuilder = function (equips) {
+      return _EquipFilterBuilder
+        .call(this, equips)
+        .withTrait(stateOnBattleStartTraitId.id)
+        .withTrait(buffOnBattleStartTraitId.id)
+        .withTrait(stateOnBattleStartRandomTraitId.id)
+        .withTrait(buffOnBattleStartRandomTraitId.id);
+    };
+  }
+  Scene_Equip_StateBuffOnBattleStartMixIn(Scene_Equip.prototype);
 })();
