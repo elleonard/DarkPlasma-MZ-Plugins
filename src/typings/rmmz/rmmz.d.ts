@@ -1,4 +1,5 @@
 /// <reference path="./lib/lib.dom.d.ts" />
+/// <reference path="../../../node_modules/typescript/lib/lib.es2019.array.d.ts" />
 /// <reference path="./lib/effekseer.d.ts" />
 /// <reference path="./lib/fpsmeter.d.ts" />
 /// <reference path="./lib/localforage.d.ts" />
