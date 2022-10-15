@@ -3,6 +3,9 @@ DarkPlasma_StateGroup:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/10/15
+      version: 1.2.0
+      description: 'DarkPlasma_StateBuffOnBattleStartにおけるグループに対する優位の挙動を定義'
     - date: 2022/10/10
       version: 1.1.1
       description: 'typescript移行'
@@ -47,6 +50,11 @@ DarkPlasma_StateGroup:
           ja: 所属するステートを優先度順に設定します。下にあるほど優先度が高くなります。
         type: state[]
         default: []
+  dependencies:
+    base: []
+    orderAfter:
+      - name: DarkPlasma_StateBuffOnBattleStart
+    orderBefore: []
   help:
     ja: |
       ステートをグルーピングします。
@@ -82,3 +90,7 @@ DarkPlasma_StateGroup:
       グループに対する優位
       <OverwriteStateGroup: x>
       そのステートにかかる際、グループxのステートを無条件で上書きします。
+      DarkPlasma_StateBuffOnBattleStartで戦闘開始時に、
+      互いを上書きするようなステートA,Bに同時にかかる場合の挙動は以下の通りです。
+      - A,Bが同一グループに属している場合、優先度の高いステートのみかける
+      - A,Bが同一グループに属していない場合、どちらか一方のみかける

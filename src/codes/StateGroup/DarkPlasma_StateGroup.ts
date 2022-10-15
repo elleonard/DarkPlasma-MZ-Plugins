@@ -32,6 +32,10 @@ class StateAndPriority {
   setPriority(priority: number) {
     this._priority = priority;
   }
+
+  hasHigherPriority(other: StateAndPriority) {
+    return this.priority > other.priority;
+  }
 }
 
 class StateGroup {
@@ -94,6 +98,29 @@ class StateGroup {
   lowerPriorityStateIds(stateId: number): number[] {
     const priority = this.priorityOf(stateId);
     return priority === null ? [] : this.states.filter((state) => state.priority < priority).map((state) => state.id);
+  }
+
+  higherPriorityStateIdIn(a: number, b: number) {
+    const priorityOfA = this.priorityOf(a);
+    const priorityOfB = this.priorityOf(b);
+    if (priorityOfA === null && priorityOfB === null) {
+      return null;
+    } else if (priorityOfB === null) {
+      return a;
+    } else if (priorityOfA === null) {
+      return b;
+    }
+    return priorityOfA > priorityOfB ? a : b;
+  }
+
+  /**
+   * 指定された配列の中で、グループ内で最も優先度の高いステートIDを返す
+   * グループ内に所属するステートIDが存在しない場合は0を返す
+   */
+  highestPriorityStateIdIn(stateIds: number[]) {
+    return stateIds.reduce((result, current) => {
+      return this.higherPriorityStateIdIn(result, current) || 0;
+    }, 0);
   }
 
   /**
@@ -160,6 +187,13 @@ class StateGroupManager {
    */
   static groupByName(name: string): StateGroup | null {
     return $dataStateGroups.find((group) => group.name === name) || null;
+  }
+
+  /**
+   * ステート同士の優先度を比較する際に用いるグループ
+   */
+  static groupForComparePriority(stateIdA: number, stateIdB: number) {
+    return this.groupListByState(stateIdA).find(group => group.hasState(stateIdB));
   }
 }
 
@@ -237,6 +271,34 @@ function Game_Battler_StateGroupMixIn(gameBattler: Game_Battler) {
         return group.lowerPriorityStateIds(stateId).filter((id) => this.states().some((state) => state.id === id));
       })
       .flat();
+  };
+
+  const _statesOnBattleStart = gameBattler.statesOnBattleStart;
+  gameBattler.statesOnBattleStart = function () {
+    const statesOnBattleStart = _statesOnBattleStart.call(this);
+    return statesOnBattleStart.filter(stateOnBattleStart => {
+      const groupA = StateGroupManager.groupByName(String($dataStates[stateOnBattleStart.stateId].meta.OverwriteStateGroup));
+      if (groupA) {
+        /**
+         * ステートAはステートBの属するグループAを上書きする
+         * ステートAの属するグループBを上書きするようなステートBが同時にかかる場合、
+         * - ステートAとBが同一グループに属していれば、その中で優先度の高いほうのみをかける (両方とも複数の同一グループに属している場合、先に定義されたグループの優先度を用いる)
+         * - ステートAとBが同一グループに属していなければ、実装依存で片方のみかける (後で処理するほうが上書きする)
+         */
+        const groupBList = StateGroupManager.groupListByState(stateOnBattleStart.stateId);
+        return statesOnBattleStart
+          .filter(s => {
+            const overWriteGroup = StateGroupManager.groupByName(String($dataStates[s.stateId].meta.OverwriteStateGroup));
+            return overWriteGroup && groupBList.includes(overWriteGroup);
+          })
+          .map(s => s.stateId)
+          .every(stateB => {
+            const group = StateGroupManager.groupForComparePriority(stateOnBattleStart.stateId, stateB);
+            return !group || group.higherPriorityStateIdIn(stateOnBattleStart.stateId, stateB) === stateOnBattleStart.stateId;
+          });
+      }
+      return true;
+    });
   };
 }
 
