@@ -1,9 +1,10 @@
-// DarkPlasma_StateGroup 1.1.1
+// DarkPlasma_StateGroup 1.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/15 1.2.0 DarkPlasma_StateBuffOnBattleStartにおけるグループに対する優位の挙動を定義
  * 2022/10/10 1.1.1 typescript移行
  * 2022/06/21 1.1.0 ステートを複数グループに所属させる
  *                  グループに対する優位設定
@@ -21,13 +22,15 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @orderAfter DarkPlasma_StateBuffOnBattleStart
+ *
  * @param groups
  * @text グループ
  * @type struct<StateGroup>[]
  * @default []
  *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  * ステートをグルーピングします。
  * 同じグループに属するステートは重ねがけできません。
  *
@@ -61,6 +64,13 @@
  * グループに対する優位
  * <OverwriteStateGroup: x>
  * そのステートにかかる際、グループxのステートを無条件で上書きします。
+ * DarkPlasma_StateBuffOnBattleStartで戦闘開始時に、
+ * 互いを上書きするようなステートA,Bに同時にかかる場合の挙動は以下の通りです。
+ * - A,Bが同一グループに属している場合、優先度の高いステートのみかける
+ * - A,Bが同一グループに属していない場合、どちらか一方のみかける
+ *
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_StateBuffOnBattleStart
  */
 /*~struct~StateGroup:
  * @param name
@@ -125,6 +135,9 @@
     setPriority(priority) {
       this._priority = priority;
     }
+    hasHigherPriority(other) {
+      return this.priority > other.priority;
+    }
   }
   class StateGroup {
     constructor(name) {
@@ -179,6 +192,27 @@
     lowerPriorityStateIds(stateId) {
       const priority = this.priorityOf(stateId);
       return priority === null ? [] : this.states.filter((state) => state.priority < priority).map((state) => state.id);
+    }
+    higherPriorityStateIdIn(a, b) {
+      const priorityOfA = this.priorityOf(a);
+      const priorityOfB = this.priorityOf(b);
+      if (priorityOfA === null && priorityOfB === null) {
+        return null;
+      } else if (priorityOfB === null) {
+        return a;
+      } else if (priorityOfA === null) {
+        return b;
+      }
+      return priorityOfA > priorityOfB ? a : b;
+    }
+    /**
+     * 指定された配列の中で、グループ内で最も優先度の高いステートIDを返す
+     * グループ内に所属するステートIDが存在しない場合は0を返す
+     */
+    highestPriorityStateIdIn(stateIds) {
+      return stateIds.reduce((result, current) => {
+        return this.higherPriorityStateIdIn(result, current) || 0;
+      }, 0);
     }
     /**
      * @param {number} stateId
@@ -238,6 +272,12 @@
      */
     static groupByName(name) {
       return $dataStateGroups.find((group) => group.name === name) || null;
+    }
+    /**
+     * ステート同士の優先度を比較する際に用いるグループ
+     */
+    static groupForComparePriority(stateIdA, stateIdB) {
+      return this.groupListByState(stateIdA).find((group) => group.hasState(stateIdB));
     }
   }
   /**
@@ -314,6 +354,40 @@
           return group.lowerPriorityStateIds(stateId).filter((id) => this.states().some((state) => state.id === id));
         })
         .flat();
+    };
+    const _statesOnBattleStart = gameBattler.statesOnBattleStart;
+    gameBattler.statesOnBattleStart = function () {
+      const statesOnBattleStart = _statesOnBattleStart.call(this);
+      return statesOnBattleStart.filter((stateOnBattleStart) => {
+        const groupA = StateGroupManager.groupByName(
+          String($dataStates[stateOnBattleStart.stateId].meta.OverwriteStateGroup)
+        );
+        if (groupA) {
+          /**
+           * ステートAはステートBの属するグループAを上書きする
+           * ステートAの属するグループBを上書きするようなステートBが同時にかかる場合、
+           * - ステートAとBが同一グループに属していれば、その中で優先度の高いほうのみをかける (両方とも複数の同一グループに属している場合、先に定義されたグループの優先度を用いる)
+           * - ステートAとBが同一グループに属していなければ、実装依存で片方のみかける (後で処理するほうが上書きする)
+           */
+          const groupBList = StateGroupManager.groupListByState(stateOnBattleStart.stateId);
+          return statesOnBattleStart
+            .filter((s) => {
+              const overWriteGroup = StateGroupManager.groupByName(
+                String($dataStates[s.stateId].meta.OverwriteStateGroup)
+              );
+              return overWriteGroup && groupBList.includes(overWriteGroup);
+            })
+            .map((s) => s.stateId)
+            .every((stateB) => {
+              const group = StateGroupManager.groupForComparePriority(stateOnBattleStart.stateId, stateB);
+              return (
+                !group ||
+                group.higherPriorityStateIdIn(stateOnBattleStart.stateId, stateB) === stateOnBattleStart.stateId
+              );
+            });
+        }
+        return true;
+      });
     };
   }
   Game_Battler_StateGroupMixIn(Game_Battler.prototype);
