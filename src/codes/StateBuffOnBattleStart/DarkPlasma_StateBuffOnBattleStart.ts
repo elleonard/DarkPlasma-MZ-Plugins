@@ -188,16 +188,19 @@ function Game_Battler_StateBuffOnBattleStartMixIn(gameBattler: Game_Battler) {
       }
     });
     /**
-     * 戦闘開始時バフ
+     * 戦闘開始時の強化・弱体
+     * 強化・弱体はターン終了時にターン数が1減り、次ターンの行動時に解除される
+     * つまり、5ターン持続としてかけられた強化・弱体は次ターンから数えて5ターン目の行動時に解除される
+     * 戦闘開始時にかけられたものは初ターンから数えるため、1減らしておく
      */
     this.buffsOnBattleStart().forEach((buffOnBattleStart) => {
       let buffStep = buffOnBattleStart.buffStep;
       while (buffStep > 0) {
-        this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
+        this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn - 1);
         buffStep--;
       }
       while (buffStep < 0) {
-        this.addDebuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
+        this.addDebuff(buffOnBattleStart.paramId, buffOnBattleStart.turn - 1);
         buffStep++;
       }
     });

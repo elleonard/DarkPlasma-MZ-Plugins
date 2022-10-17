@@ -3,6 +3,9 @@ DarkPlasma_StateBuffOnBattleStart:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/10/18
+      version: 3.2.1
+      description: '強化・弱体が設定より1ターン長く持続する不具合を修正'
     - date: 2022/10/10
       version: 3.2.0
       description: 'FilterEquipに対応'
