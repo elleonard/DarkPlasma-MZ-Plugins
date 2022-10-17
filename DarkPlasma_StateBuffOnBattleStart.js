@@ -1,9 +1,10 @@
-// DarkPlasma_StateBuffOnBattleStart 3.2.0
+// DarkPlasma_StateBuffOnBattleStart 3.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/18 3.2.1 強化・弱体が設定より1ターン長く持続する不具合を修正
  * 2022/10/10 3.2.0 FilterEquipに対応
  *            3.1.0 特徴化
  *                  typescript移行
@@ -39,7 +40,7 @@
  * @default []
  *
  * @help
- * version: 3.2.0
+ * version: 3.2.1
  * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
  * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかります。
  *
@@ -347,16 +348,19 @@
         }
       });
       /**
-       * 戦闘開始時バフ
+       * 戦闘開始時の強化・弱体
+       * 強化・弱体はターン終了時にターン数が1減り、次ターンの行動時に解除される
+       * つまり、5ターン持続としてかけられた強化・弱体は次ターンから数えて5ターン目の行動時に解除される
+       * 戦闘開始時にかけられたものは初ターンから数えるため、1減らしておく
        */
       this.buffsOnBattleStart().forEach((buffOnBattleStart) => {
         let buffStep = buffOnBattleStart.buffStep;
         while (buffStep > 0) {
-          this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
+          this.addBuff(buffOnBattleStart.paramId, buffOnBattleStart.turn - 1);
           buffStep--;
         }
         while (buffStep < 0) {
-          this.addDebuff(buffOnBattleStart.paramId, buffOnBattleStart.turn);
+          this.addDebuff(buffOnBattleStart.paramId, buffOnBattleStart.turn - 1);
           buffStep++;
         }
       });
