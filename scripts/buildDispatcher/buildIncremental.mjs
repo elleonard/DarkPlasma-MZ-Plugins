@@ -34,10 +34,15 @@ await Promise
     return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
   }));
 
+console.log("build config done.");
 
 const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   .filter(path => path.startsWith("src/codes"))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
+
+console.log("incremental build targets:");
+buildTargets.forEach(target => console.log(target));
+
 for (let target of buildTargets) {
   const targetPath = `${codePath}/${target}`;
   if (fs.existsSync(`${targetPath}/DarkPlasma_${target}.ts`)) {
