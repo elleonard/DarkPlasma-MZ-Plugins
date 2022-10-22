@@ -4,7 +4,9 @@ DarkPlasma_EquipTypeStatusBonusTrait:
   license: MIT
   histories:
     - date: 2022/10/22
-      version: 2.0.0
+      version: 2.1.0
+      description: '対象装備差し替え用のインターフェース追加'
+    - version: 2.0.0
       description: 'プラグイン名を変更'
     - version: 1.0.0
       description: '公開'

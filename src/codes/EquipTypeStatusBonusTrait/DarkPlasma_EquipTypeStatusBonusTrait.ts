@@ -147,15 +147,19 @@ Scene_Boot_EquipTypeStatusBonusTraitMixIn(Scene_Boot.prototype);
 function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   const _paramPlus = gameActor.paramPlus;
   gameActor.paramPlus = function (paramId) {
-    return _paramPlus.call(this, paramId) + this.paramPlusWithEquipTraits(paramId);
+    return _paramPlus.call(this, paramId) + this.paramPlusWithEquipTypeTraits(paramId);
   };
 
-  gameActor.paramPlusWithEquipTraits = function (paramId) {
-    return this.validParamPlusWithEquipTraits(paramId).reduce((result, trait) => result + trait.value, 0);
+  gameActor.paramPlusWithEquipTypeTraits = function (paramId) {
+    return this.validParamPlusWithEquipTypeTraits(paramId).reduce((result, trait) => result + trait.value, 0);
   };
 
-  gameActor.validParamPlusWithEquipTraits = function (paramId: number) {
-    return this.equips().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
+  gameActor.equipsForEquipTypeStatusBonus = function () {
+    return this.equips();
+  };
+
+  gameActor.validParamPlusWithEquipTypeTraits = function (paramId: number) {
+    return this.equipsForEquipTypeStatusBonus().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
       const dataId = DataManager.isWeapon(equip)
         ? dataIdFromTypeIdAndParamId(equip.wtypeId, paramId)
         : dataIdFromTypeIdAndParamId(equip.atypeId, paramId);
@@ -168,15 +172,15 @@ function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
 
   const _xparam = gameActor.xparam;
   gameActor.xparam = function (xparamId) {
-    return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTraits(xparamId);
+    return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
   };
 
-  gameActor.xparamPlusWithEquipTraits = function (xparamId) {
-    return this.validXParamPlusWithEquipTraits(xparamId).reduce((result, trait) => result + trait.value, 0);
+  gameActor.xparamPlusWithEquipTypeTraits = function (xparamId) {
+    return this.validXParamPlusWithEquipTypeTraits(xparamId).reduce((result, trait) => result + trait.value, 0);
   };
 
-  gameActor.validXParamPlusWithEquipTraits = function (xparamId: number) {
-    return this.equips().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
+  gameActor.validXParamPlusWithEquipTypeTraits = function (xparamId: number) {
+    return this.equipsForEquipTypeStatusBonus().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
       const dataId = DataManager.isWeapon(equip)
         ? dataIdFromTypeIdAndParamId(equip.wtypeId, xparamId)
         : dataIdFromTypeIdAndParamId(equip.atypeId, xparamId);

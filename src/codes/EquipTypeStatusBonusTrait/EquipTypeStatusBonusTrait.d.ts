@@ -11,8 +11,9 @@ declare interface Scene_Boot {
 }
 
 declare interface Game_Actor {
-  paramPlusWithEquipTraits(paramId: number): number;
-  validParamPlusWithEquipTraits(paramId: number): MZ.Trait[];
-  xparamPlusWithEquipTraits(xparamId: number): number;
-  validXParamPlusWithEquipTraits(xparamId: number): MZ.Trait[];
+  equipsForEquipTypeStatusBonus(): (MZ.Weapon | MZ.Armor)[]
+  paramPlusWithEquipTypeTraits(paramId: number): number;
+  validParamPlusWithEquipTypeTraits(paramId: number): MZ.Trait[];
+  xparamPlusWithEquipTypeTraits(xparamId: number): number;
+  validXParamPlusWithEquipTypeTraits(xparamId: number): MZ.Trait[];
 }
