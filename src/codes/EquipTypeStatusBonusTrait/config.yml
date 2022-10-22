@@ -19,8 +19,11 @@ DarkPlasma_EquipTypeStatusBonusTrait:
   commands: []
   structures:
   dependencies:
-    base: []
-    orderAfter: []
+    base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueTraitId
     orderBefore: []
   help:
     ja: |
