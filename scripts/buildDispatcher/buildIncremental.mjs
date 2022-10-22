@@ -29,10 +29,17 @@ const configPaths = await Promise.all(configBuildTargets
     ];
   }).flat());
 
-await Promise
-  .all(configPaths.map(globPath => {
-    return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
-  }));
+let sliceOffset = 0;
+const chunkSize = 10;
+let chunk = configPaths.slice(sliceOffset, chunkSize);
+while(chunk.length > 0) {
+  await Promise
+    .all(chunk.map(globPath => {
+      return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
+    }));
+  sliceOffset += chunkSize;
+  chunk = configPaths.slice(sliceOffset, chunkSize + sliceOffset);
+};
 
 console.log("build config done.");
 
