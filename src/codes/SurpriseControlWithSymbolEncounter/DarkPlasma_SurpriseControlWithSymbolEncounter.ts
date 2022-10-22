@@ -28,7 +28,7 @@ function BattleManager_SymbolEncounterMixIn(battleManager: typeof BattleManager)
     if ($gameTemp.isSymbolEncounter()) {
       switch ($gameTemp.encounterSituation()) {
         case ENCOUNTER_SITUATION.DEFAULT:
-          return _ratePreemptive.call(this);
+          return settings.surpriseOnlyBackAttack ? 0 :  _ratePreemptive.call(this);
         case ENCOUNTER_SITUATION.PREEMPTIVE:
           return $gameParty.preemptiveRateByBackAttack();
         case ENCOUNTER_SITUATION.SURPRISE:
@@ -43,7 +43,7 @@ function BattleManager_SymbolEncounterMixIn(battleManager: typeof BattleManager)
     if ($gameTemp.isSymbolEncounter()) {
       switch ($gameTemp.encounterSituation()) {
         case ENCOUNTER_SITUATION.DEFAULT:
-          return _rateSurprise.call(this);
+          return settings.surpriseOnlyBackAttack ? 0 :  _rateSurprise.call(this);
         case ENCOUNTER_SITUATION.PREEMPTIVE:
           return 0;
         case ENCOUNTER_SITUATION.SURPRISE:
