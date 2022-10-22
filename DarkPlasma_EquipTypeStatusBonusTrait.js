@@ -1,10 +1,11 @@
-// DarkPlasma_EquipTypeStatusBonusTrait 2.0.0
+// DarkPlasma_EquipTypeStatusBonusTrait 2.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/10/22 2.0.0 プラグイン名を変更
+ * 2022/10/22 2.1.0 対象装備差し替え用のインターフェース追加
+ *            2.0.0 プラグイン名を変更
  *            1.0.0 公開
  */
 
@@ -16,8 +17,11 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
+ *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * アクター/職業/武器/防具/ステートのメモ欄に、
  * 指定の形式でメモタグを記述することで
  * 特定の武器・防具タイプを装備していたときに
@@ -56,6 +60,11 @@
  *   盾:def:10
  *   盾:eva:5
  * >
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_AllocateUniqueTraitId
  */
 
 (() => {
@@ -203,13 +212,16 @@
   function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor) {
     const _paramPlus = gameActor.paramPlus;
     gameActor.paramPlus = function (paramId) {
-      return _paramPlus.call(this, paramId) + this.paramPlusWithEquipTraits(paramId);
+      return _paramPlus.call(this, paramId) + this.paramPlusWithEquipTypeTraits(paramId);
     };
-    gameActor.paramPlusWithEquipTraits = function (paramId) {
-      return this.validParamPlusWithEquipTraits(paramId).reduce((result, trait) => result + trait.value, 0);
+    gameActor.paramPlusWithEquipTypeTraits = function (paramId) {
+      return this.validParamPlusWithEquipTypeTraits(paramId).reduce((result, trait) => result + trait.value, 0);
     };
-    gameActor.validParamPlusWithEquipTraits = function (paramId) {
-      return this.equips()
+    gameActor.equipsForEquipTypeStatusBonus = function () {
+      return this.equips();
+    };
+    gameActor.validParamPlusWithEquipTypeTraits = function (paramId) {
+      return this.equipsForEquipTypeStatusBonus()
         .filter((equip) => equip)
         .reduce((result, equip) => {
           const dataId = DataManager.isWeapon(equip)
@@ -223,13 +235,13 @@
     };
     const _xparam = gameActor.xparam;
     gameActor.xparam = function (xparamId) {
-      return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTraits(xparamId);
+      return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
     };
-    gameActor.xparamPlusWithEquipTraits = function (xparamId) {
-      return this.validXParamPlusWithEquipTraits(xparamId).reduce((result, trait) => result + trait.value, 0);
+    gameActor.xparamPlusWithEquipTypeTraits = function (xparamId) {
+      return this.validXParamPlusWithEquipTypeTraits(xparamId).reduce((result, trait) => result + trait.value, 0);
     };
-    gameActor.validXParamPlusWithEquipTraits = function (xparamId) {
-      return this.equips()
+    gameActor.validXParamPlusWithEquipTypeTraits = function (xparamId) {
+      return this.equipsForEquipTypeStatusBonus()
         .filter((equip) => equip)
         .reduce((result, equip) => {
           const dataId = DataManager.isWeapon(equip)
