@@ -1,9 +1,10 @@
-// DarkPlasma_SurpriseControlWithSymbolEncounter 1.0.0
+// DarkPlasma_SurpriseControlWithSymbolEncounter 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/22 1.1.0 背後からの接触以外で先制・不意打ちを発生させない設定を追加
  * 2022/09/25 1.0.0 公開
  */
 
@@ -35,8 +36,14 @@
  * @type string[]
  * @default ["se"]
  *
+ * @param surpriseOnlyBackAttack
+ * @desc ONにすると背後からの接触以外で先制・不意打ちを発生させません。
+ * @text 背後接触のみで先制・不意打ち
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * シンボルエンカウントシステムにおいて、先制・不意打ちを制御します。
  *
  * 敵シンボルとなるイベントには、
@@ -67,6 +74,7 @@
     symbolTags: JSON.parse(pluginParameters.symbolTags || '["se"]').map((e) => {
       return String(e || '');
     }),
+    surpriseOnlyBackAttack: String(pluginParameters.surpriseOnlyBackAttack || false) === 'true',
   };
 
   /**
@@ -93,7 +101,7 @@
       if ($gameTemp.isSymbolEncounter()) {
         switch ($gameTemp.encounterSituation()) {
           case ENCOUNTER_SITUATION.DEFAULT:
-            return _ratePreemptive.call(this);
+            return settings.surpriseOnlyBackAttack ? 0 : _ratePreemptive.call(this);
           case ENCOUNTER_SITUATION.PREEMPTIVE:
             return $gameParty.preemptiveRateByBackAttack();
           case ENCOUNTER_SITUATION.SURPRISE:
@@ -107,7 +115,7 @@
       if ($gameTemp.isSymbolEncounter()) {
         switch ($gameTemp.encounterSituation()) {
           case ENCOUNTER_SITUATION.DEFAULT:
-            return _rateSurprise.call(this);
+            return settings.surpriseOnlyBackAttack ? 0 : _rateSurprise.call(this);
           case ENCOUNTER_SITUATION.PREEMPTIVE:
             return 0;
           case ENCOUNTER_SITUATION.SURPRISE:
