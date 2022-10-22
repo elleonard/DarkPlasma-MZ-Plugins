@@ -1,10 +1,12 @@
-DarkPlasma_EquipStatusBonusTrait:
-  name: DarkPlasma_EquipStatusBonusTrait
+DarkPlasma_EquipTypeStatusBonusTrait:
+  name: DarkPlasma_EquipTypeStatusBonusTrait
   year: 2022
   license: MIT
   histories:
     - date: 2022/10/22
-      version: 1.0.0
+      version: 2.0.0
+      description: 'プラグイン名を変更'
+    - version: 1.0.0
       description: '公開'
 
   locates:

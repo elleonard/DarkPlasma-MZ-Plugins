@@ -1,13 +1,13 @@
-/// <reference path="./EquipStatusBonusTrait.d.ts" />
+/// <reference path="./EquipTypeStatusBonusTrait.d.ts" />
 
 import { pluginName } from '../../common/pluginName';
 import { hasTraits } from '../../common/data/hasTraits';
 
 const localTraitIdStart = 1;
-const paramPlusWithWeaponTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart, "武器タイプ能力値");
-const xparamPlusWithWeaponTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 1, "武器タイプ追加能力値");
-const paramPlusWithArmorTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 2, "防具タイプ能力値");
-const xparamPlusWithArmorTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 3, "防具タイプ追加能力値");
+const paramPlusWithWeaponTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart, "武器タイプ能力値");
+const xparamPlusWithWeaponTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 1, "武器タイプ追加能力値");
+const paramPlusWithArmorTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 2, "防具タイプ能力値");
+const xparamPlusWithArmorTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 3, "防具タイプ追加能力値");
 
 const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mrg', 'trg'];
@@ -16,7 +16,7 @@ function dataIdFromTypeIdAndParamId(typeId: number, paramId: number) {
   return typeId * 10 + paramId;
 }
 
-class ParamPlusWithEquipTrait {
+class ParamPlusWithEquipTypeTrait {
   _typeId: number;
   _statusType: string;
   _value: number;
@@ -34,7 +34,7 @@ class ParamPlusWithEquipTrait {
     this._value = value;
   }
 
-  static fromTag(tag: string): ParamPlusWithEquipTrait {
+  static fromTag(tag: string): ParamPlusWithEquipTypeTrait {
     const traitParams = tag.split(':');
     const clazz = this;
     return new clazz(traitParams[0], traitParams[1], Number(traitParams[2]));
@@ -72,27 +72,27 @@ class ParamPlusWithEquipTrait {
   }
 }
 
-class ParamPlusWithWeaponTrait extends ParamPlusWithEquipTrait {
+class ParamPlusWithWeaponTypeTrait extends ParamPlusWithEquipTypeTrait {
   types() {
     return $dataSystem?.weaponTypes || [];
   }
 
   traitId() {
-    return this.isXParam() ? xparamPlusWithWeaponTraitId.id : paramPlusWithWeaponTraitId.id;
+    return this.isXParam() ? xparamPlusWithWeaponTypeTraitId.id : paramPlusWithWeaponTypeTraitId.id;
   }
 }
 
-class ParamPlusWithArmorTrait extends ParamPlusWithEquipTrait {
+class ParamPlusWithArmorTypeTrait extends ParamPlusWithEquipTypeTrait {
   types() {
     return $dataSystem?.armorTypes || [];
   }
 
   traitId() {
-    return this.isXParam() ? xparamPlusWithArmorTraitId.id : paramPlusWithArmorTraitId.id;
+    return this.isXParam() ? xparamPlusWithArmorTypeTraitId.id : paramPlusWithArmorTypeTraitId.id;
   }
 }
 
-function DataManager_EquipStatusBonusTraitMixIn(dataManager: typeof DataManager) {
+function DataManager_EquipTypeStatusBonusTraitMixIn(dataManager: typeof DataManager) {
   dataManager.loadExtraTraits = function () {
     this._databaseFiles.map(database => globalThis[database.name])
       .forEach(database => {
@@ -111,22 +111,22 @@ function DataManager_EquipStatusBonusTraitMixIn(dataManager: typeof DataManager)
       if (data.meta.weaponTypeBonus) {
         String(data.meta.weaponTypeBonus).split('\n')
           .filter(bonus => bonus)
-          .map(bonus => ParamPlusWithWeaponTrait.fromTag(bonus).trait())
+          .map(bonus => ParamPlusWithWeaponTypeTrait.fromTag(bonus).trait())
           .forEach(trait => data.traits.push(trait));
       }
       if (data.meta.armorTypeBonus) {
         String(data.meta.armorTypeBonus).split('\n')
           .filter(bonus => bonus)
-          .map(bonus => ParamPlusWithArmorTrait.fromTag(bonus).trait())
+          .map(bonus => ParamPlusWithArmorTypeTrait.fromTag(bonus).trait())
           .forEach(trait => data.traits.push(trait));
       }
     }
   }
 }
 
-DataManager_EquipStatusBonusTraitMixIn(DataManager);
+DataManager_EquipTypeStatusBonusTraitMixIn(DataManager);
 
-function Scene_Boot_EquipStatusBonusTraitMixIn(sceneBoot: Scene_Boot) {
+function Scene_Boot_EquipTypeStatusBonusTraitMixIn(sceneBoot: Scene_Boot) {
   const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
   sceneBoot.onDatabaseLoaded = function () {
     _onDatabaseLoaded.call(this);
@@ -142,9 +142,9 @@ function Scene_Boot_EquipStatusBonusTraitMixIn(sceneBoot: Scene_Boot) {
   };
 }
 
-Scene_Boot_EquipStatusBonusTraitMixIn(Scene_Boot.prototype);
+Scene_Boot_EquipTypeStatusBonusTraitMixIn(Scene_Boot.prototype);
 
-function Game_Actor_EquipStatusBonusTraitMixIn(gameActor: Game_Actor) {
+function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   const _paramPlus = gameActor.paramPlus;
   gameActor.paramPlus = function (paramId) {
     return _paramPlus.call(this, paramId) + this.paramPlusWithEquipTraits(paramId);
@@ -160,8 +160,8 @@ function Game_Actor_EquipStatusBonusTraitMixIn(gameActor: Game_Actor) {
         ? dataIdFromTypeIdAndParamId(equip.wtypeId, paramId)
         : dataIdFromTypeIdAndParamId(equip.atypeId, paramId);
       const traitId = DataManager.isWeapon(equip)
-        ? paramPlusWithWeaponTraitId.id
-        : paramPlusWithArmorTraitId.id;
+        ? paramPlusWithWeaponTypeTraitId.id
+        : paramPlusWithArmorTypeTraitId.id;
       return result.concat(this.traitsWithId(traitId, dataId));
     }, []);
   };
@@ -181,11 +181,11 @@ function Game_Actor_EquipStatusBonusTraitMixIn(gameActor: Game_Actor) {
         ? dataIdFromTypeIdAndParamId(equip.wtypeId, xparamId)
         : dataIdFromTypeIdAndParamId(equip.atypeId, xparamId);
       const traitId = DataManager.isWeapon(equip)
-        ? xparamPlusWithWeaponTraitId.id
-        : xparamPlusWithArmorTraitId.id;
+        ? xparamPlusWithWeaponTypeTraitId.id
+        : xparamPlusWithArmorTypeTraitId.id;
       return result.concat(this.traitsWithId(traitId, dataId));
     }, []);
   }
 }
 
-Game_Actor_EquipStatusBonusTraitMixIn(Game_Actor.prototype);
+Game_Actor_EquipTypeStatusBonusTraitMixIn(Game_Actor.prototype);
