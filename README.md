@@ -18,3 +18,4 @@ RPGツクールMZのプラグイン管理から読み込んでください
 ## 修正したい方へ
 
 [CONTRIBUTING.md](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/master/CONTRIBUTING.md) をお読みください。
+
