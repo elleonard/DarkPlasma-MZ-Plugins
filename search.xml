@@ -4,6 +4,58 @@
   
     
     <entry>
+      <title>装備種別によるステータスボーナス特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/10/22/equip-type-status-bonus-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/10/22/equip-type-status-bonus-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、指定した武器タイプ・防具タイプを装備している際に指定した能力値または追加能力値を増減する特徴を追加します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><p>リード9君は武器タイプ剣を装備している場合に攻撃力+10、命中率+5％のボーナスを得ます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EquipTypeStatusBonusTrait.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 装備 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>全てのセーブデータで共有するスイッチ・変数を指定する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/10/22/shared-switch-variable/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/10/22/shared-switch-variable/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>全てのセーブデータで共有するスイッチ・変数を指定できます。<br>指定した範囲のスイッチ・変数を共有セーブデータに保存し、ニューゲーム開始時やセーブデータのロード時に読み込みます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> システム </tag>
+            
+            <tag> セーブデータ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>シンボルエンカウントにおける先制・不意打ち制御</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/09/25/surprise-control-with-symbol-encounter/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/09/25/surprise-control-with-symbol-encounter/</url>
