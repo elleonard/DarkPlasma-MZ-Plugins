@@ -37,13 +37,27 @@ declare var $plugins: MZ.Plugin[];
 /**
  * The static class that manages the database and game objects.
  */
+type databaseNames = "$dataActors" |
+"$dataClasses" |
+"$dataSkills" |
+"$dataItems" |
+"$dataWeapons" |
+"$dataArmors" |
+"$dataEnemies" |
+"$dataTroops" |
+"$dataStates" |
+"$dataAnimations" |
+"$dataTilesets" |
+"$dataCommonEvents" |
+"$dataSystem" |
+"$dataMapInfos";
 declare class DataManager {
   private constructor();
 
   public static _globalInfo: DataManager.SaveFileInfo[] | null;
   public static _errors: DataManager.Error[];
 
-  public static _databaseFiles: { name: string; src: string }[];
+  public static _databaseFiles: { name: databaseNames; src: string }[];
 
   public static loadGlobalInfo(): void;
   public static removeInvalidGlobalInfo(): void;

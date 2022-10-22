@@ -1,0 +1,60 @@
+DarkPlasma_EquipStatusBonusTrait:
+  name: DarkPlasma_EquipStatusBonusTrait
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/10/22
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '装備種別によるステータスボーナス特徴'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      アクター/職業/武器/防具/ステートのメモ欄に、
+      指定の形式でメモタグを記述することで
+      特定の武器・防具タイプを装備していたときに
+      有効になるステータスボーナス特徴を追加します。
+
+      特定武器タイプを装備していた場合に有効なステータスボーナス
+      <weaponTypeBonus:[weaponType]:[statusType]:[value]>
+      特定防具タイプを装備していた場合に有効なステータスボーナス
+      <armorTypeBonus:[armorType]:[statusType]:[value]>
+
+      [statusType]:
+        mhp: 最大HP加算
+        mmp: 最大MP加算
+        atk: 攻撃力加算
+        def: 防御力加算
+        mat: 魔法攻撃力加算
+        mdf: 魔法防御力加算
+        agi: 敏捷性加算
+        luk: 運加算
+        hit: 命中率加算
+        eva: 回避率加算
+        cri: 会心率加算
+        cev: 会心回避率加算
+        mev: 魔法回避率加算
+        mrf: 魔法反射率加算
+        cnt: 反撃率加算
+        hrg: HP再生率加算
+        mrg: MP再生率加算
+        trg: TP再生率加算
+
+      記述例: 武器タイプ斧装備時に命中率+5％
+      <weaponTypeBonus:斧:hit:5> 
+
+      記述例: 防具タイプ盾装備時に防御力+10, 回避率+5％
+      <armorTypeBonus:
+        盾:def:10
+        盾:eva:5
+      >
