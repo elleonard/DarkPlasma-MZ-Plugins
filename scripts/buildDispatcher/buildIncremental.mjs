@@ -29,9 +29,13 @@ const configPaths = await Promise.all(configBuildTargets
     ];
   }).flat());
 
+/**
+ * 負荷対策でチャンクに分割して実行する
+ */
 let sliceOffset = 0;
-const chunkSize = 10;
+const chunkSize = 50;
 let chunk = configPaths.slice(sliceOffset, chunkSize);
+await $`echo "build config target:${configPaths.length} chunk size:${chunkSize}"`
 while(chunk.length > 0) {
   await Promise
     .all(chunk.map(globPath => {
@@ -41,14 +45,9 @@ while(chunk.length > 0) {
   chunk = configPaths.slice(sliceOffset, chunkSize + sliceOffset);
 };
 
-console.log("build config done.");
-
 const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   .filter(path => path.startsWith("src/codes"))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
-
-console.log("incremental build targets:");
-buildTargets.forEach(target => console.log(target));
 
 for (let target of buildTargets) {
   const targetPath = `${codePath}/${target}`;
