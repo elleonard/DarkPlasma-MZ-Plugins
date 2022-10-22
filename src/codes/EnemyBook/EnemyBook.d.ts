@@ -56,6 +56,9 @@ declare interface Window_EnemyBookStatus extends Window_Base {
   stateRate(stateId: number): number;
   drawNoEffectElementsAndStates(x: number, y: number, width: number): void;
   drawNoEffectsLabel(x: number, y: number, width: number): void;
+
+  descriptionX(): number;
+  descriptionY(): number;
 }
 
 declare interface Window_Command {
