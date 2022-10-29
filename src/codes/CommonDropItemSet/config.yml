@@ -1,0 +1,54 @@
+DarkPlasma_CommonDropItemSet:
+  name: DarkPlasma_CommonDropItemSet
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/10/29
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '全戦闘共通でドロップするアイテム・武器・防具'
+  parameters:
+    - param: dropItemSetList
+      text:
+        ja: ドロップセット一覧
+      type: DropItemSet[]
+      default: []
+  commands: []
+  structures:
+    DropItemSet:
+      - param: dropRate
+        text:
+          ja: ドロップ確率（％）
+        type: number
+        default: 10
+      - param: items
+        text:
+          ja: アイテム
+        type: item[]
+        default: []
+      - param: weapons
+        text:
+          ja: 武器
+        type: weapon[]
+        default: []
+      - param: armors
+        text:
+          ja: 防具
+        type: armor[]
+        default: []
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      全ての戦闘において共通でドロップするアイテム・武器・防具のセットを設定します。
+      ドロップセットはそれぞれ独立してドロップ確率判定を行います。
+      例えば、ドロップセット1に確率10％、セット2に確率20％を設定した場合、
+      セット1のアイテム・武器・防具のうちいずれか1つが10％
+      セット2のアイテム・武器・防具のうちいずれか1つが20％でドロップします。
+      （両方ドロップするケースもあります）
