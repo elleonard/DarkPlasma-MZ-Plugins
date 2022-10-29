@@ -1,9 +1,10 @@
-// DarkPlasma_EquipTypeStatusBonusTrait 2.1.0
+// DarkPlasma_EquipTypeStatusBonusTrait 2.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/29 2.2.0 特徴ID定数を追加
  * 2022/10/22 2.1.0 対象装備差し替え用のインターフェース追加
  *            2.0.0 プラグイン名を変更
  *            1.0.0 公開
@@ -21,7 +22,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 2.1.0
+ * version: 2.2.0
  * アクター/職業/武器/防具/ステートのメモ欄に、
  * 指定の形式でメモタグを記述することで
  * 特定の武器・防具タイプを装備していたときに
@@ -95,6 +96,10 @@
     localTraitIdStart + 3,
     '防具タイプ追加能力値'
   );
+  Game_Battler.TRAIT_PARAM_PLUS_WITH_WEAPON_TYPE = paramPlusWithWeaponTypeTraitId.id;
+  Game_Battler.TRAIT_XPARAM_PLUS_WITH_WEAPON_TYPE = xparamPlusWithWeaponTypeTraitId.id;
+  Game_Battler.TRAIT_PARAM_PLUS_WITH_ARMOR_TYPE = paramPlusWithArmorTypeTraitId.id;
+  Game_Battler.TRAIT_XPARAM_PLUS_WITH_ARMOR_TYPE = xparamPlusWithArmorTypeTraitId.id;
   const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
   const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mrg', 'trg'];
   function dataIdFromTypeIdAndParamId(typeId, paramId) {
