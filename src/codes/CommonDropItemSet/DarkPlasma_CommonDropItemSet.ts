@@ -13,14 +13,14 @@ function Game_Troop_CommonDropItemSetMixIn(gameTroop: Game_Troop) {
   };
 
   gameTroop.makeCommonDropItems = function () {
-    return settings.dropItemSetList
+    return this.isCommonItemDropSetEnabled() ? settings.dropItemSetList
       .filter((dropItemSet: DropItemSet) => dropItemSet.dropRate > Math.randomInt(100))
       .map((dropItemSet: DropItemSet) => {
         const dropItems: (MZ.Item | MZ.Weapon | MZ.Armor)[] = dropItemSet.items.map<(MZ.Item | MZ.Weapon | MZ.Armor)>(id => $dataItems[id])
           .concat(dropItemSet.weapons.map(id => $dataWeapons[id]))
           .concat(dropItemSet.armors.map(id => $dataArmors[id]));
         return dropItems[Math.randomInt(dropItems.length)];
-      });
+      }) : [];
   };
 }
 

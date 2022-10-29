@@ -4,7 +4,9 @@ DarkPlasma_CommonDropItemSet:
   license: MIT
   histories:
     - date: 2022/10/29
-      version: 1.0.0
+      version: 1.1.0
+      description: '共通ドロップアイテム有効判定の拡張用インターフェース追加'
+    - version: 1.0.0
       description: '公開'
 
   locates:
