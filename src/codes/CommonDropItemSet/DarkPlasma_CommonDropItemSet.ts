@@ -20,7 +20,7 @@ function Game_Troop_CommonDropItemSetMixIn(gameTroop: Game_Troop) {
   };
 
   gameTroop.isCommonItemDropSetEnabled = function () {
-    return true;
+    return !settings.dropOneByOneEnemy;
   };
 
   gameTroop.makeCommonDropItems = function () {
@@ -37,7 +37,7 @@ function Game_Enemy_CommonDropItemSetMixIn(gameEnemy: Game_Enemy) {
   };
 
   gameEnemy.isCommonItemDropSetEnabled = function () {
-    return true;
+    return settings.dropOneByOneEnemy;
   };
 
   gameEnemy.makeCommonDropItems = function () {
