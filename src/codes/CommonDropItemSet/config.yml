@@ -4,7 +4,9 @@ DarkPlasma_CommonDropItemSet:
   license: MIT
   histories:
     - date: 2022/10/29
-      version: 1.1.0
+      version: 1.2.0
+      description: '敵ごとにドロップする設定を追加'
+    - version: 1.1.0
       description: '共通ドロップアイテム有効判定の拡張用インターフェース追加'
     - version: 1.0.0
       description: '公開'
@@ -19,6 +21,13 @@ DarkPlasma_CommonDropItemSet:
         ja: ドロップセット一覧
       type: DropItemSet[]
       default: []
+    - param: dropOneByOneEnemy
+      text:
+        ja: 敵ごとにドロップするか
+      desc:
+        ja: ONにするとドロップ判定を戦闘ごとではなく、敵ごとに行います。
+      type: boolean
+      default: false
   commands: []
   structures:
     DropItemSet:
