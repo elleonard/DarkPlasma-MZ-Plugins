@@ -1,10 +1,11 @@
-// DarkPlasma_CommonDropItemSet 1.2.0
+// DarkPlasma_CommonDropItemSet 1.2.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/10/29 1.2.0 敵ごとにドロップする設定を追加
+ * 2022/10/29 1.2.1 敵ごとにドロップする設定が効かない不具合を修正
+ *            1.2.0 敵ごとにドロップする設定を追加
  *            1.1.0 共通ドロップアイテム有効判定の拡張用インターフェース追加
  *            1.0.0 公開
  */
@@ -29,7 +30,7 @@
  * @default false
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 全ての戦闘において共通でドロップするアイテム・武器・防具のセットを設定します。
  * ドロップセットはそれぞれ独立してドロップ確率判定を行います。
  * 例えば、ドロップセット1に確率10％、セット2に確率20％を設定した場合、
@@ -107,7 +108,7 @@
       return _makeDropItems.call(this).concat(this.makeCommonDropItems());
     };
     gameTroop.isCommonItemDropSetEnabled = function () {
-      return true;
+      return !settings.dropOneByOneEnemy;
     };
     gameTroop.makeCommonDropItems = function () {
       return this.isCommonItemDropSetEnabled() ? makeDropItems() : [];
@@ -120,7 +121,7 @@
       return _makeDropItems.call(this).concat(this.makeCommonDropItems());
     };
     gameEnemy.isCommonItemDropSetEnabled = function () {
-      return true;
+      return settings.dropOneByOneEnemy;
     };
     gameEnemy.makeCommonDropItems = function () {
       return this.isCommonItemDropSetEnabled() ? makeDropItems() : [];
