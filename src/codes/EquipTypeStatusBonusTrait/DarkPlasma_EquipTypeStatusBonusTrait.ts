@@ -9,6 +9,11 @@ const xparamPlusWithWeaponTypeTraitId = uniqueTraitIdCache.allocate(pluginName, 
 const paramPlusWithArmorTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 2, "防具タイプ能力値");
 const xparamPlusWithArmorTypeTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitIdStart + 3, "防具タイプ追加能力値");
 
+Game_Battler.TRAIT_PARAM_PLUS_WITH_WEAPON_TYPE = paramPlusWithWeaponTypeTraitId.id;
+Game_Battler.TRAIT_XPARAM_PLUS_WITH_WEAPON_TYPE = xparamPlusWithWeaponTypeTraitId.id;
+Game_Battler.TRAIT_PARAM_PLUS_WITH_ARMOR_TYPE = paramPlusWithArmorTypeTraitId.id;
+Game_Battler.TRAIT_XPARAM_PLUS_WITH_ARMOR_TYPE = xparamPlusWithArmorTypeTraitId.id;
+
 const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mrg', 'trg'];
 
