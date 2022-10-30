@@ -42,6 +42,42 @@ function Game_Actor_HighlightNewSkllMixIn(gameActor: Game_Actor) {
 Game_Actor_HighlightNewSkllMixIn(Game_Actor.prototype);
 
 function Window_SkillList_HighlightNewSkillMixIn(windowClass: Window_SkillList) {
+  const _initialize = windowClass.initialize;
+  windowClass.initialize = function (rect) {
+    _initialize.call(this, rect);
+    this._touchRequestedSkill = null;
+  };
+
+  windowClass.requestTouch = function (skill) {
+    this.processTouchRequest();
+    if (this.isNewSkill(skill)) {
+      this._touchRequestedSkill = {
+        skill: skill,
+        actor: this._actor!
+      };
+    }
+  };
+
+  windowClass.processTouchRequest = function () {
+    if (this._touchRequestedSkill) {
+      this._touchRequestedSkill.actor.touchSkill(this._touchRequestedSkill.skill);
+      this._touchRequestedSkill = null;
+      this.refresh();
+    }
+  };
+
+  const _processOk = windowClass.processOk;
+  windowClass.processOk = function () {
+    _processOk.call(this);
+    this.processTouchRequest();
+  };
+
+  const _processCancel = windowClass.processCancel;
+  windowClass.processCancel = function () {
+    _processCancel.call(this);
+    this.processTouchRequest();
+  };
+
   const _drawItemName = windowClass.drawItemName;
   windowClass.drawItemName = function (item, x, y, width) {
     if (this.isNewSkill(item)) {
@@ -68,10 +104,7 @@ function Window_SkillList_HighlightNewSkillMixIn(windowClass: Window_SkillList) 
   windowClass.select = function (index) {
     _select.call(this, index);
     const skill = this.item();
-    if (this.isNewSkill(skill)) {
-      this._actor?.touchSkill(skill);
-      this.refresh();
-    }
+    this.requestTouch(skill);
   };
 }
 
