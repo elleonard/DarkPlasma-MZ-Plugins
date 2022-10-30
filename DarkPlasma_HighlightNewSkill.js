@@ -1,10 +1,11 @@
-// DarkPlasma_HighlightNewSkill 1.0.0
+// DarkPlasma_HighlightNewSkill 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/10/30 1.0.0 公開
+ * 2022/10/30 1.1.0 カーソル合わせた後、1操作待って強調解除するよう変更
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -28,7 +29,7 @@
  * @default true
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * スキル一覧で、新しく習得したスキルを強調表示します。
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
  *
@@ -85,6 +86,37 @@
   }
   Game_Actor_HighlightNewSkllMixIn(Game_Actor.prototype);
   function Window_SkillList_HighlightNewSkillMixIn(windowClass) {
+    const _initialize = windowClass.initialize;
+    windowClass.initialize = function (rect) {
+      _initialize.call(this, rect);
+      this._touchRequestedSkill = null;
+    };
+    windowClass.requestTouch = function (skill) {
+      this.processTouchRequest();
+      if (this.isNewSkill(skill)) {
+        this._touchRequestedSkill = {
+          skill: skill,
+          actor: this._actor,
+        };
+      }
+    };
+    windowClass.processTouchRequest = function () {
+      if (this._touchRequestedSkill) {
+        this._touchRequestedSkill.actor.touchSkill(this._touchRequestedSkill.skill);
+        this._touchRequestedSkill = null;
+        this.refresh();
+      }
+    };
+    const _processOk = windowClass.processOk;
+    windowClass.processOk = function () {
+      _processOk.call(this);
+      this.processTouchRequest();
+    };
+    const _processCancel = windowClass.processCancel;
+    windowClass.processCancel = function () {
+      _processCancel.call(this);
+      this.processTouchRequest();
+    };
     const _drawItemName = windowClass.drawItemName;
     windowClass.drawItemName = function (item, x, y, width) {
       if (this.isNewSkill(item)) {
@@ -106,13 +138,9 @@
     };
     const _select = windowClass.select;
     windowClass.select = function (index) {
-      var _a;
       _select.call(this, index);
       const skill = this.item();
-      if (this.isNewSkill(skill)) {
-        (_a = this._actor) === null || _a === void 0 ? void 0 : _a.touchSkill(skill);
-        this.refresh();
-      }
+      this.requestTouch(skill);
     };
   }
   Window_SkillList_HighlightNewSkillMixIn(Window_SkillList.prototype);
