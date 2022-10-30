@@ -1,0 +1,41 @@
+DarkPlasma_HighlightNewSkill:
+  name: DarkPlasma_HighlightNewSkill
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/10/30
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '新しく習得したスキルを強調表示する'
+  parameters:
+    - param: newSkillColor
+      text:
+        ja: スキル色
+      desc:
+        ja: 新しく習得したスキルの色番号を指定します。
+      type: number
+      default: 2
+    - param: highlightFirstSkills
+      text:
+        ja: 初期スキル強調
+      desc:
+        ja: 初期スキルをゲーム開始時に新規習得スキルとして強調するかどうか。
+      type: boolean
+      default: true
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキル一覧で、新しく習得したスキルを強調表示します。
+      強調表示は一度カーソルを合わせると元の色に戻ります。
+
+      本プラグインはセーブデータに以下を追加します。
+      - アクターごとの新規習得スキルID一覧

@@ -21,6 +21,6 @@ declare interface Window_ItemList {
   _newArmorsForSort: MZ.Armor[];
 
   drawNewItemName(item: MZ.Item|MZ.Weapon|MZ.Armor, x: number, y: number, width: number): void;
-  isNewItem(item: DataManager.Item|null): item is MZ.Item|MZ.Weapon|MZ.Armor;
+  isNewItem(item: DataManager.DrawableItem|null): item is MZ.Item|MZ.Weapon|MZ.Armor;
   isNewItemForSort(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
 }
