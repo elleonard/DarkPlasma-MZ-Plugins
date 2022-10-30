@@ -133,11 +133,39 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
   const _initialize = windowClass.initialize;
   windowClass.initialize = function (rect) {
     _initialize.call(this, rect);
+    this._touchRequestedItem = null;
     if (settings.newItemToTop) {
       this._newItemsForSort = $gameParty.newItemIds().map(itemId => $dataItems[itemId]);
       this._newWeaponsForSort = $gameParty.newWeaponIds().map(weaponId => $dataWeapons[weaponId]);
       this._newArmorsForSort = $gameParty.newArmorIds().map(armorId => $dataArmors[armorId]);
     }
+  };
+
+  windowClass.requestTouch = function (item) {
+    this.processTouchRequest();
+    if (item && this.isNewItem(item)) {
+      this._touchRequestedItem = item;
+    }
+  };
+
+  windowClass.processTouchRequest = function () {
+    if (this._touchRequestedItem) {
+      $gameParty.touchItem(this._touchRequestedItem);
+      this._touchRequestedItem = null;
+      this.refresh();
+    }
+  };
+
+  const _processOk = windowClass.processOk;
+  windowClass.processOk = function () {
+    _processOk.call(this);
+    this.processTouchRequest();
+  };
+
+  const _processCancel = windowClass.processCancel;
+  windowClass.processCancel = function () {
+    _processCancel.call(this);
+    this.processTouchRequest();
   };
 
   const _drawItemName = windowClass.drawItemName;
@@ -177,11 +205,7 @@ function Window_ItemList_HighlightNewItemMixIn(windowClass: Window_ItemList) {
   const _select = windowClass.select;
   windowClass.select = function (this: Window_ItemList, index) {
     _select.call(this, index);
-    const item = this.item();
-    if (this.isNewItem(item)) {
-      $gameParty.touchItem(item);
-      this.refresh();
-    }
+    this.requestTouch(this.item());
   };
 
   windowClass.isNewItemForSort = function (this: Window_ItemList, item: MZ.Item | MZ.Weapon | MZ.Armor): boolean {

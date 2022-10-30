@@ -19,6 +19,10 @@ declare interface Window_ItemList {
   _newItemsForSort: MZ.Item[];
   _newWeaponsForSort: MZ.Weapon[];
   _newArmorsForSort: MZ.Armor[];
+  _touchRequestedItem: MZ.Item|MZ.Weapon|MZ.Armor|null;
+
+  requestTouch(item: MZ.Item|MZ.Weapon|MZ.Armor|null): void;
+  processTouchRequest(): void;
 
   drawNewItemName(item: MZ.Item|MZ.Weapon|MZ.Armor, x: number, y: number, width: number): void;
   isNewItem(item: DataManager.DrawableItem|null): item is MZ.Item|MZ.Weapon|MZ.Armor;

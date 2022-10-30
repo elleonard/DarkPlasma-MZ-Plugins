@@ -3,6 +3,9 @@ DarkPlasma_HighlightNewItem:
   year: 2021
   license: MIT
   histories:
+    - date: 2022/10/30
+      version: 1.2.0
+      description: 'カーソル合わせた後、1操作待って強調解除するよう変更'
     - date: 2022/08/23
       version: 1.1.1
       description: 'OrderEquipとの順序関係を明示'
