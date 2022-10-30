@@ -1,9 +1,10 @@
-// DarkPlasma_HighlightNewItem 1.1.1
+// DarkPlasma_HighlightNewItem 1.2.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/10/30 1.2.0 カーソル合わせた後、1操作待って強調解除するよう変更
  * 2022/08/23 1.1.1 OrderEquipとの順序関係を明示
  * 2022/08/21 1.1.0 新規入手アイテムを最上部に表示する設定を追加
  *            1.0.6 typescript移行
@@ -39,7 +40,7 @@
  * @default false
  *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  * メニューのアイテム一覧で、新しく入手したアイテムを強調表示します。
  *
  * 強調表示は一度カーソルを合わせると元の色に戻ります。
@@ -185,11 +186,35 @@
     const _initialize = windowClass.initialize;
     windowClass.initialize = function (rect) {
       _initialize.call(this, rect);
+      this._touchRequestedItem = null;
       if (settings.newItemToTop) {
         this._newItemsForSort = $gameParty.newItemIds().map((itemId) => $dataItems[itemId]);
         this._newWeaponsForSort = $gameParty.newWeaponIds().map((weaponId) => $dataWeapons[weaponId]);
         this._newArmorsForSort = $gameParty.newArmorIds().map((armorId) => $dataArmors[armorId]);
       }
+    };
+    windowClass.requestTouch = function (item) {
+      this.processTouchRequest();
+      if (item && this.isNewItem(item)) {
+        this._touchRequestedItem = item;
+      }
+    };
+    windowClass.processTouchRequest = function () {
+      if (this._touchRequestedItem) {
+        $gameParty.touchItem(this._touchRequestedItem);
+        this._touchRequestedItem = null;
+        this.refresh();
+      }
+    };
+    const _processOk = windowClass.processOk;
+    windowClass.processOk = function () {
+      _processOk.call(this);
+      this.processTouchRequest();
+    };
+    const _processCancel = windowClass.processCancel;
+    windowClass.processCancel = function () {
+      _processCancel.call(this);
+      this.processTouchRequest();
     };
     const _drawItemName = windowClass.drawItemName;
     windowClass.drawItemName = function (item, x, y, width) {
@@ -225,11 +250,7 @@
     const _select = windowClass.select;
     windowClass.select = function (index) {
       _select.call(this, index);
-      const item = this.item();
-      if (this.isNewItem(item)) {
-        $gameParty.touchItem(item);
-        this.refresh();
-      }
+      this.requestTouch(this.item());
     };
     windowClass.isNewItemForSort = function (item) {
       return DataManager.isItem(item)
