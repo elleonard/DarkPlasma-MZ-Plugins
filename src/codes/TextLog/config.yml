@@ -1,0 +1,159 @@
+DarkPlasma_TextLog:
+  name: DarkPlasma_TextLog
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/11/02
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'イベントテキストのログを保持・表示する'
+  parameters:
+    - param: disableLoggingSwitch
+      text:
+        ja: ログ記録無効スイッチ
+      desc:
+        ja: 設定したスイッチがONの間はログを残しません。0の場合、常にログを残します。
+      type: switch
+      default: 0
+    - param: openLogKeys
+      text:
+        ja: ログ開閉ボタン
+      desc:
+        ja: テキストログウィンドウを開閉するためのボタンを設定します。
+      type: select[]
+      default: 
+        - pageup
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+    - param: disableLogWindowSwitch
+      text:
+        ja: ログウィンドウ無効スイッチ
+      desc:
+        ja: 設定したスイッチがONの間はログウィンドウを開けません。0の場合、常に開けます。
+      type: switch
+      default: 0
+    - param: lineSpacing
+      text:
+        ja: ログの行間
+      desc:
+        ja: ログの行間を設定します。
+      type: number
+      default: 0
+    - param: messageSpacing
+      text:
+        ja: メッセージ間隔
+      desc:
+        ja: ログのメッセージの間隔を設定します。メッセージはイベントコマンド単位でひとかたまりです。
+      type: number
+      default: 0
+    - param: logSplitter
+      text:
+        ja: ログ区切り線
+      desc:
+        ja: イベントの切れ目などに挟むための区切り線を設定します。
+      type: string
+      default: '-------------------------------------------------------'
+    - param: autoSplit
+      text:
+        ja: 自動区切り線
+      desc:
+        ja: ONの場合、バトル、コモン、並列イベントを除くイベント終了時に区切り線を自動で入れます。
+      type: boolean
+      default: true
+    - param: choiceFormat
+      text:
+        ja: 選択肢フォーマット
+      desc:
+        ja: ログに表示する選択肢のフォーマットを設定します。{choice}は選んだ選択肢に変換されます。
+      type: string
+      default: 選択肢:{choice}
+    - param: choiceColor
+      text:
+        ja: 選択肢色
+      desc:
+        ja: ログに表示する選択肢の色を設定します。
+      type: number
+      default: 17
+    - param: choiceCancelText
+      text:
+        ja: キャンセルログ
+      desc:
+        ja: 選択肢をキャンセルした際に記録する内容を設定します。
+      type: string
+      default: キャンセル
+    - param: smoothBackFromLog
+      text:
+        ja: テキスト再表示なし
+      desc:
+        ja: ONの場合、ログシーンから戻った際にテキストを再度表示し直しません。
+      type: boolean
+      default: true
+    - param: backgroundImage
+      text:
+        ja: 背景画像
+      desc:
+        ja: ログシーンに表示する背景画像を設定します。
+      type: file
+      dir: img
+    - param: showLogWindowFrame
+      text:
+        ja: ウィンドウ枠表示
+      desc:
+        ja: ONの場合、ログウィンドウ枠を表示します。
+      type: boolean
+      default: true
+    - param: escapeCharacterCodes
+      text:
+        ja: パラメータを除外したい制御文字
+      desc:
+        ja: \XXX[YYY]の形式でYYYをログから消したい場合、ここにXXXを追加します。
+      type: string[]
+      default: []
+    - param: scrollSpeed
+      text:
+        ja: スクロール速さ
+      desc:
+        ja: 上下キーによるスクロールの速さを設定します。大きいほど速くなります。
+      type: number
+      default: 1
+      min: 1
+    - param: scrollSpeedHigh
+      text:
+        ja: 高速スクロール速さ
+      desc:
+        ja: PageUp/PageDownキーによるスクロールの速さを設定します。
+      type: number
+      default: 10
+      min: 1
+  commands:
+    - command: showTextLog
+      text:
+        ja: ログウィンドウを開く
+    - command: insertLogSplitter
+      text:
+        ja: ログに区切り線を追加する
+    - command: insertTextLog
+      text:
+        ja: ログに指定したテキストを追加する
+      args:
+        - arg: text
+          text:
+            ja: テキスト
+          type: string
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      イベントで表示されたテキストをログとして保持、表示します。
+      ログはセーブデータには保持されません。

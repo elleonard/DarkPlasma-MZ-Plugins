@@ -99,7 +99,7 @@ declare class Window_Base extends Window {
 
   public makeFontBigger(): void;
   public makeFontSmaller(): void;
-  public calcTextHeight(textState: Window_Base.TextState, all: boolean): number;
+  public calcTextHeight(textState: Window_Base.TextState): number;
 
   public maxFontSizeInLine(line: string): number;
 
@@ -131,6 +131,9 @@ declare namespace Window_Base {
     left: number;
     height: number;
     buffer: string;
+    drawing: boolean;
+    outputWidth: number;
+    outputHeight: number;
   }
 }
 
