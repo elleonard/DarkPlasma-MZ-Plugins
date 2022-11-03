@@ -3,6 +3,11 @@ DarkPlasma_TextLog:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/11/03
+      version: 1.1.0
+      description: '開閉キーのpageup/pagedownを非推奨化'
+    - description: '開閉キーでログウィンドウを閉じられない不具合を修正'
+    - description: '決定キーでもログウィンドウを閉じられるように変更'
     - date: 2022/11/02
       version: 1.0.0
       description: '公開'
@@ -26,13 +31,15 @@ DarkPlasma_TextLog:
         ja: テキストログウィンドウを開閉するためのボタンを設定します。
       type: select[]
       default: 
-        - pageup
+        - tab
       options:
-        - name: pageup
-        - name: pagedown
         - name: shift
         - name: control
         - name: tab
+        - name: pageup (非推奨)
+          value: pageup
+        - name: pagedown (非推奨)
+          value: pagedown
     - param: disableLogWindowSwitch
       text:
         ja: ログウィンドウ無効スイッチ
@@ -157,3 +164,6 @@ DarkPlasma_TextLog:
     ja: |
       イベントで表示されたテキストをログとして保持、表示します。
       ログはセーブデータには保持されません。
+
+      マップ上、イベント中にログ開閉キーを押すことでログウィンドウを開きます。
+      ログ開閉キー、決定キー、キャンセルキーのいずれかでログウィンドウを閉じます。

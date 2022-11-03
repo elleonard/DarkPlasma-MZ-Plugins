@@ -467,6 +467,10 @@ class Window_TextLog extends Window_Selectable {
     this.smoothScrollDown(settings.scrollSpeedHigh);
   }
 
+  public isCancelTriggered(): boolean {
+    return super.isCancelTriggered() || this.isOkEnabled() || settings.openLogKeys.some((key: string) => Input.isTriggered(key));
+  }
+
   public paint(): void {
     if (this.contents) {
       this.contents.clear();
