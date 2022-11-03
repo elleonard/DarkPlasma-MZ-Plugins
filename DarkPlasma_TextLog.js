@@ -1,9 +1,12 @@
-// DarkPlasma_TextLog 1.0.0
+// DarkPlasma_TextLog 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/11/03 1.1.0 開閉キーのpageup/pagedownを非推奨化
+ *                  開閉キーでログウィンドウを閉じられない不具合を修正
+ *                  決定キーでもログウィンドウを閉じられるように変更
  * 2022/11/02 1.0.0 公開
  */
 
@@ -25,12 +28,14 @@
  * @desc テキストログウィンドウを開閉するためのボタンを設定します。
  * @text ログ開閉ボタン
  * @type select[]
- * @option pageup
- * @option pagedown
  * @option shift
  * @option control
  * @option tab
- * @default ["pageup"]
+ * @option pageup (非推奨)
+ * @value pageup
+ * @option pagedown (非推奨)
+ * @value pagedown
+ * @default ["tab"]
  *
  * @param disableLogWindowSwitch
  * @desc 設定したスイッチがONの間はログウィンドウを開けません。0の場合、常に開けます。
@@ -131,9 +136,12 @@
  * @type string
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
+ *
+ * マップ上、イベント中にログ開閉キーを押すことでログウィンドウを開きます。
+ * ログ開閉キー、決定キー、キャンセルキーのいずれかでログウィンドウを閉じます。
  */
 
 (() => {
@@ -161,7 +169,7 @@
 
   const settings = {
     disableLoggingSwitch: Number(pluginParameters.disableLoggingSwitch || 0),
-    openLogKeys: JSON.parse(pluginParameters.openLogKeys || '["pageup"]').map((e) => {
+    openLogKeys: JSON.parse(pluginParameters.openLogKeys || '["tab"]').map((e) => {
       return String(e || '');
     }),
     disableLogWindowSwitch: Number(pluginParameters.disableLogWindowSwitch || 0),
@@ -566,6 +574,11 @@
     }
     cursorPagedown() {
       this.smoothScrollDown(settings.scrollSpeedHigh);
+    }
+    isCancelTriggered() {
+      return (
+        super.isCancelTriggered() || this.isOkEnabled() || settings.openLogKeys.some((key) => Input.isTriggered(key))
+      );
     }
     paint() {
       if (this.contents) {
