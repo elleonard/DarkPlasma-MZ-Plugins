@@ -6,6 +6,7 @@ date: 2022-10-22 18:19:07
 tags:
   - システム
   - セーブデータ
+  - MV版あり
 ---
 
 # 概要
@@ -15,5 +16,6 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js)
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js)
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js)
 Rawボタンを右クリックして対象をファイルに保存してください。

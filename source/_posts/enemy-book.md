@@ -6,6 +6,7 @@ date: 2022-01-01 15:37:44
 tags:
   - データベース
   - 敵キャラ
+  - MV版あり
 ---
 
 # 概要
@@ -33,7 +34,8 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js)
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js)
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_EnemyBook.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
 
 # 類似プラグイン
