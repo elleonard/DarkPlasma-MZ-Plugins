@@ -24,6 +24,8 @@
             
             <tag> イベント </tag>
             
+            <tag> MV版あり </tag>
+            
         </tags>
       
     </entry>
@@ -85,7 +87,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/10/22/shared-switch-variable/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/10/22/shared-switch-variable/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>全てのセーブデータで共有するスイッチ・変数を指定できます。<br>指定した範囲のスイッチ・変数を共有セーブデータに保存し、ニューゲーム開始時やセーブデータのロード時に読み込みます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>全てのセーブデータで共有するスイッチ・変数を指定できます。<br>指定した範囲のスイッチ・変数を共有セーブデータに保存し、ニューゲーム開始時やセーブデータのロード時に読み込みます。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SharedSwitchVariable.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
       
       
       <categories>
@@ -100,6 +102,8 @@
             <tag> システム </tag>
             
             <tag> セーブデータ </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -188,6 +192,8 @@
             
             <tag> 強化・弱体 </tag>
             
+            <tag> MV版あり </tag>
+            
         </tags>
       
     </entry>
@@ -217,6 +223,8 @@
             
             <tag> 強化・弱体 </tag>
             
+            <tag> MV版あり </tag>
+            
         </tags>
       
     </entry>
@@ -228,17 +236,21 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/08/07/master-volume/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マスターボリューム設定オプションを追加します。</p><p>本プラグインはゲームアツマールでは使用できません。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="master-volume.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MasterVolume.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マスターボリューム設定オプションを追加します。</p><p>本プラグインはゲームアツマールでは使用できません。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="master-volume.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MasterVolume.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><h2 id="MasterVolumeOptions-トリアコンタンさん"><a href="#MasterVolumeOptions-トリアコンタンさん" class="headerlink" title="MasterVolumeOptions(トリアコンタンさん)"></a><a href="https://github.com/triacontane/RPGMakerMV/blob/master/MasterVolumeOption.js">MasterVolumeOptions</a>(トリアコンタンさん)</h2><p>MVで利用可能な同一の機能を持つプラグインです。</p>]]></content>
       
       
       <categories>
           
           <category> プラグイン解説 </category>
           
-          <category> オプション </category>
-          
       </categories>
       
+      
+        <tags>
+            
+            <tag> オプション </tag>
+            
+        </tags>
       
     </entry>
     
@@ -364,6 +376,8 @@
         <tags>
             
             <tag> 装備 </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -552,6 +566,8 @@
             
             <tag> スキル </tag>
             
+            <tag> MV版あり </tag>
+            
         </tags>
       
     </entry>
@@ -578,6 +594,8 @@
             <tag> 戦闘 </tag>
             
             <tag> スキル </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -633,6 +651,8 @@
             
             <tag> テキスト </tag>
             
+            <tag> MV版あり </tag>
+            
         </tags>
       
     </entry>
@@ -657,6 +677,8 @@
         <tags>
             
             <tag> アイテム </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -696,7 +718,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/01/01/enemy-book/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/01/01/enemy-book/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>遭遇時に敵キャラを登録する図鑑シーンを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="enemy-book.png" alt="使用例" title="使用例"></p><h2 id="図鑑を開く方法"><a href="#図鑑を開く方法" class="headerlink" title="図鑑を開く方法"></a>図鑑を開く方法</h2><p>マップ上であれば、プラグインコマンドで開くことができます。<br>戦闘中にはワンボタンで開くことができます。</p><h2 id="特徴"><a href="#特徴" class="headerlink" title="特徴"></a>特徴</h2><p>本プラグインには、下記機能があります。</p><ul><li>戦闘中に開いた場合、出現している敵について<ul><li>強調表示できる（目次での色を変える）</li><li>ページ切り替えキーで行き来できる</li><li>最上部にまとめて表示できる</li></ul></li><li><a href="/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/" title="DarkPlasma_OrderIdAlias">DarkPlasma_OrderIdAlias</a>で表示順を設定できる</li></ul><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><ul><li><a href="https://github.com/ebinonote/ABMZ_EnemyBook">ABMZ_EnemyBook</a></li><li><a href="https://github.com/nuun888/MZ/blob/master/README/EnemyBook.md">NUUN_EnemyBook</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>遭遇時に敵キャラを登録する図鑑シーンを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="enemy-book.png" alt="使用例" title="使用例"></p><h2 id="図鑑を開く方法"><a href="#図鑑を開く方法" class="headerlink" title="図鑑を開く方法"></a>図鑑を開く方法</h2><p>マップ上であれば、プラグインコマンドで開くことができます。<br>戦闘中にはワンボタンで開くことができます。</p><h2 id="特徴"><a href="#特徴" class="headerlink" title="特徴"></a>特徴</h2><p>本プラグインには、下記機能があります。</p><ul><li>戦闘中に開いた場合、出現している敵について<ul><li>強調表示できる（目次での色を変える）</li><li>ページ切り替えキーで行き来できる</li><li>最上部にまとめて表示できる</li></ul></li><li><a href="/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/" title="DarkPlasma_OrderIdAlias">DarkPlasma_OrderIdAlias</a>で表示順を設定できる</li></ul><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_EnemyBook.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><ul><li><a href="https://github.com/ebinonote/ABMZ_EnemyBook">ABMZ_EnemyBook</a></li><li><a href="https://github.com/nuun888/MZ/blob/master/README/EnemyBook.md">NUUN_EnemyBook</a></li></ul>]]></content>
       
       
       <categories>
@@ -711,6 +733,8 @@
             <tag> データベース </tag>
             
             <tag> 敵キャラ </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -740,6 +764,8 @@
             <tag> スキル </tag>
             
             <tag> アイテム </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -828,6 +854,8 @@
         <tags>
             
             <tag> テキスト </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
