@@ -1,0 +1,94 @@
+DarkPlasma_MoveToPoint:
+  name: DarkPlasma_MoveToPoint
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/11/05
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '指定座標にプレイヤーやイベントを移動させる'
+  parameters: []
+  commands:
+    - command: movePlayerTo
+      text:
+        ja: プレイヤーを移動する
+      args:
+        - arg: x
+          text:
+            ja: X座標
+          type: number
+        - arg: y
+          text:
+            ja: Y座標
+          type: number
+        - arg: skip
+          text:
+            ja: 移動できない場合飛ばす
+          type: boolean
+          default: false
+        - arg: wait
+          text:
+            ja: 完了までウェイトする
+          type: boolean
+          default: true
+    - command: moveThisTo
+      text:
+        ja: このイベントを移動する
+      args:
+        - arg: x
+          text:
+            ja: X座標
+          type: number
+        - arg: y
+          text:
+            ja: Y座標
+          type: number
+        - arg: skip
+          text:
+            ja: 移動できない場合飛ばす
+          type: boolean
+          default: false
+        - arg: wait
+          text:
+            ja: 完了までウェイトする
+          type: boolean
+          default: true
+    - command: moveEventTo
+      text:
+        ja: イベントを移動する
+      args:
+        - arg: eventId
+          text:
+            ja: イベントID
+          type: number
+          min: 1
+        - arg: x
+          text:
+            ja: X座標
+          type: number
+        - arg: y
+          text:
+            ja: Y座標
+          type: number
+        - arg: skip
+          text:
+            ja: 移動できない場合飛ばす
+          type: boolean
+          default: false
+        - arg: wait
+          text:
+            ja: 完了までウェイトする
+          type: boolean
+          default: true
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      指定座標にプレイヤー、イベントを移動させるプラグインコマンドを提供します。
