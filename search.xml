@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>パーティの先頭（リーダー）を変更する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2022/11/06/change-party-leader/"/>
+      <url>/DarkPlasma-MZ-Plugins/2022/11/06/change-party-leader/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>先頭のパーティメンバーを、現在パーティメンバーにいるアクターに入れ替えるプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangePartyLeader.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> パーティ </tag>
+            
+            <tag> 並び替え </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>指定座標にプレイヤーやイベントを移動させる</title>
       <link href="/DarkPlasma-MZ-Plugins/2022/11/05/move-to-point/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/11/05/move-to-point/</url>
