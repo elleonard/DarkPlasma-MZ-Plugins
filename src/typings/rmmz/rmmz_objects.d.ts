@@ -288,15 +288,16 @@ declare class Game_Variables {
 /**
  * The game object class for self switches.
  */
+type SelfSwitchKey = [number, number, string];
 declare class Game_SelfSwitches {
   public constructor();
 
-  public _data: { [key: string]: boolean };
+  public _data: { [key: SelfSwitchKey]: boolean };
 
   public initialize(...args: any[]): void;
   public clear(): void;
-  public value(key: string): boolean;
-  public setValue(key: string, value: boolean): void;
+  public value(key: SelfSwitchKey): boolean;
+  public setValue(key: SelfSwitchKey, value: boolean): void;
   public onChange(): void;
 }
 

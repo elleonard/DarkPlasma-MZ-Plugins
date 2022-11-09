@@ -316,8 +316,11 @@ declare class Scene_Menu extends Scene_MenuBase {
   public create(): void;
   public start(): void;
   public createCommandWindow(): void;
+  public commandWindowRect(): Rectangle;
   public createGoldWindow(): void;
+  public goldWindowRect(): Rectangle;
   public createStatusWindow(): void;
+  public statusWindowRect(): Rectangle;
 
   public commandItem(): void;
   public commandPersonal(): void;
