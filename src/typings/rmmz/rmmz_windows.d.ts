@@ -478,7 +478,7 @@ declare class Window_MenuStatus extends Window_Selectable {
   public loadImages(): void;
 
   public drawItem(index: number): void;
-  public drawItemBackground(index: number): void;
+  public drawPendingItemBackground(index: number): void;
   public drawItemImage(index: number): void;
   public drawItemStatus(index: number): void;
 
