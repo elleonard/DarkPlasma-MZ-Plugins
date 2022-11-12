@@ -326,15 +326,12 @@ declare class Window_Selectable extends Window_Scrollable {
  * The superclass of windows for selecting a command.
  */
 declare class Window_Command extends Window_Selectable {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle);
 
   public _list: Window_Command.Command[];
 
   public initialize(...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
-  public numVisibleRows(): number;
   public maxItems(): number;
 
   public clearCommandList(): void;
