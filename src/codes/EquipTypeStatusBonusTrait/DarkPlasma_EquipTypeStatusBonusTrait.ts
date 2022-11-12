@@ -126,7 +126,15 @@ function DataManager_EquipTypeStatusBonusTraitMixIn(dataManager: typeof DataMana
           .forEach(trait => data.traits.push(trait));
       }
     }
-  }
+  };
+
+  dataManager.weaponTypeIdForStatusBonusTrait = function (weapon) {
+    return weapon.wtypeId;
+  };
+
+  dataManager.armorTypeIdForStatusBonusTrait = function (armor) {
+    return armor.atypeId;
+  };
 }
 
 DataManager_EquipTypeStatusBonusTraitMixIn(DataManager);
@@ -166,8 +174,8 @@ function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   gameActor.validParamPlusWithEquipTypeTraits = function (paramId: number) {
     return this.equipsForEquipTypeStatusBonus().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
       const dataId = DataManager.isWeapon(equip)
-        ? dataIdFromTypeIdAndParamId(equip.wtypeId, paramId)
-        : dataIdFromTypeIdAndParamId(equip.atypeId, paramId);
+        ? dataIdFromTypeIdAndParamId(DataManager.weaponTypeIdForStatusBonusTrait(equip), paramId)
+        : dataIdFromTypeIdAndParamId(DataManager.armorTypeIdForStatusBonusTrait(equip), paramId);
       const traitId = DataManager.isWeapon(equip)
         ? paramPlusWithWeaponTypeTraitId.id
         : paramPlusWithArmorTypeTraitId.id;
@@ -187,8 +195,8 @@ function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   gameActor.validXParamPlusWithEquipTypeTraits = function (xparamId: number) {
     return this.equipsForEquipTypeStatusBonus().filter(equip => equip).reduce((result: MZ.Trait[], equip) => {
       const dataId = DataManager.isWeapon(equip)
-        ? dataIdFromTypeIdAndParamId(equip.wtypeId, xparamId)
-        : dataIdFromTypeIdAndParamId(equip.atypeId, xparamId);
+        ? dataIdFromTypeIdAndParamId(DataManager.weaponTypeIdForStatusBonusTrait(equip), xparamId)
+        : dataIdFromTypeIdAndParamId(DataManager.armorTypeIdForStatusBonusTrait(equip), xparamId);
       const traitId = DataManager.isWeapon(equip)
         ? xparamPlusWithWeaponTypeTraitId.id
         : xparamPlusWithArmorTypeTraitId.id;

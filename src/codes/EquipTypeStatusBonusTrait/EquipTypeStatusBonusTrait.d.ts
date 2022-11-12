@@ -4,6 +4,9 @@
 declare namespace DataManager {
   function loadExtraTraits(): void;
   function extractExtraTraits(data: DataManager.NoteHolder): void;
+
+  function weaponTypeIdForStatusBonusTrait(weapon: MZ.Weapon): number;
+  function armorTypeIdForStatusBonusTrait(armor: MZ.Armor): number;
 }
 
 declare interface Scene_Boot {

@@ -3,6 +3,9 @@ DarkPlasma_EquipTypeStatusBonusTrait:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/11/12
+      version: 2.3.0
+      description: 'ステータスボーナスのための武器タイプID、防具タイプID取得用のインターフェース追加'
     - date: 2022/10/29
       version: 2.2.0
       description: '特徴ID定数を追加'
