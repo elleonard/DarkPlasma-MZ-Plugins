@@ -1,9 +1,10 @@
-// DarkPlasma_EquipTypeStatusBonusTrait 2.2.0
+// DarkPlasma_EquipTypeStatusBonusTrait 2.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/11/12 2.3.0 ステータスボーナスのための武器タイプID、防具タイプID取得用のインターフェース追加
  * 2022/10/29 2.2.0 特徴ID定数を追加
  * 2022/10/22 2.1.0 対象装備差し替え用のインターフェース追加
  *            2.0.0 プラグイン名を変更
@@ -22,7 +23,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 2.2.0
+ * version: 2.3.0
  * アクター/職業/武器/防具/ステートのメモ欄に、
  * 指定の形式でメモタグを記述することで
  * 特定の武器・防具タイプを装備していたときに
@@ -197,6 +198,12 @@
         }
       }
     };
+    dataManager.weaponTypeIdForStatusBonusTrait = function (weapon) {
+      return weapon.wtypeId;
+    };
+    dataManager.armorTypeIdForStatusBonusTrait = function (armor) {
+      return armor.atypeId;
+    };
   }
   DataManager_EquipTypeStatusBonusTraitMixIn(DataManager);
   function Scene_Boot_EquipTypeStatusBonusTraitMixIn(sceneBoot) {
@@ -230,8 +237,8 @@
         .filter((equip) => equip)
         .reduce((result, equip) => {
           const dataId = DataManager.isWeapon(equip)
-            ? dataIdFromTypeIdAndParamId(equip.wtypeId, paramId)
-            : dataIdFromTypeIdAndParamId(equip.atypeId, paramId);
+            ? dataIdFromTypeIdAndParamId(DataManager.weaponTypeIdForStatusBonusTrait(equip), paramId)
+            : dataIdFromTypeIdAndParamId(DataManager.armorTypeIdForStatusBonusTrait(equip), paramId);
           const traitId = DataManager.isWeapon(equip)
             ? paramPlusWithWeaponTypeTraitId.id
             : paramPlusWithArmorTypeTraitId.id;
@@ -250,8 +257,8 @@
         .filter((equip) => equip)
         .reduce((result, equip) => {
           const dataId = DataManager.isWeapon(equip)
-            ? dataIdFromTypeIdAndParamId(equip.wtypeId, xparamId)
-            : dataIdFromTypeIdAndParamId(equip.atypeId, xparamId);
+            ? dataIdFromTypeIdAndParamId(DataManager.weaponTypeIdForStatusBonusTrait(equip), xparamId)
+            : dataIdFromTypeIdAndParamId(DataManager.armorTypeIdForStatusBonusTrait(equip), xparamId);
           const traitId = DataManager.isWeapon(equip)
             ? xparamPlusWithWeaponTypeTraitId.id
             : xparamPlusWithArmorTypeTraitId.id;
