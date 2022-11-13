@@ -1,3 +1,5 @@
+/// <reference path="./SaveEquipSet.d.ts" />
+
 import { pluginName } from '../../common/pluginName';
 import {
   command_clearEquipSets,
@@ -59,11 +61,16 @@ const KIND = {
 };
 
 class Game_EquipSlot {
+  _slotId: number;
+  _item?: MZ.Weapon|MZ.Armor;
+  _itemId: number|null;
+  _kind: number|null;
+
   /**
    * @param {number} slotId
    * @param {MZ.Weapon | MZ.Armor} item
    */
-  constructor(slotId, item) {
+  constructor(slotId: number, item: MZ.Weapon|MZ.Armor) {
     this._slotId = slotId;
     this.initIdAndKind(item);
   }
@@ -83,8 +90,6 @@ class Game_EquipSlot {
       return null;
     }
     switch (this._kind) {
-      case KIND.ITEM:
-        return $dataItems[this._itemId];
       case KIND.WEAPON:
         return $dataWeapons[this._itemId];
       case KIND.ARMOR:
@@ -94,45 +99,27 @@ class Game_EquipSlot {
     }
   }
 
-  /**
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   */
-  initIdAndKind(item) {
+  initIdAndKind(item: MZ.Weapon|MZ.Armor) {
     this._itemId = item ? item.id : null;
     this._kind = item
       ? (() => {
-          if (DataManager.isItem(item)) {
-            /**
-             * アイテムを装備する系システムにふわっと対応
-             */
-            return KIND.ITEM;
-          } else if (DataManager.isWeapon(item)) {
+          if (DataManager.isWeapon(item)) {
             return KIND.WEAPON;
           } else if (DataManager.isArmor(item)) {
             return KIND.ARMOR;
           } else {
-            /**
-             * 武器と防具のみ、1.1.0以前のセーブデータに対応
-             */
-            if (item.etypeId === 1) {
-              return KIND.WEAPON;
-            } else if (item.etypeId > 1) {
-              return KIND.ARMOR;
-            }
+            return null;
           }
-          throw Error(`不正な装備です: ${item.name}`);
         })()
       : null;
     delete this._item;
   }
 }
 
-globalThis.Game_EquipSlot = Game_EquipSlot;
-
 /**
  * @param {Game_Actor.prototype} gameActor
  */
-function Game_Actor_SaveEquipSetMixIn(gameActor) {
+function Game_Actor_SaveEquipSetMixIn(gameActor: Game_Actor) {
   gameActor.equipSets = function () {
     if (!this._equipSets) {
       this._equipSets = [];
@@ -142,7 +129,7 @@ function Game_Actor_SaveEquipSetMixIn(gameActor) {
      */
     if (this._equipSet) {
       if (!this._equipSets[0]) {
-        this._equipSets[0] = this._equipSet.map((slot) => slot);
+        this._equipSets[0] = this._equipSet.map((slot: Game_EquipSlot) => slot);
       }
       delete this._equipSet;
     }
@@ -167,17 +154,18 @@ function Game_Actor_SaveEquipSetMixIn(gameActor) {
     this.loadEquipSetAt(0);
   };
 
-  gameActor.loadEquipSetAt = function (index) {
+  gameActor.loadEquipSetAt = function (this: Game_Actor, index) {
     const equipSet = this.equipSetAt(index);
     if (settings.equipSetCount > index && equipSet) {
       equipSet
         .filter(
-          (equipSlot) =>
+          (equipSlot: Game_EquipSlot) =>
+            !equipSlot.item ||
             $gameParty.hasItem(equipSlot.item) &&
             this.canEquip(equipSlot.item) &&
             this.isEquipChangeOk(equipSlot.slotId)
         )
-        .forEach((equipSlot) => this.changeEquip(equipSlot.slotId, equipSlot.item));
+        .forEach((equipSlot: Game_EquipSlot) => this.changeEquip(equipSlot.slotId, equipSlot.item));
     }
   };
 
@@ -187,9 +175,15 @@ function Game_Actor_SaveEquipSetMixIn(gameActor) {
 
   gameActor.deleteEquipSetAt = function (index) {
     if (this.equipSetAt(index)) {
-      this._equipSets[index] = null;
+      delete this._equipSets[index];
     }
   };
 }
 
 Game_Actor_SaveEquipSetMixIn(Game_Actor.prototype);
+
+type _Game_EquipSlot = typeof Game_EquipSlot;
+declare global {
+  var Game_EquipSlot: _Game_EquipSlot;
+}
+globalThis.Game_EquipSlot = Game_EquipSlot;

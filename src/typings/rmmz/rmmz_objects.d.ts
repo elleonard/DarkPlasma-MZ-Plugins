@@ -1213,9 +1213,9 @@ declare class Game_Actor extends Game_Battler {
   public equips(): (MZ.Weapon | MZ.Armor)[];
   public weapons(): MZ.Weapon[];
   public armors(): MZ.Armor[];
-  public hasWeapon(weapon: MZ.Weapon): void;
-  public hasArmor(armor: MZ.Armor): void;
-  public isEquipChangeOk(slotId: number): void;
+  public hasWeapon(weapon: MZ.Weapon): boolean;
+  public hasArmor(armor: MZ.Armor): boolean;
+  public isEquipChangeOk(slotId: number): boolean;
   public changeEquip(slotId: number, item: MZ.Weapon | MZ.Armor | null): void;
   public forceChangeEquip(slotId: number, item: MZ.Weapon | MZ.Armor | null): void;
   public tradeItemWithParty(newItem: MZ.Item|MZ.Weapon|MZ.Armor, oldItem: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
