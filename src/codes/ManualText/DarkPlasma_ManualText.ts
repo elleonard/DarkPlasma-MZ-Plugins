@@ -101,14 +101,10 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
   };
 
   const _refresh = windowClass.refresh;
-  windowClass.refresh = function() {
-    if (_refresh) {
-      _refresh.call(this);
-    }
-    /**
-     * drawManualは各利用元から呼び出される
-     */
-  };
+  if (!_refresh) {
+    windowClass.refresh = function () {
+    };
+  }
 }
 
 globalThis.Window_ManualTextMixIn = Window_ManualTextMixIn;
