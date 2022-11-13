@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.2.0
+// DarkPlasma_BattleGuide 1.2.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/07/02 1.2.1 ページ番号表示設定が正常に扱えない不具合の修正
  * 2022/06/21 1.2.0 ショートカットキーなし設定を追加
  * 2022/05/16 1.1.0 SceneGlossaryの説明文のみ引用する機能を追加
  *                  フォントサイズ設定を追加
@@ -75,7 +76,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
