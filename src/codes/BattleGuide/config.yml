@@ -3,6 +3,9 @@ DarkPlasma_BattleGuide:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/11/13
+      version: 1.2.2
+      description: 'typescript移行'
     - date: 2022/07/02
       version: 1.2.1
       description: 'ページ番号表示設定が正常に扱えない不具合の修正'

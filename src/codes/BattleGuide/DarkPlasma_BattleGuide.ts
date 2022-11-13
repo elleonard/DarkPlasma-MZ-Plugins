@@ -1,14 +1,20 @@
+/// <reference path="./BattleGuide.d.ts" />
+
 import { Scene_Battle_MoveCancelButtonMixIn } from '../../common/scene/battleCancelButtonToEdge';
 import { Scene_Battle_InputtingWindowMixIn } from '../../common/scene/battleInputtingWindow';
 import { settings } from './_build/DarkPlasma_BattleGuide_parameters';
 
 class Data_BattleGuide {
+  _title: string;
+  _texts: string[];
+  _condition: Data_BattleGuideCondition;
+
   /**
    * @param {string} title
    * @param {string[]} texts
    * @param {Data_BattleGuideCondition} condition
    */
-  constructor(title, texts, condition) {
+  constructor(title: string, texts: string[], condition: Data_BattleGuideCondition) {
     this._title = title;
     this._texts = texts;
     this._condition = condition;
@@ -25,18 +31,22 @@ class Data_BattleGuide {
   /**
    * @return {boolean}
    */
-  isValid() {
+  isValid(): boolean {
     return this._condition.isValid();
   }
 }
 
 class Data_BattleGuideCondition {
+  _switchId: number;
+  _variableId: number;
+  _threshold: number;
+
   /**
    * @param {number} switchId
    * @param {number} variableId
    * @param {number} threshold
    */
-  constructor(switchId, variableId, threshold) {
+  constructor(switchId: number, variableId: number, threshold: number) {
     this._switchId = switchId;
     this._variableId = variableId;
     this._threshold = threshold;
@@ -45,7 +55,7 @@ class Data_BattleGuideCondition {
   /**
    * @return {boolean}
    */
-  isValid() {
+  isValid(): boolean {
     return (
       (!this._switchId || $gameSwitches.value(this._switchId)) &&
       (!this._variableId || $gameVariables.value(this._variableId) > this._threshold)
@@ -60,8 +70,8 @@ class Data_BattleGuideCondition {
  * @param {MZ.Item} item
  * @return {boolean}
  */
-function isGlossaryItem(item) {
-  return item && item.meta && (item.meta['SG説明'] || item.meta.SGDescription);
+function isGlossaryItem(item: MZ.Item): boolean {
+  return !!item && !!item.meta && !!(item.meta['SG説明'] || item.meta.SGDescription);
 }
 
 /**
@@ -69,15 +79,15 @@ function isGlossaryItem(item) {
  * @param {MZ.Item} item
  * @return {string[]|null}
  */
-function getGlossaryDescription(item) {
+function getGlossaryDescription(item: MZ.Item): string[]|null {
   if (!isGlossaryItem(item)) {
     return null;
   }
-  const result = [];
+  const result: string[] = [];
   const metaTag = item.meta['SG説明'] ? 'SG説明' : 'SGDescription';
-  result.push(item.meta[metaTag]);
+  result.push(String(item.meta[metaTag]));
   for (let i = 2; item.meta[`${metaTag}${i}`]; i++) {
-    result.push(item.meta[`${metaTag}${i}`]);
+    result.push(String(item.meta[`${metaTag}${i}`]));
   }
   return result;
 }
@@ -85,16 +95,16 @@ function getGlossaryDescription(item) {
 /**
  * @type {Data_BattleGuide[]}
  */
-let $dataBattleGuides = [];
+let $dataBattleGuides: Data_BattleGuide[] = [];
 
 /**
  * @param {Scene_Boot.prototype} sceneBoot
  */
-function Scene_Boot_GuideMixIn(sceneBoot) {
+function Scene_Boot_GuideMixIn(sceneBoot: Scene_Boot) {
   const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
   sceneBoot.onDatabaseLoaded = function () {
     _onDatabaseLoaded.call(this);
-    $dataBattleGuides = settings.guides.map((guide) => {
+    $dataBattleGuides = settings.guides.map((guide: SettingsGuide) => {
       return new Data_BattleGuide(
         guide.title,
         getGlossaryDescription($dataItems[guide.glossaryItem]) || guide.texts,
@@ -111,7 +121,7 @@ Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
 /**
  * @param {Scene_Battle.prototype} sceneBattle
  */
-function Scene_Battle_GuideMixIn(sceneBattle) {
+function Scene_Battle_GuideMixIn(sceneBattle: Scene_Battle) {
   const _createWindowLayer = sceneBattle.createWindowLayer;
   sceneBattle.createWindowLayer = function () {
     _createWindowLayer.call(this);
@@ -213,7 +223,10 @@ Scene_Battle_GuideMixIn(Scene_Battle.prototype);
 Scene_Battle_MoveCancelButtonMixIn(Scene_Battle.prototype);
 
 class Window_BattleGuideList extends Window_Selectable {
-  initialize(rect) {
+  _textWindow: Window_BattleGuideText;
+  _list: Data_BattleGuide[];
+
+  initialize(rect: Rectangle) {
     super.initialize(rect);
     this.makeItemList();
     this.refresh();
@@ -222,7 +235,7 @@ class Window_BattleGuideList extends Window_Selectable {
   /**
    * @param {Window_BattleGuideText} textWindow
    */
-  setTextWindow(textWindow) {
+  setTextWindow(textWindow: Window_BattleGuideText) {
     this._textWindow = textWindow;
   }
 
@@ -245,7 +258,7 @@ class Window_BattleGuideList extends Window_Selectable {
     this._list = $dataBattleGuides.filter((guide) => guide.isValid());
   }
 
-  drawItem(index) {
+  drawItem(index: number) {
     const guide = this._list[index];
     if (guide) {
       const rect = this.itemLineRect(index);
@@ -279,10 +292,13 @@ const SHOW_PAGE_NUMBER = {
 };
 
 class Window_BattleGuideText extends Window_Base {
+  _guide: Data_BattleGuide;
+  _page: number;
+
   /**
    * @param {Data_BattleGuide} guide
    */
-  setGuide(guide) {
+  setGuide(guide: Data_BattleGuide) {
     if (guide !== this._guide) {
       this._guide = guide;
       this._page = 0;
@@ -298,7 +314,7 @@ class Window_BattleGuideText extends Window_Base {
   /**
    * @param {number} page
    */
-  setPage(page) {
+  setPage(page: number) {
     if (page !== this._page) {
       this._page = page;
       this.refresh();
@@ -350,7 +366,7 @@ class Window_BattleGuideText extends Window_Base {
   /**
    * @return {boolean}
    */
-  isPageNumberVisible() {
+  isPageNumberVisible(): boolean {
     return (
       (settings.showPageNumber === SHOW_PAGE_NUMBER.DEFAULT && this.maxPage() > 1) ||
       settings.showPageNumber === SHOW_PAGE_NUMBER.ALWAYS
@@ -363,8 +379,12 @@ class Window_BattleGuideText extends Window_Base {
      * refreshの中で実行されるため、直接代入する
      */
     this._isManualVisible = this.isPageNumberVisible();
-    this.addManualText(`[ ${this._page + 1} / ${this.maxPage()} ]`);
+    this.addManualText(this.getPageNumberText());
     this.drawManual();
+  }
+
+  getPageNumberText() {
+    return `[ ${this._page + 1} / ${this.maxPage()} ]`;
   }
 
   _refreshArrows() {
@@ -388,7 +408,7 @@ if (settings.key) {
 /**
  * @param {Window_PartyCommand.prototype} windowClass
  */
-function Window_PartyCommand_GuideMixIn(windowClass) {
+function Window_PartyCommand_GuideMixIn(windowClass: Window_PartyCommand) {
   const _makeCommandList = windowClass.makeCommandList;
   windowClass.makeCommandList = function () {
     _makeCommandList.call(this);
