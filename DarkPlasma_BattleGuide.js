@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.2.1
+// DarkPlasma_BattleGuide 1.2.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/11/13 1.2.2 typescript移行
  * 2022/07/02 1.2.1 ページ番号表示設定が正常に扱えない不具合の修正
  * 2022/06/21 1.2.0 ショートカットキーなし設定を追加
  * 2022/05/16 1.1.0 SceneGlossaryの説明文のみ引用する機能を追加
@@ -76,7 +77,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
@@ -228,15 +229,12 @@
       this._texts = texts;
       this._condition = condition;
     }
-
     get title() {
       return this._title;
     }
-
     get texts() {
       return this._texts;
     }
-
     /**
      * @return {boolean}
      */
@@ -244,7 +242,6 @@
       return this._condition.isValid();
     }
   }
-
   class Data_BattleGuideCondition {
     /**
      * @param {number} switchId
@@ -256,7 +253,6 @@
       this._variableId = variableId;
       this._threshold = threshold;
     }
-
     /**
      * @return {boolean}
      */
@@ -267,7 +263,6 @@
       );
     }
   }
-
   /**
    * SceneGlossary.js で定義される用語集アイテムであるかどうか
    * $gameParty.isGlossaryItem でも判定可能だが、
@@ -276,9 +271,8 @@
    * @return {boolean}
    */
   function isGlossaryItem(item) {
-    return item && item.meta && (item.meta['SG説明'] || item.meta.SGDescription);
+    return !!item && !!item.meta && !!(item.meta['SG説明'] || item.meta.SGDescription);
   }
-
   /**
    * SceneGlossary.js で定義される用語集アイテムの説明文を取得する
    * @param {MZ.Item} item
@@ -290,18 +284,16 @@
     }
     const result = [];
     const metaTag = item.meta['SG説明'] ? 'SG説明' : 'SGDescription';
-    result.push(item.meta[metaTag]);
+    result.push(String(item.meta[metaTag]));
     for (let i = 2; item.meta[`${metaTag}${i}`]; i++) {
-      result.push(item.meta[`${metaTag}${i}`]);
+      result.push(String(item.meta[`${metaTag}${i}`]));
     }
     return result;
   }
-
   /**
    * @type {Data_BattleGuide[]}
    */
   let $dataBattleGuides = [];
-
   /**
    * @param {Scene_Boot.prototype} sceneBoot
    */
@@ -318,11 +310,8 @@
       });
     };
   }
-
   Scene_Boot_GuideMixIn(Scene_Boot.prototype);
-
   Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
-
   /**
    * @param {Scene_Battle.prototype} sceneBattle
    */
@@ -335,26 +324,22 @@
       this._guideWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
       this.addChild(this._guideWindowLayer);
     };
-
     const _createAllWindows = sceneBattle.createAllWindows;
     sceneBattle.createAllWindows = function () {
       _createAllWindows.call(this);
       this.createGuideListWindow();
       this.createGuideTextWindow();
     };
-
     const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
     sceneBattle.createPartyCommandWindow = function () {
       _createPartyCommandWindow.call(this);
       this._partyCommandWindow.setHandler('guide', this.openGuide.bind(this));
     };
-
     const _createActorCommandWindow = sceneBattle.createActorCommandWindow;
     sceneBattle.createActorCommandWindow = function () {
       _createActorCommandWindow.call(this);
       this._actorCommandWindow.setHandler('guide', this.openGuide.bind(this));
     };
-
     sceneBattle.createGuideListWindow = function () {
       this._guideListWindow = new Window_BattleGuideList(this.guideListWindowRect());
       this._guideListWindow.setHandler('ok', this.onTurnGuidePage.bind(this));
@@ -362,7 +347,6 @@
       this._guideListWindow.hide();
       this.addWindow(this._guideListWindow);
     };
-
     sceneBattle.createGuideTextWindow = function () {
       this._guideTextWindow = new Window_BattleGuideText(this.guideTextWindowRect());
       this._guideListWindow.setTextWindow(this._guideTextWindow);
@@ -373,15 +357,12 @@
       this._guideTextWindow.hide();
       this.addWindow(this._guideTextWindow);
     };
-
     sceneBattle.guideListWindowRect = function () {
       return new Rectangle(0, 0, settings.listWidth, Graphics.boxHeight);
     };
-
     sceneBattle.guideTextWindowRect = function () {
       return new Rectangle(settings.listWidth, 0, Graphics.boxWidth - settings.listWidth, Graphics.boxHeight);
     };
-
     sceneBattle.openGuide = function () {
       this._returnFromGuide = this.inputtingWindow();
       if (this._returnFromGuide) {
@@ -392,7 +373,6 @@
       this._guideListWindow.activate();
       this.moveCancelButtonToEdge();
     };
-
     sceneBattle.onCancelGuideList = function () {
       this._guideListWindow.hide();
       this._guideTextWindow.hide();
@@ -407,59 +387,48 @@
       this.updateCancelButton();
       this.returnCancelButton();
     };
-
     sceneBattle.onTurnGuidePage = function () {
       this._guideTextWindow.turnPage();
       this._guideListWindow.activate();
     };
-
     const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
     sceneBattle.isAnyInputWindowActive = function () {
       return _isAnyInputWindowActive.call(this) || this._guideListWindow.active;
     };
-
     const _inputWindows = sceneBattle.inputWindows;
     sceneBattle.inputWindows = function () {
       return _inputWindows.call(this).concat([this._guideListWindow]);
     };
   }
-
   Scene_Battle_GuideMixIn(Scene_Battle.prototype);
   Scene_Battle_MoveCancelButtonMixIn(Scene_Battle.prototype);
-
   class Window_BattleGuideList extends Window_Selectable {
     initialize(rect) {
       super.initialize(rect);
       this.makeItemList();
       this.refresh();
     }
-
     /**
      * @param {Window_BattleGuideText} textWindow
      */
     setTextWindow(textWindow) {
       this._textWindow = textWindow;
     }
-
     maxItems() {
       return this._list ? this._list.length : 0;
     }
-
     update() {
       super.update();
       this.updateText();
     }
-
     updateText() {
       if (this._textWindow) {
         this._textWindow.setGuide(this._list[this.index()]);
       }
     }
-
     makeItemList() {
       this._list = $dataBattleGuides.filter((guide) => guide.isValid());
     }
-
     drawItem(index) {
       const guide = this._list[index];
       if (guide) {
@@ -467,18 +436,15 @@
         this.drawText(guide.title, rect.x, rect.y, rect.width);
       }
     }
-
     /**
      * ページめくりの音はテキストウィンドウに任せる
      */
     playOkSound() {}
-
     cursorRight() {
       if (this._textWindow) {
         this._textWindow.turnPage();
       }
     }
-
     cursorLeft() {
       if (this._textWindow) {
         this._textWindow.backPage();
@@ -486,13 +452,11 @@
       }
     }
   }
-
   const SHOW_PAGE_NUMBER = {
     DEFAULT: 0,
     ALWAYS: 1,
     NO: 2,
   };
-
   class Window_BattleGuideText extends Window_Base {
     /**
      * @param {Data_BattleGuide} guide
@@ -504,12 +468,10 @@
         this.refresh();
       }
     }
-
     resetFontSettings() {
       super.resetFontSettings();
       this.contents.fontSize = settings.fontSize;
     }
-
     /**
      * @param {number} page
      */
@@ -519,11 +481,9 @@
         this.refresh();
       }
     }
-
     maxPage() {
       return this._guide ? this._guide.texts.length : 0;
     }
-
     turnPage() {
       const page = this._page;
       this._page++;
@@ -535,7 +495,6 @@
       }
       this.refresh();
     }
-
     backPage() {
       const page = this._page;
       this._page--;
@@ -547,7 +506,6 @@
       }
       this.refresh();
     }
-
     refresh() {
       this.contents.clear();
       if (this._guide) {
@@ -556,12 +514,10 @@
       }
       this.updateArrows();
     }
-
     updateArrows() {
       this.downArrowVisible = this._page > 0;
       this.upArrowVisible = this._page < this.maxPage() - 1;
     }
-
     /**
      * @return {boolean}
      */
@@ -571,35 +527,32 @@
         settings.showPageNumber === SHOW_PAGE_NUMBER.ALWAYS
       );
     }
-
     drawPageNumber() {
       this.initManualTexts();
       /**
        * refreshの中で実行されるため、直接代入する
        */
       this._isManualVisible = this.isPageNumberVisible();
-      this.addManualText(`[ ${this._page + 1} / ${this.maxPage()} ]`);
+      this.addManualText(this.getPageNumberText());
       this.drawManual();
     }
-
+    getPageNumberText() {
+      return `[ ${this._page + 1} / ${this.maxPage()} ]`;
+    }
     _refreshArrows() {
       super._refreshArrows();
       const horizontalPadding = 12;
-
       this._downArrowSprite.rotation = Math.PI / 2;
       this._downArrowSprite.move(horizontalPadding, this.height / 2);
       this._upArrowSprite.rotation = Math.PI / 2;
       this._upArrowSprite.move(this.width - horizontalPadding, this.height / 2);
     }
   }
-
   Window_ManualTextMixIn(Window_BattleGuideText.prototype);
-
   if (settings.key) {
     Window_CustomKeyHandlerMixIn(settings.key, Window_PartyCommand.prototype, 'guide');
     Window_CustomKeyHandlerMixIn(settings.key, Window_ActorCommand.prototype, 'guide');
   }
-
   /**
    * @param {Window_PartyCommand.prototype} windowClass
    */
@@ -611,7 +564,6 @@
         this.addCommand(settings.partyCommandName, 'guide', true, 'keepActive');
       }
     };
-
     const _callOkHandler = windowClass.callOkHandler;
     windowClass.callOkHandler = function () {
       /**
@@ -623,6 +575,5 @@
       _callOkHandler.call(this);
     };
   }
-
   Window_PartyCommand_GuideMixIn(Window_PartyCommand.prototype);
 })();

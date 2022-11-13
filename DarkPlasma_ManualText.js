@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.5.3
+// DarkPlasma_ManualText 1.5.4
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/11/13 1.5.4 refreshメソッドを無駄に上書きしないように修正
  * 2022/09/11 1.5.3 正しく表示されない不具合を修正
  * 2022/09/10 1.5.2 複数列表示時、正しく表示されない不具合を修正
  *            1.5.1 複数列表示時、表示数が奇数の場合に正しく表示されない不具合を修正
@@ -32,7 +33,7 @@
  * @default 12
  *
  * @help
- * version: 1.5.3
+ * version: 1.5.4
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -194,14 +195,9 @@
       }
     };
     const _refresh = windowClass.refresh;
-    windowClass.refresh = function () {
-      if (_refresh) {
-        _refresh.call(this);
-      }
-      /**
-       * drawManualは各利用元から呼び出される
-       */
-    };
+    if (!_refresh) {
+      windowClass.refresh = function () {};
+    }
   }
   globalThis.Window_ManualTextMixIn = Window_ManualTextMixIn;
 })();
