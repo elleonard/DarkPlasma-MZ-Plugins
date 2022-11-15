@@ -458,21 +458,19 @@ declare class Window_MenuCommand extends Window_Command {
 /**
  * The window for displaying party member status on the menu screen.
  */
-declare class Window_MenuStatus extends Window_Selectable {
-  public constructor(x?: number, y?: number);
+declare class Window_MenuStatus extends Window_StatusBase {
+  public constructor(rect: Rectangle);
 
   public _formationMode: boolean;
   public _pendingIndex: number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
   public maxItems(): number;
-  public itemHeight(): number;
   public numVisibleRows(): number;
+  public itemHeight(): number;
 
-  public loadImages(): void;
+  public actor(index: number): Game_Actor;
 
   public drawItem(index: number): void;
   public drawPendingItemBackground(index: number): void;
@@ -748,6 +746,8 @@ declare class Window_StatusBase extends Window_Selectable {
   public constructor(rect: Rectangle);
 
   public _additionalSprites: any;
+
+  public initialize(rect: Rectangle): void;
 
   public loadFaceImages(): void;
   public refresh(): void;
