@@ -299,7 +299,7 @@ declare class Window_Selectable extends Window_Scrollable {
   public processPagedown(): void;
 
   public updateInputData(): void;
-  public ensureCursorVisible(): void;
+  public ensureCursorVisible(smooth: boolean): void;
 
   public callUpdateHelp(): void;
   public updateHelp(): void;
