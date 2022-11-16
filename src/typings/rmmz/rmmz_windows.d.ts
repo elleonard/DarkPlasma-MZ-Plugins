@@ -375,11 +375,10 @@ declare namespace Window_Command {
  * The command window for the horizontal selection format.
  */
 declare class Window_HorzCommand extends Window_Command {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public numVisibleRows(): number;
   public maxCols(): number;
   public itemTextAlign(): string;
 }

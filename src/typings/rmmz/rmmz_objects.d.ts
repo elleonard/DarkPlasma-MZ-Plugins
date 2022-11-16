@@ -954,8 +954,8 @@ declare class Game_BattlerBase {
   public canMove(): boolean;
   public isConfused(): boolean;
   public confusionLevel(): number;
-  public isActor(): boolean;
-  public isEnemy(): boolean;
+  public isActor(): this is Game_Actor;
+  public isEnemy(): this is Game_Enemy;
 
   public sortStates(): void;
   public restriction(): number;
