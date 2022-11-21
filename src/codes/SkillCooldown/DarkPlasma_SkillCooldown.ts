@@ -1,11 +1,16 @@
+/// <reference path="./SkillCooldown.d.ts" />
+
 import { settings } from './_build/DarkPlasma_SkillCooldown_parameters';
 
 class SkillCooldown {
+  _skillId: number;
+  _turnCount: number;
+
   /**
    * @param {number} skillId スキルID
    * @param {number} turnCount ターン数
    */
-  constructor(skillId, turnCount) {
+  constructor(skillId: number, turnCount: number) {
     this._skillId = skillId;
     this._turnCount = turnCount;
   }
@@ -15,14 +20,14 @@ class SkillCooldown {
    * @param {number} triggerSkillId トリガースキルID
    * @return {SkillCooldown[]}
    */
-  static setup(triggerSkillId) {
-    const cooldownSetting = settings.skillCooldownSettings.find(
-      (cooldown) => cooldown.triggerSkillId === triggerSkillId
+  static setup(triggerSkillId: number): SkillCooldown[] {
+    const cooldownSetting: SkillCooldownSetting = settings.skillCooldownSettings.find(
+      (cooldown: SkillCooldownSetting) => cooldown.triggerSkillId === triggerSkillId
     );
     /**
      * メモ欄による設定
      */
-    const result = [];
+    const result: SkillCooldown[] = [];
     if ($dataSkills[triggerSkillId].meta.cooldownTurn) {
       result.push(new SkillCooldown(triggerSkillId, Number($dataSkills[triggerSkillId].meta.cooldownTurn) + 1));
     }
@@ -41,21 +46,21 @@ class SkillCooldown {
   /**
    * @return {number}
    */
-  get skillId() {
+  get skillId(): number {
     return this._skillId;
   }
 
   /**
    * @return {number}
    */
-  get turnCount() {
+  get turnCount(): number {
     return this._turnCount;
   }
 
   /**
    * @return {boolean}
    */
-  isFinished() {
+  isFinished(): boolean {
     return this._turnCount <= 0;
   }
 
@@ -74,6 +79,9 @@ class SkillCooldown {
  * スキルクールタイムの管理
  */
 class SkillCooldownManager {
+  _actorsSkillCooldowns: SkillCooldown[][];
+  _enemysSkillCooldowns: SkillCooldown[][];
+
   constructor() {
     /**
      * @type {SkillCooldown[][]}
@@ -102,7 +110,7 @@ class SkillCooldownManager {
    * @param {number} actorId
    * @return {SkillCooldown[]}
    */
-  actorsCooldowns(actorId) {
+  actorsCooldowns(actorId: number): SkillCooldown[] {
     if (!this._actorsSkillCooldowns[actorId]) {
       this._actorsSkillCooldowns[actorId] = [];
     }
@@ -113,7 +121,7 @@ class SkillCooldownManager {
    * @param {number} index
    * @return {SkillCooldown[]}
    */
-  enemysCooldowns(index) {
+  enemysCooldowns(index: number): SkillCooldown[] {
     if (!this._enemysSkillCooldowns[index]) {
       this._enemysSkillCooldowns[index] = [];
     }
@@ -126,7 +134,7 @@ class SkillCooldownManager {
    * @param {MZ.Skill} skill スキルデータ
    * @param {boolean} isActor
    */
-  setupCooldownTurn(id, skill, isActor) {
+  setupCooldownTurn(id: number, skill: MZ.Skill, isActor: boolean) {
     const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
     const cooldowns = SkillCooldown.setup(skill.id);
     cooldowns.forEach((cooldown) => {
@@ -136,12 +144,12 @@ class SkillCooldownManager {
 
   /**
    * クールダウン中かどうか
-   * @param {number} id
+   * @param {number} id アクターIDまたは敵キャラインデックス
    * @param {MZ.Skill} skill スキルデータ
    * @param {boolean} isActor
    * @return {boolean}
    */
-  isDuringCooldown(id, skill, isActor) {
+  isDuringCooldown(id: number, skill: MZ.Skill, isActor: boolean): boolean {
     const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
     const cooldown = targetCooldowns[skill.id];
     return cooldown ? !cooldown.isFinished() : false;
@@ -149,12 +157,12 @@ class SkillCooldownManager {
 
   /**
    * 残りクールダウンターン数を返す
-   * @param {number} id
+   * @param {number} id アクターIDまたは敵キャラインデックス
    * @param {MZ.Skill} skill スキルデータ
    * @param {boolean} isActor
    * @return {number}
    */
-  cooldownTurn(id, skill, isActor) {
+  cooldownTurn(id: number, skill: MZ.Skill, isActor: boolean): number {
     const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
     const cooldown = targetCooldowns[skill.id];
     return cooldown ? cooldown.turnCount : 0;
@@ -166,7 +174,7 @@ class SkillCooldownManager {
   decreaseAllCooldownTurns() {
     const actorsCooldowns = settings.decreaseBenchwarmersCooldown
       ? this._actorsSkillCooldowns
-      : this._actorsSkillCooldowns.filter((_, actorId) => $gameActors.actor(actorId).isBattleMember());
+      : this._actorsSkillCooldowns.filter((_, actorId) => $gameActors.actor(actorId)?.isBattleMember());
     const cooldowns = actorsCooldowns.flat().concat(this._enemysSkillCooldowns.flat());
     cooldowns.forEach((cooldown) => cooldown.decreaseTurn());
   }
@@ -176,7 +184,7 @@ class SkillCooldownManager {
    * @param {number} id
    * @param {boolean} isActor
    */
-  decreaseCooldownTurns(id, isActor) {
+  decreaseCooldownTurns(id: number, isActor: boolean) {
     const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
     targetCooldowns.forEach((cooldown) => cooldown.decreaseTurn());
   }
@@ -184,30 +192,34 @@ class SkillCooldownManager {
 
 const skillCooldownManager = new SkillCooldownManager();
 
-const _BattleManager_startBattle = BattleManager.startBattle;
-BattleManager.startBattle = function () {
-  _BattleManager_startBattle.call(this);
-  skillCooldownManager.initialize();
-};
+function BattleManager_SkillCooldownMixIn(battleManager: typeof BattleManager) {
+  const _startBattle = battleManager.startBattle;
+  battleManager.startBattle = function () {
+    _startBattle.call(this);
+    skillCooldownManager.initialize();
+  };
+  
+  const _endTurn = battleManager.endTurn;
+  battleManager.endTurn = function () {
+    _endTurn.call(this);
+    /**
+     * ターン制のみ、控えメンバーのターン経過
+     */
+    if (!this.isTpb() && settings.decreaseBenchwarmersCooldown) {
+      $gameParty
+        .allMembers()
+        .filter((actor) => !actor.isBattleMember())
+        .forEach((actor) => skillCooldownManager.decreaseCooldownTurns(actor.skillCooldownId(), true));
+    }
+  };
+}
 
-const _BattleManager_endTurn = BattleManager.endTurn;
-BattleManager.endTurn = function () {
-  _BattleManager_endTurn.call(this);
-  /**
-   * ターン制のみ、控えメンバーのターン経過
-   */
-  if (!this.isTpb() && settings.decreaseBenchwarmersCooldown) {
-    $gameParty
-      .allMembers()
-      .filter((actor) => !actor.isBattleMember())
-      .forEach((actor) => skillCooldownManager.decreaseCooldownTurns(actor.skillCooldownId(), true));
-  }
-};
+BattleManager_SkillCooldownMixIn(BattleManager);
 
 /**
  * @param {Game_BattlerBase.prototype} gameBattlerBase
  */
-function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase) {
+function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase: Game_BattlerBase) {
   const _meetsSkillConditions = gameBattlerBase.meetsSkillConditions;
   gameBattlerBase.meetsSkillConditions = function (skill) {
     return _meetsSkillConditions.call(this, skill) && !this.isDuringCooldown(skill);
@@ -217,7 +229,7 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase) {
    * スキルクールタイムを開始する
    * @param {MZ.Skill} skill スキルデータ
    */
-  gameBattlerBase.setupCooldownTurn = function (skill) {
+  gameBattlerBase.setupCooldownTurn = function (skill: MZ.Skill) {
     skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), skill, this.isActor());
   };
 
@@ -226,7 +238,7 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase) {
    * @param {MZ.Skill} skill スキルデータ
    * @return {boolean}
    */
-  gameBattlerBase.isDuringCooldown = function (skill) {
+  gameBattlerBase.isDuringCooldown = function (skill: MZ.Skill): boolean {
     return skillCooldownManager.isDuringCooldown(this.skillCooldownId(), skill, this.isActor());
   };
 
@@ -235,7 +247,7 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase) {
    * @param {MZ.Skill} skill スキルデータ
    * @return {number}
    */
-  gameBattlerBase.cooldownTurn = function (skill) {
+  gameBattlerBase.cooldownTurn = function (skill: MZ.Skill): number {
     return skillCooldownManager.cooldownTurn(this.skillCooldownId(), skill, this.isActor());
   };
 
@@ -256,7 +268,7 @@ Game_BattlerBase_SkillCooldownMixIn(Game_BattlerBase.prototype);
 /**
  * @param {Game_Battler.prototype} gameBattler
  */
-function Game_Battler_SkillCooldownMixIn(gameBattler) {
+function Game_Battler_SkillCooldownMixIn(gameBattler: Game_Battler) {
   const _useItem = gameBattler.useItem;
   gameBattler.useItem = function (item) {
     _useItem.call(this, item);
@@ -279,37 +291,33 @@ function Game_Battler_SkillCooldownMixIn(gameBattler) {
 
 Game_Battler_SkillCooldownMixIn(Game_Battler.prototype);
 
-Game_Actor.prototype.skillCooldownId = function () {
-  return this.actorId();
-};
-
-Game_Enemy.prototype.skillCooldownId = function () {
-  return this.index();
-};
-
-const _Window_SKillList_drawSkillCost = Window_SkillList.prototype.drawSkillCost;
-Window_SkillList.prototype.drawSkillCost = function (skill, x, y, width) {
-  if ($gameParty.inBattle() && settings.displayCooldownTurn && this._actor.isDuringCooldown(skill)) {
-    const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, this._actor.cooldownTurn(skill));
-    this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
-    this.drawText(cooldownText, x, y, width, 'right');
-  } else {
-    _Window_SKillList_drawSkillCost.call(this, skill, x, y, width);
-  }
-};
-
-if (!Array.prototype.flat) {
-  Array.prototype.flat = function (depth) {
-    let flattend = [];
-    (function flat(array, depth) {
-      for (let el of array) {
-        if (Array.isArray(el) && depth > 0) {
-          flat(el, depth - 1);
-        } else {
-          flattend.push(el);
-        }
-      }
-    })(this, Math.floor(depth) || 1);
-    return flattend.filter((el) => el);
+function Game_Actor_SkillCooldownMixIn(gameActor: Game_Actor) {
+  gameActor.skillCooldownId = function () {
+    return this.actorId();
   };
 }
+
+Game_Actor_SkillCooldownMixIn(Game_Actor.prototype);
+
+function Game_Enemy_SkillCooldownMixIn(gameEnemy: Game_Enemy) {
+  gameEnemy.skillCooldownId = function () {
+    return this.index();
+  };
+}
+
+Game_Enemy_SkillCooldownMixIn(Game_Enemy.prototype);
+
+function Window_SkillList_SkillCooldownMixIn(windowClass: Window_SkillList) {
+  const _drawSkillCost = windowClass.drawSkillCost;
+  windowClass.drawSkillCost = function (skill, x, y, width) {
+    if ($gameParty.inBattle() && settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
+      const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, `${this._actor.cooldownTurn(skill)}`);
+      this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
+      this.drawText(cooldownText, x, y, width, 'right');
+    } else {
+      _drawSkillCost.call(this, skill, x, y, width);
+    }
+  };
+}
+
+Window_SkillList_SkillCooldownMixIn(Window_SkillList.prototype);
