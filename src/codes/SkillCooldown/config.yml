@@ -4,7 +4,9 @@ DarkPlasma_SkillCooldown:
   license: MIT
   histories:
     - date: 2022/11/21
-      version: 2.1.1
+      version: 2.2.0
+      description: 'クールタイムを増減・終了するプラグインコマンドを追加'
+    - version: 2.1.1
       description: 'typescript移行'
     - date: 2022/06/12
       version: 2.1.0
@@ -79,7 +81,50 @@ DarkPlasma_SkillCooldown:
         ja: 控えクールタイム減
       type: boolean
       default: true
-  commands: []
+  commands:
+    - command: plusCooldownTurns
+      text:
+        ja: クールタイム増減
+      desc:
+        ja: 開始済みクールタイムを増減させます。
+      args:
+        - arg: turn
+          text:
+            ja: 増加ターン数
+          desc:
+            ja: 増加ターン数を指定します。負の値を指定するとクールタイムが減少します。
+          type: number
+          min: -9999
+        - arg: actors
+          text:
+            ja: 対象アクター一覧
+          desc:
+            ja: クールタイムを増減させたいアクター一覧を指定します。省略時にはパーティ全体を対象とします。
+          type: actor[]
+        - arg: skills
+          text:
+            ja: 対象スキル一覧
+          desc:
+            ja: クールタイムを増減させたいスキル一覧を指定します。省略時には全てのクールタイム中スキルを対象とします。
+          type: skill[]
+    - command: finishCooldowns
+      text:
+        ja: クールタイム終了
+      desc:
+        ja: 開始済みクールタイムを終了します。
+      args:
+        - arg: actors
+          text:
+            ja: 対象アクター一覧
+          desc:
+            ja: クールタイムを増減させたいアクター一覧を指定します。省略時にはパーティ全体を対象とします。
+          type: actor[]
+        - arg: skills
+          text:
+            ja: 対象スキル一覧
+          desc:
+            ja: クールタイムを増減させたいスキル一覧を指定します。省略時には全てのクールタイム中スキルを対象とします。
+          type: skill[]
   structures:
     SkillCooldown:
       - param: triggerSkillId
