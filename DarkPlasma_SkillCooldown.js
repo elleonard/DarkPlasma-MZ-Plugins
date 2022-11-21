@@ -1,10 +1,11 @@
-// DarkPlasma_SkillCooldown 2.1.1
+// DarkPlasma_SkillCooldown 2.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/11/21 2.1.1 typescript移行
+ * 2022/11/21 2.2.0 クールタイムを増減・終了するプラグインコマンドを追加
+ *            2.1.1 typescript移行
  * 2022/06/12 2.1.0 メモ欄による設定をサポート
  * 2022/01/07 2.0.5 TPBにおいてターンカウントが正常に進まない不具合を修正
  * 2021/11/14 2.0.4 戦闘中にパーティメンバーを追加するとエラーが発生する不具合を修正
@@ -59,8 +60,37 @@
  * @type boolean
  * @default true
  *
+ * @command plusCooldownTurns
+ * @text クールタイム増減
+ * @desc 開始済みクールタイムを増減させます。
+ * @arg turn
+ * @text 増加ターン数
+ * @desc 増加ターン数を指定します。負の値を指定するとクールタイムが減少します。
+ * @type number
+ * @min -9999
+ * @arg actors
+ * @text 対象アクター一覧
+ * @desc クールタイムを増減させたいアクター一覧を指定します。省略時にはパーティ全体を対象とします。
+ * @type actor[]
+ * @arg skills
+ * @text 対象スキル一覧
+ * @desc クールタイムを増減させたいスキル一覧を指定します。省略時には全てのクールタイム中スキルを対象とします。
+ * @type skill[]
+ *
+ * @command finishCooldowns
+ * @text クールタイム終了
+ * @desc 開始済みクールタイムを終了します。
+ * @arg actors
+ * @text 対象アクター一覧
+ * @desc クールタイムを増減させたいアクター一覧を指定します。省略時にはパーティ全体を対象とします。
+ * @type actor[]
+ * @arg skills
+ * @text 対象スキル一覧
+ * @desc クールタイムを増減させたいスキル一覧を指定します。省略時には全てのクールタイム中スキルを対象とします。
+ * @type skill[]
+ *
  * @help
- * version: 2.1.1
+ * version: 2.2.0
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -131,6 +161,33 @@
     decreaseBenchwarmersCooldown: String(pluginParameters.decreaseBenchwarmersCooldown || true) === 'true',
   };
 
+  function parseArgs_plusCooldownTurns(args) {
+    return {
+      turn: Number(args.turn || 0),
+      actors: JSON.parse(args.actors || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+      skills: JSON.parse(args.skills || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+    };
+  }
+
+  function parseArgs_finishCooldowns(args) {
+    return {
+      actors: JSON.parse(args.actors || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+      skills: JSON.parse(args.skills || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+    };
+  }
+
+  const command_plusCooldownTurns = 'plusCooldownTurns';
+
+  const command_finishCooldowns = 'finishCooldowns';
+
   class SkillCooldown {
     /**
      * @param {number} skillId スキルID
@@ -185,11 +242,17 @@
     isFinished() {
       return this._turnCount <= 0;
     }
+    finish() {
+      this._turnCount = 0;
+    }
     /**
      * ターンカウントを進める
      */
     decreaseTurn() {
-      this._turnCount--;
+      this.plusTurn(-1);
+    }
+    plusTurn(plus) {
+      this._turnCount += plus;
       if (this._turnCount < 0) {
         this._turnCount = 0;
       }
@@ -299,8 +362,65 @@
       const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
       targetCooldowns.forEach((cooldown) => cooldown.decreaseTurn());
     }
+    /**
+     * すでに開始しているクールタイムを増減する
+     * 開始していない(または終了済みの)クールタイムについては何もしない
+     * クールタイム開始のトリガーは、設定されたスキルの使用のみとする
+     *
+     * @param {Game_Battler[]} targetBattlers クールタイム増減対象バトラーリスト
+     * @param {number} plus 増減ターン数。正の値でクールタイム増加、負の値でクールタイム減少
+     * @param {MZ.Skill[]} skills クールタイム増減対象スキルリスト。省略した場合、開始している全てのクールタイムが対象となる
+     */
+    plusCooldownTurns(targetBattlers, plus, skills) {
+      const targetCooldowns = targetBattlers
+        .map((battler) => {
+          const cooldowns = battler.isActor()
+            ? this.actorsCooldowns(battler.skillCooldownId())
+            : this.enemysCooldowns(battler.skillCooldownId());
+          return skills ? cooldowns.filter((_, skillId) => skills.some((skill) => skill.id === skillId)) : cooldowns;
+        })
+        .flat();
+      targetCooldowns.filter((cooldown) => !cooldown.isFinished()).forEach((cooldown) => cooldown.plusTurn(plus));
+    }
+    /**
+     * すでに開始してるクールタイムを終了する
+     *
+     * @param {Game_Battler[]} targetBattlers 対象バトラーリスト
+     * @param {MZ.Skill[]} skills 対象スキルリスト。省略時には全スキルが対象
+     */
+    finishCooldowns(targetBattlers, skills) {
+      const targetCooldowns = targetBattlers
+        .map((battler) => {
+          const cooldowns = battler.isActor()
+            ? this.actorsCooldowns(battler.skillCooldownId())
+            : this.enemysCooldowns(battler.skillCooldownId());
+          return skills ? cooldowns.filter((_, skillId) => skills.some((skill) => skill.id === skillId)) : cooldowns;
+        })
+        .flat();
+      targetCooldowns.forEach((cooldown) => cooldown.finish());
+    }
   }
   const skillCooldownManager = new SkillCooldownManager();
+  PluginManager.registerCommand(pluginName, command_plusCooldownTurns, function (args) {
+    const parsedArgs = parseArgs_plusCooldownTurns(args);
+    const targetBattlers =
+      parsedArgs.actors.length === 0
+        ? $gameParty.allMembers()
+        : parsedArgs.actors.map((actorId) => $gameActors.actor(actorId));
+    const targetSkills =
+      parsedArgs.skills.length === 0 ? null : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
+    skillCooldownManager.plusCooldownTurns(targetBattlers, parsedArgs.turn, targetSkills);
+  });
+  PluginManager.registerCommand(pluginName, command_finishCooldowns, function (args) {
+    const parsedArgs = parseArgs_finishCooldowns(args);
+    const targetBattlers =
+      parsedArgs.actors.length === 0
+        ? $gameParty.allMembers()
+        : parsedArgs.actors.map((actorId) => $gameActors.actor(actorId));
+    const targetSkills =
+      parsedArgs.skills.length === 0 ? null : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
+    skillCooldownManager.finishCooldowns(targetBattlers, targetSkills);
+  });
   function BattleManager_SkillCooldownMixIn(battleManager) {
     const _startBattle = battleManager.startBattle;
     battleManager.startBattle = function () {
