@@ -3,6 +3,9 @@ DarkPlasma_SkillCooldown:
   year: 2020
   license: MIT
   histories:
+    - date: 2022/11/22
+      version: 2.3.0
+      description: '初期クールタイム用のインターフェース追加'
     - date: 2022/11/21
       version: 2.2.0
       description: 'クールタイムを増減・終了するプラグインコマンドを追加'
