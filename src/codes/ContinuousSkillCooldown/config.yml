@@ -1,0 +1,37 @@
+DarkPlasma_ContinuousSkillCooldown:
+  name: DarkPlasma_ContinuousSkillCooldown
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/11/22
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルクールタイムを戦闘後も継続する'
+  parameters:
+    - param: decreaseCooldownTurnOnMap
+      text:
+        ja: マップ上でクールダウン
+      desc:
+        ja: ONの場合、マップ上でターン経過した場合にクールタイムのターンカウントを進めます。
+      type: boolean
+      default: true
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_SkillCooldown
+        version: 2.3.1
+    orderAfter:
+      - name: DarkPlasma_SkillCooldown
+    orderBefore: []
+  help:
+    ja: |
+      DarkPlasma_SkillCooldownによるスキルのクールタイムを
+      戦闘後も継続させます。
+
+      セーブデータに以下の情報を追加します。
+      - 各アクターのスキルクールタイム情報
