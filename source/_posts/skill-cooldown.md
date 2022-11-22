@@ -25,3 +25,9 @@ tags:
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillCooldown.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillCooldown.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
+
+# 派生プラグイン
+
+## スキルクールタイムを戦闘後も継続する
+
+- [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ContinuousSkillCooldown.js)
