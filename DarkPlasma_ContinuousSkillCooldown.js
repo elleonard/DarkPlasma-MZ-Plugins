@@ -1,10 +1,11 @@
-// DarkPlasma_ContinuousSkillCooldown 1.0.0
+// DarkPlasma_ContinuousSkillCooldown 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/11/22 1.0.0 公開
+ * 2022/11/22 1.0.1 戦闘終了時に1ターン経過した扱いとする
+ *            1.0.0 公開
  */
 
 /*:ja
@@ -25,7 +26,7 @@
  * @default true
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * DarkPlasma_SkillCooldownによるスキルのクールタイムを
  * 戦闘後も継続させます。
  *
@@ -84,6 +85,11 @@
     const _onBattleEnd = gameBattler.onBattleEnd;
     gameBattler.onBattleEnd = function () {
       _onBattleEnd.call(this);
+      /**
+       * CT開始ターンには、継続ターンは設定+1となっている(ターン終了時に1ターン経過するため)
+       * 統一的に扱うため、戦闘終了時には1ターン経過した扱いとする
+       */
+      skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), true);
       this.updateSkillCooldown();
     };
     gameBattler.updateSkillCooldown = function () {};
