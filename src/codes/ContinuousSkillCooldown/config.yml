@@ -3,6 +3,9 @@ DarkPlasma_ContinuousSkillCooldown:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/11/23
+      version: 1.0.2
+      description: '戦闘終了時に2ターン経過することがある不具合を修正'
     - date: 2022/11/22
       version: 1.0.1
       description: '戦闘終了時に1ターン経過した扱いとする'

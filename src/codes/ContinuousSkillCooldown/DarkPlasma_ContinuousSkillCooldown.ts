@@ -44,7 +44,7 @@ function Game_Battler_ContinuousSkillCooldownMixIn(gameBattler: Game_Battler) {
      * CT開始ターンには、継続ターンは設定+1となっている(ターン終了時に1ターン経過するため)
      * 統一的に扱うため、戦闘終了時には1ターン経過した扱いとする
      */
-    skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), true);
+    skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), this.isActor());
     this.updateSkillCooldown();
   };
 
@@ -54,7 +54,7 @@ function Game_Battler_ContinuousSkillCooldownMixIn(gameBattler: Game_Battler) {
   gameBattler.onTurnEnd = function () {
     _onTurnEnd.call(this);
     if (this.isActor() && settings.decreaseCooldownTurnOnMap && !$gameParty.inBattle()) {
-      skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), true);
+      skillCooldownManager.decreaseCooldownTurns(this.skillCooldownId(), this.isActor());
       this.updateSkillCooldown();
     }
   };
