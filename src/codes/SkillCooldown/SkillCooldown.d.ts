@@ -8,6 +8,18 @@ type SkillCooldownSetting = {
   }[];
 };
 
+declare var skillCooldownManager: SkillCooldownManager;
+
+declare interface SkillCooldownManager {
+  initialize(): void;
+
+  actorsCooldowns(actorId: number): Game_SkillCooldown[];
+  decreaseCooldownTurns(id: number, isActor: boolean): void;
+  isDuringCooldown(id: number, skill: MZ.Skill, isActor: boolean): boolean;
+  plusCooldownTurns(targetBattlers: Game_Battler[], plus: number, skills?: MZ.Skill[]): void;
+  finishCooldowns(targetBattlers: Game_Battler[], skills?: MZ.Skill[]): void;
+}
+
 declare interface Game_SkillCooldown {
   _skillId: number;
   _turnCount: number;

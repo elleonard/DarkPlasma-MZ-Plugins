@@ -312,7 +312,7 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase: Game_BattlerBase) 
    * @return {boolean}
    */
   gameBattlerBase.isDuringCooldown = function (skill: MZ.Skill): boolean {
-    return skillCooldownManager.isDuringCooldown(this.skillCooldownId(), skill, this.isActor());
+    return $gameParty.inBattle() && skillCooldownManager.isDuringCooldown(this.skillCooldownId(), skill, this.isActor());
   };
 
   /**
@@ -387,7 +387,7 @@ Game_Enemy_SkillCooldownMixIn(Game_Enemy.prototype);
 function Window_SkillList_SkillCooldownMixIn(windowClass: Window_SkillList) {
   const _drawSkillCost = windowClass.drawSkillCost;
   windowClass.drawSkillCost = function (skill, x, y, width) {
-    if ($gameParty.inBattle() && settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
+    if (settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
       const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, `${this._actor.cooldownTurn(skill)}`);
       this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
       this.drawText(cooldownText, x, y, width, 'right');
@@ -400,9 +400,11 @@ function Window_SkillList_SkillCooldownMixIn(windowClass: Window_SkillList) {
 Window_SkillList_SkillCooldownMixIn(Window_SkillList.prototype);
 
 type _Game_SkillCooldown = typeof Game_SkillCooldown;
+type _SkillCooldownManager = typeof SkillCooldownManager;
 declare global {
-  var skillCooldownManager: SkillCooldownManager;
   var Game_SkillCooldown: _Game_SkillCooldown;
+  var SkillCooldownManager: _SkillCooldownManager;
 }
 globalThis.Game_SkillCooldown = Game_SkillCooldown;
 globalThis.skillCooldownManager = skillCooldownManager;
+globalThis.SkillCooldownManager = SkillCooldownManager;
