@@ -4,7 +4,9 @@ DarkPlasma_ContinuousSkillCooldown:
   license: MIT
   histories:
     - date: 2022/11/22
-      version: 1.0.0
+      version: 1.0.1
+      description: '戦闘終了時に1ターン経過した扱いとする'
+    - version: 1.0.0
       description: '公開'
 
   locates:
