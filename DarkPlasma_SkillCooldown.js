@@ -1,10 +1,11 @@
-// DarkPlasma_SkillCooldown 2.3.0
+// DarkPlasma_SkillCooldown 2.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/11/22 2.3.0 初期クールタイム用のインターフェース追加
+ * 2022/11/22 2.3.1 クールタイム中判定をGame_BattlerBaseクラスに寄せる
+ *            2.3.0 初期クールタイム用のインターフェース追加
  * 2022/11/21 2.2.0 クールタイムを増減・終了するプラグインコマンドを追加
  *            2.1.1 typescript移行
  * 2022/06/12 2.1.0 メモ欄による設定をサポート
@@ -91,7 +92,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.3.0
+ * version: 2.3.1
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -461,7 +462,9 @@
      * @return {boolean}
      */
     gameBattlerBase.isDuringCooldown = function (skill) {
-      return skillCooldownManager.isDuringCooldown(this.skillCooldownId(), skill, this.isActor());
+      return (
+        $gameParty.inBattle() && skillCooldownManager.isDuringCooldown(this.skillCooldownId(), skill, this.isActor())
+      );
     };
     /**
      * 指定したスキルの残りクールタイムを返す
@@ -523,7 +526,7 @@
   function Window_SkillList_SkillCooldownMixIn(windowClass) {
     const _drawSkillCost = windowClass.drawSkillCost;
     windowClass.drawSkillCost = function (skill, x, y, width) {
-      if ($gameParty.inBattle() && settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
+      if (settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
         const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, `${this._actor.cooldownTurn(skill)}`);
         this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
         this.drawText(cooldownText, x, y, width, 'right');
@@ -535,4 +538,5 @@
   Window_SkillList_SkillCooldownMixIn(Window_SkillList.prototype);
   globalThis.Game_SkillCooldown = Game_SkillCooldown;
   globalThis.skillCooldownManager = skillCooldownManager;
+  globalThis.SkillCooldownManager = SkillCooldownManager;
 })();
