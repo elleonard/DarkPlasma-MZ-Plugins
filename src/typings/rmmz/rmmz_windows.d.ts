@@ -1490,7 +1490,7 @@ declare class Window_BattleLog extends Window_Base {
   public displayAffectedStatus(target: Game_Battler): void;
   public displayAutoAffectedStatus(target: Game_Battler): void;
   public displayChangedStates(target: Game_Battler): void;
-  public displayAddedStates(target: Game_Battler): void;
+  public displayAddedStates(target: Game_Actor|Game_Enemy): void;
   public displayRemovedStates(target: Game_Battler): void;
   public displayChangedBuffs(target: Game_Battler): void;
   public displayBuffs(target: Game_Battler, buffs: number[], fmt: string): void;
