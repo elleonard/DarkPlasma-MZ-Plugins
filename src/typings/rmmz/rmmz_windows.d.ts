@@ -559,7 +559,7 @@ declare class Window_ItemList extends Window_Selectable {
  * The window for selecting a skill type on the skill screen.
  */
 declare class Window_SkillType extends Window_Command {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle);
 
   public _actor: Game_Actor | null;
   public _skillWindow: Window_SkillList | null | undefined;

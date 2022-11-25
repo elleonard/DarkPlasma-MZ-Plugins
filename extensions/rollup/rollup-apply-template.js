@@ -41,5 +41,5 @@ function wrapperToLambda (code) {
  * @return {string}
  */
  function removeTripleSlash(code) {
-  return code.replace(/\/\/\/ <.*\/>\n/gi, '');
+  return code.replaceAll(/\/\/\/ <.*\/>\r??\n/gi, '');
 }

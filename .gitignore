@@ -5,6 +5,8 @@ node_modules/
 DarkPlasma_*.js
 
 src/excludes/
+src/excludeCommon/
+src/.gitignore
 release/
 stage/
 
