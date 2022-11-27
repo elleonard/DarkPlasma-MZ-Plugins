@@ -1,13 +1,19 @@
 const { PluginParameter } = require('./generateHeader');
 
-function generateParser(config, parameter, symbolType) {
-  let parser = 'TODO';
+const TYPE_CATEGORIES = {
+  STRING: "string",
+  NUMBER: "number",
+  BOOLEAN: "boolean",
+  ARRAY: "array",
+  STRUCT: "struct",
+};
+
+function toJsTypeCategory(parameter) {
   switch (parameter.type) {
     case 'string':
     case 'multiline_string':
     case 'file':
-      parser = stringParser(parameter, symbolType);
-      break;
+      return TYPE_CATEGORIES.STRING;
     case 'number':
     case 'actor':
     case 'class':
@@ -21,24 +27,40 @@ function generateParser(config, parameter, symbolType) {
     case 'switch':
     case 'variable':
     case 'common_event':
-      parser = numberParser(parameter, symbolType);
-      break;
+      return TYPE_CATEGORIES.NUMBER;
     case 'boolean':
-      parser = booleanParser(parameter, symbolType);
-      break;
+      return TYPE_CATEGORIES.BOOLEAN;
     case 'select':
       if (parameter.options[0].value !== undefined && Number.isFinite(parameter.options[0].value)) {
-        parser = numberParser(parameter, symbolType);
+        return TYPE_CATEGORIES.NUMBER;
       } else {
-        parser = stringParser(parameter, symbolType);
+        return TYPE_CATEGORIES.STRING;
       }
-      break;
     default:
       // structure or array
       if (parameter.type.endsWith('[]')) {
-        parser = arrayParser(config, parameter, symbolType);
-        break;
+        return TYPE_CATEGORIES.ARRAY;
       }
+      return TYPE_CATEGORIES.STRUCT;
+  }
+}
+
+function generateParser(config, parameter, symbolType) {
+  let parser = 'TODO';
+  switch (toJsTypeCategory(parameter)) {
+    case TYPE_CATEGORIES.STRING:
+      parser = stringParser(parameter, symbolType);
+      break;
+    case TYPE_CATEGORIES.NUMBER:
+      parser = numberParser(parameter, symbolType);
+      break;
+    case TYPE_CATEGORIES.BOOLEAN:
+      parser = booleanParser(parameter, symbolType);
+      break;
+    case TYPE_CATEGORIES.ARRAY:
+      parser = arrayParser(config, parameter, symbolType);
+      break;
+    case TYPE_CATEGORIES.STRUCT:
       parser = structParser(config, parameter, symbolType);
       break;
   }
@@ -97,4 +119,6 @@ function parameterSymbol(parameter, symbolType) {
 
 module.exports = {
   generateParser,
+  toJsTypeCategory,
+  TYPE_CATEGORIES,
 };

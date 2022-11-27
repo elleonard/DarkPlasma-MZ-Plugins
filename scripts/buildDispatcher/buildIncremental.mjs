@@ -24,7 +24,7 @@ const configPaths = await Promise.all(configBuildTargets
   .map(target => {
     return [
       glob(`${codePath}/${target}/_build/*_commands.js`),
-      glob(`${codePath}/${target}/_build/*_parameters.js`),
+      //glob(`${codePath}/${target}/_build/*_parameters.js`),
       glob(`${codePath}/${target}/_build/*_parametersOf.js`),
     ];
   }).flat());

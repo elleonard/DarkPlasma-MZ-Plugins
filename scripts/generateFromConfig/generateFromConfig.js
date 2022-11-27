@@ -5,6 +5,7 @@ const mkdirp = require('mkdirp');
 const { generateHeader } = require('./generateHeader');
 const { generateParameterReader, generateParameterReaderFunction } = require('./generateParameterReader');
 const { generatePluginCommand } = require('./generatePluginCommand');
+const { generateParameterType } = require('./generateParameterType');
 
 async function generateFromConfig(file) {
   const config = loadConfig(file);
@@ -20,6 +21,8 @@ async function generateFromConfig(file) {
     fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
     const pluginCommands = await generatePluginCommand(currentConfig);
     fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
+    const parameterType = await generateParameterType(currentConfig, key.replace(`DarkPlasma_`, ''));
+    fs.writeFileSync(path.resolve(distDir, `${key}_parameters.d.ts`), parameterType);
   }
 
   console.log(`build config: ${file}`);
