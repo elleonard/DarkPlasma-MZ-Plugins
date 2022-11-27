@@ -74,7 +74,7 @@ declare class Window_Base extends Window {
   public changePaintOpacity(enabled: boolean): void;
 
   public drawRect(x: number, y: number, width: number, height: number): void;
-  public drawText(text: string, x: number, y: number, maxWidth: number, align?: string): void;
+  public drawText(text: string, x: number, y: number, maxWidth?: number, align?: string): void;
   public textWidth(text: string): number;
   public drawTextEx(text: string, x: number, y: number): number;
   public textSizeEx(text: string);
@@ -138,7 +138,7 @@ declare namespace Window_Base {
 }
 
 declare class Window_Scrollable extends Window_Base {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _scrollX: number;
   public _scrollY: number;
@@ -303,7 +303,7 @@ declare class Window_Selectable extends Window_Scrollable {
 
   public callUpdateHelp(): void;
   public updateHelp(): void;
-  public setHelpWindowItem(item: MZ.Item | null): void;
+  public setHelpWindowItem(item: MZ.Item | MZ.Skill | null): void;
   public isCurrentItemEnabled(): boolean;
 
   public drawAllItems(): void;
