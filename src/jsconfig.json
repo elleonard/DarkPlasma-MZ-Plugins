@@ -1,6 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "es6"
-  },
-  "include": ["./*", "./**/*.js", "./rmmz/*.js", "./typings/rmmz/*", "./node_modules/typescript/es2016"]
-}
