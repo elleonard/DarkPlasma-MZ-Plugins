@@ -16,6 +16,10 @@ tags:
 ![使用例](item-storage.png "使用例")
 ![設定例](item-storage-setting.png "設定例")
 
+## 紹介動画
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gFTow2TeDII" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 # ダウンロードリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ItemStorage.js)

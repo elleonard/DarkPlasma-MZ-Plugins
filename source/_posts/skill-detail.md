@@ -21,6 +21,10 @@ tags:
 
 長い文字列を自動で改行するには {% post_link auto-line-break %} をご利用ください。
 
+## 紹介動画
+
+[【RPGツクールMZプラグイン】 スキルに詳細解説をつけたい人なら必須プラグイン！ 「DarkPlasma_SkillDetail.js」](https://youtube.com/shorts/katnCYZdVOY?feature=share)
+
 # ダウンロードリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetail.js)
