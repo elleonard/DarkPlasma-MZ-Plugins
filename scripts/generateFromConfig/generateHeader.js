@@ -50,6 +50,8 @@ class TypedParameter {
         'variable',
         'common_event',
         'file',
+        'color',
+        'icon',
       ].includes(this.baseType())
     );
   }

@@ -27,6 +27,8 @@ function toJsTypeCategory(parameter) {
     case 'switch':
     case 'variable':
     case 'common_event':
+    case 'color':
+    case 'icon':
       return TYPE_CATEGORIES.NUMBER;
     case 'boolean':
       return TYPE_CATEGORIES.BOOLEAN;
