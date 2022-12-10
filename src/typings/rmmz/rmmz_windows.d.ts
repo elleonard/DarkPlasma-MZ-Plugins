@@ -611,11 +611,11 @@ declare class Window_SkillType extends Window_Command {
  * The window for displaying the skill user's status on the skill screen.
  */
 declare class Window_SkillStatus extends Window_StatusBase {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setActor(actor: Game_Actor | null): void;
   public refresh(): void;
@@ -626,7 +626,7 @@ declare class Window_SkillStatus extends Window_StatusBase {
  * The window for selecting a skill on the skill screen.
  */
 declare class Window_SkillList extends Window_Selectable {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null;
   public _stypeId: number;
@@ -640,7 +640,7 @@ declare class Window_SkillList extends Window_Selectable {
   public colSpacing(): number;
   public maxItems(): number;
   public item(): MZ.Skill | null;
-  public itemAt(): MZ.Skill|null;
+  public itemAt(index: number): MZ.Skill|null;
   public isCurrentItemEnabled(): boolean;
 
   public includes(item: MZ.Skill | null): boolean;
