@@ -487,7 +487,7 @@ declare class Window_MenuCommand extends Window_Command {
  * The window for displaying party member status on the menu screen.
  */
 declare class Window_MenuStatus extends Window_StatusBase {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _formationMode: boolean;
   public _pendingIndex: number;
@@ -520,9 +520,9 @@ declare class Window_MenuStatus extends Window_StatusBase {
  * The window for selecting a target actor on the item and skill screens.
  */
 declare class Window_MenuActor extends Window_MenuStatus {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public processOk(): void;
   public selectLast(): void;
@@ -534,19 +534,20 @@ declare class Window_MenuActor extends Window_MenuStatus {
  * The window for selecting a category of items on the item and shop screens.
  */
 declare class Window_ItemCategory extends Window_HorzCommand {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _itemWindow: Window_ItemList | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
   public maxCols(): number;
 
   public update(): void;
 
   public makeCommandList(): void;
+  public needsCommand(name: string): boolean;
   public setItemWindow(itemWindow: Window_ItemList | null): void;
+  public needsSelection(): boolean;
 }
 
 //-----------------------------------------------------------------------------
