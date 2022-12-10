@@ -1,0 +1,26 @@
+DarkPlasma_UpdateStateBuffTurnsOnlyInBattle:
+  name: DarkPlasma_UpdateStateBuffTurnsOnlyInBattle
+  year: 2022
+  license: MIT
+  histories:
+    - date: 2022/12/10
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ステート・強化・弱体のターン経過を戦闘中のみ行う'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      RPGツクールのデフォルトでは、戦闘におけるターン終了時以外に
+      マップ上で20歩歩いた場合にも
+      ステート・強化・弱体のターン経過処理が行われます。
+      本プラグインではそのターン経過処理を戦闘中以外スキップします。
