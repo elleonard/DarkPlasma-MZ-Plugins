@@ -555,18 +555,19 @@ declare class Window_ItemCategory extends Window_HorzCommand {
  * The window for selecting an item on the item screen.
  */
 declare class Window_ItemList extends Window_Selectable {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _category: string;
   public _data: (MZ.Item | MZ.Weapon | MZ.Armor | null)[];
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setCategory(category: string): void;
   public maxCols(): number;
-  public spacing(): number;
+  public colSpacing(): number;
   public maxItems(): number;
   public item(): MZ.Item | MZ.Weapon | MZ.Armor | null;
+  public itemAt(index: number): MZ.Item | MZ.Weapon | MZ.Armor | null;
   public isCurrentItemEnabled(): boolean;
 
   public includes(item: MZ.Item | MZ.Weapon | MZ.Armor): boolean;
