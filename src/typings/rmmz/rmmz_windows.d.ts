@@ -373,7 +373,7 @@ declare namespace Window_Command {
  * The command window for the horizontal selection format.
  */
 declare class Window_HorzCommand extends Window_Command {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public initialize(rect: Rectangle, ...args: any[]): void;
 
@@ -386,7 +386,7 @@ declare class Window_HorzCommand extends Window_Command {
  * The window for displaying the description of the selected item.
  */
 declare class Window_Help extends Window_Base {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _text: string;
 
@@ -394,7 +394,7 @@ declare class Window_Help extends Window_Base {
 
   public setText(text: string): void;
   public clear(): void;
-  public setItem(item: MZ.Item | null): void;
+  public setItem(item: {description: string} | null): void;
   public refresh(): void;
 }
 
@@ -403,9 +403,9 @@ declare class Window_Help extends Window_Base {
  * The window for displaying the party's gold.
  */
 declare class Window_Gold extends Window_Base {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public colSpacing(): number;
   public refresh(): void;
@@ -418,19 +418,50 @@ declare class Window_Gold extends Window_Base {
 
 //-----------------------------------------------------------------------------
 /**
+ * The window for displaying full status on the status screen.
+ */
+declare class Window_StatusBase extends Window_Selectable {
+  public constructor(rect: Rectangle, ...args: any[]);
+
+  public _additionalSprites: any;
+
+  public initialize(rect: Rectangle, ...args: any[]): void;
+
+  public loadFaceImages(): void;
+  public refresh(): void;
+  public hideAdditionalSprites(): void;
+  public placeActorName(actor: Game_Actor, x: number, y: number): void;
+  public placeStateIcon(actor: Game_Actor, x: number, y: number): void;
+  public placeGauge(actor: Game_Actor, type: string, x: number, y: number): void;
+  public createInnerSprite(key: string, spriteClass: typeof Sprite): Sprite;
+  public placeTimeGauge(actor: Game_Actor, x: number, y: number): void;
+  public placeBasicGauges(actor: Game_Actor, x: number, y: number): void;
+  public gaugeLineHeight(): number;
+
+  public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
+  public drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void;
+  public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
+  public drawActorIcons(actor: Game_Actor, x: number, y: number, width?: number): void;
+  public drawActorSimpleStatus(actor: Game_Actor, x: number, y: number): void;
+  public actorSlotName(actor: Game_Actor, index: number): string;
+}
+
+//-----------------------------------------------------------------------------
+/**
  * The window for selecting a command on the menu screen.
  */
 declare class Window_MenuCommand extends Window_Command {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
+  public _canRepeat: boolean;
   public static _lastCommandSymbol: string | null;
 
+  public initialize(rect: Rectangle, ...args: any[]): void;
+
   public static initCommandPosition(): void;
-
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public numVisibleRows(): number;
 
   public makeCommandList(): void;
   public addMainCommands(): void;
@@ -736,37 +767,6 @@ declare class Window_EquipItem extends Window_ItemList {
 }
 
 //-----------------------------------------------------------------------------
-/**
- * The window for displaying full status on the status screen.
- */
-declare class Window_StatusBase extends Window_Selectable {
-  public constructor(rect: Rectangle);
-
-  public _additionalSprites: any;
-
-  public initialize(rect: Rectangle): void;
-
-  public loadFaceImages(): void;
-  public refresh(): void;
-  public hideAdditionalSprites(): void;
-  public placeActorName(actor: Game_Actor, x: number, y: number): void;
-  public placeStateIcon(actor: Game_Actor, x: number, y: number): void;
-  public placeGauge(actor: Game_Actor, type: string, x: number, y: number): void;
-  public createInnerSprite(key: string, spriteClass: typeof Sprite): Sprite;
-  public placeTimeGauge(actor: Game_Actor, x: number, y: number): void;
-  public placeBasicGauges(actor: Game_Actor, x: number, y: number): void;
-  public gaugeLineHeight(): number;
-
-  public drawActorCharacter(actor: Game_Actor, x: number, y: number): void;
-  public drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void;
-  public drawActorName(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorClass(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorNickname(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorLevel(actor: Game_Actor, x: number, y: number): void;
-  public drawActorIcons(actor: Game_Actor, x: number, y: number, width?: number): void;
-  public drawActorSimpleStatus(actor: Game_Actor, x: number, y: number): void;
-  public actorSlotName(actor: Game_Actor, index: number): string;
-}
 
 declare class Window_Status extends Window_StatusBase {
   public constructor();
