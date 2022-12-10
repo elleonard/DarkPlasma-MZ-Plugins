@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_windows.js v1.3.4
+// rmmz_windows.js v1.6.0
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -9,11 +9,6 @@
 declare class Window_Base extends Window {
   public constructor(rect: Rectangle, ...args: any[]);
 
-  public static _iconWidth: number;
-  public static _iconHeight: number;
-  public static _faceWidth: number;
-  public static _faceHeight: number;
-
   public _opening: boolean;
   public _closing: boolean;
   public _dimmerSprite: Sprite | undefined;
@@ -22,7 +17,11 @@ declare class Window_Base extends Window {
   /**
    * コード的にはoptionsが渡されているが、親クラスで握りつぶされている
    */
-  public destroy(): void;
+  public destroy(options?: {
+    children?: boolean;
+    texture?: boolean;
+    baseTexture?: boolean;
+  }): void;
 
   public checkRectObject(rect: Rectangle): void;
 
@@ -88,19 +87,16 @@ declare class Window_Base extends Window {
   public actorName(n: number): string;
   public partyMemberName(n: number): string;
   public processCharacter(textState: Window_Base.TextState): void;
-  public processNormalCharacter(textState: Window_Base.TextState): void;
+  public processControlCharacter(textState: Window_Base.TextState, c: string): void;
   public processNewLine(textState: Window_Base.TextState): void;
-  public processNewPage(textState: Window_Base.TextState): void;
   public obtainEscapeCode(textState: Window_Base.TextState): string;
   public obtainEscapeParam(textState: Window_Base.TextState): number;
   public processEscapeCharacter(code: string, textState: Window_Base.TextState): void;
   public processColorChange(colorIndex: number): void;
   public processDrawIcon(iconIndex: number, textState: Window_Base.TextState): void;
-
   public makeFontBigger(): void;
   public makeFontSmaller(): void;
   public calcTextHeight(textState: Window_Base.TextState): number;
-
   public maxFontSizeInLine(line: string): number;
 
   public drawIcon(iconIndex: number, x: number, y: number): void;
@@ -108,7 +104,6 @@ declare class Window_Base extends Window {
   public drawCharacter(characterName: string, characterIndex: number, x: number, y: number): void;
   public drawItemName(item: DataManager.DrawableItem | null, x: number, y: number, width?: number): void;
   public drawCurrencyValue(value: number, unit: string, x: number, y: number, width: number): void;
-  public drawGauge(x: number, y: number, width: number, rate: number, color1: string, color2: string): void;
 
   public setBackgroundType(type: number): void;
   public showBackgroundDimmer(): void;
@@ -128,8 +123,11 @@ declare namespace Window_Base {
     index: number;
     x: number;
     y: number;
-    left: number;
+    width: number;
     height: number;
+    startX: number;
+    startY: number;
+    rtl: boolean;
     buffer: string;
     drawing: boolean;
     outputWidth: number;
