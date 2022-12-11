@@ -706,13 +706,13 @@ declare class Window_EquipCommand extends Window_HorzCommand {
  * The window for selecting an equipment slot on the equipment screen.
  */
 declare class Window_EquipSlot extends Window_StatusBase {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null;
   public _statusWindow: Window_EquipStatus | null | undefined;
   public _itemWindow: Window_EquipItem | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setActor(actor: Game_Actor | null): void;
 
@@ -738,13 +738,13 @@ declare class Window_EquipSlot extends Window_StatusBase {
  * The window for selecting an equipment item on the equipment screen.
  */
 declare class Window_EquipItem extends Window_ItemList {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null;
   public _slotId: number;
   public _statusWindow: Window_EquipStatus | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
   public maxCols(): number;
   public colSpacing(): number;
 
@@ -765,11 +765,11 @@ declare class Window_EquipItem extends Window_ItemList {
 //-----------------------------------------------------------------------------
 
 declare class Window_Status extends Window_StatusBase {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setActor(actor: Game_Actor | null): void;
 
@@ -788,10 +788,10 @@ declare class Window_Status extends Window_StatusBase {
 }
 
 declare class Window_StatusParams extends Window_StatusBase {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
   public _actor: Game_Actor;
 
-  public initialize(rect: Rectangle): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setActor(actor: Game_Actor): void;
   public maxItems(): number;
@@ -801,10 +801,10 @@ declare class Window_StatusParams extends Window_StatusBase {
 }
 
 declare class Window_StatusEquip extends Window_StatusBase {
-  public constructor(rect: Rectangle);
-  public _actor: Game_Actor;
+  public constructor(rect: Rectangle, ...args: any[]);
+  public _actor: Game_Actor|null;
 
-  public initialize(rect: Rectangle): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
   public setActor(actor: Game_Actor): void;
   public maxItems(): number;
   public itemHeight(): number;
@@ -817,14 +817,9 @@ declare class Window_StatusEquip extends Window_StatusBase {
  * The window for changing various settings on the options screen.
  */
 declare class Window_Options extends Window_Command {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public windowHeight(): number;
-
-  public updatePlacement(): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public makeCommandList(): void;
   public addGeneralOptions(): void;
@@ -840,6 +835,7 @@ declare class Window_Options extends Window_Command {
   public processOk(): void;
   public cursorRight(): void;
   public cursorLeft(): void;
+  public changeVolume(symbol: string, forward: boolean, wrap: boolean): void;
   public volumeOffset(): number;
   public changeValue(symbol: string, value: number): void;
 
@@ -852,21 +848,27 @@ declare class Window_Options extends Window_Command {
  * The window for selecting a save file on the save and load screens.
  */
 declare class Window_SavefileList extends Window_Selectable {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _mode: string | null;
+  public _autoSave: boolean;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public setMode(mode: string | null): void;
+  public setMode(mode: string | null, autoSave: boolean): void;
   public maxItems(): number;
-  public maxVisibleItems(): number;
+  public numVisibleRows(): number;
   public itemHeight(): number;
 
   public drawItem(index: number): void;
-  public drawFileId(id: number, x: number, y: number): void;
-  public drawContents(info: DataManager.SaveFileInfo, rect: Rectangle, valid: boolean): void;
-  public drawGameTitle(info: DataManager.SaveFileInfo, x: number, y: number, width: number): void;
+  public indexToSavefileId(index: number): number;
+  public savefileIdToIndex(savefileId: number): number;
+  public isEnabled(savefileId: number): boolean;
+  public savefileId(): number;
+  public selectSavefile(savefileId: number): void;
+
+  public drawTitle(savefileId: number, x: number, y: number): void;
+  public drawContents(info: DataManager.SaveFileInfo, rect: Rectangle): void;
   public drawPartyCharacters(info: DataManager.SaveFileInfo, x: number, y: number): void;
   public drawPlaytime(info: DataManager.SaveFileInfo, x: number, y: number, width: number): void;
 
@@ -878,11 +880,11 @@ declare class Window_SavefileList extends Window_Selectable {
  * The window for selecting buy/sell on the shop screen.
  */
 declare class Window_ShopCommand extends Window_HorzCommand {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _purchaseOnly: boolean;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setPurchaseOnly(purchaseOnly: boolean): void;
   public maxCols(): number;
@@ -895,7 +897,7 @@ declare class Window_ShopCommand extends Window_HorzCommand {
  * The window for selecting an item to buy on the shop screen.
  */
 declare class Window_ShopBuy extends Window_Selectable {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _shopGoods: Shop_Goods[];
   public _money: number;
@@ -903,9 +905,9 @@ declare class Window_ShopBuy extends Window_Selectable {
   public _price: number[];
   public _statusWindow: Window_ShopStatus | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public setupGoods(shopGoods: number[][]): void;
+  public setupGoods(shopGoods: Shop_Goods[]): void;
 
   public maxItems(): number;
   public item(): MZ.Item | MZ.Weapon | MZ.Armor;
@@ -917,7 +919,7 @@ declare class Window_ShopBuy extends Window_Selectable {
 
   public refresh(): void;
   public makeItemList(): void;
-  public goodsToItem(goods: number[]): MZ.Item|MZ.Weapon|MZ.Armor|null;
+  public goodsToItem(goods: Shop_Goods): MZ.Item|MZ.Weapon|MZ.Armor|null;
 
   public drawItem(index: number): void;
 
@@ -932,9 +934,9 @@ declare class Window_ShopBuy extends Window_Selectable {
  * The window for selecting an item to sell on the shop screen.
  */
 declare class Window_ShopSell extends Window_ItemList {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public isEnabled(item: MZ.Item | MZ.Weapon | MZ.Armor | null): boolean;
 }
@@ -946,7 +948,7 @@ declare class Window_ShopSell extends Window_ItemList {
  */
 
 declare class Window_ShopNumber extends Window_Selectable {
-  public constructor(x?: number, y?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
   public _max: number;
@@ -954,10 +956,11 @@ declare class Window_ShopNumber extends Window_Selectable {
   public _number: number;
   public _currencyUnit: string;
   public _buttons: Sprite_Button[];
+  public _canRepeat: boolean;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
+  public isScrollEnabled(): boolean;
   public number(): number;
 
   public setup(item: MZ.Item | MZ.Weapon | MZ.Armor | null, max: number, price: number): void;
@@ -966,46 +969,50 @@ declare class Window_ShopNumber extends Window_Selectable {
 
   public createButtons(): void;
   public placeButtons(): void;
-  public updateButtonsVisiblity(): void;
-  public showButtons(): void;
-  public hideButtons(): void;
+  public totalButtonWidth(): number;
+  public buttonSpacing(): number;
 
   public refresh(): void;
+  public drawCurrentItemName(): void;
   public drawMultiplicationSign(): void;
+  public multiplicationSign(): string;
+  public multiplicationSignX(): number;
   public drawNumber(): void;
+  public drawHorzLine(): void;
   public drawTotalPrice(): void;
 
-  public itemY(): number;
-  public priceY(): number;
+  public itemNameY(): number;
+  public totalPriceY(): number;
   public buttonY(): number;
   public cursorWidth(): number;
   public cursorX(): number;
   public maxDigits(): number;
 
   public update(): void;
-  public isOkTriggered(): boolean;
   public playOkSound(): void;
   public processNumberChange(): void;
   public changeNumber(amount: number): void;
-  public updateCursor(): void;
+  public itemRect(): Rectangle;
+  public isTouchOkEnabled(): boolean;
+
   public onButtonUp(): void;
   public onButtonUp2(): void;
   public onButtonDown(): void;
   public onButtonDown2(): void;
   public onButtonOk(): void;
-} // equipment on the shop screen.
+}
 
 //-----------------------------------------------------------------------------
 /**
  * The window for displaying number of items in possession and the actor's
  */
 declare class Window_ShopStatus extends Window_StatusBase {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
   public _pageIndex: number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public refresh(): void;
 
@@ -1038,19 +1045,21 @@ declare class Window_ShopStatus extends Window_StatusBase {
  * The window for editing an actor's name on the name input screen.
  */
 declare class Window_NameEdit extends Window_Base {
-  public constructor(actor: Game_Actor, maxLength: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public _actor: Game_Actor;
+  public _actor: Game_Actor|null;
   public _name: string;
   public _index: number;
   public _maxLength: number;
-  public _defaultName: string;
+  /**
+   * 何故かinitializeで0が代入されている
+   */
+  public _defaultName: string|number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
-  // public name():string;
+  public setup(actor: Game_Actor, maxLength: number): void;
+  public name(): string;
 
   public restoreDefault(): boolean;
   public add(ch: string): boolean;
@@ -1059,22 +1068,13 @@ declare class Window_NameEdit extends Window_Base {
   public faceWidth(): number;
   public charWidth(): number;
   public left(): number;
-  public itemRect(index: number): Window_NameEdit.Rectangle;
-  public underlineRect(index: number): Window_NameEdit.Rectangle;
+  public itemRect(index: number): Rectangle;
+  public underlineRect(index: number): Rectangle;
   public underlineColor(): string;
 
-  public drawUnderline(indexn: number): void;
-  public drawChar(indexn: number): void;
+  public drawUnderline(index: number): void;
+  public drawChar(index: number): void;
   public refresh(): void;
-}
-
-declare namespace Window_NameEdit {
-  interface Rectangle {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }
 }
 
 //-----------------------------------------------------------------------------
@@ -1082,7 +1082,7 @@ declare namespace Window_NameEdit {
  * The window for selecting text characters on the name input screen.
  */
 declare class Window_NameInput extends Window_Selectable {
-  public constructor(editWindow: Window_NameEdit);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public static readonly LATIN1: ReadonlyArray<string>;
   public static readonly LATIN2: ReadonlyArray<string>;
@@ -1091,10 +1091,11 @@ declare class Window_NameInput extends Window_Selectable {
   public static readonly JAPAN2: ReadonlyArray<string>;
   public static readonly JAPAN3: ReadonlyArray<string>;
 
-  public _editWindow: Window_NameEdit;
+  public _editWindow: Window_NameEdit|null;
   public _page: number;
+  public _index: number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setEditWindow(editWindow: Window_NameEdit): void;
 
@@ -1106,7 +1107,7 @@ declare class Window_NameInput extends Window_Selectable {
   public character(): string;
   public isPageChange(): boolean;
   public isOk(): boolean;
-  public itemRect(index: number): Rectangle; /* Window_NameEdit.Rectangle */
+  public itemRect(index: number): Rectangle;
   public drawItem(index: number): void;
 
   public updateCursor(): void;
@@ -1152,6 +1153,7 @@ declare class Window_ChoiceList extends Window_Command {
   public _messageWindow: Window_Message;
   public _background: number;
   public _canRepeat: boolean;
+  public _cancelButton: Sprite_Button;
 
   public initialize(...args: any[]): void;
 
@@ -1211,7 +1213,7 @@ declare class Window_NumberInput extends Window_Selectable {
   public maxCols(): number;
   public maxItems(): number;
   public itemWidth(): number;
-  public itemRect(): Rectangle;
+  public itemRect(index: number): Rectangle;
 
   public isScrollEnabled(): boolean;
   public isHoverEnabled(): boolean;
@@ -1239,11 +1241,12 @@ declare class Window_NumberInput extends Window_Selectable {
  * The window used for the event command [Select Item].
  */
 declare class Window_EventItem extends Window_ItemList {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _messageWindow: Window_Message;
+  public _cancelButton: Sprite_Button;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setMessageWindow(messageWindow: Window_Message): void;
   public createCancelButton(): void;
@@ -1264,7 +1267,7 @@ declare class Window_EventItem extends Window_ItemList {
  * The window for displaying text messages.
  */
 declare class Window_Message extends Window_Base {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _background: number;
   public _positionType: number;
@@ -1273,7 +1276,7 @@ declare class Window_Message extends Window_Base {
   public _textState: Window_Base.TextState | null;
   public _goldWindow: Window_Gold;
   public _nameBoxWindow: Window_NameBox;
-  public _choiceWindow: Window_ChoiceList;
+  public _choiceListWindow: Window_ChoiceList;
   public _numberInputWindow: Window_NumberInput;
   public _eventItemWindow: Window_EventItem;
 
@@ -1281,7 +1284,7 @@ declare class Window_Message extends Window_Base {
   public _lineShowFast: boolean;
   public _pauseSkip: boolean;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
   public initMembers(): void;
 
   public setGoldWindow(goldWindow: Window_Gold): void;
@@ -1298,7 +1301,7 @@ declare class Window_Message extends Window_Base {
   public canStart(): boolean;
 
   public startMessage(): void;
-  public newLineX(): number;
+  public newLineX(textState: Window_Base.TextState): number;
   public updatePlacement(): void;
   public updateBackground(): void;
   public terminateMessage(): void;
@@ -1339,17 +1342,19 @@ declare class Window_Message extends Window_Base {
  * is handled as a window for convenience.
  */
 declare class Window_ScrollText extends Window_Base {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
+  public _reservedRect: Rectangle;
   public _text: string | null;
   public _allTextHeight: number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public update(): void;
   public startMessage(): void;
 
   public refresh(): void;
+  public updatePlacement(): void;
 
   public contentsHeight(): number;
   public updateMessage(): void;
@@ -1365,15 +1370,12 @@ declare class Window_ScrollText extends Window_Base {
  * The window for displaying the map name on the map screen.
  */
 declare class Window_MapName extends Window_Base {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public contentsOpacity: number;
   public _showCount: number;
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public windowHeight(): number;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public update(): void;
   public updateFadeIn(): void;
@@ -1393,7 +1395,7 @@ declare class Window_MapName extends Window_Base {
  */
 
 declare class Window_BattleLog extends Window_Base {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _lines: string[];
   public _methods: { name: string; params: any[] }[];
@@ -1402,16 +1404,10 @@ declare class Window_BattleLog extends Window_Base {
   public _baseLineStack: number[];
   public _spriteset: Spriteset_Battle | null;
 
-  public initialize(rect: Rectangle): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public setSpriteset(spriteset: Spriteset_Battle | null): void;
-  public windowWidth(): number;
-  public windowHeight(): number;
   public maxLines(): number;
-
-  public createBackBitmap(): void;
-  public createBackSprite(): void;
-
   public numLines(): number;
   public messageSpeed(): number;
   public isBusy(): boolean;
@@ -1469,6 +1465,7 @@ declare class Window_BattleLog extends Window_Base {
   public displayCurrentState(subject: Game_Battler): void;
   public displayRegeneration(subject: Game_Battler): void;
   public displayAction(subject: Game_Battler, item: MZ.Skill | MZ.Item): void;
+  public displayItemMessage(fmt: string, subject: Game_Battler, item: MZ.Skill|MZ.Item): void;
   public displayCounter(target: Game_Battler): void;
   public displayReflection(target: Game_Battler): void;
   public displaySubstitute(substitute: Game_Battler, target: Game_Battler): void;
@@ -1494,26 +1491,14 @@ declare class Window_BattleLog extends Window_Base {
   public makeTpDamageText(target: Game_Battler): string;
 }
 
-declare namespace Window_BattleLog {
-  interface Rectangle {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }
-}
-
 //-----------------------------------------------------------------------------
 /**
  * The window for selecting whether to fight or escape on the battle screen.
  */
 declare class Window_PartyCommand extends Window_Command {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public numVisibleRows(): number;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public makeCommandList(): void;
   public setup(): void;
@@ -1524,14 +1509,11 @@ declare class Window_PartyCommand extends Window_Command {
  * The window for selecting an actor's action on the battle screen.
  */
 declare class Window_ActorCommand extends Window_Command {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _actor: Game_Actor | null;
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
-  public numVisibleRows(): number;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public makeCommandList(): void;
   public addAttackCommand(): void;
@@ -1549,13 +1531,25 @@ declare class Window_ActorCommand extends Window_Command {
  * The window for displaying the status of party members on the battle screen.
  */
 declare class Window_BattleStatus extends Window_Selectable {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public _bitmapsReady: number;
+
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public extraHeight(): number;
+  public maxCols(): number;
+  public itemHeight(): number;
+  public maxItems(): number;
+  public rowSpacing(): number;
+
+  public updatePadding(): void;
+
   public actor(index: number): Game_Actor;
   public selectActor(actor: Game_Actor): void;
+
+  public update(): void;
+
   public preparePartyRefresh(): void;
   public performPartyRefresh(): void;
 
@@ -1566,8 +1560,8 @@ declare class Window_BattleStatus extends Window_Selectable {
   public faceRect(index: number): Rectangle;
   public nameX(rect: Rectangle): number;
   public nameY(rect: Rectangle): number;
-  public statusIconX(rect: Rectangle): number;
-  public statusIconY(rect: Rectangle): number;
+  public stateIconX(rect: Rectangle): number;
+  public stateIconY(rect: Rectangle): number;
   public basicGaugesX(rect: Rectangle): number;
   public basicGaugesY(rect: Rectangle): number;
 }
@@ -1577,13 +1571,15 @@ declare class Window_BattleStatus extends Window_Selectable {
  * The window for selecting a target actor on the battle screen.
  */
 declare class Window_BattleActor extends Window_BattleStatus {
-  public constructor(x: number, y: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public initialize(rect: Rectangle, ...args: any[]): void;
 
   public show(): void;
   public hide(): void;
   public select(index: number): void;
+
+  public processTouch(): void;
 }
 
 //-----------------------------------------------------------------------------
@@ -1591,15 +1587,12 @@ declare class Window_BattleActor extends Window_BattleStatus {
  * The window for selecting a target enemy on the battle screen.
  */
 declare class Window_BattleEnemy extends Window_Selectable {
-  public constructor(x?: number, y?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _enemies: Game_Enemy[];
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
-  public numVisibleRows(): number;
   public maxCols(): number;
   public maxItems(): number;
   public enemy(): Game_Enemy;
@@ -1612,6 +1605,8 @@ declare class Window_BattleEnemy extends Window_Selectable {
 
   public refresh(): void;
   public select(index: number): void;
+
+  public processTouch(): void;
 }
 
 //-----------------------------------------------------------------------------
@@ -1619,9 +1614,9 @@ declare class Window_BattleEnemy extends Window_Selectable {
  * The window for selecting a skill to use on the battle screen.
  */
 declare class Window_BattleSkill extends Window_SkillList {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public show(): void;
   public hide(): void;
@@ -1632,9 +1627,9 @@ declare class Window_BattleSkill extends Window_SkillList {
  * The window for selecting an item to use on the battle screen.
  */
 declare class Window_BattleItem extends Window_ItemList {
-  public constructor(x?: number, y?: number, width?: number, height?: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public includes(item: MZ.Item): boolean;
   public show(): void;
@@ -1646,17 +1641,14 @@ declare class Window_BattleItem extends Window_ItemList {
  * The window for selecting New Game/Continue on the title screen.
  */
 declare class Window_TitleCommand extends Window_Command {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public static _lastCommandSymbol: string | null;
 
   public static initCommandPosition(): void;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-
-  public updatePlacement(): void;
   public makeCommandList(): void;
   public isContinueEnabled(): boolean;
   public processOk(): void;
@@ -1668,13 +1660,10 @@ declare class Window_TitleCommand extends Window_Command {
  * The window for selecting "Go to Title" on the game end screen.
  */
 declare class Window_GameEnd extends Window_Command {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-
-  public updatePlacement(): void;
   public makeCommandList(): void;
 }
 
@@ -1683,7 +1672,7 @@ declare class Window_GameEnd extends Window_Command {
  * The window for selecting a block of switches/variables on the debug screen.
  */
 declare class Window_DebugRange extends Window_Selectable {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public static lastTopRow: number;
   public static lastIndex: number;
@@ -1692,18 +1681,16 @@ declare class Window_DebugRange extends Window_Selectable {
   public _maxVariables: number;
   public _editWindow: Window_DebugEdit | null | undefined;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public windowWidth(): number;
-  public windowHeight(): number;
   public maxItems(): number;
 
   public update(): void;
 
-  public mode(): string;
-  public topId(): number;
+  public mode(index: number): string;
+  public topId(index: number): number;
+  public isSwitchMode(index: number): boolean;
 
-  public refresh(): void;
   public drawItem(index: number): void;
   public isCancelTriggered(): boolean;
   public processCancel(): void;
@@ -1716,16 +1703,15 @@ declare class Window_DebugRange extends Window_Selectable {
  * The window for displaying switches and variables on the debug screen.
  */
 declare class Window_DebugEdit extends Window_Selectable {
-  public constructor();
+  public constructor(rect: Rectangle, ...args: any[]);
 
   public _mode: string;
   public _topId: number;
 
-  public initialize(...args: any[]): void;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
   public maxItems(): number;
 
-  public refresh(): void;
   public drawItem(index: number): void;
   public itemName(dataId: number): string;
   public itemStatus(dataId: number): string;
@@ -1737,4 +1723,6 @@ declare class Window_DebugEdit extends Window_Selectable {
   public update(): void;
   public updateSwitch(): void;
   public updateVariable(): void;
+
+  public deltaForVariable(): number;
 }

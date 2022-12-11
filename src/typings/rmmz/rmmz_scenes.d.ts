@@ -638,13 +638,11 @@ declare class Scene_GameEnd extends Scene_MenuBase {
 /**
  * The scene class of the shop screen.
  */
-declare interface Shop_Goods {
-
-}
+type Shop_Goods = [number, number, number, number][];
 declare class Scene_Shop extends Scene_MenuBase {
   public constructor();
 
-  public _goods: number[][];
+  public _goods: Shop_Goods[];
   public _purchaseOnly: boolean;
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
   public _helpWindow: Window_Help;
