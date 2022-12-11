@@ -31,6 +31,9 @@ PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
   const goods = parsedArgs.presetIds
     .map((presetId: number) => {
       const preset = settings.presets.find((preset: FusionItem.Settings.Preset) => preset.id === presetId);
+      if (!preset) {
+        throw `無効なプリセットIDが指定されています。 ${presetId}`;
+      }
       return preset.items
         .map((item: FusionItem.Settings.PresetItem) => toFusionItemGood($dataItems[item.result], item))
         .concat(preset.weapons.map((weapon: FusionItem.Settings.PresetItem) => toFusionItemGood($dataWeapons[weapon.result], weapon)))
@@ -153,16 +156,167 @@ function Game_Party_FusionItemMixIn(gameParty: Game_Party) {
 
 Game_Party_FusionItemMixIn(Game_Party.prototype);
 
-class Scene_FusionItem extends Scene_Shop {
-  _materials: FusionItemMaterial[] = [];
-  //@ts-ignore
-  _buyWindow: Window_FusionShopBuy;
-  /**
-   * @param {FusionItemGoods[]} goods
-   */
-  prepare(goods: FusionItemGoods[]) {
-    super.prepare(goods, true);
+type Constructor<T = Scene_MenuBase> = new (...args: any[]) => T;
+function Scene_ShopLikeMixIn<TScene extends Constructor, TGoods, TBuyWindow>(sceneClass: TScene) {
+  return class extends sceneClass {
+    _goods: TGoods[];
+    public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
+    public _helpWindow: Window_Help;
+    public _goldWindow: Window_Gold;
+    public _commandWindow: Window_ShopCommand;
+    public _dummyWindow: Window_Base;
+    public _numberWindow: Window_ShopNumber;
+    public _statusWindow: Window_ShopStatus;
+    public _buyWindow: TBuyWindow;
+    public _categoryWindow: Window_ItemCategory;
+    public _sellWindow: Window_ShopSell;
+
+    prepare(goods: TGoods[]) {
+      this._goods = goods;
+      this._item = null;
+    }
+
+    create() {
+      super.create();
+      Scene_Shop.prototype.create.call(this);
+    }
+
+    createGoldWindow() {
+      Scene_Shop.prototype.createGoldWindow.call(this);
+    }
+
+    goldWindowRect() {
+      return Scene_Shop.prototype.goldWindowRect.call(this);
+    }
+
+    commandWindowRect() {
+      return Scene_Shop.prototype.commandWindowRect.call(this);
+    }
+
+    createDummyWindow() {
+      Scene_Shop.prototype.createDummyWindow.call(this);
+    }
+
+    dummyWindowRect() {
+      return Scene_Shop.prototype.dummyWindowRect.call(this);
+    }
+
+    createNumberWindow() {
+      Scene_Shop.prototype.createNumberWindow.call(this);
+    }
+
+    numberWindowRect() {
+      return Scene_Shop.prototype.numberWindowRect.call(this);
+    }
+
+    statusWindowRect() {
+      return Scene_Shop.prototype.statusWindowRect.call(this);
+    }
+
+    buyWindowRect() {
+      return Scene_Shop.prototype.buyWindowRect.call(this);
+    }
+
+    createCategoryWindow() {
+      Scene_Shop.prototype.createCategoryWindow.call(this);
+    }
+
+    categoryWindowRect() {
+      return Scene_Shop.prototype.categoryWindowRect.call(this);
+    }
+
+    createSellWindow() {
+      Scene_Shop.prototype.createSellWindow.call(this);
+    }
+
+    sellWindowRect() {
+      return Scene_Shop.prototype.sellWindowRect.call(this);
+    }
+
+    statusWidth() {
+      return Scene_Shop.prototype.statusWidth.call(this);
+    }
+
+    activateBuyWindow() {
+      Scene_Shop.prototype.activateBuyWindow.call(this);
+    }
+
+    activateSellWindow() {
+      Scene_Shop.prototype.activateSellWindow.call(this);
+    }
+
+    commandBuy() {
+      Scene_Shop.prototype.commandBuy.call(this);
+    }
+
+    commandSell() {
+      Scene_Shop.prototype.commandSell.call(this);
+    }
+
+    onCategoryOk() {
+      Scene_Shop.prototype.onCategoryCancel.call(this);
+    }
+
+    onCategoryCancel() {
+      Scene_Shop.prototype.onCategoryCancel.call(this);
+    }
+
+    onBuyOk() {
+      Scene_Shop.prototype.onBuyOk.call(this);
+    }
+
+    onSellOk() {
+      Scene_Shop.prototype.onSellOk.call(this);
+    }
+
+    onSellCancel() {
+      Scene_Shop.prototype.onSellCancel.call(this);
+    }
+
+    onNumberOk() {
+      Scene_Shop.prototype.onNumberOk.call(this);
+    }
+
+    onNumberCancel() {
+      Scene_Shop.prototype.onNumberCancel.call(this);
+    }
+
+    doBuy(number: number) {
+      Scene_Shop.prototype.doBuy.call(this, number);
+    }
+
+    doSell(number: number) {
+      Scene_Shop.prototype.doSell.call(this, number);
+    }
+
+    endNumberInput() {
+      Scene_Shop.prototype.endNumberInput.call(this);
+    }
+
+    maxBuy() {
+      return Scene_Shop.prototype.maxBuy.call(this);
+    }
+
+    maxSell() {
+      return Scene_Shop.prototype.maxSell.call(this);
+    }
+
+    money() {
+      return Scene_Shop.prototype.money.call(this);
+    }
+
+    currencyUnit() {
+      return Scene_Shop.prototype.currencyUnit.call(this);
+    }
+
+    sellingPrice() {
+      return Scene_Shop.prototype.sellingPrice.call(this);
+    }
   }
+}
+
+class Scene_FusionItem extends Scene_ShopLikeMixIn<typeof Scene_MenuBase, FusionItemGoods, Window_FusionShopBuy>(Scene_MenuBase) {
+  _materials: FusionItemMaterial[] = [];
 
   /**
    * 融合する やめるの2択しかないので、ゲームパッド・キーボード操作の場合は不要
@@ -187,7 +341,7 @@ class Scene_FusionItem extends Scene_Shop {
   createBuyWindow() {
     const rect = this.buyWindowRect();
     this._buyWindow = new Window_FusionShopBuy(rect);
-    this._buyWindow.setupGoods(this._goods);
+    this._buyWindow.setupFusionGoods(this._goods);
     this._buyWindow.setMoney($gameParty.gold());
     this._buyWindow.setHelpWindow(this._helpWindow);
     this._buyWindow.setStatusWindow(this._statusWindow);
@@ -296,9 +450,16 @@ declare global {
 globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
 
 class Window_FusionShopBuy extends Window_ShopBuy {
-  _shopGoods: FusionItemGoods[] = [];
+  _fusionGoods: FusionItemGoods[] = [];
   _materials: FusionItemMaterial[][] = [];
   _statusWindow: Window_FusionShopStatus|null = null;
+
+  setupFusionGoods(fusionGoods: FusionItemGoods[]) {
+    this._fusionGoods = fusionGoods;
+    this.refresh();
+    this.select(0);
+  }
+
   /**
    * @return {FusionItemMaterial[]}
    */
@@ -353,7 +514,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     this._data = [];
     this._price = [];
     this._materials = [];
-    this._shopGoods
+    this._fusionGoods
       .filter((goods) => goods.isValid())
       .forEach((goods) => {
         this._data.push(goods.result);
