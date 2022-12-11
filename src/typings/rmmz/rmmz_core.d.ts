@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_core.js v1.0.0
+// rmmz_core.js v1.6.0
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ declare interface Array<T> {
    * @param {Array} array The array to compare to
    * @return {Boolean} True if the two arrays are same
    */
-  equal(array: Array<T>): boolean;
+  equals(array: Array<T>): boolean;
 
   /**
    * Makes a shallow copy of the array.
@@ -133,7 +133,7 @@ declare class Utils {
   private constructor();
 
   /**
-   * The name of the RPG Maker. 'MV' in the current version.
+   * The name of the RPG Maker.
    *
    * @static
    * @property RPGMAKER_NAME
@@ -207,6 +207,11 @@ declare class Utils {
   public static isAndroidChrome(): boolean;
 
   /**
+   * Checks whether the browser is accessing local files.
+   */
+  public static isLocal(): boolean;
+
+  /**
    * Checks whether the browser supports WebGL.
    *
    * @return {Boolean} True if the browser supports WebGL.
@@ -257,6 +262,14 @@ declare class Utils {
   public static encodeURI(str: string): string;
 
   /**
+   * Gets the filename that does not include subfolders.
+   *
+   * @param {string} filename - The filename with subfolders.
+   * @return {string} The filename without subfolders.
+   */
+  public static extractFileName(filename: string): string;
+
+  /**
    * Escape special characters for HTML.
    *
    * @param {String} str The input string.
@@ -302,6 +315,259 @@ declare class Utils {
    * @return {ArrayBuffer} The decrypted data.
    */
   public static decryptArrayBuffer(source: ArrayBuffer): ArrayBuffer;
+}
+
+//-----------------------------------------------------------------------------
+/**
+ * The static class that carries out graphics processing.
+ */
+declare class Graphics {
+  /**
+   * @class Graphics
+   */
+  private constructor();
+
+  /**
+   * Initializes the graphics system.
+   *
+   * @static
+   * @method initialize
+   * @return {Boolean} True if the graphics system is available.
+   */
+  public static initialize(): boolean;
+
+  public static app: PIXI.Application;
+  public static effekseer: EffekseerContext;
+
+  public static _width: number;
+  public static _height: number;
+
+  public static _defaultScale: number;
+  public static _realScale: number;
+
+  public static _errorPrinter: HTMLParagraphElement | null;
+  public static _tickHandler: Function | null;
+  public static _canvas: HTMLCanvasElement | null;
+  public static _fpsCounter: Graphics.FPSCounter | null;
+  public static _loadingSpinner: HTMLDivElement | null;
+  public static _stretchEnabled: boolean;
+
+  public static _app: PIXI.Application | null;
+  public static _effekseer: effekseer.EffekseerContext | null;
+  public static _wasLoading: boolean;
+
+  /**
+   * The total frame count of the game screen.
+   *
+   * @static
+   * @property frameCount
+   * @type Number
+   */
+  public static frameCount: number;
+
+  /**
+   * Register a handler for tick events.
+   *
+   * @param {Function} handler The listener function to be added for updates.
+   */
+  public static setTickHandler(handler: Function): void;
+
+  /**
+   * Starts the game loop.
+   */
+  public static startGameLoop(): void;
+
+  /**
+   * Stops the game loop.
+   */
+  public static stopGameLoop(): void;
+
+  /**
+   * Sets the stage to be rendered.
+   *
+   * @param {Stage} stage The stage object to be rendered.
+   */
+  public static setStage(stage: Stage): void;
+
+  /**
+   * Shows the loading spinner.
+   *
+   * @static
+   * @method startLoading
+   */
+  public static startLoading(): void;
+
+  /**
+   * Erases the loading spinner.
+   *
+   * @static
+   * @method endLoading
+   * @return {Boolean} True if the loading spinner was active.
+   */
+  public static endLoading(): boolean;
+
+  /**
+   * Displays the error text to the screen.
+   *
+   * @static
+   * @method printError
+   * @param {String} name The name of the error
+   * @param {String} message The message of the error
+   * @param {Error} error The error object
+   */
+  public static printError(name: string, message: string, error?: Error): void;
+
+  /**
+   * Displays a button to try to reload resources.
+   *
+   * @param {Function} retry The callback function to be called when the button is pressed.
+   */
+  public static showRetryButtln(retry: Function): void;
+
+  /**
+   * Erases the loading error text.
+   */
+  public static eraseError(): void;
+
+  /**
+   * Converts an x coordinate on the page to the corresponding
+   * x coordinate on the canvas area.
+   *
+   * @static
+   * @method pageToCanvasX
+   * @param {Number} x The x coordinate on the page to be converted
+   * @return {Number} The x coordinate on the canvas area
+   */
+  public static pageToCanvasX(x: number): number;
+
+  /**
+   * Converts a y coordinate on the page to the corresponding
+   * y coordinate on the canvas area.
+   *
+   * @static
+   * @method pageToCanvasY
+   * @param {Number} y The y coordinate on the page to be converted
+   * @return {Number} The y coordinate on the canvas area
+   */
+  public static pageToCanvasY(y: number): number;
+
+  /**
+   * Checks whether the specified point is inside the game canvas area.
+   *
+   * @static
+   * @method isInsideCanvas
+   * @param {Number} x The x coordinate on the canvas area
+   * @param {Number} y The y coordinate on the canvas area
+   * @return {Boolean} True if the specified point is inside the game canvas area
+   */
+  public static isInsideCanvas(x: number, y: number): boolean;
+
+  /**
+   * Shows the game screen.
+   */
+  public static showScreen(): void;
+
+  /**
+   * Hides the game screen.
+   */
+  public static hideScreen(): void;
+
+  /**
+   * Changes the size of the game screen.
+   *
+   * @param {Number} width The width of the game screen.
+   * @param {Number} height The height of the game screen.
+   */
+  public static resize(width: number, height: number): void;
+
+  /**
+   * The width of the game screen.
+   *
+   * @static
+   * @property width
+   * @type Number
+   */
+  public static width: number;
+
+  /**
+   * The height of the game screen.
+   *
+   * @static
+   * @property height
+   * @type Number
+   */
+  public static height: number;
+
+  /**
+   * The width of the window display area.
+   *
+   * @static
+   * @property boxWidth
+   * @type Number
+   */
+  public static boxWidth: number;
+
+  /**
+   * The height of the window display area.
+   *
+   * @static
+   * @property boxHeight
+   * @type Number
+   */
+  public static boxHeight: number;
+
+  /**
+   * The zoom scale of the game screen.
+   *
+   * @static
+   * @property defaultScale
+   * @type Number
+   */
+  public static defaultScale: number;
+
+  public static _createAllElements(): void;
+  public static _updateAllElements(): void;
+  public static _onTick(deltaTIme: any): void;
+  public static _canRender(): boolean;
+  public static _updateRealScale(): void;
+  public static _strechWidth(): number;
+  public static _strechHeight(): number;
+  public static _makeErrorHtml(name: string, message: string): string;
+  public static _defaultStretchMode(): boolean;
+  public static _createErrorPrinter(): void;
+  public static _updateErrorPrinter(): void;
+  public static _createCanvas(): void;
+  public static _updateCanvas(): void;
+  public static _updateVideo(): void;
+  public static _createLoadingSpinner(): void;
+  public static _createFPSCounter(): void;
+  public static _centerElement(element: HTMLElement): void;
+  public static _disableContextMenu(): void;
+  public static _applyCanvasFilter(): void;
+  public static _clearCanvasFilter(): void;
+  public static _setupEventHandlers(): void;
+  public static _onWindowResize(): void;
+  public static _onKeyDown(event: KeyboardEvent): void;
+  public static _switchFPSCounter(): void;
+  public static _switchStretchMode(): void;
+  public static _switchFullScreen(): void;
+  public static _isFullScreen(): boolean;
+  public static _requestFullScreen(): void;
+  public static _cancelFullScreen(): void;
+  public static _createPixiApp(): void;
+  public static _setupPixi(): void;
+  public static _createEffekseerContext(): void;
+}
+
+declare namespace Graphics {
+  class FPSCounter {
+    initialize(): void;
+    startTick(): void;
+    endTick(): void;
+    switchMode(): void;
+    _createElements(): void;
+    _update(): void;
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -723,650 +989,6 @@ declare class Bitmap {
 }
 type BitmapLoadListener = () => void;
 
-//-----------------------------------------------------------------------------
-
-/**
- * The static class that carries out graphics processing.
- */
-declare class Graphics {
-  /**
-   * @class Graphics
-   */
-  private constructor();
-
-  /**
-   * Initializes the graphics system.
-   *
-   * @static
-   * @method initialize
-   * @return {Boolean} True if the graphics system is available.
-   */
-  public static initialize(): boolean;
-
-  public static app: PIXI.Application;
-  public static effekseer: EffekseerContext;
-
-  public static _width: number;
-  public static _height: number;
-
-  public static _defaultScale: number;
-  public static _realScale: number;
-
-  public static _errorPrinter: HTMLParagraphElement | null;
-  public static _tickHandler: Function | null;
-  public static _canvas: HTMLCanvasElement | null;
-  public static _fpsCounter: Graphics.FPSCounter | null;
-  public static _loadingSpinner: HTMLDivElement | null;
-  public static _stretchEnabled: boolean;
-
-  public static _app: PIXI.Application | null;
-  public static _effekseer: effekseer.EffekseerContext | null;
-  public static _wasLoading: boolean;
-
-  /**
-   * The total frame count of the game screen.
-   *
-   * @static
-   * @property frameCount
-   * @type Number
-   */
-  public static frameCount: number;
-
-  /**
-   * Register a handler for tick events.
-   *
-   * @param {Function} handler The listener function to be added for updates.
-   */
-  public static setTickHandler(handler: Function): void;
-
-  /**
-   * Starts the game loop.
-   */
-  public static startGameLoop(): void;
-
-  /**
-   * Stops the game loop.
-   */
-  public static stopGameLoop(): void;
-
-  /**
-   * Sets the stage to be rendered.
-   *
-   * @param {Stage} stage The stage object to be rendered.
-   */
-  public static setStage(stage: Stage): void;
-
-  /**
-   * Shows the loading spinner.
-   *
-   * @static
-   * @method startLoading
-   */
-  public static startLoading(): void;
-
-  /**
-   * Erases the loading spinner.
-   *
-   * @static
-   * @method endLoading
-   * @return {Boolean} True if the loading spinner was active.
-   */
-  public static endLoading(): boolean;
-
-  /**
-   * Displays the error text to the screen.
-   *
-   * @static
-   * @method printError
-   * @param {String} name The name of the error
-   * @param {String} message The message of the error
-   * @param {Error} error The error object
-   */
-  public static printError(name: string, message: string, error?: Error): void;
-
-  /**
-   * Displays a button to try to reload resources.
-   *
-   * @param {Function} retry The callback function to be called when the button is pressed.
-   */
-  public static showRetryButtln(retry: Function): void;
-
-  /**
-   * Erases the loading error text.
-   */
-  public static eraseError(): void;
-
-  /**
-   * Converts an x coordinate on the page to the corresponding
-   * x coordinate on the canvas area.
-   *
-   * @static
-   * @method pageToCanvasX
-   * @param {Number} x The x coordinate on the page to be converted
-   * @return {Number} The x coordinate on the canvas area
-   */
-  public static pageToCanvasX(x: number): number;
-
-  /**
-   * Converts a y coordinate on the page to the corresponding
-   * y coordinate on the canvas area.
-   *
-   * @static
-   * @method pageToCanvasY
-   * @param {Number} y The y coordinate on the page to be converted
-   * @return {Number} The y coordinate on the canvas area
-   */
-  public static pageToCanvasY(y: number): number;
-
-  /**
-   * Checks whether the specified point is inside the game canvas area.
-   *
-   * @static
-   * @method isInsideCanvas
-   * @param {Number} x The x coordinate on the canvas area
-   * @param {Number} y The y coordinate on the canvas area
-   * @return {Boolean} True if the specified point is inside the game canvas area
-   */
-  public static isInsideCanvas(x: number, y: number): boolean;
-
-  /**
-   * Shows the game screen.
-   */
-  public static showScreen(): void;
-
-  /**
-   * Hides the game screen.
-   */
-  public static hideScreen(): void;
-
-  /**
-   * Changes the size of the game screen.
-   *
-   * @param {Number} width The width of the game screen.
-   * @param {Number} height The height of the game screen.
-   */
-  public static resize(width: number, height: number): void;
-
-  /**
-   * The width of the game screen.
-   *
-   * @static
-   * @property width
-   * @type Number
-   */
-  public static width: number;
-
-  /**
-   * The height of the game screen.
-   *
-   * @static
-   * @property height
-   * @type Number
-   */
-  public static height: number;
-
-  /**
-   * The width of the window display area.
-   *
-   * @static
-   * @property boxWidth
-   * @type Number
-   */
-  public static boxWidth: number;
-
-  /**
-   * The height of the window display area.
-   *
-   * @static
-   * @property boxHeight
-   * @type Number
-   */
-  public static boxHeight: number;
-
-  /**
-   * The zoom scale of the game screen.
-   *
-   * @static
-   * @property defaultScale
-   * @type Number
-   */
-  public static defaultScale: number;
-
-  public static _createAllElements(): void;
-  public static _updateAllElements(): void;
-  public static _onTick(deltaTIme: any): void;
-  public static _canRender(): boolean;
-  public static _updateRealScale(): void;
-  public static _strechWidth(): number;
-  public static _strechHeight(): number;
-  public static _makeErrorHtml(name: string, message: string): string;
-  public static _defaultStretchMode(): boolean;
-  public static _createErrorPrinter(): void;
-  public static _updateErrorPrinter(): void;
-  public static _createCanvas(): void;
-  public static _updateCanvas(): void;
-  public static _updateVideo(): void;
-  public static _createLoadingSpinner(): void;
-  public static _createFPSCounter(): void;
-  public static _centerElement(element: HTMLElement): void;
-  public static _disableContextMenu(): void;
-  public static _applyCanvasFilter(): void;
-  public static _clearCanvasFilter(): void;
-  public static _setupEventHandlers(): void;
-  public static _onWindowResize(): void;
-  public static _onKeyDown(event: KeyboardEvent): void;
-  public static _switchFPSCounter(): void;
-  public static _switchStretchMode(): void;
-  public static _switchFullScreen(): void;
-  public static _isFullScreen(): boolean;
-  public static _requestFullScreen(): void;
-  public static _cancelFullScreen(): void;
-  public static _createPixiApp(): void;
-  public static _setupPixi(): void;
-  public static _createEffekseerContext(): void;
-}
-
-declare namespace Graphics {
-  class FPSCounter {
-    initialize(): void;
-    startTick(): void;
-    endTick(): void;
-    switchMode(): void;
-    _createElements(): void;
-    _update(): void;
-  }
-}
-
-//-----------------------------------------------------------------------------
-/**
- * The static class that handles input data from the keyboard and gamepads.
- */
-declare class Input {
-  /**
-   * @class Input
-   */
-  private constructor();
-
-  /**
-   * Initializes the input system.
-   *
-   * @static
-   * @method initialize
-   */
-  public static initialize(): void;
-
-  /**
-   * The wait time of the key repeat in frames.
-   *
-   * @static
-   * @property keyRepeatWait
-   * @type Number
-   */
-  public static keyRepeatWait: number;
-
-  /**
-   * The interval of the key repeat in frames.
-   *
-   * @static
-   * @property keyRepeatInterval
-   * @type Number
-   */
-  public static keyRepeatInterval: number;
-
-  /**
-   * A hash table to convert from a virtual key code to a mapped key name.
-   *
-   * @static
-   * @property keyMapper
-   * @type Object
-   */
-  public static keyMapper: { [keyCode: number]: string };
-
-  /**
-   * A hash table to convert from a gamepad button to a mapped key name.
-   *
-   * @static
-   * @property gamepadMapper
-   * @type Object
-   */
-  public static gamepadMapper: { [gamepadButton: number]: string };
-
-  /**
-   * Clears all the input data.
-   *
-   * @static
-   * @method clear
-   */
-  public static clear(): void;
-
-  public static _currentState: { [keyName: string]: boolean };
-  public static _previousState: { [keyName: string]: boolean };
-  public static _gamepadStates: boolean[][];
-  public static _latestButton: string | null;
-  public static _pressedTime: number;
-  public static _dir4: number;
-  public static _dir8: number;
-  public static _preferredAxis: 'x' | 'y' | '';
-  public static _date: number;
-  public static _virtualButton: string | null;
-
-  /**
-   * Updates the input data.
-   *
-   * @static
-   * @method update
-   */
-  public static update(): void;
-
-  /**
-   * Checks whether a key is currently pressed down.
-   *
-   * @static
-   * @method isPressed
-   * @param {String} keyName The mapped name of the key
-   * @return {Boolean} True if the key is pressed
-   */
-  public static isPressed(keyName: string): boolean;
-
-  /**
-   * Checks whether a key is just pressed.
-   *
-   * @static
-   * @method isTriggered
-   * @param {String} keyName The mapped name of the key
-   * @return {Boolean} True if the key is triggered
-   */
-  public static isTriggered(keyName: string): boolean;
-
-  /**
-   * Checks whether a key is just pressed or a key repeat occurred.
-   *
-   * @static
-   * @method isRepeated
-   * @param {String} keyName The mapped name of the key
-   * @return {Boolean} True if the key is repeated
-   */
-  public static isRepeated(keyName: string): boolean;
-
-  /**
-   * Checks whether a key is kept depressed.
-   *
-   * @static
-   * @method isLongPressed
-   * @param {String} keyName The mapped name of the key
-   * @return {Boolean} True if the key is long-pressed
-   */
-  public static isLongPressed(keyName: string): boolean;
-
-  /**
-   * [read-only] The four direction value as a number of the numpad, or 0 for neutral.
-   *
-   * @static
-   * @property dir4
-   * @type Number
-   */
-  public static readonly dir4: number;
-
-  /**
-   * [read-only] The eight direction value as a number of the numpad, or 0 for neutral.
-   *
-   * @static
-   * @property dir8
-   * @type Number
-   */
-  public static readonly dir8: number;
-
-  /**
-   * [read-only] The time of the last input in milliseconds.
-   *
-   * @static
-   * @property date
-   * @type Number
-   */
-  public static readonly date: number;
-
-  public static virtualClick(buttonName: string): void;
-
-  public static _setupEventHandlers(): void;
-  public static _onKeyDown(event: KeyboardEvent): void;
-  public static _shouldPreventDefault(keyCode: number): boolean;
-  public static _onKeyUp(event: KeyboardEvent): void;
-  public static _onLostFocus(): void;
-  public static _pollGamepads(): void;
-  public static _updateGamepadState(gamepad: Gamepad): void;
-  public static _updateDirection(): void;
-  public static _signX(): number;
-  public static _signY(): number;
-  public static _makeNumpadDirection(x: number, y: number): number;
-  public static _isEscapeCompatible(keyName: string): boolean;
-}
-
-//-----------------------------------------------------------------------------
-/**
- * The static class that handles input data from the mouse and touchscreen.
- */
-declare class TouchInput {
-  /**
-   * @class TouchInput
-   */
-  private constructor();
-
-  /**
-   * Initializes the touch system.
-   *
-   * @static
-   * @method initialize
-   */
-  public static initialize(): void;
-
-  /**
-   * The wait time of the pseudo key repeat in frames.
-   *
-   * @static
-   * @property keyRepeatWait
-   * @type Number
-   */
-  public static keyRepeatWait: number;
-
-  /**
-   * The interval of the pseudo key repeat in frames.
-   *
-   * @static
-   * @property keyRepeatInterval
-   * @type Number
-   */
-  public static keyRepeatInterval: number;
-
-  /**
-   * The threshold number of pixels to treat as moved.
-   *
-   * @type number
-   */
-  public static moveThreashold: number;
-
-  /**
-   * Clears all the touch data.
-   *
-   * @static
-   * @method clear
-   */
-  public static clear(): void;
-
-  public static _mousePressed: boolean;
-  public static _screenPressed: boolean;
-  public static _pressedTime: number;
-  public static _clicked: boolean;
-  public static _newState: TouchInput.State;
-  public static _currentState: TouchInput.State;
-  public static _moved: boolean;
-  public static _triggerX: number;
-  public static _triggerY: number;
-  public static _x: number;
-  public static _y: number;
-  public static _date: number;
-
-  /**
-   * Updates the touch data.
-   *
-   * @static
-   * @method update
-   */
-  public static update(): void;
-
-  /**
-   * Checks whether the mouse button or touchscreen has been pressed and released at the same position.
-   *
-   * @return {Boolean} True if the mouse button or touchscreen is clicked.
-   */
-  public static isClicked(): boolean;
-
-  /**
-   * Checks whether the mouse button or touchscreen is currently pressed down.
-   *
-   * @static
-   * @method isPressed
-   * @return {Boolean} True if the mouse button or touchscreen is pressed
-   */
-  public static isPressed(): boolean;
-
-  /**
-   * Checks whether the left mouse button or touchscreen is just pressed.
-   *
-   * @static
-   * @method isTriggered
-   * @return {Boolean} True if the mouse button or touchscreen is triggered
-   */
-  public static isTriggered(): boolean;
-
-  /**
-   * Checks whether the left mouse button or touchscreen is just pressed
-   * or a pseudo key repeat occurred.
-   *
-   * @static
-   * @method isRepeated
-   * @return {Boolean} True if the mouse button or touchscreen is repeated
-   */
-  public static isRepeated(): boolean;
-
-  /**
-   * Checks whether the left mouse button or touchscreen is kept depressed.
-   *
-   * @static
-   * @method isLongPressed
-   * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
-   */
-  public static isLongPressed(): boolean;
-
-  /**
-   * Checks whether the right mouse button is just pressed.
-   *
-   * @static
-   * @method isCancelled
-   * @return {Boolean} True if the right mouse button is just pressed
-   */
-  public static isCancelled(): boolean;
-
-  /**
-   * Checks whether the mouse or a finger on the touchscreen is moved.
-   *
-   * @static
-   * @method isMoved
-   * @return {Boolean} True if the mouse or a finger on the touchscreen is moved
-   */
-  public static isMoved(): boolean;
-
-  /**
-   * Checks whether the mouse is moved without pressing a button.
-   *
-   * @return {Boolean} True if the mouse is hovered.
-   */
-  public static isHovered(): boolean;
-
-  /**
-   * Checks whether the left mouse button or touchscreen is released.
-   *
-   * @static
-   * @method isReleased
-   * @return {Boolean} True if the mouse button or touchscreen is released
-   */
-  public static isReleased(): boolean;
-
-  /**
-   * [read-only] The horizontal scroll amount.
-   *
-   * @static
-   * @property wheelX
-   * @type Number
-   */
-  public static readonly wheelX: number;
-
-  /**
-   * [read-only] The vertical scroll amount.
-   *
-   * @static
-   * @property wheelY
-   * @type Number
-   */
-  public static readonly wheelY: number;
-
-  /**
-   * [read-only] The x coordinate on the canvas area of the latest touch event.
-   *
-   * @static
-   * @property x
-   * @type Number
-   */
-  public static readonly x: number;
-
-  /**
-   * [read-only] The y coordinate on the canvas area of the latest touch event.
-   *
-   * @static
-   * @property y
-   * @type Number
-   */
-  public static readonly y: number;
-
-  /**
-   * [read-only] The time of the last input in milliseconds.
-   *
-   * @static
-   * @property date
-   * @type Number
-   */
-  public static readonly date: number;
-
-  public static _setupEventHandlers(): void;
-  public static _onMouseDown(event: MouseEvent): void;
-  public static _onLeftButtonDown(event: MouseEvent): void;
-  public static _onMiddleButtonDown(event: MouseEvent): void;
-  public static _onRightButtonDown(event: MouseEvent): void;
-  public static _onMouseMove(event: MouseEvent): void;
-  public static _onMouseUp(event: MouseEvent): void;
-  public static _onWheel(event: WheelEvent): void;
-  public static _onTouchStart(event: TouchEvent): void;
-  public static _onTouchMove(event: TouchEvent): void;
-  public static _onTouchEnd(event: TouchEvent): void;
-  public static _onTouchCancel(event: TouchEvent): void;
-  public static _onLostFocus(): void;
-  public static _onTrigger(x: number, y: number): void;
-  public static _onCancel(x: number, y: number): void;
-  public static _onMove(x: number, y: number): void;
-  public static _onHover(x: number, y: number): void;
-  public static _onRelease(x: number, y: number): void;
-}
-
-declare namespace TouchInput {
-  interface State {
-    triggered: boolean;
-    cancelled: boolean;
-    moved: boolean;
-    hovered: boolean;
-    released: boolean;
-    wheelX: number;
-    wheelY: number;
-  }
-}
 
 //-----------------------------------------------------------------------------
 /**
@@ -1387,8 +1009,8 @@ declare class Sprite extends PIXI.Sprite {
   public _bitmap: Bitmap | null | undefined;
   public _frame: Rectangle;
   public _hue: number;
-  public _blendColor: number[];
-  public _colorTone: number[];
+  public _blendColor: [number, number, number, number];
+  public _colorTone: [number, number, number, number];
   public _colorFilter: ColorFilter | null;
   public _blendMode: number;
   public _hidden: boolean;
@@ -2741,6 +2363,396 @@ declare class Video {
   public static _isVisible(): boolean;
   public static _setupEventHandlers(): void;
   public static _onUserGesture(): void;
+}
+//-----------------------------------------------------------------------------
+/**
+ * The static class that handles input data from the keyboard and gamepads.
+ */
+declare class Input {
+  /**
+   * @class Input
+   */
+  private constructor();
+
+  /**
+   * Initializes the input system.
+   *
+   * @static
+   * @method initialize
+   */
+  public static initialize(): void;
+
+  /**
+   * The wait time of the key repeat in frames.
+   *
+   * @static
+   * @property keyRepeatWait
+   * @type Number
+   */
+  public static keyRepeatWait: number;
+
+  /**
+   * The interval of the key repeat in frames.
+   *
+   * @static
+   * @property keyRepeatInterval
+   * @type Number
+   */
+  public static keyRepeatInterval: number;
+
+  /**
+   * A hash table to convert from a virtual key code to a mapped key name.
+   *
+   * @static
+   * @property keyMapper
+   * @type Object
+   */
+  public static keyMapper: { [keyCode: number]: string };
+
+  /**
+   * A hash table to convert from a gamepad button to a mapped key name.
+   *
+   * @static
+   * @property gamepadMapper
+   * @type Object
+   */
+  public static gamepadMapper: { [gamepadButton: number]: string };
+
+  /**
+   * Clears all the input data.
+   *
+   * @static
+   * @method clear
+   */
+  public static clear(): void;
+
+  public static _currentState: { [keyName: string]: boolean };
+  public static _previousState: { [keyName: string]: boolean };
+  public static _gamepadStates: boolean[][];
+  public static _latestButton: string | null;
+  public static _pressedTime: number;
+  public static _dir4: number;
+  public static _dir8: number;
+  public static _preferredAxis: 'x' | 'y' | '';
+  public static _date: number;
+  public static _virtualButton: string | null;
+
+  /**
+   * Updates the input data.
+   *
+   * @static
+   * @method update
+   */
+  public static update(): void;
+
+  /**
+   * Checks whether a key is currently pressed down.
+   *
+   * @static
+   * @method isPressed
+   * @param {String} keyName The mapped name of the key
+   * @return {Boolean} True if the key is pressed
+   */
+  public static isPressed(keyName: string): boolean;
+
+  /**
+   * Checks whether a key is just pressed.
+   *
+   * @static
+   * @method isTriggered
+   * @param {String} keyName The mapped name of the key
+   * @return {Boolean} True if the key is triggered
+   */
+  public static isTriggered(keyName: string): boolean;
+
+  /**
+   * Checks whether a key is just pressed or a key repeat occurred.
+   *
+   * @static
+   * @method isRepeated
+   * @param {String} keyName The mapped name of the key
+   * @return {Boolean} True if the key is repeated
+   */
+  public static isRepeated(keyName: string): boolean;
+
+  /**
+   * Checks whether a key is kept depressed.
+   *
+   * @static
+   * @method isLongPressed
+   * @param {String} keyName The mapped name of the key
+   * @return {Boolean} True if the key is long-pressed
+   */
+  public static isLongPressed(keyName: string): boolean;
+
+  /**
+   * [read-only] The four direction value as a number of the numpad, or 0 for neutral.
+   *
+   * @static
+   * @property dir4
+   * @type Number
+   */
+  public static readonly dir4: number;
+
+  /**
+   * [read-only] The eight direction value as a number of the numpad, or 0 for neutral.
+   *
+   * @static
+   * @property dir8
+   * @type Number
+   */
+  public static readonly dir8: number;
+
+  /**
+   * [read-only] The time of the last input in milliseconds.
+   *
+   * @static
+   * @property date
+   * @type Number
+   */
+  public static readonly date: number;
+
+  public static virtualClick(buttonName: string): void;
+
+  public static _setupEventHandlers(): void;
+  public static _onKeyDown(event: KeyboardEvent): void;
+  public static _shouldPreventDefault(keyCode: number): boolean;
+  public static _onKeyUp(event: KeyboardEvent): void;
+  public static _onLostFocus(): void;
+  public static _pollGamepads(): void;
+  public static _updateGamepadState(gamepad: Gamepad): void;
+  public static _updateDirection(): void;
+  public static _signX(): number;
+  public static _signY(): number;
+  public static _makeNumpadDirection(x: number, y: number): number;
+  public static _isEscapeCompatible(keyName: string): boolean;
+}
+
+//-----------------------------------------------------------------------------
+/**
+ * The static class that handles input data from the mouse and touchscreen.
+ */
+declare class TouchInput {
+  /**
+   * @class TouchInput
+   */
+  private constructor();
+
+  /**
+   * Initializes the touch system.
+   *
+   * @static
+   * @method initialize
+   */
+  public static initialize(): void;
+
+  /**
+   * The wait time of the pseudo key repeat in frames.
+   *
+   * @static
+   * @property keyRepeatWait
+   * @type Number
+   */
+  public static keyRepeatWait: number;
+
+  /**
+   * The interval of the pseudo key repeat in frames.
+   *
+   * @static
+   * @property keyRepeatInterval
+   * @type Number
+   */
+  public static keyRepeatInterval: number;
+
+  /**
+   * The threshold number of pixels to treat as moved.
+   *
+   * @type number
+   */
+  public static moveThreashold: number;
+
+  /**
+   * Clears all the touch data.
+   *
+   * @static
+   * @method clear
+   */
+  public static clear(): void;
+
+  public static _mousePressed: boolean;
+  public static _screenPressed: boolean;
+  public static _pressedTime: number;
+  public static _clicked: boolean;
+  public static _newState: TouchInput.State;
+  public static _currentState: TouchInput.State;
+  public static _moved: boolean;
+  public static _triggerX: number;
+  public static _triggerY: number;
+  public static _x: number;
+  public static _y: number;
+  public static _date: number;
+
+  /**
+   * Updates the touch data.
+   *
+   * @static
+   * @method update
+   */
+  public static update(): void;
+
+  /**
+   * Checks whether the mouse button or touchscreen has been pressed and released at the same position.
+   *
+   * @return {Boolean} True if the mouse button or touchscreen is clicked.
+   */
+  public static isClicked(): boolean;
+
+  /**
+   * Checks whether the mouse button or touchscreen is currently pressed down.
+   *
+   * @static
+   * @method isPressed
+   * @return {Boolean} True if the mouse button or touchscreen is pressed
+   */
+  public static isPressed(): boolean;
+
+  /**
+   * Checks whether the left mouse button or touchscreen is just pressed.
+   *
+   * @static
+   * @method isTriggered
+   * @return {Boolean} True if the mouse button or touchscreen is triggered
+   */
+  public static isTriggered(): boolean;
+
+  /**
+   * Checks whether the left mouse button or touchscreen is just pressed
+   * or a pseudo key repeat occurred.
+   *
+   * @static
+   * @method isRepeated
+   * @return {Boolean} True if the mouse button or touchscreen is repeated
+   */
+  public static isRepeated(): boolean;
+
+  /**
+   * Checks whether the left mouse button or touchscreen is kept depressed.
+   *
+   * @static
+   * @method isLongPressed
+   * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
+   */
+  public static isLongPressed(): boolean;
+
+  /**
+   * Checks whether the right mouse button is just pressed.
+   *
+   * @static
+   * @method isCancelled
+   * @return {Boolean} True if the right mouse button is just pressed
+   */
+  public static isCancelled(): boolean;
+
+  /**
+   * Checks whether the mouse or a finger on the touchscreen is moved.
+   *
+   * @static
+   * @method isMoved
+   * @return {Boolean} True if the mouse or a finger on the touchscreen is moved
+   */
+  public static isMoved(): boolean;
+
+  /**
+   * Checks whether the mouse is moved without pressing a button.
+   *
+   * @return {Boolean} True if the mouse is hovered.
+   */
+  public static isHovered(): boolean;
+
+  /**
+   * Checks whether the left mouse button or touchscreen is released.
+   *
+   * @static
+   * @method isReleased
+   * @return {Boolean} True if the mouse button or touchscreen is released
+   */
+  public static isReleased(): boolean;
+
+  /**
+   * [read-only] The horizontal scroll amount.
+   *
+   * @static
+   * @property wheelX
+   * @type Number
+   */
+  public static readonly wheelX: number;
+
+  /**
+   * [read-only] The vertical scroll amount.
+   *
+   * @static
+   * @property wheelY
+   * @type Number
+   */
+  public static readonly wheelY: number;
+
+  /**
+   * [read-only] The x coordinate on the canvas area of the latest touch event.
+   *
+   * @static
+   * @property x
+   * @type Number
+   */
+  public static readonly x: number;
+
+  /**
+   * [read-only] The y coordinate on the canvas area of the latest touch event.
+   *
+   * @static
+   * @property y
+   * @type Number
+   */
+  public static readonly y: number;
+
+  /**
+   * [read-only] The time of the last input in milliseconds.
+   *
+   * @static
+   * @property date
+   * @type Number
+   */
+  public static readonly date: number;
+
+  public static _setupEventHandlers(): void;
+  public static _onMouseDown(event: MouseEvent): void;
+  public static _onLeftButtonDown(event: MouseEvent): void;
+  public static _onMiddleButtonDown(event: MouseEvent): void;
+  public static _onRightButtonDown(event: MouseEvent): void;
+  public static _onMouseMove(event: MouseEvent): void;
+  public static _onMouseUp(event: MouseEvent): void;
+  public static _onWheel(event: WheelEvent): void;
+  public static _onTouchStart(event: TouchEvent): void;
+  public static _onTouchMove(event: TouchEvent): void;
+  public static _onTouchEnd(event: TouchEvent): void;
+  public static _onTouchCancel(event: TouchEvent): void;
+  public static _onLostFocus(): void;
+  public static _onTrigger(x: number, y: number): void;
+  public static _onCancel(x: number, y: number): void;
+  public static _onMove(x: number, y: number): void;
+  public static _onHover(x: number, y: number): void;
+  public static _onRelease(x: number, y: number): void;
+}
+
+declare namespace TouchInput {
+  interface State {
+    triggered: boolean;
+    cancelled: boolean;
+    moved: boolean;
+    hovered: boolean;
+    released: boolean;
+    wheelX: number;
+    wheelY: number;
+  }
 }
 //-----------------------------------------------------------------------------
 /**
