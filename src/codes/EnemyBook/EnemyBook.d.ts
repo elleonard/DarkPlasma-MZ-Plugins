@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz/rmmz.d.ts" />
+/// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../../common/scene/battleInputtingWindowInterface.d.ts" />
 /// <reference path="../../codes/CustomKeyHandler/CustomKeyHandler.d.ts" />
 /// <reference path="../../codes/CustomKeyHandler/CustomKeyHandlerExport.d.ts" />

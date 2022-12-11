@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz/rmmz.d.ts" />
+/// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../StateBuffOnBattleStart/StateBuffOnBattleStart.d.ts" />
 
 type StateGroupSetting = { name: string; states: number[] };

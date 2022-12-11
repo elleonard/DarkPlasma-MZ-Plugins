@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz/rmmz.d.ts" />
+/// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
 /// <reference path="../FilterEquip/FilterEquip.d.ts" />
 

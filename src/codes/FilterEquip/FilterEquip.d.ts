@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz/rmmz.d.ts" />
+/// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
 /// <reference path="../ParameterText/ParameterText.d.ts" />
 /// <reference path="../CustomKeyHandler/CustomKeyHandler.d.ts" />

@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz/rmmz.d.ts" />
+/// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../ForceFormation/ForceFormation.d.ts" />
 
 declare interface GenericSceneManager<T extends Stage> {

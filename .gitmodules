@@ -1,0 +1,3 @@
+[submodule "src/typings/rmmz-types"]
+	path = src/typings/rmmz-types
+	url = git@github.com:elleonard/rmmz-types.git
