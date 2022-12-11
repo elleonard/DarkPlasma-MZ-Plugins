@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_scenes.js v1.0.0
+// rmmz_scenes.js v1.6.0
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -759,7 +759,7 @@ declare class Scene_Debug extends Scene_MenuBase {
 /**
  * The scene class of the battle screen.
  */
-declare class Scene_Battle extends Scene_Base {
+declare class Scene_Battle extends Scene_Message {
   public constructor();
 
   public _spriteset: Spriteset_Battle;
