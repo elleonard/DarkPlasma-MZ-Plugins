@@ -337,11 +337,7 @@
      * マップ上の並列実行イベントで実行されているかどうか
      */
     gameInterpreter.isOnParallelEvent = function () {
-      var _a;
-      return (
-        ((_a = $gameMap.event(this._eventId)) === null || _a === void 0 ? void 0 : _a.isTriggerIn([4])) &&
-        this.isOnCurrentMap()
-      );
+      return $gameMap.event(this._eventId)?.isTriggerIn([4]) && this.isOnCurrentMap();
     };
   }
   Game_Interpreter_TextLogMixIn(Game_Interpreter.prototype);
@@ -479,7 +475,6 @@
       return settings.openLogKeys.some((key) => Input.isTriggered(key));
     };
     sceneMap.callTextLog = function () {
-      var _a;
       if (settings.smoothBackFromLog) {
         $gameTemp.setEvacuatedMessageAndSubWindows(
           new EvacuatedMessageAndSubWindows(
@@ -494,7 +489,7 @@
       SoundManager.playCursor();
       SceneManager.push(Scene_TextLog);
       $gameTemp.clearDestination();
-      (_a = this._mapNameWindow) === null || _a === void 0 ? void 0 : _a.hide();
+      this._mapNameWindow?.hide();
       this._waitCount = 2;
     };
   }

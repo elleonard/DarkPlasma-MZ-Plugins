@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.3.1
+// DarkPlasma_SkillCooldown 2.3.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/12/11 2.3.2 リファクタ
  * 2022/11/22 2.3.1 クールタイム中判定をGame_BattlerBaseクラスに寄せる
  *            2.3.0 初期クールタイム用のインターフェース追加
  * 2022/11/21 2.2.0 クールタイムを増減・終了するプラグインコマンドを追加
@@ -92,7 +93,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.3.1
+ * version: 2.3.2
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。

@@ -983,9 +983,8 @@
       return false;
     }
     toggleFilter() {
-      var _a, _b;
-      (_a = this._itemWindow) === null || _a === void 0 ? void 0 : _a.select(0);
-      (_b = this._itemWindow) === null || _b === void 0 ? void 0 : _b.scrollTo(0, 0);
+      this._itemWindow?.select(0);
+      this._itemWindow?.scrollTo(0, 0);
     }
     allOff() {}
     filterNameList() {
@@ -1007,13 +1006,11 @@
       return this._filter ? this._filter.traitNames : [];
     }
     toggleFilter() {
-      var _a;
       super.toggleFilter();
-      (_a = this._filter) === null || _a === void 0 ? void 0 : _a.toggleTrait(this.index());
+      this._filter?.toggleTrait(this.index());
     }
     allOff() {
-      var _a;
-      (_a = this._filter) === null || _a === void 0 ? void 0 : _a.allOffTrait();
+      this._filter?.allOffTrait();
     }
     isFilterOn(index) {
       return !!this._filter && this._filter.isIncludedTrait(index);
@@ -1033,15 +1030,11 @@
       return this._filter && this._filterTraitWindow ? this._filter.effectNames(this._filterTraitWindow.index()) : [];
     }
     toggleFilter() {
-      var _a;
       super.toggleFilter();
-      (_a = this._filter) === null || _a === void 0
-        ? void 0
-        : _a.toggleEffect(this._filterTraitWindow.index(), this.index());
+      this._filter?.toggleEffect(this._filterTraitWindow.index(), this.index());
     }
     allOff() {
-      var _a;
-      (_a = this._filter) === null || _a === void 0 ? void 0 : _a.allOffEffect(this._filterTraitWindow.index());
+      this._filter?.allOffEffect(this._filterTraitWindow.index());
     }
     isFilterOn(index) {
       return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);

@@ -145,8 +145,7 @@
       this._isExpandedScope = false;
     };
     gameAction.canExpandScope = function () {
-      var _a;
-      return !!((_a = this._item.object()) === null || _a === void 0 ? void 0 : _a.meta.canExpandScope);
+      return !!this._item.object()?.meta.canExpandScope;
     };
     gameAction.isExpandedScope = function () {
       return this._isExpandedScope;
@@ -252,9 +251,8 @@
     };
     const _startActorCommandSelection = sceneBattle.startActorCommandSelection;
     sceneBattle.startActorCommandSelection = function () {
-      var _a;
       _startActorCommandSelection.call(this);
-      (_a = BattleManager.actor()) === null || _a === void 0 ? void 0 : _a.resetAllActionsExpandedScope();
+      BattleManager.actor()?.resetAllActionsExpandedScope();
     };
     const _startActorSelection = sceneBattle.startActorSelection;
     sceneBattle.startActorSelection = function () {
@@ -359,13 +357,8 @@
     };
     const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
     windowClass.isCustomKeyEnabled = function (key) {
-      var _a;
       if (key === settings.switchScopeButton) {
-        return (
-          $gameParty.inBattle() &&
-          !!((_a = BattleManager.inputtingAction()) === null || _a === void 0 ? void 0 : _a.canExpandScope()) &&
-          !this.cursorFixed()
-        );
+        return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed();
       }
       return _isCustomKeyEnabled.call(this, key);
     };

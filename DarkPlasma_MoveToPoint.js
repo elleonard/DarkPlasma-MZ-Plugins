@@ -121,7 +121,7 @@
       this._x = x;
       this._y = y;
       this._realCost = realCost;
-      this._parent = parent !== null && parent !== void 0 ? parent : null;
+      this._parent = parent ?? null;
     }
     get x() {
       return this._x;

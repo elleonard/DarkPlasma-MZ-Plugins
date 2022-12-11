@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.2.2
+// DarkPlasma_FusionItem 1.2.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/12/11 1.2.3 リファクタ
  * 2022/09/04 1.2.2 typescript移行
  * 2022/07/03 1.2.1 コマンドウィンドウのコマンド表示幅変更
  * 2022/04/22 1.2.0 条件カスタマイズ用にクラス定義をグローバルに公開
@@ -44,7 +45,7 @@
  * @type number[]
  *
  * @help
- * version: 1.2.2
+ * version: 1.2.3
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -397,6 +398,9 @@
     const goods = parsedArgs.presetIds
       .map((presetId) => {
         const preset = settings.presets.find((preset) => preset.id === presetId);
+        if (!preset) {
+          throw `無効なプリセットIDが指定されています。 ${presetId}`;
+        }
         return preset.items
           .map((item) => toFusionItemGood($dataItems[item.result], item))
           .concat(preset.weapons.map((weapon) => toFusionItemGood($dataWeapons[weapon.result], weapon)))
@@ -495,16 +499,121 @@
     };
   }
   Game_Party_FusionItemMixIn(Game_Party.prototype);
-  class Scene_FusionItem extends Scene_Shop {
+  function Scene_ShopLikeMixIn(sceneClass) {
+    return class extends sceneClass {
+      prepare(goods) {
+        this._goods = goods;
+        this._item = null;
+      }
+      create() {
+        super.create();
+        Scene_Shop.prototype.create.call(this);
+      }
+      createGoldWindow() {
+        Scene_Shop.prototype.createGoldWindow.call(this);
+      }
+      goldWindowRect() {
+        return Scene_Shop.prototype.goldWindowRect.call(this);
+      }
+      commandWindowRect() {
+        return Scene_Shop.prototype.commandWindowRect.call(this);
+      }
+      createDummyWindow() {
+        Scene_Shop.prototype.createDummyWindow.call(this);
+      }
+      dummyWindowRect() {
+        return Scene_Shop.prototype.dummyWindowRect.call(this);
+      }
+      createNumberWindow() {
+        Scene_Shop.prototype.createNumberWindow.call(this);
+      }
+      numberWindowRect() {
+        return Scene_Shop.prototype.numberWindowRect.call(this);
+      }
+      statusWindowRect() {
+        return Scene_Shop.prototype.statusWindowRect.call(this);
+      }
+      buyWindowRect() {
+        return Scene_Shop.prototype.buyWindowRect.call(this);
+      }
+      createCategoryWindow() {
+        Scene_Shop.prototype.createCategoryWindow.call(this);
+      }
+      categoryWindowRect() {
+        return Scene_Shop.prototype.categoryWindowRect.call(this);
+      }
+      createSellWindow() {
+        Scene_Shop.prototype.createSellWindow.call(this);
+      }
+      sellWindowRect() {
+        return Scene_Shop.prototype.sellWindowRect.call(this);
+      }
+      statusWidth() {
+        return Scene_Shop.prototype.statusWidth.call(this);
+      }
+      activateBuyWindow() {
+        Scene_Shop.prototype.activateBuyWindow.call(this);
+      }
+      activateSellWindow() {
+        Scene_Shop.prototype.activateSellWindow.call(this);
+      }
+      commandBuy() {
+        Scene_Shop.prototype.commandBuy.call(this);
+      }
+      commandSell() {
+        Scene_Shop.prototype.commandSell.call(this);
+      }
+      onCategoryOk() {
+        Scene_Shop.prototype.onCategoryCancel.call(this);
+      }
+      onCategoryCancel() {
+        Scene_Shop.prototype.onCategoryCancel.call(this);
+      }
+      onBuyOk() {
+        Scene_Shop.prototype.onBuyOk.call(this);
+      }
+      onSellOk() {
+        Scene_Shop.prototype.onSellOk.call(this);
+      }
+      onSellCancel() {
+        Scene_Shop.prototype.onSellCancel.call(this);
+      }
+      onNumberOk() {
+        Scene_Shop.prototype.onNumberOk.call(this);
+      }
+      onNumberCancel() {
+        Scene_Shop.prototype.onNumberCancel.call(this);
+      }
+      doBuy(number) {
+        Scene_Shop.prototype.doBuy.call(this, number);
+      }
+      doSell(number) {
+        Scene_Shop.prototype.doSell.call(this, number);
+      }
+      endNumberInput() {
+        Scene_Shop.prototype.endNumberInput.call(this);
+      }
+      maxBuy() {
+        return Scene_Shop.prototype.maxBuy.call(this);
+      }
+      maxSell() {
+        return Scene_Shop.prototype.maxSell.call(this);
+      }
+      money() {
+        return Scene_Shop.prototype.money.call(this);
+      }
+      currencyUnit() {
+        return Scene_Shop.prototype.currencyUnit.call(this);
+      }
+      sellingPrice() {
+        return Scene_Shop.prototype.sellingPrice.call(this);
+      }
+    };
+  }
+  class Scene_FusionItem extends Scene_ShopLikeMixIn(Scene_MenuBase) {
     constructor() {
       super(...arguments);
       this._materials = [];
-    }
-    /**
-     * @param {FusionItemGoods[]} goods
-     */
-    prepare(goods) {
-      super.prepare(goods, true);
     }
     /**
      * 融合する やめるの2択しかないので、ゲームパッド・キーボード操作の場合は不要
@@ -527,7 +636,7 @@
     createBuyWindow() {
       const rect = this.buyWindowRect();
       this._buyWindow = new Window_FusionShopBuy(rect);
-      this._buyWindow.setupGoods(this._goods);
+      this._buyWindow.setupFusionGoods(this._goods);
       this._buyWindow.setMoney($gameParty.gold());
       this._buyWindow.setHelpWindow(this._helpWindow);
       this._buyWindow.setStatusWindow(this._statusWindow);
@@ -619,9 +728,14 @@
   class Window_FusionShopBuy extends Window_ShopBuy {
     constructor() {
       super(...arguments);
-      this._shopGoods = [];
+      this._fusionGoods = [];
       this._materials = [];
       this._statusWindow = null;
+    }
+    setupFusionGoods(fusionGoods) {
+      this._fusionGoods = fusionGoods;
+      this.refresh();
+      this.select(0);
     }
     /**
      * @return {FusionItemMaterial[]}
@@ -671,7 +785,7 @@
       this._data = [];
       this._price = [];
       this._materials = [];
-      this._shopGoods
+      this._fusionGoods
         .filter((goods) => goods.isValid())
         .forEach((goods) => {
           this._data.push(goods.result);

@@ -250,28 +250,20 @@
   }
   class StepImageSetting {
     constructor(filename, meta) {
-      var _a, _b, _c;
       this._filename = filename;
       const settingList = meta.split(',').map((s) => s.trim());
       this._offsetX = Number(settingList[0]);
       this._offsetY = Number(settingList[1]);
       this._scale = Number(
-        ((_a = settingList.find((setting) => /^(\d+)[%％]$/.test(setting))) === null || _a === void 0
-          ? void 0
-          : _a.match(/^(\d+)[%％]$/)[1]) || 100
+        settingList.find((setting) => /^(\d+)[%％]$/.test(setting))?.match(/^(\d+)[%％]$/)[1] || 100
       );
       this._fitAngle = settingList.some((setting) => /^fitAngle$/.test(setting));
       this._fitStep = settingList.some((setting) => /^fitStep$/.test(setting));
       this._dry = settingList.some((setting) => /^dry$/.test(setting));
-      this._wet = Number(
-        ((_b = settingList.find((setting) => /^wet(\d+)$/.test(setting))) === null || _b === void 0
-          ? void 0
-          : _b.match(/^wet(\d+)$/)[1]) || -1
-      );
+      this._wet = Number(settingList.find((setting) => /^wet(\d+)$/.test(setting))?.match(/^wet(\d+)$/)[1] || -1);
       this._speed = Number(
-        ((_c = settingList.find((setting) => /^animeSpeed(\d+)$/.test(setting))) === null || _c === void 0
-          ? void 0
-          : _c.match(/^animeSpeed(\d+)$/)[1]) || settings.animationSpeed
+        settingList.find((setting) => /^animeSpeed(\d+)$/.test(setting))?.match(/^animeSpeed(\d+)$/)[1] ||
+          settings.animationSpeed
       );
     }
     get filename() {

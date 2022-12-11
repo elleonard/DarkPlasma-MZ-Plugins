@@ -152,7 +152,7 @@
   }
   class ParamPlusWithWeaponTypeTrait extends ParamPlusWithEquipTypeTrait {
     types() {
-      return ($dataSystem === null || $dataSystem === void 0 ? void 0 : $dataSystem.weaponTypes) || [];
+      return $dataSystem?.weaponTypes || [];
     }
     traitId() {
       return this.isXParam() ? xparamPlusWithWeaponTypeTraitId.id : paramPlusWithWeaponTypeTraitId.id;
@@ -160,7 +160,7 @@
   }
   class ParamPlusWithArmorTypeTrait extends ParamPlusWithEquipTypeTrait {
     types() {
-      return ($dataSystem === null || $dataSystem === void 0 ? void 0 : $dataSystem.armorTypes) || [];
+      return $dataSystem?.armorTypes || [];
     }
     traitId() {
       return this.isXParam() ? xparamPlusWithArmorTypeTraitId.id : paramPlusWithArmorTypeTraitId.id;
