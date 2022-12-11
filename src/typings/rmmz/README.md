@@ -21,7 +21,7 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 
-### globaldata.d.ts, lib/pixi-5.2.4.js.d.ts
+### lib/pixi-5.2.4.js.d.ts
 
 [LunaLite](https://github.com/LunaTechsDev/LunaLite) から定義をコピーして、本プロジェクト用に一部改変しています。
 

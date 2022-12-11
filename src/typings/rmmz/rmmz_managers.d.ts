@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_managers.js v1.0.0
+// rmmz_managers.js v1.6.0
 //=============================================================================
 
 declare var $dataActors: MZ.Actor[];
@@ -37,7 +37,7 @@ declare var $plugins: MZ.Plugin[];
 /**
  * The static class that manages the database and game objects.
  */
-type databaseNames = "$dataActors" |
+type DatabaseNames = "$dataActors" |
 "$dataClasses" |
 "$dataSkills" |
 "$dataItems" |
@@ -57,7 +57,7 @@ declare class DataManager {
   public static _globalInfo: DataManager.SaveFileInfo[] | null;
   public static _errors: DataManager.Error[];
 
-  public static _databaseFiles: { name: databaseNames; src: string }[];
+  public static _databaseFiles: { name: DatabaseNames; src: string }[];
 
   public static loadGlobalInfo(): void;
   public static removeInvalidGlobalInfo(): void;

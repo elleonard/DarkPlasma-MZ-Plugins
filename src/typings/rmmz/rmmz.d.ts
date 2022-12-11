@@ -14,4 +14,3 @@
 /// <reference path="./rmmz_scenes.d.ts" />
 /// <reference path="./rmmz_sprites.d.ts" />
 /// <reference path="./rmmz_windows.d.ts" />
-/// <reference path="./globaldata.d.ts" />
