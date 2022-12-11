@@ -662,7 +662,7 @@ declare class Window_SkillList extends Window_Selectable {
  * The window for displaying parameter changes on the equipment screen.
  */
 declare class Window_EquipStatus extends Window_StatusBase {
-  public constructor(rect: Rectangle);
+  public constructor(rect: Rectangl, ...args: any[]);
 
   public _actor: Game_Actor | null;
   public _tempActor: Game_Actor | null;
@@ -692,13 +692,10 @@ declare class Window_EquipStatus extends Window_StatusBase {
  * The window for selecting a command on the equipment screen.
  */
 declare class Window_EquipCommand extends Window_HorzCommand {
-  public constructor(x: number, y: number, width: number);
+  public constructor(rect: Rectangle, ...args: any[]);
 
-  public _windowWidth: number;
+  public initialize(rect: Rectangle, ...args: any[]): void;
 
-  public initialize(...args: any[]): void;
-
-  public windowWidth(): number;
   public maxCols(): number;
 
   public makeCommandList(): void;
