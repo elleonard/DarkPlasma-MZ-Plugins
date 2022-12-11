@@ -1,13 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 
-type SkillCooldownSetting = {
-  triggerSkillId: number;
-  targetSkills: {
-    targetSkillId: number;
-    cooldownTurnCount: number;
-  }[];
-};
-
 declare var skillCooldownManager: SkillCooldownManager;
 
 declare interface SkillCooldownManager {

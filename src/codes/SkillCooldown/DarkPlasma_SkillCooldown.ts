@@ -1,6 +1,6 @@
 /// <reference path="./SkillCooldown.d.ts" />
 
-import { settings } from './_build/DarkPlasma_SkillCooldown_parameters';
+import { settings, SkillCooldown_SkillCooldown } from './_build/DarkPlasma_SkillCooldown_parameters';
 import { pluginName } from '../../common/pluginName';
 import { command_finishCooldowns, command_plusCooldownTurns, parseArgs_finishCooldowns, parseArgs_plusCooldownTurns } from './_build/DarkPlasma_SkillCooldown_commands';
 
@@ -23,8 +23,8 @@ class Game_SkillCooldown {
    * @return {Game_SkillCooldown[]}
    */
   static setup(triggerSkillId: number): Game_SkillCooldown[] {
-    const cooldownSetting: SkillCooldownSetting = settings.skillCooldownSettings.find(
-      (cooldown: SkillCooldownSetting) => cooldown.triggerSkillId === triggerSkillId
+    const cooldownSetting: SkillCooldown_SkillCooldown|undefined = settings.skillCooldownSettings.find(
+      (cooldown: SkillCooldown_SkillCooldown) => cooldown.triggerSkillId === triggerSkillId
     );
     /**
      * メモ欄による設定
