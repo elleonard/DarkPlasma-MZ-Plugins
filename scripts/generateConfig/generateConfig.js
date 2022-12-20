@@ -39,7 +39,7 @@ async function generateConfig(destDir) {
     const declarationFile = path.resolve(destDir, `${path.basename(destDir)}.d.ts`);
     fs.ensureFile(declarationFile, (err) => {
       if (err) console.error(`generate declaration failed.`);
-      fs.appendFile(declarationFile, `/// <reference path="../../typings/rmmz/rmmz.d.ts" />`);
+      fs.appendFile(declarationFile, `/// <reference path="../../typings/rmmz.d.ts" />`);
     });
     const tsFile = path.resolve(destDir, `DarkPlasma_${path.basename(destDir)}.ts`);
     fs.ensureFile(tsFile, (err) => {
