@@ -1,9 +1,10 @@
-// DarkPlasma_ImportExportSaveFile 1.0.0
+// DarkPlasma_ImportExportSaveFile 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/12/23 1.1.0 インポート時の説明文をplaceholderに変更
  * 2022/12/22 1.0.0 リファクタ
  *            0.0.1 公開
  */
@@ -68,7 +69,7 @@
  * @default {"ok":"buttonOk", "cancel":"buttonCancel", "import":"buttonImport", "export":"buttonExport"}
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 本プラグインはkienさんの「セーブデータのインポート・エクスポート」を
  * MZ移植したものです。
  *
@@ -234,6 +235,9 @@
     graphics.setImportExportAreaValue = function (text) {
       this._importExportElement.value = text;
     };
+    graphics.setImportExportAreaPlaceholder = function (text) {
+      this._importExportElement.placeholder = text;
+    };
   }
   Graphics_ImportExportSaveFileMixIn(Graphics);
   /**
@@ -325,6 +329,7 @@
       DataManager.loadCompressedGamedata(this.savefileId())
         .then((base64) => Graphics.setImportExportAreaValue(base64))
         .then(() => {
+          Graphics.setImportExportAreaPlaceholder('');
           Graphics.showImportExportArea();
           this._okButton.visible = true;
           this._cancelButton.visible = false;
@@ -341,7 +346,8 @@
     };
     sceneFile.onImportClicked = function () {
       this._listWindow.deactivate();
-      Graphics.setImportExportAreaValue(settings.importHelpText);
+      Graphics.setImportExportAreaValue('');
+      Graphics.setImportExportAreaPlaceholder(settings.importHelpText);
       Graphics.showImportExportArea();
       this._okButton.visible = true;
       this._cancelButton.visible = true;
