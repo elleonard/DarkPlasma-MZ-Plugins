@@ -3,6 +3,9 @@ DarkPlasma_ImportExportSaveFile:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/12/23
+      version: 1.1.0
+      description: 'インポート時の説明文をplaceholderに変更'
     - date: 2022/12/22
       version: 1.0.0
       description: 'リファクタ'

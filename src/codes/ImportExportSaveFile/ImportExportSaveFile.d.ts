@@ -7,6 +7,7 @@ declare namespace Graphics {
   export function hideImportExportArea(): void;
   export function importExportAreaValue(): string;
   export function setImportExportAreaValue(text: string): void;
+  export function setImportExportAreaPlaceholder(text: string): void;
 }
 
 declare namespace DataManager {

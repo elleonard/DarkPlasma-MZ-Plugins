@@ -17,7 +17,7 @@ function Graphics_ImportExportSaveFileMixIn(graphics: typeof Graphics) {
     this._importExportElement.style.width = `${settings.textAreaRect.width}px`;
     this._importExportElement.style.height = `${settings.textAreaRect.height}px`;
     this._importExportElement.style.zIndex = "98";
-  }
+  };
 
   graphics.showImportExportArea = function () {
     this._importExportElement.setSelectionRange(0, this._importExportElement.textLength);
@@ -34,6 +34,10 @@ function Graphics_ImportExportSaveFileMixIn(graphics: typeof Graphics) {
 
   graphics.setImportExportAreaValue = function (text) {
     this._importExportElement.value = text;
+  };
+
+  graphics.setImportExportAreaPlaceholder = function (text) {
+    this._importExportElement.placeholder = text;
   };
 }
 
@@ -142,6 +146,7 @@ function Scene_File_ImportExportSaveFileMixIn(sceneFile: Scene_File) {
     DataManager.loadCompressedGamedata(this.savefileId())
       .then(base64 => Graphics.setImportExportAreaValue(base64))
       .then(() => {
+        Graphics.setImportExportAreaPlaceholder("");
         Graphics.showImportExportArea();
         this._okButton.visible = true;
         this._cancelButton.visible = false;
@@ -159,7 +164,8 @@ function Scene_File_ImportExportSaveFileMixIn(sceneFile: Scene_File) {
 
   sceneFile.onImportClicked = function () {
     this._listWindow.deactivate();
-    Graphics.setImportExportAreaValue(settings.importHelpText);
+    Graphics.setImportExportAreaValue("");
+    Graphics.setImportExportAreaPlaceholder(settings.importHelpText);
     Graphics.showImportExportArea();
     this._okButton.visible = true;
     this._cancelButton.visible = true;
