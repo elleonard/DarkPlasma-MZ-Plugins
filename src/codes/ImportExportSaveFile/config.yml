@@ -3,6 +3,9 @@ DarkPlasma_ImportExportSaveFile:
   year: 2022
   license: MIT
   histories:
+    - date: 2022/12/24
+      version: 1.2.0
+      description: 'ゲームアツマール上からスマホでエクスポートできるように修正'
     - date: 2022/12/23
       version: 1.1.0
       description: 'インポート時の説明文をplaceholderに変更'
@@ -20,6 +23,8 @@ DarkPlasma_ImportExportSaveFile:
     - param: textAreaRect
       text:
         ja: セーブデータ表示エリア
+      desc:
+        ja: PC版向けのセーブデータ表示エリアを設定します。
       type: Rectangle
       default:
         x: 208

@@ -2,6 +2,8 @@
 
 import { settings } from "./_build/DarkPlasma_ImportExportSaveFile_parameters";
 
+const MOBILE_IMPORT_EXPORT_AREA_PADDING = 5;
+
 function Graphics_ImportExportSaveFileMixIn(graphics: typeof Graphics) {
   const _createAllElements = graphics._createAllElements;
   graphics._createAllElements = function () {
@@ -9,23 +11,57 @@ function Graphics_ImportExportSaveFileMixIn(graphics: typeof Graphics) {
     this._createImportExportArea();
   };
 
+  graphics._importExportAreaRect = function () {
+    return Utils.isMobileDevice()
+      ? new Rectangle(
+        this._stretchWidth()/2 + MOBILE_IMPORT_EXPORT_AREA_PADDING,
+        MOBILE_IMPORT_EXPORT_AREA_PADDING,
+        this._stretchWidth()/2 - MOBILE_IMPORT_EXPORT_AREA_PADDING * 2,
+        this._stretchHeight() - MOBILE_IMPORT_EXPORT_AREA_PADDING * 2
+      )
+      : new Rectangle(
+        settings.textAreaRect.x,
+        settings.textAreaRect.y,
+        settings.textAreaRect.width,
+        settings.textAreaRect.height
+      );
+  };
+
   graphics._createImportExportArea = function () {
+    const rect = this._importExportAreaRect();
     this._importExportElement = document.createElement('textarea');
     this._importExportElement.style.position = 'absolute';
-    this._importExportElement.style.left = `${settings.textAreaRect.x}px`;
-    this._importExportElement.style.top = `${settings.textAreaRect.y}px`;
-    this._importExportElement.style.width = `${settings.textAreaRect.width}px`;
-    this._importExportElement.style.height = `${settings.textAreaRect.height}px`;
+    this._importExportElement.style.left = `${rect.x}px`;
+    this._importExportElement.style.top = `${rect.y}px`;
+    this._importExportElement.style.width = `${rect.width}px`;
+    this._importExportElement.style.height = `${rect.height}px`;
     this._importExportElement.style.zIndex = "98";
+  };
+
+  const _stretchWidth = graphics._stretchWidth;
+  graphics._stretchWidth = function () {
+    return this._importExportMode && Utils.isMobileDevice() ? _stretchWidth.call(this)/2 : _stretchWidth.call(this);
+  };
+
+  const _centerElement = graphics._centerElement;
+  graphics._centerElement = function (element) {
+    _centerElement.call(this, element);
+    if (element === this._canvas && this._importExportMode && Utils.isMobileDevice()) {
+      element.style.margin = "auto 0";
+    }
   };
 
   graphics.showImportExportArea = function () {
     this._importExportElement.setSelectionRange(0, this._importExportElement.textLength);
+    this._importExportMode = true;
     document.body.appendChild(this._importExportElement);
+    this._updateAllElements();
   };
 
   graphics.hideImportExportArea = function () {
+    this._importExportMode = false;
     document.body.removeChild(this._importExportElement);
+    this._updateAllElements();
   };
 
   graphics.importExportAreaValue = function () {

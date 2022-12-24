@@ -2,7 +2,9 @@
 
 declare namespace Graphics {
   export var _importExportElement: HTMLTextAreaElement;
+  export var _importExportMode: boolean;
   export function _createImportExportArea(): void;
+  export function _importExportAreaRect(): Rectangle;
   export function showImportExportArea(): void;
   export function hideImportExportArea(): void;
   export function importExportAreaValue(): string;
