@@ -6,6 +6,7 @@ date: 2022-12-24 15:59:54
 tags:
   - セーブデータ
   - システム
+  - MV版あり
 ---
 
 # 概要
@@ -28,7 +29,7 @@ tags:
 
 # ボタン画像について
 
-kienさんが配布されている[MV版](https://forum.tkool.jp/index.php?threads/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%8C%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E3%82%A4%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E3%82%A8%E3%82%AF%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%88%E3%80%8D.100/)のzipに含まれる画像をそのまま利用できます。
+kienさんが配布されている[元プラグイン](https://forum.tkool.jp/index.php?threads/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%8C%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E3%82%A4%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E3%82%A8%E3%82%AF%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%88%E3%80%8D.100/)のzipに含まれる画像をそのまま利用できます。
 
 また、みなみよつばさんが本プラグインで利用可能な[ボタン画像素材](https://jisakugame.com/inportexport/)を配布してくださっています。
 
@@ -49,5 +50,6 @@ kienさんが配布されている[MV版](https://forum.tkool.jp/index.php?threa
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ImportExportSaveFile.js)
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ImportExportSaveFile.js)
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_ImportExportSaveFile.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
