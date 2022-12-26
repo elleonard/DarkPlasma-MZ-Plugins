@@ -18,6 +18,7 @@ function toJsTypeCategory(parameter) {
     case 'actor':
     case 'class':
     case 'enemy':
+    case 'troop':
     case 'skill':
     case 'item':
     case 'weapon':
