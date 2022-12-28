@@ -540,14 +540,17 @@ DarkPlasma_EnemyBook:
       DarkPlasmaが改変を加えたものです。
 
       スクリプト:
-        $gameSystem.percentCompleteEnemy() # 図鑑のエネミー遭遇達成率を取得する
-        $gameSystem.percentCompleteDrop()  # 図鑑のドロップアイテム取得達成率を取得する
-        SceneManager.push(Secne_EnemyBook) # 図鑑を開く
+        # 図鑑のエネミー遭遇達成率を取得する
+        $gameSystem.percentCompleteEnemy()
+        # 図鑑のドロップアイテム取得達成率を取得する
+        $gameSystem.percentCompleteDrop()
+        # 図鑑を開く
+        SceneManager.push(Secne_EnemyBook)
 
       敵キャラのメモ:
-        <desc1:なんとか>       # 説明１行目
-        <desc2:かんとか>       # 説明２行目
-        <book:no>              # 図鑑に載せない場合
+        <desc1:なんとか>  # 説明１行目
+        <desc2:かんとか>  # 説明２行目
+        <book:no>        # 図鑑に載せない場合
         <scaleInBook:80> # 図鑑上の画像の拡大率
 
       DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
@@ -561,9 +564,9 @@ DarkPlasma_EnemyBook:
         SceneManager.push(Secne_EnemyBook) # Open enemy book.
 
       Enemy Note:
-        <desc1:foobar>         # Description text in the enemy book, line 1
-        <desc2:blahblah>       # Description text in the enemy book, line 2
-        <book:no>              # This enemy does not appear in the enemy book
+        <desc1:foobar>   # Description text in the enemy book, line 1
+        <desc2:blahblah> # Description text in the enemy book, line 2
+        <book:no>        # This enemy does not appear in the enemy book
         <scaleInBook:80> # Enemy image scale in book
 
       You can control order of enemies by using DarkPlasma_OrderIdAlias.
