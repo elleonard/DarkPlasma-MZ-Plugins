@@ -5,7 +5,7 @@ import { settings } from './_build/DarkPlasma_ManualText_parameters';
  * @param {Window_Base.prototype} windowClass
  */
 function Window_ManualTextMixIn(windowClass: Window_Base) {
-  windowClass.drawManual = function () {
+  windowClass.drawManual = windowClass.drawManual || function (this: Window_Base) {
     if (this.isManualVisible()) {
       this.contents.fontSize = this.manualFontSize();
       this.changeTextColor(ColorManager.textColor(6));
@@ -16,14 +16,14 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     }
   };
 
-  windowClass.manualX = function (index) {
+  windowClass.manualX = windowClass.manualX || function (this: Window_Base, index) {
     const colsWidth = this.manualWidth() * this.manualCols() >= this.innerWidth
       ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
       : this.manualWidth();
     return this.innerWidth - (colsWidth + this.manualPadding()) * (index % this.manualCols() + 1);
   };
 
-  windowClass.manualY = function (index) {
+  windowClass.manualY = windowClass.manualY || function (this: Window_Base, index) {
     return this.innerHeight - this.manualLineHeight() * (Math.floor(index / this.manualCols()) + 1) + this.manualOffsetY();
   };
 
@@ -100,11 +100,8 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     }
   };
 
-  const _refresh = windowClass.refresh;
-  if (!_refresh) {
-    windowClass.refresh = function () {
-    };
-  }
+  windowClass.refresh = windowClass.refresh || function () {
+  };
 }
 
 globalThis.Window_ManualTextMixIn = Window_ManualTextMixIn;
