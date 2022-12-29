@@ -1,9 +1,10 @@
-// DarkPlasma_ManualText 1.5.4
+// DarkPlasma_ManualText 1.6.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/12/29 1.6.0 一部メソッドが既存に存在すれば上書きしないように修正
  * 2022/11/13 1.5.4 refreshメソッドを無駄に上書きしないように修正
  * 2022/09/11 1.5.3 正しく表示されない不具合を修正
  * 2022/09/10 1.5.2 複数列表示時、正しく表示されない不具合を修正
@@ -33,7 +34,7 @@
  * @default 12
  *
  * @help
- * version: 1.5.4
+ * version: 1.6.0
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -115,28 +116,36 @@
    * @param {Window_Base.prototype} windowClass
    */
   function Window_ManualTextMixIn(windowClass) {
-    windowClass.drawManual = function () {
-      if (this.isManualVisible()) {
-        this.contents.fontSize = this.manualFontSize();
-        this.changeTextColor(ColorManager.textColor(6));
-        this.manualTexts().forEach((text, index) => {
-          this.drawText(text, this.manualX(index), this.manualY(index), this.manualWidth());
-        });
-        this.resetFontSettings();
-      }
-    };
-    windowClass.manualX = function (index) {
-      const colsWidth =
-        this.manualWidth() * this.manualCols() >= this.innerWidth
-          ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
-          : this.manualWidth();
-      return this.innerWidth - (colsWidth + this.manualPadding()) * ((index % this.manualCols()) + 1);
-    };
-    windowClass.manualY = function (index) {
-      return (
-        this.innerHeight - this.manualLineHeight() * (Math.floor(index / this.manualCols()) + 1) + this.manualOffsetY()
-      );
-    };
+    windowClass.drawManual =
+      windowClass.drawManual ||
+      function () {
+        if (this.isManualVisible()) {
+          this.contents.fontSize = this.manualFontSize();
+          this.changeTextColor(ColorManager.textColor(6));
+          this.manualTexts().forEach((text, index) => {
+            this.drawText(text, this.manualX(index), this.manualY(index), this.manualWidth());
+          });
+          this.resetFontSettings();
+        }
+      };
+    windowClass.manualX =
+      windowClass.manualX ||
+      function (index) {
+        const colsWidth =
+          this.manualWidth() * this.manualCols() >= this.innerWidth
+            ? this.manualTexts().reduce((result, text) => Math.max(result, this.textWidth(text)), 0)
+            : this.manualWidth();
+        return this.innerWidth - (colsWidth + this.manualPadding()) * ((index % this.manualCols()) + 1);
+      };
+    windowClass.manualY =
+      windowClass.manualY ||
+      function (index) {
+        return (
+          this.innerHeight -
+          this.manualLineHeight() * (Math.floor(index / this.manualCols()) + 1) +
+          this.manualOffsetY()
+        );
+      };
     windowClass.setManualOffsetY = function (offset) {
       this._manualOffsetY = offset;
     };
@@ -194,10 +203,7 @@
         this.refresh();
       }
     };
-    const _refresh = windowClass.refresh;
-    if (!_refresh) {
-      windowClass.refresh = function () {};
-    }
+    windowClass.refresh = windowClass.refresh || function () {};
   }
   globalThis.Window_ManualTextMixIn = Window_ManualTextMixIn;
 })();
