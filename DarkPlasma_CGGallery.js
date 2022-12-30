@@ -1,9 +1,11 @@
-// DarkPlasma_CGGallery 2.0.1
+// DarkPlasma_CGGallery 2.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2022/12/30 2.0.2 typescript移行
+ *                  MoviePicture.jsとの競合対策
  * 2021/07/05 2.0.1 MZ 1.3.2に対応
  * 2021/06/27 1.0.0 公開
  */
@@ -47,7 +49,7 @@
  * @dir img
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * CGギャラリーシーンを提供します。
  *
  * 下記スクリプトによってシーンを開くことができます。
@@ -104,12 +106,10 @@
       super.initialize();
       this.loadSwitches();
     }
-
     /**
      * overwrite if needed.
      */
     loadSwitches() {}
-
     create() {
       super.create();
       this.createBackground();
@@ -117,7 +117,6 @@
       this.createSelectWindow();
       this.createSprite();
     }
-
     createBackground() {
       if (settings.backgroundImage) {
         this._backgroundSprite = new Sprite();
@@ -125,14 +124,12 @@
         this.addChild(this._backgroundSprite);
       }
     }
-
     createSelectWindow() {
       this._selectWindow = new Window_SelectCG(this.selectWindowRect());
       this._selectWindow.setHandler('ok', this.commandSelectOk.bind(this));
       this._selectWindow.setHandler('cancel', this.commandSelectCancel.bind(this));
       this.addWindow(this._selectWindow);
     }
-
     selectWindowRect() {
       return new Rectangle(
         Graphics.boxWidth / 2 - settings.selectWindowWidth / 2,
@@ -141,29 +138,24 @@
         settings.selectWindowHeight
       );
     }
-
     createSprite() {
-      this._sprite = new Sprite_CG();
+      this._sprite = new Sprite_CG('');
       this._sprite.setClickHandler(this.closeCG.bind(this));
       this.addChild(this._sprite);
     }
-
     commandSelectOk() {
       this._selectWindow.hide();
       this._selectWindow.deactivate();
-      this._sprite.show(this._selectWindow.currentExt());
+      this._sprite.showCG(this._selectWindow.currentExt());
     }
-
     commandSelectCancel() {
       this.popScene();
     }
-
     closeCG() {
       this._sprite.hide();
       this._selectWindow.activate();
       this._selectWindow.show();
     }
-
     update() {
       super.update();
       if (this._sprite.visible) {
@@ -173,57 +165,58 @@
       }
     }
   }
-
   class Sprite_CG extends Sprite_Button {
     initialize() {
       super.initialize();
       this._pictureName = '';
       this._picture = new Game_Picture();
     }
-
     setupFrames() {}
-
     picture() {
       return this._picture;
     }
-
     /**
      * @param {string} pictureName
      */
-    show(pictureName) {
+    showCG(pictureName) {
       const bitmap = ImageManager.loadPicture(pictureName);
       if (!bitmap.isReady()) {
-        bitmap.addLoadListener(() => this.show(pictureName));
+        bitmap.addLoadListener(() => this.showCG(pictureName));
         return;
       }
       this.picture().show(pictureName, 0, 0, 0, 100, 100, 255, 0);
       this.updateBitmap();
     }
-
     hide() {
       this.picture().initBasic();
       this.updateBitmap();
     }
-
     update() {
       if (this.visible) {
         this.processTouch();
       }
     }
-
     updateOpacity() {}
-
     checkBitmap() {}
-
     updateBitmap() {
-      Sprite_Picture.prototype.updateBitmap.call(this);
+      const picture = this.picture();
+      if (picture) {
+        const pictureName = picture.name();
+        if (this._pictureName !== pictureName) {
+          this._pictureName = pictureName;
+          this.loadBitmap();
+        }
+        this.visible = true;
+      } else {
+        this._pictureName = '';
+        this.bitmap = null;
+        this.visible = false;
+      }
     }
-
     loadBitmap() {
-      Sprite_Picture.prototype.loadBitmap.call(this);
+      this.bitmap = ImageManager.loadPicture(this._pictureName);
     }
   }
-
   class Window_SelectCG extends Window_Command {
     makeCommandList() {
       settings.cgs.forEach((cg, index) => {
@@ -232,12 +225,10 @@
       });
       this.addCommand('戻る', 'cancel');
     }
-
     itemTextAlign() {
       return 'left';
     }
   }
-
-  window[Scene_CGGallery.name] = Scene_CGGallery;
-  window[Window_SelectCG.name] = Window_SelectCG;
+  globalThis.Scene_CGGallery = Scene_CGGallery;
+  globalThis.Window_SelectCG = Window_SelectCG;
 })();
