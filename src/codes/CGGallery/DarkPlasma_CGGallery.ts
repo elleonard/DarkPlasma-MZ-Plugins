@@ -1,6 +1,12 @@
+/// <reference path="./CGGallery.d.ts" />
+
 import { settings } from './_build/DarkPlasma_CGGallery_parameters';
 
 class Scene_CGGallery extends Scene_Base {
+  _selectWindow: Window_SelectCG;
+  _backgroundSprite: Sprite;
+  _sprite: Sprite_CG;
+
   initialize() {
     super.initialize();
     this.loadSwitches();
@@ -9,7 +15,7 @@ class Scene_CGGallery extends Scene_Base {
   /**
    * overwrite if needed.
    */
-  loadSwitches() {}
+  loadSwitches() { }
 
   create() {
     super.create();
@@ -44,7 +50,7 @@ class Scene_CGGallery extends Scene_Base {
   }
 
   createSprite() {
-    this._sprite = new Sprite_CG();
+    this._sprite = new Sprite_CG("");
     this._sprite.setClickHandler(this.closeCG.bind(this));
     this.addChild(this._sprite);
   }
@@ -52,7 +58,7 @@ class Scene_CGGallery extends Scene_Base {
   commandSelectOk() {
     this._selectWindow.hide();
     this._selectWindow.deactivate();
-    this._sprite.show(this._selectWindow.currentExt());
+    this._sprite.showCG(this._selectWindow.currentExt());
   }
 
   commandSelectCancel() {
@@ -76,13 +82,16 @@ class Scene_CGGallery extends Scene_Base {
 }
 
 class Sprite_CG extends Sprite_Button {
+  _pictureName: string;
+  _picture: Game_Picture;
+
   initialize() {
     super.initialize();
     this._pictureName = '';
     this._picture = new Game_Picture();
   }
 
-  setupFrames() {}
+  setupFrames() { }
 
   picture() {
     return this._picture;
@@ -91,10 +100,10 @@ class Sprite_CG extends Sprite_Button {
   /**
    * @param {string} pictureName
    */
-  show(pictureName) {
+  showCG(pictureName: string): void {
     const bitmap = ImageManager.loadPicture(pictureName);
     if (!bitmap.isReady()) {
-      bitmap.addLoadListener(() => this.show(pictureName));
+      bitmap.addLoadListener(() => this.showCG(pictureName));
       return;
     }
     this.picture().show(pictureName, 0, 0, 0, 100, 100, 255, 0);
@@ -112,16 +121,28 @@ class Sprite_CG extends Sprite_Button {
     }
   }
 
-  updateOpacity() {}
+  updateOpacity() { }
 
-  checkBitmap() {}
+  checkBitmap() { }
 
   updateBitmap() {
-    Sprite_Picture.prototype.updateBitmap.call(this);
+    const picture = this.picture();
+    if (picture) {
+      const pictureName = picture.name();
+      if (this._pictureName !== pictureName) {
+        this._pictureName = pictureName;
+        this.loadBitmap();
+      }
+      this.visible = true;
+    } else {
+      this._pictureName = "";
+      this.bitmap = null;
+      this.visible = false;
+    }
   }
 
   loadBitmap() {
-    Sprite_Picture.prototype.loadBitmap.call(this);
+    this.bitmap = ImageManager.loadPicture(this._pictureName);
   }
 }
 
@@ -139,5 +160,12 @@ class Window_SelectCG extends Window_Command {
   }
 }
 
-window[Scene_CGGallery.name] = Scene_CGGallery;
-window[Window_SelectCG.name] = Window_SelectCG;
+type _Scene_CGGallery = typeof Scene_CGGallery;
+type _Window_SelectCG = typeof Window_SelectCG;
+declare global {
+  var Scene_CGGallery: _Scene_CGGallery;
+  var Window_SelectCG: _Window_SelectCG;
+}
+
+globalThis.Scene_CGGallery = Scene_CGGallery;
+globalThis.Window_SelectCG = Window_SelectCG;
