@@ -1,0 +1,106 @@
+DarkPlasma_ForceActionWithId:
+  name: DarkPlasma_ForceActionWithId
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/01/09
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '主体と対象IDを指定して戦闘行動を強制する'
+  parameters: []
+  commands:
+    - command: forceActionEnemyToActor
+      text:
+        ja: 戦闘行動の強制(敵キャラからアクター)
+      args:
+        - arg: subject
+          text:
+            ja: 行動主体
+          desc:
+            ja: 行動主体を設定します。なしの場合、すべての敵が行動します。
+          type: enemy
+        - arg: skill
+          text:
+            ja: スキル
+          type: skill
+        - arg: target
+          text:
+            ja: 対象
+          desc:
+            ja: 対象を設定します。なしの場合、ランダムな対象を選択します。
+          type: actor
+    - command: forceActionActorToEnemy
+      text:
+        ja: 戦闘行動の強制(アクターから敵キャラ)
+      args:
+        - arg: subject
+          text:
+            ja: 行動主体
+          desc:
+            ja: 行動主体を設定します。なしの場合、すべての味方が行動します。
+          type: actor
+        - arg: skill
+          text:
+            ja: スキル
+          type: skill
+        - arg: target
+          text:
+            ja: 対象
+          desc:
+            ja: 対象を設定します。なしの場合、ランダムな対象を選択します。
+          type: enemy
+    - command: forceActionEnemyToEnemy
+      text:
+        ja: 戦闘行動の強制(敵キャラから敵キャラ)
+      args:
+        - arg: subject
+          text:
+            ja: 行動主体
+          desc:
+            ja: 行動主体を設定します。なしの場合、すべての敵が行動します。
+          type: enemy
+        - arg: skill
+          text:
+            ja: スキル
+          type: skill
+        - arg: target
+          text:
+            ja: 対象
+          desc:
+            ja: 対象を設定します。なしの場合、ランダムな対象を選択します。
+          type: enemy
+    - command: forceActionActorToActor
+      text:
+        ja: 戦闘行動の強制(アクターからアクター)
+      args:
+        - arg: subject
+          text:
+            ja: 行動主体
+          desc:
+            ja: 行動主体を設定します。なしの場合、すべての味方が行動します。
+          type: actor
+        - arg: skill
+          text:
+            ja: スキル
+          type: skill
+        - arg: target
+          text:
+            ja: 対象
+          desc:
+            ja: 対象を設定します。なしの場合、ランダムな対象を選択します。
+          type: actor
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      主体及び対象のIDを指定して戦闘行動の強制を行うプラグインコマンドを提供します。
+
+      主体が存在しない場合、プラグインコマンドは何もしません。
+      対象が存在しない場合、対象をランダムに選択します。
