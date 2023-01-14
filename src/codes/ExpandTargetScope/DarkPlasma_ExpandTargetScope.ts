@@ -161,6 +161,12 @@ function Scene_ItemBase_ExpandScopeTargetMixIn(sceneItemBase: Scene_ItemBase) {
     }
     return _itemTargetActors.call(this);
   };
+
+  const _showActorWindow = sceneItemBase.showActorWindow;
+  sceneItemBase.showActorWindow = function () {
+    this._actorWindow?.setItem(this.item());
+    _showActorWindow.call(this);
+  };
 }
 
 Scene_ItemBase_ExpandScopeTargetMixIn(Scene_ItemBase.prototype);
@@ -267,6 +273,13 @@ Sprite_Battler_ExpandTargetScopeMixIn(Sprite_Battler.prototype);
  * @param {Window_MenuActor.prototype} windowClass
  */
 function Window_MenuActor_ExpandTargetScopeMixIn(windowClass: Window_MenuActor) {
+  windowClass.setItem = function (item) {
+    if (item) {
+      this._currentAction = new Game_Action($gameParty.menuActor());
+      this._currentAction.setItemObject(item);
+    }
+  };
+
   const _selectForItem = windowClass.selectForItem;
   windowClass.selectForItem = function (this: Window_MenuActor, item) {
     _selectForItem.call(this, item);
@@ -277,6 +290,7 @@ function Window_MenuActor_ExpandTargetScopeMixIn(windowClass: Window_MenuActor) 
   windowClass.toggleCursorAll = function (this: Window_MenuActor) {
     this.setCursorAll(!this._cursorAll);
     this.forceSelect(0);
+    SoundManager.playCursor();
   };
 
   windowClass.canToggleScope = function (this: Window_MenuActor) {
@@ -306,9 +320,13 @@ function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass: Window_BattleAc
   const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
   windowClass.isCustomKeyEnabled = function (this: Window_BattleActor | Window_BattleEnemy, key) {
     if (key === settings.switchScopeButton) {
-      return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed();
+      return this.canToggleScope();
     }
     return _isCustomKeyEnabled.call(this, key);
+  };
+
+  windowClass.canToggleScope = function () {
+    return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed()
   };
 
   const _setCursorAll = windowClass.setCursorAll;

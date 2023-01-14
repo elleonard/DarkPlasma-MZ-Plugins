@@ -42,6 +42,7 @@ declare interface Scene_Battle {
 declare interface Window_MenuActor {
   _currentAction: Game_Action;
 
+  setItem(item: MZ.Item|MZ.Skill|null): void;
   toggleCursorAll(): void;
   canToggleScope(): boolean;
 }
@@ -50,10 +51,12 @@ declare interface Window_BattleActor {
   unit(): Game_Party;
   currentTarget(): Game_Actor;
   toggleCursorAll(): void;
+  canToggleScope(): boolean;
 }
 
 declare interface Window_BattleEnemy {
   unit(): Game_Troop;
   currentTarget(): Game_Enemy;
   toggleCursorAll(): void;
+  canToggleScope(): boolean;
 }

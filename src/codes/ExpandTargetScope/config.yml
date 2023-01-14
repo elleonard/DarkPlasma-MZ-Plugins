@@ -3,6 +3,9 @@ DarkPlasma_ExpandTargetScope:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/01/14
+      version: 1.4.0
+      description: '拡張プラグイン用インターフェース追加'
     - date: 2022/08/21
       version: 1.3.1
       description: 'typescript移行'
