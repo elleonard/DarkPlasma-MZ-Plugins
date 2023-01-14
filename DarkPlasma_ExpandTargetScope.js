@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.3.1
+// DarkPlasma_ExpandTargetScope 1.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/14 1.4.0 拡張プラグイン用インターフェース追加
  * 2022/08/21 1.3.1 typescript移行
  *                  アクターコマンド入力決定後にキャンセルすると全体化MP消費率が全スキルに反映される不具合を修正
  * 2022/08/16 1.3.0 メニュー画面でも全体化する機能を追加
@@ -65,7 +66,7 @@
  * @default false
  *
  * @help
- * version: 1.3.1
+ * version: 1.4.0
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -233,6 +234,11 @@
       }
       return _itemTargetActors.call(this);
     };
+    const _showActorWindow = sceneItemBase.showActorWindow;
+    sceneItemBase.showActorWindow = function () {
+      this._actorWindow?.setItem(this.item());
+      _showActorWindow.call(this);
+    };
   }
   Scene_ItemBase_ExpandScopeTargetMixIn(Scene_ItemBase.prototype);
   /**
@@ -325,6 +331,12 @@
    * @param {Window_MenuActor.prototype} windowClass
    */
   function Window_MenuActor_ExpandTargetScopeMixIn(windowClass) {
+    windowClass.setItem = function (item) {
+      if (item) {
+        this._currentAction = new Game_Action($gameParty.menuActor());
+        this._currentAction.setItemObject(item);
+      }
+    };
     const _selectForItem = windowClass.selectForItem;
     windowClass.selectForItem = function (item) {
       _selectForItem.call(this, item);
@@ -334,6 +346,7 @@
     windowClass.toggleCursorAll = function () {
       this.setCursorAll(!this._cursorAll);
       this.forceSelect(0);
+      SoundManager.playCursor();
     };
     windowClass.canToggleScope = function () {
       return this._currentAction && this._currentAction.canExpandScope() && !this.cursorFixed();
@@ -358,9 +371,12 @@
     const _isCustomKeyEnabled = windowClass.isCustomKeyEnabled;
     windowClass.isCustomKeyEnabled = function (key) {
       if (key === settings.switchScopeButton) {
-        return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed();
+        return this.canToggleScope();
       }
       return _isCustomKeyEnabled.call(this, key);
+    };
+    windowClass.canToggleScope = function () {
+      return $gameParty.inBattle() && !!BattleManager.inputtingAction()?.canExpandScope() && !this.cursorFixed();
     };
     const _setCursorAll = windowClass.setCursorAll;
     windowClass.setCursorAll = function (cursorAll) {
