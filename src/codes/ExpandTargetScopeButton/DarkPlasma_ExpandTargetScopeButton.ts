@@ -1,10 +1,12 @@
+/// <reference path="./ExpandTargetScopeButton.d.ts" />
+
 import { Sprite_ToggleButton } from '../../common/sprite/toggleButton';
 import { settings } from './_build/DarkPlasma_ExpandTargetScopeButton_parameters';
 
 /**
  * @param {Scene_Battle.prototype} sceneBattle
  */
-function Scene_Battle_ExpandScopeTargetButtonMixIn(sceneBattle) {
+function Scene_Battle_ExpandScopeTargetButtonMixIn(sceneBattle: Scene_Battle) {
   const _createActorWindow = sceneBattle.createActorWindow;
   sceneBattle.createActorWindow = function () {
     _createActorWindow.call(this);
@@ -20,12 +22,35 @@ function Scene_Battle_ExpandScopeTargetButtonMixIn(sceneBattle) {
 
 Scene_Battle_ExpandScopeTargetButtonMixIn(Scene_Battle.prototype);
 
-/**
- * @param {Window_BattleActor.prototype|Window_BattleEnemy.prototype} windowClass
- */
-function Window_BattleTarget_ExpandTargetScopeButtonMixIn(windowClass) {
+function Scene_ItemBase_ExpandScopeTargetButtonMixIn(sceneItemBase: Scene_ItemBase) {
+  const _createActorWindow = sceneItemBase.createActorWindow;
+  sceneItemBase.createActorWindow = function () {
+    _createActorWindow.call(this);
+    this.addChild(this._actorWindow?.expandScopeButton());
+  };
+
+  const _showActorWindow = sceneItemBase.showActorWindow;
+  sceneItemBase.showActorWindow = function () {
+    if (this.isCursorLeft()) {
+      this._actorWindow?.expandScopeButton().setPosition(
+        settings.positionInMenu.cursorLeft.x,
+        settings.positionInMenu.cursorLeft.y
+      );
+    } else {
+      this._actorWindow?.expandScopeButton().setPosition(
+        settings.positionInMenu.cursorRight.x,
+        settings.positionInMenu.cursorRight.y
+      );
+    }
+    _showActorWindow.call(this);
+  };
+}
+
+Scene_ItemBase_ExpandScopeTargetButtonMixIn(Scene_ItemBase.prototype);
+
+function Window_ExpandTargetScopeButtonMixIn(windowClass: Window_BattleActor|Window_BattleEnemy|Window_MenuActor) {
   const _initialize = windowClass.initialize;
-  windowClass.initialize = function (rect) {
+  windowClass.initialize = function (rect: Rectangle) {
     _initialize.call(this, rect);
     this._expandScopeButton = new Sprite_ExpandTargetScopeButton(this.toggleCursorAll.bind(this));
   };
@@ -43,7 +68,7 @@ function Window_BattleTarget_ExpandTargetScopeButtonMixIn(windowClass) {
   const _show = windowClass.show;
   windowClass.show = function () {
     _show.call(this);
-    if (BattleManager.inputtingAction().canExpandScope()) {
+    if (this.canToggleScope()) {
       this.showExpandScopeButton();
     }
   };
@@ -65,27 +90,36 @@ function Window_BattleTarget_ExpandTargetScopeButtonMixIn(windowClass) {
   };
 }
 
-Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleActor.prototype);
-Window_BattleTarget_ExpandTargetScopeButtonMixIn(Window_BattleEnemy.prototype);
+Window_ExpandTargetScopeButtonMixIn(Window_BattleActor.prototype);
+Window_ExpandTargetScopeButtonMixIn(Window_BattleEnemy.prototype);
+Window_ExpandTargetScopeButtonMixIn(Window_MenuActor.prototype);
 
 class Sprite_ExpandTargetScopeButton extends Sprite_ToggleButton {
+  setPosition(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
   scaleXY() {
     return settings.scale / 100;
   }
 
+  /**
+   * デフォルトは戦闘画面上のポジションとする
+   */
   positionX() {
-    return settings.x;
+    return settings.positionInBattle.x;
   }
 
   positionY() {
-    return settings.y;
+    return settings.positionInBattle.y;
   }
 
   onImageName() {
-    return settings.allButtonImage;
+    return settings.singleButtonImage;
   }
 
   offImageName() {
-    return settings.singleButtonImage;
+    return settings.allButtonImage;
   }
 }

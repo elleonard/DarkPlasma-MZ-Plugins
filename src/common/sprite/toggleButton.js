@@ -48,7 +48,7 @@ export class Sprite_ToggleButton extends Sprite_Clickable {
   loadButtonImage() {
     this._onBitmap = ImageManager.loadBitmap('img/', this.onImageName());
     this._offBitmap = ImageManager.loadBitmap('img/', this.offImageName());
-    this.bitmap = this._onBitmap;
+    this.bitmap = this._offBitmap;
   }
 
   onClick() {
