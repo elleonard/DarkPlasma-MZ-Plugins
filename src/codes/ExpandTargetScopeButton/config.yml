@@ -24,11 +24,15 @@ DarkPlasma_ExpandTargetScopeButton:
     - param: allButtonImage
       text:
         ja: 全体化ボタン画像
+      desc:
+        ja: 押すとスキル/アイテムの対象を全体化するボタンの画像を指定します。
       type: file
       dir: img
     - param: singleButtonImage
       text:
         ja: 単体化ボタン画像
+      desc:
+        ja: 押すとスキル/アイテムの対象を単体化するボタンの画像を指定します。
       type: file
       dir: img
     - param: positionInBattle
