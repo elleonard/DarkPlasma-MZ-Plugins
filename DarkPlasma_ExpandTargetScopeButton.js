@@ -24,11 +24,13 @@
  * @orderAfter DarkPlasma_ExpandTargetScope
  *
  * @param allButtonImage
+ * @desc 押すとスキル/アイテムの対象を全体化するボタンの画像を指定します。
  * @text 全体化ボタン画像
  * @type file
  * @dir img
  *
  * @param singleButtonImage
+ * @desc 押すとスキル/アイテムの対象を単体化するボタンの画像を指定します。
  * @text 単体化ボタン画像
  * @type file
  * @dir img

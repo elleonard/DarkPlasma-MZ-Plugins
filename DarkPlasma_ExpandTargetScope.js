@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.4.0
+// DarkPlasma_ExpandTargetScope 1.4.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/16 1.4.1 pageup, pagedownキーでの対象範囲変更が正常に動作しない不具合を修正
  * 2023/01/14 1.4.0 拡張プラグイン用インターフェース追加
  * 2022/08/21 1.3.1 typescript移行
  *                  アクターコマンド入力決定後にキャンセルすると全体化MP消費率が全スキルに反映される不具合を修正
@@ -66,7 +67,7 @@
  * @default false
  *
  * @help
- * version: 1.4.0
+ * version: 1.4.1
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -358,6 +359,14 @@
       }
       return _isCustomKeyEnabled.call(this, key);
     };
+    /**
+     * deactivateされてしまうため
+     */
+    if (settings.switchScopeButton === 'pageup') {
+      windowClass.processPageup = () => {};
+    } else if (settings.switchScopeButton === 'pagedown') {
+      windowClass.processPagedown = () => {};
+    }
   }
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_MenuActor.prototype);
   Window_MenuActor_ExpandTargetScopeMixIn(Window_MenuActor.prototype);
@@ -389,6 +398,14 @@
       SoundManager.playCursor();
       this.refreshCursor();
     };
+    /**
+     * deactivateされてしまうため
+     */
+    if (settings.switchScopeButton === 'pageup') {
+      windowClass.processPageup = () => {};
+    } else if (settings.switchScopeButton === 'pagedown') {
+      windowClass.processPagedown = () => {};
+    }
   }
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleActor.prototype);
   Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleEnemy.prototype);
