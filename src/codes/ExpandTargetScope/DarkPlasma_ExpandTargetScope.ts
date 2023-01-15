@@ -304,6 +304,15 @@ function Window_MenuActor_ExpandTargetScopeMixIn(windowClass: Window_MenuActor) 
     }
     return _isCustomKeyEnabled.call(this, key);
   };
+
+  /**
+   * deactivateされてしまうため
+   */
+  if (settings.switchScopeButton === 'pageup') {
+    windowClass.processPageup = () => {};
+  } else if (settings.switchScopeButton === 'pagedown') {
+    windowClass.processPagedown = () => {};
+  }
 }
 
 Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_MenuActor.prototype);
@@ -340,6 +349,15 @@ function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass: Window_BattleAc
     SoundManager.playCursor();
     this.refreshCursor();
   };
+
+  /**
+   * deactivateされてしまうため
+   */
+  if (settings.switchScopeButton === 'pageup') {
+    windowClass.processPageup = () => {};
+  } else if (settings.switchScopeButton === 'pagedown') {
+    windowClass.processPagedown = () => {};
+  }
 }
 
 Window_CustomKeyHandlerMixIn(settings.switchScopeButton, Window_BattleActor.prototype);
