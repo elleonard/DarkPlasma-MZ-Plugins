@@ -4,10 +4,15 @@
 
 declare interface Game_Temp {
   _syncSelectionEffectRequestedBattlers: Game_Battler[];
+  _expandTargetScope: boolean;
 
   requestSyncSelectionEffect(battler: Game_Battler): void;
   isSyncSelectionEffectRequested(battler: Game_Battler): boolean;
   processSyncSelectionEffect(battler: Game_Battler): void;
+
+  isExpandScopeTargetRequested(): boolean;
+  toggleExpandTargetScope(): void;
+  resetExpandTargetScope(): void;
 }
 
 declare interface Game_Unit {
@@ -28,6 +33,7 @@ declare interface Game_Action {
   isExpandedScope(): boolean;
   isForAllByDefault(): boolean;
   expandedScopeDamageRate(): number;
+  isExpandedDamageRateEnabled(): boolean;
 }
 
 declare interface Scene_ItemBase {

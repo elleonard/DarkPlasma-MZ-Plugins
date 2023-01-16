@@ -9,6 +9,7 @@ function Game_Temp_ExpandTargetScopeMixIn(gameTemp: Game_Temp) {
   gameTemp.initialize = function (this: Game_Temp) {
     _initialize.call(this);
     this._syncSelectionEffectRequestedBattlers = [];
+    this._expandTargetScope = false;
   };
 
   /**
@@ -33,6 +34,18 @@ function Game_Temp_ExpandTargetScopeMixIn(gameTemp: Game_Temp) {
       (b) => b !== battler
     );
   };
+
+  gameTemp.isExpandScopeTargetRequested = function () {
+    return this._expandTargetScope;
+  };
+
+  gameTemp.toggleExpandTargetScope = function () {
+    this._expandTargetScope = !this._expandTargetScope;
+  };
+
+  gameTemp.resetExpandTargetScope = function () {
+    this._expandTargetScope = false;
+  };
 }
 
 Game_Temp_ExpandTargetScopeMixIn(Game_Temp.prototype);
@@ -44,7 +57,7 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction: Game_Action) {
   const _clear = gameAction.clear;
   gameAction.clear = function (this: Game_Action) {
     _clear.call(this);
-    this._isExpandedScope = false;
+    this._isExpandedScope = $gameTemp.isExpandScopeTargetRequested();
     this._enableForAllRate = false;
   };
 
@@ -100,14 +113,25 @@ function Game_Action_ExpandTargetScopeMixIn(gameAction: Game_Action) {
    */
   gameAction.expandedScopeDamageRate = function (this: Game_Action): number {
     /**
-     * 全体化済み かつ 敵残数2以上なら全体化倍率を有効化
+     * 全体化済み かつ 対象残数2以上なら全体化倍率を有効化
      * 単純に同条件で倍率をかけると、全体化攻撃で残り1体になった場合、最後の1体に倍率がかからない
      * そのため、やや気持ち悪いが一度でも全体化倍率がかかった行動には必ず全体化倍率をかける
      */
-    if (this._isExpandedScope && $gameTroop.aliveMembers().length > 1) {
+    if (this.isExpandedDamageRateEnabled()) {
       this._enableForAllRate = true;
     }
     return this._enableForAllRate ? settings.damageRateForAll / 100 : 1;
+  };
+
+  /**
+   * 全体化を使うのはプレイヤーサイドのみなので、
+   * 自軍向け = パーティメンバー向け
+   * 敵軍向け = 敵グループ向け
+   */
+  gameAction.isExpandedDamageRateEnabled = function () {
+    return this._isExpandedScope
+      && (this.isForFriend() && $gameParty.aliveMembers().length > 1
+        || this.isForOpponent() && $gameTroop.aliveMembers().length > 1);
   };
 }
 
@@ -166,6 +190,12 @@ function Scene_ItemBase_ExpandScopeTargetMixIn(sceneItemBase: Scene_ItemBase) {
   sceneItemBase.showActorWindow = function () {
     this._actorWindow?.setItem(this.item());
     _showActorWindow.call(this);
+  };
+
+  const _onActorCancel = sceneItemBase.onActorCancel;
+  sceneItemBase.onActorCancel = function () {
+    _onActorCancel.call(this);
+    $gameTemp.resetExpandTargetScope();
   };
 }
 
@@ -288,7 +318,8 @@ function Window_MenuActor_ExpandTargetScopeMixIn(windowClass: Window_MenuActor) 
   };
 
   windowClass.toggleCursorAll = function (this: Window_MenuActor) {
-    this.setCursorAll(!this._cursorAll);
+    $gameTemp.toggleExpandTargetScope();
+    this.setCursorAll($gameTemp.isExpandScopeTargetRequested());
     this.forceSelect(0);
     SoundManager.playCursor();
   };
