@@ -36,15 +36,17 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
     return Scene_Message.prototype.messageWindowRect.call(this);
   };
 
-  sceneClass.createGoldWindow = function () {
-    this._goldWindow = new Window_Gold(this.goldWindowRect());
-    this._goldWindow.openness = 0;
-    this._messageWindowLayer.addChild(this._goldWindow);
-  };
+  if (!sceneClass.createGoldWindow) {
+    sceneClass.createGoldWindow = function () {
+      this._goldWindow = new Window_Gold(this.goldWindowRect());
+      this._goldWindow.openness = 0;
+      this._messageWindowLayer.addChild(this._goldWindow);
+    };
 
-  sceneClass.goldWindowRect = function () {
-    return Scene_Message.prototype.goldWindowRect.call(this);
-  };
+    sceneClass.goldWindowRect = function () {
+      return Scene_Message.prototype.goldWindowRect.call(this);
+    };
+  }
 
   sceneClass.createNameBoxWindow = function () {
     this._nameBoxWindow = new Window_NameBox();
@@ -64,6 +66,10 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
   sceneClass.createEventItemWindow = function () {
     this._eventItemWindow = new Window_EventItem(this.eventItemWindowRect());
     this._messageWindowLayer.addChild(this._eventItemWindow);
+  };
+
+  sceneClass.eventItemWindowRect = function () {
+    return Scene_Message.prototype.eventItemWindowRect.call(this);
   };
 
   sceneClass.associateWindows = function () {
