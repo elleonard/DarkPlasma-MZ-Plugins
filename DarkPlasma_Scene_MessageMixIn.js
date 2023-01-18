@@ -1,9 +1,11 @@
-// DarkPlasma_Scene_MessageMixIn 1.0.0
+// DarkPlasma_Scene_MessageMixIn 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/18 1.0.1 すでにお金ウィンドウがあるシーンにはお金ウィンドウを再定義しない
+ *                  指定シーンを開こうとするとエラーが起きる不具合を修正
  * 2023/01/13 1.0.0 公開
  */
 
@@ -21,7 +23,7 @@
  * @default []
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
  * $gameMessage.add などでメッセージを追加した際に、
@@ -74,14 +76,16 @@
     sceneClass.messageWindowRect = function () {
       return Scene_Message.prototype.messageWindowRect.call(this);
     };
-    sceneClass.createGoldWindow = function () {
-      this._goldWindow = new Window_Gold(this.goldWindowRect());
-      this._goldWindow.openness = 0;
-      this._messageWindowLayer.addChild(this._goldWindow);
-    };
-    sceneClass.goldWindowRect = function () {
-      return Scene_Message.prototype.goldWindowRect.call(this);
-    };
+    if (!sceneClass.createGoldWindow) {
+      sceneClass.createGoldWindow = function () {
+        this._goldWindow = new Window_Gold(this.goldWindowRect());
+        this._goldWindow.openness = 0;
+        this._messageWindowLayer.addChild(this._goldWindow);
+      };
+      sceneClass.goldWindowRect = function () {
+        return Scene_Message.prototype.goldWindowRect.call(this);
+      };
+    }
     sceneClass.createNameBoxWindow = function () {
       this._nameBoxWindow = new Window_NameBox();
       this._messageWindowLayer.addChild(this._nameBoxWindow);
@@ -97,6 +101,9 @@
     sceneClass.createEventItemWindow = function () {
       this._eventItemWindow = new Window_EventItem(this.eventItemWindowRect());
       this._messageWindowLayer.addChild(this._eventItemWindow);
+    };
+    sceneClass.eventItemWindowRect = function () {
+      return Scene_Message.prototype.eventItemWindowRect.call(this);
     };
     sceneClass.associateWindows = function () {
       Scene_Message.prototype.associateWindows.call(this);
