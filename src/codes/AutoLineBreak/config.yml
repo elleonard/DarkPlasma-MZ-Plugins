@@ -3,6 +3,11 @@ DarkPlasma_AutoLineBreak:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/01/21
+      version: 1.3.0
+      description: 'typescript移行'
+    - description: '単語ベースの自動改行をサポート'
+    - description: '英語ヘルプを追加'
     - date: 2022/04/19
       version: 1.2.1
       description: '文字列の長さ次第で二重改行される不具合を修正'
@@ -29,37 +34,56 @@ DarkPlasma_AutoLineBreak:
 
   locates:
     - ja
+    - en
   plugindesc:
-    ja: 'ウィンドウ幅を超える日本語文章を自動で折り返す'
+    ja: 'ウィンドウ幅を超える文章を自動で折り返す'
+    en: "Automatically line break when text width is over window's"
   parameters:
     - param: prohibitLineBreakBefore
       desc:
         ja: 行頭に表示してはならない文字
+        en: character that cannot be displayed at the beginning of line.
       text:
         ja: 行頭禁則文字
+        en: Character can't be at the beginning
       type: string
       default: ',)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.'
     - param: prohibitLineBreakAfter
       desc:
         ja: 行末に表示してはならない文字
+        en: character that cannot be displayed at the end of line.
       text:
         ja: 行末禁則文字
+        en: Character can't be at the end
       type: string
       default: ([｛〔〈《「『【〘〖〝‘“｟«
     - param: ignoreAutoLineBreakWindows
       desc:
         ja: 自動改行しないウィンドウ一覧
+        en: Windows should not be auto line breaking.
       text:
         ja: 自動改行無効ウィンドウ
+        en: No auto line break windows
       type: string[]
       default: []
     - param: lineWidthMargin
       desc:
         ja: 行幅のマージン。禁則文字用に余裕を持たせるための幅
+        en: Margin for characters that cannot be at the beginning or end of line.
       text:
         ja: 行幅のマージン
+        en: Line width margin
       type: number
       default: 4
+    - param: wordBaseLineBreak
+      text:
+        ja: 単語ベース改行
+        en: Word base line break
+      desc:
+        ja: 単語ベースで自動改行を行うかどうか。半角スペースで区切られたひとかたまりを1単語とみなします。
+        en: When this is ON, it is enabled word base line breaking. Word is separated by half-width space.
+      type: boolean
+      default: false
   commands: []
   structures:
   help:
@@ -74,3 +98,10 @@ DarkPlasma_AutoLineBreak:
         （行末禁則文字が連続した場合、行末に対象の文字が表示されることがあります）
       - 行頭行末揃えを行いません。（必ずしも各行の行頭と行末が一直線に揃いません）
       - 分離禁則を適用しません。（英単語や連数字の途中で改行されることがあります）
+    en: |
+      This is plugin for automatically line break when text width is over window's.
+      
+      Especially, it supports line breaking rule for Japanese (multi byte characters) partially.
+      (see Japanese help in this file.)
+
+      For English, I recommend enabling word base line break settings.
