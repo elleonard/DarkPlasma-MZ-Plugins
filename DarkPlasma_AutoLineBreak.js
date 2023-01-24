@@ -1,9 +1,10 @@
-// DarkPlasma_AutoLineBreak 1.3.0
+// DarkPlasma_AutoLineBreak 1.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/24 1.3.1 単語ベース改行で改行文字を含むと自動改行判定が狂うことがある不具合を修正
  * 2023/01/21 1.3.0 typescript移行
  *                  単語ベースの自動改行をサポート
  *                  英語ヘルプを追加
@@ -56,7 +57,7 @@
  * @default false
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -108,7 +109,7 @@
  * @default false
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * This is plugin for automatically line break when text width is over window's.
  *
  * Especially, it supports line breaking rule for Japanese (multi byte characters) partially.
@@ -235,7 +236,10 @@
         return false;
       }
       const isInitialOfWord = textState.text[textState.index - 1] === ' ' && textState.text[textState.index] !== ' ';
-      const nextSpaceIndex = textState.text.indexOf(' ', textState.index + 1);
+      const nextSpaceIndex = Math.min(
+        textState.text.indexOf(' ', textState.index + 1),
+        textState.text.indexOf('\n', textState.index + 1)
+      );
       if (!isInitialOfWord || nextSpaceIndex < 0) {
         return false;
       }
