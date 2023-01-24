@@ -102,7 +102,10 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
       return false;
     }
     const isInitialOfWord = textState.text[textState.index-1] === " " && textState.text[textState.index] !== " ";
-    const nextSpaceIndex = textState.text.indexOf(" ", textState.index+1);
+    const nextSpaceIndex = Math.min(
+      textState.text.indexOf(" ", textState.index+1),
+      textState.text.indexOf("\n", textState.index+1)
+    );
     if (!isInitialOfWord || nextSpaceIndex < 0) {
       return false;
     }

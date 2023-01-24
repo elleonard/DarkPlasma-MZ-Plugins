@@ -3,6 +3,9 @@ DarkPlasma_AutoLineBreak:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/01/24
+      version: 1.3.1
+      description: '単語ベース改行で改行文字を含むと自動改行判定が狂うことがある不具合を修正'
     - date: 2023/01/21
       version: 1.3.0
       description: 'typescript移行'
