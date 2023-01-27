@@ -1,11 +1,19 @@
 import { settings } from './_build/DarkPlasma_AutoLineBreak_parameters';
 
 function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
+  windowClass.startIgnoreAutoLineBreakTemporary = function () {
+    this._ignoreAutoLineBreakTemporary = true;
+  };
+
+  windowClass.finishIgnoreAutoLineBreakTemporary = function () {
+    this._ignoreAutoLineBreakTemporary = false;
+  };
+
   /**
    * 自動折返しが無効なウィンドウであるかどうか
    */
   windowClass.isIgnoreAutoLineBreakWindow = function () {
-    return settings.ignoreAutoLineBreakWindows.includes(this.constructor.name);
+    return settings.ignoreAutoLineBreakWindows.includes(this.constructor.name) || this._ignoreAutoLineBreakTemporary;
   };
 
   /**
@@ -42,6 +50,31 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
   windowClass.processNewLine = function (textState) {
     _processNewLine.call(this, textState);
     textState.lineBuffer = this.createTextBuffer(textState.rtl);
+  };
+
+  const _processEscapeCharacter = windowClass.processEscapeCharacter;
+  windowClass.processEscapeCharacter = function (code, textState) {
+    _processEscapeCharacter.call(this, code, textState);
+    switch (code) {
+      case "IGNOREAUTOLINEBREAK":
+        const param = this.obtainEscapeParamText(textState);
+        if (param.toUpperCase() === "START") {
+          this.startIgnoreAutoLineBreakTemporary();
+        } else if (param.toUpperCase() === "FINISH") {
+          this.finishIgnoreAutoLineBreakTemporary();
+        }
+        break;
+    }
+  };
+
+  windowClass.obtainEscapeParamText = function (textState) {
+    const regExp = /^\[(.+)\]/;
+    const arr = regExp.exec(textState.text.slice(textState.index));
+    if (arr) {
+      textState.index += arr[0].length;
+      return arr[1];
+    }
+    return "";
   };
 
   const _createTextState = windowClass.createTextState;
@@ -102,11 +135,9 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
       return false;
     }
     const isInitialOfWord = textState.text[textState.index-1] === " " && textState.text[textState.index] !== " ";
-    const nextSpaceIndex = Math.min(
-      textState.text.indexOf(" ", textState.index+1),
-      textState.text.indexOf("\n", textState.index+1)
-    );
-    if (!isInitialOfWord || nextSpaceIndex < 0) {
+    const nextSpaceIndex = textState.text.indexOf(" ", textState.index+1);
+    const nextLineBreakIndex = textState.text.indexOf("\n", textState.index+1);
+    if (!isInitialOfWord || nextSpaceIndex < 0 || nextLineBreakIndex > 0 && nextSpaceIndex > nextLineBreakIndex) {
       return false;
     }
     const currentWord = textState.text.substring(textState.index, nextSpaceIndex);
