@@ -1,9 +1,11 @@
-// DarkPlasma_AutoLineBreak 1.3.1
+// DarkPlasma_AutoLineBreak 1.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/28 1.4.0 一時的に自動改行を無効にする制御文字を追加
+ *                  単語ベース改行が正常に動作しない不具合を修正
  * 2023/01/24 1.3.1 単語ベース改行で改行文字を含むと自動改行判定が狂うことがある不具合を修正
  * 2023/01/21 1.3.0 typescript移行
  *                  単語ベースの自動改行をサポート
@@ -57,7 +59,7 @@
  * @default false
  *
  * @help
- * version: 1.3.1
+ * version: 1.4.0
  * ウィンドウ幅を超えるような文字列を自動で改行します。
  *
  * 以下の法則でゆるふわ禁則処理します。
@@ -68,6 +70,11 @@
  *   （行末禁則文字が連続した場合、行末に対象の文字が表示されることがあります）
  * - 行頭行末揃えを行いません。（必ずしも各行の行頭と行末が一直線に揃いません）
  * - 分離禁則を適用しません。（英単語や連数字の途中で改行されることがあります）
+ *
+ * 下記制御文字を使うことで、一時的に自動改行を無効化/無効化解除できます。
+ * この状態はセーブデータに記録されません。
+ * \IGNOREAUTOLINEBREAK[START]: 無効化
+ * \IGNOREAUTOLINEBREAK[FINISH]: 無効化解除
  */
 
 /*:en
@@ -109,13 +116,18 @@
  * @default false
  *
  * @help
- * version: 1.3.1
+ * version: 1.4.0
  * This is plugin for automatically line break when text width is over window's.
  *
  * Especially, it supports line breaking rule for Japanese (multi byte characters) partially.
  * (see Japanese help in this file.)
  *
  * For English, I recommend enabling word base line break settings.
+ *
+ * You can use following control characters.
+ * These window state is not saved in player data.
+ * \IGNOREAUTOLINEBREAK[START]: mark as window that should be ignoring auto line break temporarily.
+ * \IGNOREAUTOLINEBREAK[FINISH]: unmark as window that should be ignoring auto line break temporarily.
  */
 
 (() => {
@@ -143,11 +155,17 @@
   };
 
   function Window_AutoLineBreakMixIn(windowClass) {
+    windowClass.startIgnoreAutoLineBreakTemporary = function () {
+      this._ignoreAutoLineBreakTemporary = true;
+    };
+    windowClass.finishIgnoreAutoLineBreakTemporary = function () {
+      this._ignoreAutoLineBreakTemporary = false;
+    };
     /**
      * 自動折返しが無効なウィンドウであるかどうか
      */
     windowClass.isIgnoreAutoLineBreakWindow = function () {
-      return settings.ignoreAutoLineBreakWindows.includes(this.constructor.name);
+      return settings.ignoreAutoLineBreakWindows.includes(this.constructor.name) || this._ignoreAutoLineBreakTemporary;
     };
     /**
      * 自動折返しが有効かどうか
@@ -181,6 +199,29 @@
     windowClass.processNewLine = function (textState) {
       _processNewLine.call(this, textState);
       textState.lineBuffer = this.createTextBuffer(textState.rtl);
+    };
+    const _processEscapeCharacter = windowClass.processEscapeCharacter;
+    windowClass.processEscapeCharacter = function (code, textState) {
+      _processEscapeCharacter.call(this, code, textState);
+      switch (code) {
+        case 'IGNOREAUTOLINEBREAK':
+          const param = this.obtainEscapeParamText(textState);
+          if (param.toUpperCase() === 'START') {
+            this.startIgnoreAutoLineBreakTemporary();
+          } else if (param.toUpperCase() === 'FINISH') {
+            this.finishIgnoreAutoLineBreakTemporary();
+          }
+          break;
+      }
+    };
+    windowClass.obtainEscapeParamText = function (textState) {
+      const regExp = /^\[(.+)\]/;
+      const arr = regExp.exec(textState.text.slice(textState.index));
+      if (arr) {
+        textState.index += arr[0].length;
+        return arr[1];
+      }
+      return '';
     };
     const _createTextState = windowClass.createTextState;
     windowClass.createTextState = function (text, x, y, width) {
@@ -236,11 +277,9 @@
         return false;
       }
       const isInitialOfWord = textState.text[textState.index - 1] === ' ' && textState.text[textState.index] !== ' ';
-      const nextSpaceIndex = Math.min(
-        textState.text.indexOf(' ', textState.index + 1),
-        textState.text.indexOf('\n', textState.index + 1)
-      );
-      if (!isInitialOfWord || nextSpaceIndex < 0) {
+      const nextSpaceIndex = textState.text.indexOf(' ', textState.index + 1);
+      const nextLineBreakIndex = textState.text.indexOf('\n', textState.index + 1);
+      if (!isInitialOfWord || nextSpaceIndex < 0 || (nextLineBreakIndex > 0 && nextSpaceIndex > nextLineBreakIndex)) {
         return false;
       }
       const currentWord = textState.text.substring(textState.index, nextSpaceIndex);
