@@ -21,11 +21,12 @@ tags:
 本プラグインを導入すると、他プラグインによって追加されたウィンドウでも自動改行され、意図しない改行が発生する可能性があります。
 その場合は、対象プラグインのウィンドウクラス名を自動改行無効ウィンドウ設定に追加してください。
 
-## よく問題になるプラグインとクラス名
+## よく問題になるプラグインとクラス名(MZ)
 
 |プラグイン名|バージョン（※）|ウィンドウクラス名|
 |:---------|---------:|:----------------|
 |[通知メッセージプラグイン - 鳥小屋](https://torigoya-plugin.rutan.dev/map/notifyMessage/)|1.3.0|Window_NotifyMessage|
+|[メッセージの中央揃えプラグイン](https://github.com/triacontane/RPGMakerMV/blob/mz_master/MessageAlignCenter.js)|1.4.1|Window_MessageDummy|
 
 （※）筆者が確認したバージョン。
 
