@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 1.1.0
+// DarkPlasma_TextLog 1.1.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/01/30 1.1.1 決定キーでログウィンドウが閉じない不具合を修正
  * 2022/11/03 1.1.0 開閉キーのpageup/pagedownを非推奨化
  *                  開閉キーでログウィンドウを閉じられない不具合を修正
  *                  決定キーでもログウィンドウを閉じられるように変更
@@ -136,7 +137,7 @@
  * @type string
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -572,7 +573,7 @@
     }
     isCancelTriggered() {
       return (
-        super.isCancelTriggered() || this.isOkEnabled() || settings.openLogKeys.some((key) => Input.isTriggered(key))
+        super.isCancelTriggered() || this.isOkTriggered() || settings.openLogKeys.some((key) => Input.isTriggered(key))
       );
     }
     paint() {
