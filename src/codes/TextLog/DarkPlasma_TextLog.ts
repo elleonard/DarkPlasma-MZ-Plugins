@@ -468,7 +468,7 @@ class Window_TextLog extends Window_Selectable {
   }
 
   public isCancelTriggered(): boolean {
-    return super.isCancelTriggered() || this.isOkEnabled() || settings.openLogKeys.some((key: string) => Input.isTriggered(key));
+    return super.isCancelTriggered() || this.isOkTriggered() || settings.openLogKeys.some((key: string) => Input.isTriggered(key));
   }
 
   public paint(): void {
