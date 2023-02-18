@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/02/18
+      version: 4.5.2
+      description: 'デフォルト言語を設定'
     - date: 2022/09/10
       version: 4.5.1
       description: 'typescript移行'
@@ -110,6 +113,7 @@ DarkPlasma_EnemyBook:
   locates:
     - ja
     - en
+  defaultLanguage: en
   plugindesc:
     ja: 'モンスター図鑑'
     en: 'Displays detailed statuses of enemies.'
