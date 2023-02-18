@@ -451,7 +451,7 @@ function generateHistories(histories) {
  */
 function generatePluginMetaText(config, language) {
   const result = [
-    `/*:${language}`,
+    `/*:${isDefaultLanguage(config, language) ? "" : language}`,
     ` * @plugindesc ${config.plugindesc[language]}`,
     ` * @author ${config.author ? config.author : 'DarkPlasma'}`,
     ` * @license ${config.license}`,
@@ -462,6 +462,10 @@ function generatePluginMetaText(config, language) {
     return result.concat([` * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release`]).join('\n');
   }
   return result.join('\n');
+}
+
+function isDefaultLanguage(config, language) {
+  return config.locates.length === 1 || config.defaultLanguage === language;
 }
 
 /**
