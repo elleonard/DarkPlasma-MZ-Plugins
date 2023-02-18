@@ -1,9 +1,10 @@
-// DarkPlasma_OrderIdAlias 1.1.2
+// DarkPlasma_OrderIdAlias 1.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/02/18 1.1.3 デフォルト言語を設定
  * 2022/08/21 1.1.2 typescript移行
  * 2022/05/14 1.1.1 リファクタ
  * 2021/07/27 1.1.0 スキルの並び順設定をデフォルトのままにする設定を追加
@@ -13,7 +14,7 @@
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc スキル/アイテムの表示順序IDを書き換える
  * @author DarkPlasma
  * @license MIT
@@ -28,7 +29,7 @@
  * @default false
  *
  * @help
- * version: 1.1.2
+ * version: 1.1.3
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
  *
