@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 4.5.1
+// DarkPlasma_EnemyBook 4.5.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/02/18 4.5.2 デフォルト言語を設定
  * 2022/09/10 4.5.1 typescript移行
  * 2022/07/24 4.5.0 敵キャラ画像のスケール設定メモタグを追加
  *            4.4.0 敵キャラ画像表示位置設定を追加
@@ -225,7 +226,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 4.5.1
+ * version: 4.5.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -331,7 +332,7 @@
  * @text 閾値（大）
  * @type number
  */
-/*:en
+/*:
  * @plugindesc Displays detailed statuses of enemies.
  * @author DarkPlasma
  * @license MIT
@@ -510,7 +511,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.5.1
+ * version: 4.5.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
