@@ -14,12 +14,12 @@ const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().sp
  * ひとまず、インクリメンタルビルドはcodesのみ対象とする
  */
 const codePath = path.resolve(__dirname, '..', '..', 'src', 'codes').replaceAll('\\', '/');
-const configTargets = await glob([`${codePath}/`]);
-const configBuildTargets = [...new Set(configTargets
-  .filter(path => /src\/codes\/.+\/config\.yml$/.test(path))
-  .map(path => /src\/codes\/(.+)\/config\.yml$/.exec(path)[1]))];
 
-const configPaths = await Promise.all(configBuildTargets
+const buildTargets = [...new Set(diffFiles.stdout.split('\n')
+  .filter(path => path.startsWith("src/codes"))
+  .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
+
+const configPaths = await Promise.all(buildTargets
   .filter(target => fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`))
   .map(target => {
     return [
@@ -36,7 +36,7 @@ let sliceOffset = 0;
 const chunkSize = 50;
 let chunk = configPaths.slice(sliceOffset, chunkSize);
 await $`echo "build config target:${configPaths.length} chunk size:${chunkSize}"`
-while(chunk.length > 0) {
+while (chunk.length > 0) {
   await Promise
     .all(chunk.map(globPath => {
       return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
@@ -44,10 +44,6 @@ while(chunk.length > 0) {
   sliceOffset += chunkSize;
   chunk = configPaths.slice(sliceOffset, chunkSize + sliceOffset);
 };
-
-const buildTargets = [...new Set(diffFiles.stdout.split('\n')
-  .filter(path => path.startsWith("src/codes"))
-  .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
 
 for (let target of buildTargets) {
   const targetPath = `${codePath}/${target}`;
