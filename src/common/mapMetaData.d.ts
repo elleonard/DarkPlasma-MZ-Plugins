@@ -1,1 +1,1 @@
-export function isMapMetaDataAvailable(): boolean;
+export function isMapMetaDataAvailable(): $dataMap is MZ.Map;
