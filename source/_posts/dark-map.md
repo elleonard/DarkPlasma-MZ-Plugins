@@ -23,5 +23,5 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_/DarkPlasma_DarkMap.js)
+[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DarkMap.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
