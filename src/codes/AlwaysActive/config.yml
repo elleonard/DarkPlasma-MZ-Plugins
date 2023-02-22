@@ -3,6 +3,10 @@ DarkPlasma_AlwaysActive:
   year: 2021
   license: MIT
   histories:
+    - date: 2023/02/23
+      version: 1.0.1
+      description: 'TypeScript移行'
+    - description: 'デフォルト言語を設定'
     - date: 2021/12/11
       version: 1.0.0
       description: '公開'
