@@ -1,8 +1,10 @@
-# このリポジトリは何？
+# このリポジトリは何？ What is this repository?
 
 DarkPlasma による RPG ツクール MZ のプラグイン開発を行うリポジトリです。
 
-# プラグインをダウンロードしたい
+This repository is for development RMMZ plugin `DarkPlasma` series.
+
+# プラグインをダウンロードしたい How to Download plugin?
 
 [release ブランチ](https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release)をご覧ください。
 
@@ -10,47 +12,52 @@ DarkPlasma による RPG ツクール MZ のプラグイン開発を行うリポ
 以前のバージョンに上書きすると、プラグインパラメータの設定値が初期化されます。  
 お手数ですが、必ず、上書き前に以前の設定を記録しておくようにしてください。
 
-# ビルドしたい
+Please see [branch for release](https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release).
 
-node と yarn が必要です。
+# ビルドしたい How to build plugin?
+
+NodeJS (v16以降) と Yarn (v1.22.18以降) が必要です。
+
+To build plugin, it needs to install NodeJS (v16 or later), Yarn (v1.22.18 or later).
 
 ```bash
 yarn install
-yarn buildAll
+yarn build --target <plugin>
 ```
 
 `yarn install` は初回のみ必要です。
 
-## 個別ビルド
+You must `yarn install` only first build.
 
-```bash
-yarn build --target (ビルド対象)
-```
+ビルド完了後、 `_dist/codes` フォルダ下に `DarkPlasma_<plugin>.js` が生成されます。
 
-### 個別ビルド用オプション
+Then, `DarkPlasma_<plugin>.js` is built and you can see it in `./_dist/codes/` directory.
+
+### ビルド用オプション Build options
 
 |option|required?|description|
 |:----------|:--|:---|
 |--target &lt;BuildTarget&gt;|yes|ビルド対象を指定します。|
-|--ts|no|ビルド対象がtypescriptである場合に指定します。|
+|--js|no|ビルド対象がjavascriptである場合に指定します。|
 |--exclude|no|excludesディレクトリ以下の対象をビルドします。|
 |--configOnly|no|config.ymlのみビルドします。|
 |--noFinalize|no|ビルド後の成果物のフォーマットとコピーを行いません。|
 
-# 動作確認したい
+# 動作確認したい How to check plugin?
 
-./scripts/copyToProject/config.yml に、プロジェクトのディレクトリパスを追記した上で、下記コマンドで watch モードにすると、編集後にビルド結果を自動的にプロジェクトにコピーしてくれます。
+ビルドしたプラグインをRPGツクールMZのプロジェクトの `js/plugins` フォルダに入れて確認してください。
 
-```bash
-yarn install
-yarn watch
-```
+Please check built plugin by copying it into RMMZ test project's `./js/plugins/` directory.
 
-`yarn install` は初回のみ必要です。
+./scripts/copyToProject/config.yml に、プロジェクトのディレクトリパスを追記した上でビルドすると、自動的にプロジェクトにコピーしてくれます。
 
-# コミットしたい
+If you set `./scripts/copyToProject/config.yml` and building plugin, it automatically copy the plugin to the project.
+
+# コミットしたい How to commit? (Including how to translate plugin)
 
 [CONTRIBUTING.md](./docs/CONTRIBUTING.md) を参照してください。
+
+Plase see [CONTRIBUTING.en.md](./docs/CONTRIBUTING.en.md).
 
 # ディレクトリ構造
 

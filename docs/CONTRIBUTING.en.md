@@ -3,6 +3,8 @@
 Thank you for investing your time in contributing to this project.
 In this guide you will get an overview of the contribution workflow from opening an issue, creating a PR, reviewing, and merging the PR.
 
+If you want to translate a plugin, please see also [How to translate plugin](HOW_TO_TRANSLATE.md).
+
 # Pull Request Process
 
 1. After creating PR, maintainer of this project (elleonard = DarkPlasma) will review your PR.
