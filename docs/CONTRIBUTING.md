@@ -3,6 +3,8 @@
 このリポジトリでは Issue や Pull Request を歓迎しています。  
 下記の簡単なルールをお読みの上、積極的にコミットしてください。
 
+[In English](CONTRIBUTING.en.md)
+
 # Pull Request Process
 
 1. Pull Request が出されたら、メンテナ（elleonard, DarkPlasma）が内容と動作を確認します。
@@ -117,5 +119,4 @@ Window クラスは Scene クラスによって生成・管理されるべきで
 できるだけ早く反応したいと考えていますが、時期によってはすぐに反応できないこともあります。
 反応がない場合、下記 Twitter アカウントまでご連絡ください。
 
-- [@plasma_dark](https://twitter.com/plasma_dark)（18 歳以上）
-- [@elleonard_f](https://twitter.com/elleonard_f)（18 歳未満）
+- [@elleonard_f](https://twitter.com/elleonard_f)

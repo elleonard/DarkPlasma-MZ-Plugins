@@ -50,7 +50,7 @@ yarn watch
 
 # コミットしたい
 
-[CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
+[CONTRIBUTING.md](./docs/CONTRIBUTING.md) を参照してください。
 
 # ディレクトリ構造
 
