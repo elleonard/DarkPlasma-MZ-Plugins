@@ -3,6 +3,9 @@ DarkPlasma_OrderIdAlias:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/02/23
+      version: 1.1.4
+      description: '英語翻訳を追加 (Add English translation)'
     - date: 2023/02/18
       version: 1.1.3
       description: 'デフォルト言語を設定'
@@ -30,14 +33,18 @@ DarkPlasma_OrderIdAlias:
 
   locates:
     - ja
+    - en
   plugindesc:
     ja: 'スキル/アイテムの表示順序IDを書き換える'
+    en: 'Set id to skill, item for display order'
   parameters:
     - param: sortSkillById
       desc:
         ja: スキルの表示順をID順にします。
+        en: Sort skill by order id.
       text:
         ja: スキルID順
+        en: sort skill
       type: boolean
       default: false
   commands: []
@@ -51,3 +58,11 @@ DarkPlasma_OrderIdAlias:
       OrderIdタグが有効になります。
 
       <OrderId:xxx> xxxは整数値
+    en: |
+      You can write note tag OrderId for item, skill
+      for change display order.
+
+      If skill sort parameter is OFF,
+      skill's OrderId tag is ignored.
+
+      <OrderId:xxx> xxx is number.
