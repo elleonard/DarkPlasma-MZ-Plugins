@@ -1,9 +1,10 @@
-// DarkPlasma_OrderIdAlias 1.1.3
+// DarkPlasma_OrderIdAlias 1.1.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/02/23 1.1.4 英語翻訳を追加 (Add English translation)
  * 2023/02/18 1.1.3 デフォルト言語を設定
  * 2022/08/21 1.1.2 typescript移行
  * 2022/05/14 1.1.1 リファクタ
@@ -29,7 +30,7 @@
  * @default false
  *
  * @help
- * version: 1.1.3
+ * version: 1.1.4
  * アイテムまたはスキルの順序がID順の場合、メモ欄に以下のように記述することで、
  * IDの代わりにその数値を順序として使います。
  *
@@ -37,6 +38,31 @@
  * OrderIdタグが有効になります。
  *
  * <OrderId:xxx> xxxは整数値
+ */
+
+/*:en
+ * @plugindesc Set id to skill, item for display order
+ * @author DarkPlasma
+ * @license MIT
+ *
+ * @target MZ
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @param sortSkillById
+ * @desc Sort skill by order id.
+ * @text sort skill
+ * @type boolean
+ * @default false
+ *
+ * @help
+ * version: 1.1.4
+ * You can write note tag OrderId for item, skill
+ * for change display order.
+ *
+ * If skill sort parameter is OFF,
+ * skill's OrderId tag is ignored.
+ *
+ * <OrderId:xxx> xxx is number.
  */
 
 (() => {
