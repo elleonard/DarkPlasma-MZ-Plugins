@@ -17,7 +17,10 @@ glob.sync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) =
   fs.copyFileSync(file, path.join(targetDir, name));
 });
 
-const removeFiles = ["DarkPlasma_TweetScreenShot.js"];
+/**
+ * ちょっと雑な対応だが、消したいファイルをここに書いてコミットすると消せる
+ */
+const removeFiles = [];
 removeFiles.forEach(file => {
   fs.unlink(path.join(targetDir, file), err => {
     if (err) {
