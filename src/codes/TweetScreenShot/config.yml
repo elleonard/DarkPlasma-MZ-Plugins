@@ -1,0 +1,44 @@
+DarkPlasma_TweetScreenShot:
+  name: DarkPlasma_TweetScreenShot
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/03/05
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ゲーム画面のキャプチャをツイートする'
+  parameters:
+    - param: clientId
+      text:
+        ja: imgurクライアントID
+      desc:
+        ja: imgurのアップロードAPIを利用するためのクライアントIDを設定してください。
+      type: string
+    - param: tweetText
+      text:
+        ja: ツイート
+      type: multiline_string
+      default: |
+        今日はこのRPGをやってるよ！
+        #RPGツクールMZ
+  commands:
+    - command: tweetScreenShot
+      text:
+        ja: スクリーンショットをツイートする
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      ゲーム画面のキャプチャをimgurに匿名でアップロードし、
+      そのURLを付与したツイート画面を開きます。
+
+      利用にはimgurの登録、及びクライアントIDの発行が必要です。
+
+      ブラウザプレイには対応していません。

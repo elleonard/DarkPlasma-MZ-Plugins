@@ -72,7 +72,7 @@ function generateParser(config, parameter, symbolType) {
 
 function stringParser(parameter, symbolType) {
   const default_ = parameter.default ? (parameter.default.ja ? parameter.default.ja : parameter.default) : '';
-  return `String(${parameterSymbol(parameter, symbolType)} || '${default_}')`;
+  return `String(${parameterSymbol(parameter, symbolType)} || \`${default_}\`)`;
 }
 
 function numberParser(parameter, symbolType) {
