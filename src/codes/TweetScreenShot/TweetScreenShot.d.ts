@@ -1,7 +1,7 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 
 declare interface SceneManager {
-  tweetScreenShot(): void;
+  tweetScreenshot(): void;
   tweetImage(base64Image: string): void;
-  notifyTweetScreenShotError(error: Error): void;
+  notifyTweetScreenshotError(error: Error): void;
 }

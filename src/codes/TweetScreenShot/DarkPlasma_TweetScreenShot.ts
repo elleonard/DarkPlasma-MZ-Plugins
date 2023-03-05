@@ -1,12 +1,12 @@
-/// <reference path="./TweetScreenShot.d.ts" />
+/// <reference path="./TweetScreenshot.d.ts" />
 
 import { pluginName } from '../../common/pluginName';
-import { settings } from './_build/DarkPlasma_TweetScreenShot_parameters';
+import { settings } from './_build/DarkPlasma_TweetScreenshot_parameters';
 
 const IMAGE_UPLOAD_API_URL = "https://api.imgur.com/3/image";
 
-function SceneManager_TweetScreenShotMixIn(sceneManager: typeof SceneManager) {
-  sceneManager.tweetScreenShot = function () {
+function SceneManager_TweetScreenshotMixIn(sceneManager: typeof SceneManager) {
+  sceneManager.tweetScreenshot = function () {
     this.tweetImage(this.snap().canvas.toDataURL("image/jpeg", 1).replace(/^.*,/, ''));
   };
 
@@ -34,22 +34,22 @@ function SceneManager_TweetScreenShotMixIn(sceneManager: typeof SceneManager) {
           throw new Error(`画像アップロードに失敗しました。 status: ${json.status} error: ${json.data.error}`);
         }
       }).catch(e => {
-        this.notifyTweetScreenShotError(e);
+        this.notifyTweetScreenshotError(e);
       });
     }).catch(e => {
-      this.notifyTweetScreenShotError(e);
+      this.notifyTweetScreenshotError(e);
     });
   };
 
-  sceneManager.notifyTweetScreenShotError = function (error) {
+  sceneManager.notifyTweetScreenshotError = function (error) {
     console.log(error);
   };
 }
 
-SceneManager_TweetScreenShotMixIn(SceneManager);
+SceneManager_TweetScreenshotMixIn(SceneManager);
 
-PluginManager.registerCommand(pluginName, 'tweetScreenShot', function () {
-  SceneManager.tweetScreenShot();
+PluginManager.registerCommand(pluginName, 'tweetScreenshot', function () {
+  SceneManager.tweetScreenshot();
 });
 
 function tweetText(imageUrl: string) {

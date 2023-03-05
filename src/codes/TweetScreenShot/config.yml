@@ -1,5 +1,5 @@
-DarkPlasma_TweetScreenShot:
-  name: DarkPlasma_TweetScreenShot
+DarkPlasma_TweetScreenshot:
+  name: DarkPlasma_TweetScreenshot
   year: 2023
   license: MIT
   histories:
@@ -26,7 +26,7 @@ DarkPlasma_TweetScreenShot:
         今日はこのRPGをやってるよ！
         #RPGツクールMZ
   commands:
-    - command: tweetScreenShot
+    - command: tweetScreenshot
       text:
         ja: スクリーンショットをツイートする
   structures:
