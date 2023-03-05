@@ -16,3 +16,14 @@ glob.sync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) =
 
   fs.copyFileSync(file, path.join(targetDir, name));
 });
+
+const removeFiles = ["DarkPlasma_TweetScreenShot.js"];
+removeFiles.forEach(file => {
+  fs.unlink(path.join(targetDir, file), err => {
+    if (err) {
+      console.log(`${file} not found.`);
+    } else {
+      console.log(`delete ${file}.`);
+    }
+  });
+});
