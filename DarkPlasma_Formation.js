@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.4.1
+// DarkPlasma_Formation 1.4.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/03/07 1.4.2 FesCursor.jsとの競合を解消
  * 2022/09/10 1.4.1 FormationInBattleと組み合わせて戦闘開始時にエラーで停止する不具合を修正
  * 2022/09/04 1.4.0 typescript移行
  *                  左右キーでカーソルをラップするように修正
@@ -28,7 +29,7 @@
  * 2020/09/13 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 並び替えシーン
  * @author DarkPlasma
  * @license MIT
@@ -82,7 +83,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.4.1
+ * version: 1.4.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -769,9 +770,12 @@
     }
     itemRect(index) {
       if (index < $gameParty.battleMembers().length) {
-        return this._battleMemberWindow.itemRect(index);
+        /**
+         * メンバーウィンドウ生成前に呼ばれた場合は適当に誤魔化す
+         */
+        return this._battleMemberWindow?.itemRect(index) || super.itemRect(index);
       } else {
-        return this._waitingMemberWindow.itemRect(index - $gameParty.battleMembers().length);
+        return this._waitingMemberWindow?.itemRect(index - $gameParty.battleMembers().length) || super.itemRect(index);
       }
     }
     pendingIndex() {
