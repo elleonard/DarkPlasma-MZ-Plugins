@@ -763,9 +763,12 @@ class Window_FormationSelect extends Window_Selectable {
 
   itemRect(index: number) {
     if (index < $gameParty.battleMembers().length) {
-      return this._battleMemberWindow!.itemRect(index);
+      /**
+       * メンバーウィンドウ生成前に呼ばれた場合は適当に誤魔化す
+       */
+      return this._battleMemberWindow?.itemRect(index) || super.itemRect(index);
     } else {
-      return this._waitingMemberWindow!.itemRect(index - $gameParty.battleMembers().length);
+      return this._waitingMemberWindow?.itemRect(index - $gameParty.battleMembers().length) || super.itemRect(index);
     }
   }
 
