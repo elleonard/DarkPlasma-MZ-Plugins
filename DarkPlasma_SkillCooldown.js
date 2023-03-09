@@ -1,9 +1,11 @@
-// DarkPlasma_SkillCooldown 2.3.2
+// DarkPlasma_SkillCooldown 2.3.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/03/09 2.3.3 クールタイム初期化タイミングの変更
+ *                  リファクタ
  * 2022/12/11 2.3.2 リファクタ
  * 2022/11/22 2.3.1 クールタイム中判定をGame_BattlerBaseクラスに寄せる
  *            2.3.0 初期クールタイム用のインターフェース追加
@@ -20,7 +22,7 @@
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc スキルにクールタイムを指定する
  * @author DarkPlasma
  * @license MIT
@@ -93,7 +95,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.3.2
+ * version: 2.3.3
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -159,7 +161,7 @@
       })(e || '{}');
     }),
     displayCooldownTurn: String(pluginParameters.displayCooldownTurn || true) === 'true',
-    cooldownFormat: String(pluginParameters.cooldownFormat || 'CT:{turn}'),
+    cooldownFormat: String(pluginParameters.cooldownFormat || `CT:{turn}`),
     cooldownTextColor: Number(pluginParameters.cooldownTextColor || 2),
     decreaseBenchwarmersCooldown: String(pluginParameters.decreaseBenchwarmersCooldown || true) === 'true',
   };
@@ -309,12 +311,12 @@
     /**
      * クールダウン開始
      * @param {number} id
-     * @param {MZ.Skill} skill スキルデータ
+     * @param {MZ.Skill} triggerSkill スキルデータ
      * @param {boolean} isActor
      */
-    setupCooldownTurn(id, skill, isActor) {
+    setupCooldownTurn(id, triggerSkill, isActor) {
       const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
-      const cooldowns = Game_SkillCooldown.setup(skill.id);
+      const cooldowns = Game_SkillCooldown.setup(triggerSkill.id);
       cooldowns.forEach((cooldown) => {
         targetCooldowns[cooldown.skillId] = cooldown;
       });
@@ -424,8 +426,8 @@
   function BattleManager_SkillCooldownMixIn(battleManager) {
     const _startBattle = battleManager.startBattle;
     battleManager.startBattle = function () {
-      _startBattle.call(this);
       skillCooldownManager.initialize();
+      _startBattle.call(this);
     };
     const _endTurn = battleManager.endTurn;
     battleManager.endTurn = function () {
@@ -452,10 +454,10 @@
     };
     /**
      * スキルクールタイムを開始する
-     * @param {MZ.Skill} skill スキルデータ
+     * @param {MZ.Skill} triggerSkill スキルデータ
      */
-    gameBattlerBase.setupCooldownTurn = function (skill) {
-      skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), skill, this.isActor());
+    gameBattlerBase.setupCooldownTurn = function (triggerSkill) {
+      skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), triggerSkill, this.isActor());
     };
     /**
      * 指定したスキルのクールタイム中であるかどうか
