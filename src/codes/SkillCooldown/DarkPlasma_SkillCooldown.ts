@@ -141,12 +141,12 @@ class SkillCooldownManager {
   /**
    * クールダウン開始
    * @param {number} id
-   * @param {MZ.Skill} skill スキルデータ
+   * @param {MZ.Skill} triggerSkill スキルデータ
    * @param {boolean} isActor
    */
-  setupCooldownTurn(id: number, skill: MZ.Skill, isActor: boolean) {
+  setupCooldownTurn(id: number, triggerSkill: MZ.Skill, isActor: boolean) {
     const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
-    const cooldowns = Game_SkillCooldown.setup(skill.id);
+    const cooldowns = Game_SkillCooldown.setup(triggerSkill.id);
     cooldowns.forEach((cooldown) => {
       targetCooldowns[cooldown.skillId] = cooldown;
     });
@@ -268,8 +268,8 @@ PluginManager.registerCommand(pluginName, command_finishCooldowns, function (arg
 function BattleManager_SkillCooldownMixIn(battleManager: typeof BattleManager) {
   const _startBattle = battleManager.startBattle;
   battleManager.startBattle = function () {
-    _startBattle.call(this);
     skillCooldownManager.initialize();
+    _startBattle.call(this);
   };
 
   const _endTurn = battleManager.endTurn;
@@ -300,10 +300,10 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase: Game_BattlerBase) 
 
   /**
    * スキルクールタイムを開始する
-   * @param {MZ.Skill} skill スキルデータ
+   * @param {MZ.Skill} triggerSkill スキルデータ
    */
-  gameBattlerBase.setupCooldownTurn = function (skill: MZ.Skill) {
-    skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), skill, this.isActor());
+  gameBattlerBase.setupCooldownTurn = function (triggerSkill: MZ.Skill) {
+    skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), triggerSkill, this.isActor());
   };
 
   /**
