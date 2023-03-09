@@ -27,6 +27,10 @@ class Game_SkillCooldown {
       (cooldown: SkillCooldown_SkillCooldown) => cooldown.triggerSkillId === triggerSkillId
     );
     /**
+     * NOTE: 付与タイミングは基本的にスキル使用時であり、その後スキルリスト確認までにターン経過を1回挟む。
+     * そのため、付与ターン数は設定値+1としている。
+     */
+    /**
      * メモ欄による設定
      */
     const result: Game_SkillCooldown[] = [];
@@ -43,6 +47,20 @@ class Game_SkillCooldown {
         )
         : []
     );
+  }
+
+  /**
+   * 指定スキルに指定ターン数のクールタイムを開始する
+   */
+  static setupByTargetSkillId(targetSkillId: number, turn?: number): Game_SkillCooldown|undefined {
+    turn = turn || Number($dataSkills[targetSkillId].meta.cooldownTurn);
+    if (!turn) {
+      return undefined;
+    }
+    /**
+     * 付与タイミングを想定しないため、渡されたターン数をそのまま付与する
+     */
+    return new Game_SkillCooldown(targetSkillId, turn);
   }
 
   /**
@@ -150,6 +168,17 @@ class SkillCooldownManager {
     cooldowns.forEach((cooldown) => {
       targetCooldowns[cooldown.skillId] = cooldown;
     });
+  }
+
+  /**
+   * 対象スキルに指定ターン数のクールダウン開始
+   */
+  setupCooldownTurnByTargetSkill(id: number, targetSkill: MZ.Skill, isActor: boolean, turn?: number) {
+    const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
+    const cooldown = Game_SkillCooldown.setupByTargetSkillId(targetSkill.id, turn);
+    if (cooldown) {
+      targetCooldowns[cooldown.skillId] = cooldown;
+    }
   }
 
   /**
@@ -304,6 +333,13 @@ function Game_BattlerBase_SkillCooldownMixIn(gameBattlerBase: Game_BattlerBase) 
    */
   gameBattlerBase.setupCooldownTurn = function (triggerSkill: MZ.Skill) {
     skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), triggerSkill, this.isActor());
+  };
+
+  /**
+   * 指定スキルに指定ターン数のクールタイムを開始する
+   */
+  gameBattlerBase.setupCooldownTurnByTargetSkill = function (targetSkill: MZ.Skill, turn?: number) {
+    skillCooldownManager.setupCooldownTurnByTargetSkill(this.skillCooldownId(), targetSkill, this.isActor(), turn);
   };
 
   /**

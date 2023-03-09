@@ -25,7 +25,8 @@ declare interface Game_SkillCooldown {
 }
 
 declare interface Game_BattlerBase {
-  setupCooldownTurn(skill: MZ.Skill): void;
+  setupCooldownTurn(triggerSkill: MZ.Skill): void;
+  setupCooldownTurnByTargetSkill(targetSkill: MZ.Skill, turn?: number): void;
   isDuringCooldown(skill: MZ.Skill): boolean;
   cooldownTurn(skill: MZ.Skill): number;
   skillCooldownId(): number;
