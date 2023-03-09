@@ -1,10 +1,11 @@
-// DarkPlasma_SkillCooldown 2.3.3
+// DarkPlasma_SkillCooldown 2.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/03/09 2.3.3 クールタイム初期化タイミングの変更
+ * 2023/03/09 2.4.0 柔軟なクールタイム開始のインターフェース追加
+ *            2.3.3 クールタイム初期化タイミングの変更
  *                  リファクタ
  * 2022/12/11 2.3.2 リファクタ
  * 2022/11/22 2.3.1 クールタイム中判定をGame_BattlerBaseクラスに寄せる
@@ -95,7 +96,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.3.3
+ * version: 2.4.0
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -212,6 +213,10 @@
         (cooldown) => cooldown.triggerSkillId === triggerSkillId
       );
       /**
+       * NOTE: 付与タイミングは基本的にスキル使用時であり、その後スキルリスト確認までにターン経過を1回挟む。
+       * そのため、付与ターン数は設定値+1としている。
+       */
+      /**
        * メモ欄による設定
        */
       const result = [];
@@ -228,6 +233,19 @@
             )
           : []
       );
+    }
+    /**
+     * 指定スキルに指定ターン数のクールタイムを開始する
+     */
+    static setupByTargetSkillId(targetSkillId, turn) {
+      turn = turn || Number($dataSkills[targetSkillId].meta.cooldownTurn);
+      if (!turn) {
+        return undefined;
+      }
+      /**
+       * 付与タイミングを想定しないため、渡されたターン数をそのまま付与する
+       */
+      return new Game_SkillCooldown(targetSkillId, turn);
     }
     /**
      * @return {number}
@@ -320,6 +338,16 @@
       cooldowns.forEach((cooldown) => {
         targetCooldowns[cooldown.skillId] = cooldown;
       });
+    }
+    /**
+     * 対象スキルに指定ターン数のクールダウン開始
+     */
+    setupCooldownTurnByTargetSkill(id, targetSkill, isActor, turn) {
+      const targetCooldowns = isActor ? this.actorsCooldowns(id) : this.enemysCooldowns(id);
+      const cooldown = Game_SkillCooldown.setupByTargetSkillId(targetSkill.id, turn);
+      if (cooldown) {
+        targetCooldowns[cooldown.skillId] = cooldown;
+      }
     }
     /**
      * クールダウン中かどうか
@@ -458,6 +486,12 @@
      */
     gameBattlerBase.setupCooldownTurn = function (triggerSkill) {
       skillCooldownManager.setupCooldownTurn(this.skillCooldownId(), triggerSkill, this.isActor());
+    };
+    /**
+     * 指定スキルに指定ターン数のクールタイムを開始する
+     */
+    gameBattlerBase.setupCooldownTurnByTargetSkill = function (targetSkill, turn) {
+      skillCooldownManager.setupCooldownTurnByTargetSkill(this.skillCooldownId(), targetSkill, this.isActor(), turn);
     };
     /**
      * 指定したスキルのクールタイム中であるかどうか
