@@ -12,7 +12,7 @@
  * 2022/03/13 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc アイテム融合ショップ
  * @author DarkPlasma
  * @license MIT
@@ -368,7 +368,7 @@
       })(e || '{}');
     }),
     useEquip: String(pluginParameters.useEquip || false) === 'true',
-    commandName: String(pluginParameters.commandName || '融合する'),
+    commandName: String(pluginParameters.commandName || `融合する`),
   };
 
   /**
