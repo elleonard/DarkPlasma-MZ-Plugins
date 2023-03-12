@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>スクリーンショットギャラリー</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/03/12/screenshot-gallery/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/03/12/screenshot-gallery/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ゲーム内でスクリーンショットを撮影し、記録する機能を提供します。<br>スクリーンショットギャラリーシーンで、スクリーンショットを閲覧できます。</p><p><a href="/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/" title="ゲーム画面のキャプチャをツイートする">ゲーム画面のキャプチャをツイートする</a>(2.0.0以降)との連携で、ギャラリーシーンから画像をツイートできます。<h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="gallery.jpeg" alt="使用例" title="使用例"></p><p>※画像へのカーソル画像表示は本プラグインの機能には含まれません。<br><a href="https://awaya3ji.seesaa.net/article/488927664.html">FesCursor.js</a>等をご利用ください。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ScreenshotGallery.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> システム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ゲーム画面のキャプチャをツイートする</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/</url>
