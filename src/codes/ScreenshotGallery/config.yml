@@ -1,0 +1,113 @@
+DarkPlasma_ScreenshotGallery:
+  name: DarkPlasma_ScreenshotGallery
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/03/12
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スクリーンショットギャラリー'
+  parameters:
+    - param: key
+      text:
+        ja: 撮影キー
+      type: select
+      default: control
+      options:
+        - name: control
+        - name: tab
+    - param: tweetKey
+      text:
+        ja: ツイートキー
+      desc:
+        ja: ギャラリーからツイートするキー。DarkPlasma_TweetScreenshotが必要です。機能を利用しない場合は空欄
+      type: select
+      default: shift
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+        - name: ""
+    - param: scenes
+      text:
+        ja: 撮影可能シーン
+      type: string[]
+      default:
+        - Scene_Base
+    - param: format
+      text:
+        ja: フォーマット
+      type: select
+      default: png
+      options:
+        - name: png
+        - name: jpg
+    - param: se
+      text:
+        ja: 効果音
+      type: Se
+      default:
+        name: Switch2
+        volume: 90
+        pitch: 100
+        pan: 0
+    - param: directory
+      text:
+        ja: 保存先フォルダ名
+      type: string
+      default: screenshot
+  commands:
+    - command: sceneScreenshot
+      text:
+        ja: スクショギャラリーを開く
+  structures:
+    Se:
+      - param: name
+        text:
+          ja: SEファイル
+        type: file
+        dir: audio/se
+      - param: volume
+        text:
+          ja: 音量
+        type: number
+        default: 90
+        max: 100
+        min: 0
+      - param: pitch
+        text:
+          ja: ピッチ
+        type: number
+        default: 100
+        max: 150
+        min: 50
+      - param: pan
+        text:
+          ja: 位相
+        type: number
+        default: 0
+        max: 100
+        min: -100
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スクリーンショットの撮影、保存を可能とし
+      保存したスクリーンショットをゲーム内で閲覧するシーンを提供します。
+
+      DarkPlasma_TweetScreenshotと一緒に利用することで
+      ギャラリーでスクリーンショットを閲覧している際にその画像をツイートできます。
+
+      ブラウザプレイには対応していません。
+
+      シーンクラス名を指定してギャラリーシーンを開く場合、
+      Scene_ScreenshotGallery
+      と指定してください。
