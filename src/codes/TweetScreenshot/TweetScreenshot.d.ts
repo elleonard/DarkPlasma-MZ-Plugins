@@ -2,6 +2,6 @@
 
 declare interface SceneManager {
   tweetScreenshot(): void;
-  tweetImage(base64Image: string): void;
+  tweetImage(image: Bitmap): void;
   notifyTweetScreenshotError(error: Error): void;
 }

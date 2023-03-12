@@ -3,6 +3,9 @@ DarkPlasma_TweetScreenshot:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/03/12
+      version: 2.0.0
+      description: 'ツイート用インターフェース変更'
     - date: 2023/03/05
       version: 1.0.0
       description: '公開'

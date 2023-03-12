@@ -7,10 +7,11 @@ const IMAGE_UPLOAD_API_URL = "https://api.imgur.com/3/image";
 
 function SceneManager_TweetScreenshotMixIn(sceneManager: typeof SceneManager) {
   sceneManager.tweetScreenshot = function () {
-    this.tweetImage(this.snap().canvas.toDataURL("image/jpeg", 1).replace(/^.*,/, ''));
+    this.tweetImage(this.snap());
   };
 
-  sceneManager.tweetImage = function (base64Image) {
+  sceneManager.tweetImage = function (image) {
+    const base64Image = image.canvas.toDataURL("image/jpeg", 1).replace(/^.*,/, '');
     const formData = new FormData();
     formData.append('image', base64Image);
     formData.append('type', 'base64');
