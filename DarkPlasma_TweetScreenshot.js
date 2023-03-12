@@ -1,9 +1,10 @@
-// DarkPlasma_TweetScreenshot 1.0.0
+// DarkPlasma_TweetScreenshot 2.0.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/03/12 2.0.0 ツイート用インターフェース変更
  * 2023/03/05 1.0.0 公開
  */
 
@@ -31,7 +32,7 @@
  * @text スクリーンショットをツイートする
  *
  * @help
- * version: 1.0.0
+ * version: 2.0.0
  * ゲーム画面のキャプチャをimgurに匿名でアップロードし、
  * そのURLを付与したツイート画面を開きます。
  *
@@ -64,9 +65,10 @@
   const IMAGE_UPLOAD_API_URL = 'https://api.imgur.com/3/image';
   function SceneManager_TweetScreenshotMixIn(sceneManager) {
     sceneManager.tweetScreenshot = function () {
-      this.tweetImage(this.snap().canvas.toDataURL('image/jpeg', 1).replace(/^.*,/, ''));
+      this.tweetImage(this.snap());
     };
-    sceneManager.tweetImage = function (base64Image) {
+    sceneManager.tweetImage = function (image) {
+      const base64Image = image.canvas.toDataURL('image/jpeg', 1).replace(/^.*,/, '');
       const formData = new FormData();
       formData.append('image', base64Image);
       formData.append('type', 'base64');
