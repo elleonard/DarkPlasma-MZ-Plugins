@@ -1,9 +1,12 @@
-// DarkPlasma_EnemyBook 4.5.3
+// DarkPlasma_EnemyBook 5.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/03/18 5.0.0 デフォルト言語を日本語に修正
+ *                  アイコン設定をSystemTypeIconに切り出す
+ *                  戦闘中に開く機能をEnemyBookInBattleに切り出す
  * 2023/02/23 4.5.3 デフォルト言語を日本語に変更
  * 2023/02/18 4.5.2 デフォルト言語を設定
  * 2022/09/10 4.5.1 typescript移行
@@ -47,292 +50,6 @@
  * 2020/08/30 1.0.0 MZ版公開
  */
 
-/*:
- * @plugindesc モンスター図鑑
- * @author DarkPlasma
- * @license MIT
- *
- * @target MZ
- * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
- *
- * @base DarkPlasma_CustomKeyHandler
- * @orderAfter DarkPlasma_CustomKeyHandler
- *
- * @param unknownData
- * @text 未確認要素表示名
- * @type string
- * @default ？？？？？？
- *
- * @param grayOutUnknown
- * @text 未確認要素グレー表示
- * @type boolean
- * @default false
- *
- * @param maskUnknownDropItem
- * @text 未確認ドロップ隠し
- * @type boolean
- * @default false
- *
- * @param enemyPercentLabel
- * @text 図鑑収集率ラベル
- * @type string
- * @default Enemy
- *
- * @param dropItemPercentLabel
- * @text ドロップ取得率ラベル
- * @type string
- * @default Drop Item
- *
- * @param displayDropRate
- * @text ドロップ率表示
- * @type boolean
- * @default false
- *
- * @param dropRateFormat
- * @text ドロップ率表示形式
- * @type select
- * @option XX％
- * @value 0
- * @option 1/X
- * @value 1
- * @default 0
- *
- * @param elementIcons
- * @desc 属性アイコンリストを設定します（順序はデータベースのタイプ設定に対応します）
- * @text 属性アイコンリスト
- * @type number[]
- * @default ["0", "76", "64", "65", "66", "67", "68", "69", "70", "71"]
- *
- * @param weakElementAndStateLabel
- * @desc 弱点属性/ステート/弱体のラベルを設定します
- * @text 弱点ラベル
- * @type string
- * @default 弱点属性/ステート/弱体
- *
- * @param resistElementAndStateLabel
- * @desc 耐性属性/ステート/弱体のラベルを設定します
- * @text 耐性ラベル
- * @type string
- * @default 耐性属性/ステート/弱体
- *
- * @param devideResistAndNoEffect
- * @desc 耐性属性/ステート/弱体と無効属性/ステート/弱体を分けて表示します
- * @text 耐性と無効を分ける
- * @type boolean
- * @default false
- *
- * @param noEffectElementAndStateLabel
- * @desc 無効属性/ステート/弱体のラベルを設定します
- * @text 無効ラベル
- * @type string
- * @default 無効属性/ステート/弱体
- *
- * @param excludeWeakStates
- * @desc 弱点ステートに表示しないステートを設定します
- * @text 弱点表示しないステート
- * @type state[]
- * @default []
- *
- * @param excludeResistStates
- * @desc 耐性/無効ステートに表示しないステートを設定します
- * @text 耐性表示しないステート
- * @type state[]
- * @default []
- *
- * @param debuffStatus
- * @text 弱体有効度の表示
- *
- * @param displayDebuffStatus
- * @text 有効弱体/耐性弱体を表示
- * @type boolean
- * @default true
- * @parent debuffStatus
- *
- * @param debuffStatusIcons
- * @text ステータス弱体アイコン
- * @type struct<DebuffStatusIcons>
- * @default {"mhp":"{\"small\":\"48\", \"large\":\"56\"}", "mmp":"{\"small\":\"49\", \"large\":\"57\"}", "atk":"{\"small\":\"50\", \"large\":\"58\"}", "def":"{\"small\":\"51\", \"large\":\"59\"}", "mat":"{\"small\":\"52\", \"large\":\"60\"}", "mdf":"{\"small\":\"53\", \"large\":\"61\"}", "agi":"{\"small\":\"54\", \"large\":\"62\"}", "luk":"{\"small\":\"55\", \"large\":\"63\"}"}
- * @parent debuffStatus
- *
- * @param debuffStatusThreshold
- * @text 弱体有効度閾値
- * @type struct<DebuffStatusThresholds>
- * @default {"weak":"{\"small\":\"100\", \"large\":\"150\"}", "resist":"{\"small\":\"100\", \"large\":\"50\"}"}
- * @parent debuffStatus
- *
- * @param enableInBattle
- * @desc 戦闘中に図鑑ウィンドウを開けるかどうか
- * @text 戦闘中に開く
- * @type boolean
- * @default true
- *
- * @param openKeyInBattle
- * @desc 戦闘中に図鑑ウィンドウを開閉するためのボタン。戦闘中に開ける設定の場合のみ有効です
- * @text 図鑑ウィンドウボタン
- * @type select
- * @option pageup
- * @option pagedown
- * @option shift
- * @option control
- * @option tab
- * @default shift
- *
- * @param highlightColor
- * @desc 戦闘中に図鑑を開いた場合のリスト中の出現モンスターの名前につける色
- * @text 出現モンスター色
- * @type number
- * @default 2
- *
- * @param skipToBattlerEnemy
- * @desc pageup,pagedownキーで出現モンスターにフォーカスします。
- * @text 出現モンスターフォーカス
- * @type boolean
- * @default false
- *
- * @param battlerEnemyToTop
- * @desc ONの場合、出現モンスターを最上部に表示する
- * @text 出現モンスター最上部表示
- * @type boolean
- * @default true
- *
- * @param enemyImageView
- * @text 敵キャラ画像表示設定
- * @type struct<ImageView>
- * @default {"x":"135", "y":"190"}
- *
- * @command open enemyBook
- * @text 図鑑を開く
- * @desc 図鑑シーンを開きます。
- *
- * @command add to enemyBook
- * @text 図鑑に登録する
- * @desc 指定した敵キャラを図鑑に登録します。
- * @arg id
- * @text 敵キャラID
- * @type enemy
- *
- * @command remove from enemyBook
- * @text 図鑑から登録抹消する
- * @desc 指定した敵キャラを図鑑から登録抹消します。
- * @arg id
- * @text 敵キャラID
- * @type enemy
- *
- * @command complete enemyBook
- * @text 図鑑を完成させる
- * @desc 図鑑の内容を全開示します。
- *
- * @command clear enemyBook
- * @text 図鑑を初期化する
- * @desc 図鑑の内容を初期化します。
- *
- * @help
- * version: 4.5.3
- * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
- * DarkPlasmaが改変を加えたものです。
- *
- * スクリプト:
- *   # 図鑑のエネミー遭遇達成率を取得する
- *   $gameSystem.percentCompleteEnemy()
- *   # 図鑑のドロップアイテム取得達成率を取得する
- *   $gameSystem.percentCompleteDrop()
- *   # 図鑑を開く
- *   SceneManager.push(Secne_EnemyBook)
- *
- * 敵キャラのメモ:
- *   <desc1:なんとか>  # 説明１行目
- *   <desc2:かんとか>  # 説明２行目
- *   <book:no>        # 図鑑に載せない場合
- *   <scaleInBook:80> # 図鑑上の画像の拡大率
- *
- * DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
- *
- * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_CustomKeyHandler version:1.2.1
- * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * DarkPlasma_CustomKeyHandler
- */
-/*~struct~DebuffStatusIcons:
- * @param mhp
- * @text 最大HP弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"48", "large":"56"}
- *
- * @param mmp
- * @text 最大MP弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"49", "large":"57"}
- *
- * @param atk
- * @text 攻撃力弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"50", "large":"58"}
- *
- * @param def
- * @text 防御力弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"51", "large":"59"}
- *
- * @param mat
- * @text 魔法力弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"52", "large":"60"}
- *
- * @param mdf
- * @text 魔法防御弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"53", "large":"61"}
- *
- * @param agi
- * @text 敏捷性弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"54", "large":"62"}
- *
- * @param luk
- * @text 運弱体アイコン
- * @type struct<DebuffStatusIcon>
- * @default {"small":"55", "large":"63"}
- */
-/*~struct~DebuffStatusThresholds:
- * @param weak
- * @desc 弱点弱体のアイコン表示判定の閾値。有効度がこれらの値よりも大ならアイコンを弱点弱体に表示
- * @text 弱点閾値
- * @type struct<DebuffStatusThreshold>
- * @default {"small":"100", "large":"150"}
- *
- * @param resist
- * @desc 耐性弱体のアイコン表示判定の閾値。有効度がこれらの値よりも小ならアイコンを耐性弱体に表示
- * @text 耐性閾値
- * @type struct<DebuffStatusThreshold>
- * @default {"small":"100", "large":"50"}
- */
-/*~struct~ImageView:
- * @param x
- * @text X座標
- * @type number
- *
- * @param y
- * @text Y座標
- * @type number
- */
-/*~struct~DebuffStatusIcon:
- * @param small
- * @text 弱体アイコン（小）
- * @type number
- *
- * @param large
- * @text 弱体アイコン（大）
- * @type number
- */
-/*~struct~DebuffStatusThreshold:
- * @param small
- * @text 閾値（小）
- * @type number
- *
- * @param large
- * @text 閾値（大）
- * @type number
- */
 /*:en
  * @plugindesc Displays detailed statuses of enemies.
  * @author DarkPlasma
@@ -342,6 +59,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_CustomKeyHandler
+ * @base DarkPlasma_SystemTypeIcon
  * @orderAfter DarkPlasma_CustomKeyHandler
  *
  * @param unknownData
@@ -382,12 +100,6 @@
  * @option 1/X
  * @value 1
  * @default 0
- *
- * @param elementIcons
- * @desc Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
- * @text Element Icons
- * @type number[]
- * @default ["0", "76", "64", "65", "66", "67", "68", "69", "70", "71"]
  *
  * @param weakElementAndStateLabel
  * @desc Label for weak elements and states.
@@ -434,51 +146,16 @@
  * @default true
  * @parent debuffStatus
  *
- * @param debuffStatusIcons
- * @text Debuff Status Icons
- * @type struct<DebuffStatusIconsEn>
- * @default {"mhp":"{\"small\":\"48\", \"large\":\"56\"}", "mmp":"{\"small\":\"49\", \"large\":\"57\"}", "atk":"{\"small\":\"50\", \"large\":\"58\"}", "def":"{\"small\":\"51\", \"large\":\"59\"}", "mat":"{\"small\":\"52\", \"large\":\"60\"}", "mdf":"{\"small\":\"53\", \"large\":\"61\"}", "agi":"{\"small\":\"54\", \"large\":\"62\"}", "luk":"{\"small\":\"55\", \"large\":\"63\"}"}
- * @parent debuffStatus
- *
  * @param debuffStatusThreshold
  * @text Debuff Status Threshold
  * @type struct<DebuffStatusThresholdsEn>
  * @default {"weak":"{\"small\":\"100\", \"large\":\"150\"}", "resist":"{\"small\":\"100\", \"large\":\"50\"}"}
  * @parent debuffStatus
  *
- * @param enableInBattle
- * @desc Enable enemy book in battle
- * @text Enable In Battle
- * @type boolean
- * @default true
- *
- * @param openKeyInBattle
- * @desc Open key for enemy book window in battle
- * @text Open Key In Battle
- * @type select
- * @option pageup
- * @option pagedown
- * @option shift
- * @option control
- * @option tab
- * @default shift
- *
  * @param highlightColor
- * @desc Highlight color for enemy in troop.
+ * @desc Highlight color for enemy list.
  * @type number
  * @default 2
- *
- * @param skipToBattlerEnemy
- * @desc Skip to battle enemy when pageup or pagedown key pressed.
- * @text Skip To Battle Enemy
- * @type boolean
- * @default false
- *
- * @param battlerEnemyToTop
- * @desc Display battler enemy to top of the list.
- * @text Battler Enemy to Top
- * @type boolean
- * @default true
  *
  * @param enemyImageView
  * @text Display enemy image setting.
@@ -512,7 +189,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 4.5.3
+ * version: 5.0.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -527,53 +204,14 @@
  *   <book:no>        # This enemy does not appear in the enemy book
  *   <scaleInBook:80> # Enemy image scale in book
  *
- * You can control order of enemies by using DarkPlasma_OrderIdAlias.
+ * You can control order of enemies with DarkPlasma_OrderIdAlias.
+ * You can open enemy book in battle with DarkPlasma_EnemyBookInBattle.
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_CustomKeyHandler version:1.2.1
+ * DarkPlasma_SystemTypeIcon version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
- */
-/*~struct~DebuffStatusIconsEn:
- * @param mhp
- * @text Debuff max hp icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"48", "large":"56"}
- *
- * @param mmp
- * @text Debuff max mp icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"49", "large":"57"}
- *
- * @param atk
- * @text Debuff attack icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"50", "large":"58"}
- *
- * @param def
- * @text Debuff defense icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"51", "large":"59"}
- *
- * @param mat
- * @text Debuff magical attack icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"52", "large":"60"}
- *
- * @param mdf
- * @text Debuff magical defense icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"53", "large":"61"}
- *
- * @param agi
- * @text Debuff agility icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"54", "large":"62"}
- *
- * @param luk
- * @text Debuff luck icons
- * @type struct<DebuffStatusIconEn>
- * @default {"small":"55", "large":"63"}
  */
 /*~struct~DebuffStatusThresholdsEn:
  * @param weak
@@ -597,15 +235,6 @@
  * @text position y
  * @type number
  */
-/*~struct~DebuffStatusIconEn:
- * @param small
- * @text Debuff status icon Lv1.
- * @type number
- *
- * @param large
- * @text Debuff status icon Lv2.
- * @type number
- */
 /*~struct~DebuffStatusThresholdEn:
  * @param small
  * @text Threshold (small)
@@ -613,6 +242,205 @@
  *
  * @param large
  * @text Threshold (large)
+ * @type number
+ */
+/*:
+ * @plugindesc 敵キャラ図鑑
+ * @author DarkPlasma
+ * @license MIT
+ *
+ * @target MZ
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_CustomKeyHandler
+ * @base DarkPlasma_SystemTypeIcon
+ * @orderAfter DarkPlasma_CustomKeyHandler
+ *
+ * @param unknownData
+ * @text 未確認要素表示名
+ * @type string
+ * @default ？？？？？？
+ *
+ * @param grayOutUnknown
+ * @text 未確認要素グレー表示
+ * @type boolean
+ * @default false
+ *
+ * @param maskUnknownDropItem
+ * @text 未確認ドロップ隠し
+ * @type boolean
+ * @default false
+ *
+ * @param enemyPercentLabel
+ * @text 図鑑収集率ラベル
+ * @type string
+ * @default Enemy
+ *
+ * @param dropItemPercentLabel
+ * @text ドロップ取得率ラベル
+ * @type string
+ * @default Drop Item
+ *
+ * @param displayDropRate
+ * @text ドロップ率表示
+ * @type boolean
+ * @default false
+ *
+ * @param dropRateFormat
+ * @text ドロップ率表示形式
+ * @type select
+ * @option XX％
+ * @value 0
+ * @option 1/X
+ * @value 1
+ * @default 0
+ *
+ * @param weakElementAndStateLabel
+ * @desc 弱点属性/ステート/弱体のラベルを設定します
+ * @text 弱点ラベル
+ * @type string
+ * @default 弱点属性/ステート/弱体
+ *
+ * @param resistElementAndStateLabel
+ * @desc 耐性属性/ステート/弱体のラベルを設定します
+ * @text 耐性ラベル
+ * @type string
+ * @default 耐性属性/ステート/弱体
+ *
+ * @param devideResistAndNoEffect
+ * @desc 耐性属性/ステート/弱体と無効属性/ステート/弱体を分けて表示します
+ * @text 耐性と無効を分ける
+ * @type boolean
+ * @default false
+ *
+ * @param noEffectElementAndStateLabel
+ * @desc 無効属性/ステート/弱体のラベルを設定します
+ * @text 無効ラベル
+ * @type string
+ * @default 無効属性/ステート/弱体
+ *
+ * @param excludeWeakStates
+ * @desc 弱点ステートに表示しないステートを設定します
+ * @text 弱点表示しないステート
+ * @type state[]
+ * @default []
+ *
+ * @param excludeResistStates
+ * @desc 耐性/無効ステートに表示しないステートを設定します
+ * @text 耐性表示しないステート
+ * @type state[]
+ * @default []
+ *
+ * @param debuffStatus
+ * @text 弱体有効度の表示
+ *
+ * @param displayDebuffStatus
+ * @text 有効弱体/耐性弱体を表示
+ * @type boolean
+ * @default true
+ * @parent debuffStatus
+ *
+ * @param debuffStatusThreshold
+ * @text 弱体有効度閾値
+ * @type struct<DebuffStatusThresholds>
+ * @default {"weak":"{\"small\":\"100\", \"large\":\"150\"}", "resist":"{\"small\":\"100\", \"large\":\"50\"}"}
+ * @parent debuffStatus
+ *
+ * @param highlightColor
+ * @desc 図鑑のモンスターリストをハイライトする際の色を設定します。
+ * @text ハイライト色
+ * @type number
+ * @default 2
+ *
+ * @param enemyImageView
+ * @text 敵キャラ画像表示設定
+ * @type struct<ImageView>
+ * @default {"x":"135", "y":"190"}
+ *
+ * @command open enemyBook
+ * @text 図鑑を開く
+ * @desc 図鑑シーンを開きます。
+ *
+ * @command add to enemyBook
+ * @text 図鑑に登録する
+ * @desc 指定した敵キャラを図鑑に登録します。
+ * @arg id
+ * @text 敵キャラID
+ * @type enemy
+ *
+ * @command remove from enemyBook
+ * @text 図鑑から登録抹消する
+ * @desc 指定した敵キャラを図鑑から登録抹消します。
+ * @arg id
+ * @text 敵キャラID
+ * @type enemy
+ *
+ * @command complete enemyBook
+ * @text 図鑑を完成させる
+ * @desc 図鑑の内容を全開示します。
+ *
+ * @command clear enemyBook
+ * @text 図鑑を初期化する
+ * @desc 図鑑の内容を初期化します。
+ *
+ * @help
+ * version: 5.0.0
+ * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
+ * DarkPlasmaが改変を加えたものです。
+ *
+ * スクリプト:
+ *   # 図鑑のエネミー遭遇達成率を取得する
+ *   $gameSystem.percentCompleteEnemy()
+ *   # 図鑑のドロップアイテム取得達成率を取得する
+ *   $gameSystem.percentCompleteDrop()
+ *   # 図鑑を開く
+ *   SceneManager.push(Secne_EnemyBook)
+ *
+ * 敵キャラのメモ:
+ *   <desc1:なんとか>  # 説明１行目
+ *   <desc2:かんとか>  # 説明２行目
+ *   <book:no>        # 図鑑に載せない場合
+ *   <scaleInBook:80> # 図鑑上の画像の拡大率
+ *
+ * DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
+ * DarkPlasma_EnemyBookInBattle と併用することにより、
+ * 戦闘中に図鑑を開けます。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_CustomKeyHandler version:1.2.1
+ * DarkPlasma_SystemTypeIcon version:1.0.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_CustomKeyHandler
+ */
+/*~struct~DebuffStatusThresholds:
+ * @param weak
+ * @desc 弱点弱体のアイコン表示判定の閾値。有効度がこれらの値よりも大ならアイコンを弱点弱体に表示
+ * @text 弱点閾値
+ * @type struct<DebuffStatusThreshold>
+ * @default {"small":"100", "large":"150"}
+ *
+ * @param resist
+ * @desc 耐性弱体のアイコン表示判定の閾値。有効度がこれらの値よりも小ならアイコンを耐性弱体に表示
+ * @text 耐性閾値
+ * @type struct<DebuffStatusThreshold>
+ * @default {"small":"100", "large":"50"}
+ */
+/*~struct~ImageView:
+ * @param x
+ * @text X座標
+ * @type number
+ *
+ * @param y
+ * @text Y座標
+ * @type number
+ */
+/*~struct~DebuffStatusThreshold:
+ * @param small
+ * @text 閾値（小）
+ * @type number
+ *
+ * @param large
+ * @text 閾値（大）
  * @type number
  */
 (() => {
@@ -705,22 +533,17 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    unknownData: String(pluginParameters.unknownData || '？？？？？？'),
+    unknownData: String(pluginParameters.unknownData || `？？？？？？`),
     grayOutUnknown: String(pluginParameters.grayOutUnknown || false) === 'true',
     maskUnknownDropItem: String(pluginParameters.maskUnknownDropItem || false) === 'true',
-    enemyPercentLabel: String(pluginParameters.enemyPercentLabel || 'Enemy'),
-    dropItemPercentLabel: String(pluginParameters.dropItemPercentLabel || 'Drop Item'),
+    enemyPercentLabel: String(pluginParameters.enemyPercentLabel || `Enemy`),
+    dropItemPercentLabel: String(pluginParameters.dropItemPercentLabel || `Drop Item`),
     displayDropRate: String(pluginParameters.displayDropRate || false) === 'true',
     dropRateFormat: Number(pluginParameters.dropRateFormat || 0),
-    elementIcons: JSON.parse(
-      pluginParameters.elementIcons || '["0", "76", "64", "65", "66", "67", "68", "69", "70", "71"]'
-    ).map((e) => {
-      return Number(e || 0);
-    }),
-    weakElementAndStateLabel: String(pluginParameters.weakElementAndStateLabel || '弱点属性/ステート/弱体'),
-    resistElementAndStateLabel: String(pluginParameters.resistElementAndStateLabel || '耐性属性/ステート/弱体'),
+    weakElementAndStateLabel: String(pluginParameters.weakElementAndStateLabel || `弱点属性/ステート/弱体`),
+    resistElementAndStateLabel: String(pluginParameters.resistElementAndStateLabel || `耐性属性/ステート/弱体`),
     devideResistAndNoEffect: String(pluginParameters.devideResistAndNoEffect || false) === 'true',
-    noEffectElementAndStateLabel: String(pluginParameters.noEffectElementAndStateLabel || '無効属性/ステート/弱体'),
+    noEffectElementAndStateLabel: String(pluginParameters.noEffectElementAndStateLabel || `無効属性/ステート/弱体`),
     excludeWeakStates: JSON.parse(pluginParameters.excludeWeakStates || '[]').map((e) => {
       return Number(e || 0);
     }),
@@ -728,70 +551,6 @@
       return Number(e || 0);
     }),
     displayDebuffStatus: String(pluginParameters.displayDebuffStatus || true) === 'true',
-    debuffStatusIcons: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        mhp: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.mhp || '{"small":"48", "large":"56"}'),
-        mmp: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.mmp || '{"small":"49", "large":"57"}'),
-        atk: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.atk || '{"small":"50", "large":"58"}'),
-        def: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.def || '{"small":"51", "large":"59"}'),
-        mat: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.mat || '{"small":"52", "large":"60"}'),
-        mdf: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.mdf || '{"small":"53", "large":"61"}'),
-        agi: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.agi || '{"small":"54", "large":"62"}'),
-        luk: ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            small: Number(parsed.small || 0),
-            large: Number(parsed.large || 0),
-          };
-        })(parsed.luk || '{"small":"55", "large":"63"}'),
-      };
-    })(
-      pluginParameters.debuffStatusIcons ||
-        '{"mhp":{"small":"48", "large":"56"}, "mmp":{"small":"49", "large":"57"}, "atk":{"small":"50", "large":"58"}, "def":{"small":"51", "large":"59"}, "mat":{"small":"52", "large":"60"}, "mdf":{"small":"53", "large":"61"}, "agi":{"small":"54", "large":"62"}, "luk":{"small":"55", "large":"63"}}'
-    ),
     debuffStatusThreshold: ((parameter) => {
       const parsed = JSON.parse(parameter);
       return {
@@ -814,11 +573,7 @@
       pluginParameters.debuffStatusThreshold ||
         '{"weak":{"small":"100", "large":"150"}, "resist":{"small":"100", "large":"50"}}'
     ),
-    enableInBattle: String(pluginParameters.enableInBattle || true) === 'true',
-    openKeyInBattle: String(pluginParameters.openKeyInBattle || 'shift'),
     highlightColor: Number(pluginParameters.highlightColor || 2),
-    skipToBattlerEnemy: String(pluginParameters.skipToBattlerEnemy || false) === 'true',
-    battlerEnemyToTop: String(pluginParameters.battlerEnemyToTop || true) === 'true',
     enemyImageView: ((parameter) => {
       const parsed = JSON.parse(parameter);
       return {
@@ -857,32 +612,6 @@
     refresh() {
       this.contents.clear();
       this.drawPercent();
-    }
-  }
-
-  /**
-   * @param {Scene_Battle.prototype} sceneBattle
-   */
-  function Scene_Battle_InputtingWindowMixIn(sceneBattle) {
-    const _inputtingWindow = sceneBattle.inputtingWindow;
-    if (!_inputtingWindow) {
-      sceneBattle.inputtingWindow = function () {
-        return this.inputWindows().find((inputWindow) => inputWindow.active);
-      };
-    }
-
-    const _inputWindows = sceneBattle.inputWindows;
-    if (!_inputWindows) {
-      sceneBattle.inputWindows = function () {
-        return [
-          this._partyCommandWindow,
-          this._actorCommandWindow,
-          this._skillWindow,
-          this._itemWindow,
-          this._actorWindow,
-          this._enemyWindow,
-        ];
-      };
     }
   }
 
@@ -1224,25 +953,12 @@
       super.initialize(rect);
       this._isInBattle = isInBattle;
       this.refresh();
-      if (this._isInBattle) {
-        this._battlerEnemyIndexes = Array.from(
-          new Set(
-            $gameTroop
-              .members()
-              .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
-              .filter((index) => index >= 0)
-          )
-        ).sort((a, b) => a - b);
-        const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : -1;
-        if (firstIndex >= 0) {
-          this.setTopRow(firstIndex);
-          this.select(firstIndex);
-        }
-      } else {
-        this.setTopRow(Window_EnemyBookIndex.lastTopRow);
-        this.select(Window_EnemyBookIndex.lastIndex);
-      }
+      this.forcusOnFirst();
       this.activate();
+    }
+    forcusOnFirst() {
+      this.setTopRow(Window_EnemyBookIndex.lastTopRow);
+      this.select(Window_EnemyBookIndex.lastIndex);
     }
     /**
      * @return {number}
@@ -1278,11 +994,6 @@
         return;
       }
       this._list = registerableEnemies();
-      if (this._isInBattle && settings.battlerEnemyToTop) {
-        this._list = this._list
-          .filter((enemy) => $gameTroop.members().some((gameEnemy) => gameEnemy.enemy() === enemy))
-          .concat(this._list.filter((enemy) => $gameTroop.members().every((gameEnemy) => gameEnemy.enemy() !== enemy)));
-      }
     }
     refresh() {
       this.makeItemList();
@@ -1329,45 +1040,13 @@
      * @return {boolean}
      */
     mustHighlight(enemy) {
-      return this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id);
-    }
-    processHandling() {
-      super.processHandling();
-      if (this.active && $gameParty.inBattle() && Input.isTriggered(settings.openKeyInBattle)) {
-        this.processCancel();
-      }
+      return false;
     }
     processOk() {}
     processCancel() {
       super.processCancel();
       Window_EnemyBookIndex.lastTopRow = this.topRow();
       Window_EnemyBookIndex.lastIndex = this.index();
-    }
-    battlerEnemyIsInBook() {
-      return this._battlerEnemyIndexes && this._battlerEnemyIndexes.length > 0;
-    }
-    cursorPagedown() {
-      if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
-        this.selectNextBattlerEnemy();
-      } else {
-        super.cursorPagedown();
-      }
-    }
-    cursorPageup() {
-      if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
-        this.selectPreviousBattlerEnemy();
-      } else {
-        super.cursorPageup();
-      }
-    }
-    selectNextBattlerEnemy() {
-      const nextIndex = this._battlerEnemyIndexes.find((index) => index > this.index()) || this._battlerEnemyIndexes[0];
-      this.smoothSelect(nextIndex);
-    }
-    selectPreviousBattlerEnemy() {
-      const candidates = this._battlerEnemyIndexes.filter((index) => index < this.index());
-      const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
-      this.smoothSelect(prevIndex);
     }
   }
   Window_EnemyBookIndex.lastTopRow = 0;
@@ -1637,7 +1316,7 @@
       const targetIcons = $dataSystem.elements
         .map((_, index) => index)
         .filter((elementId) => this.elementRate(elementId) > 1)
-        .map((elementId) => settings.elementIcons[elementId])
+        .map((elementId) => $gameSystem.elementIconIndex(elementId))
         .concat(
           $dataStates
             .filter((state) => state && this.stateRate(state.id) > 1 && !this.isExcludedWeakState(state.id))
@@ -1646,7 +1325,7 @@
         .concat(
           STATUS_NAMES.filter((_, index) => {
             return settings.displayDebuffStatus && this.debuffRate(index) > settings.debuffStatusThreshold.weak.large;
-          }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+          }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
         )
         .concat(
           STATUS_NAMES.filter((_, index) => {
@@ -1656,7 +1335,7 @@
               debuffRate <= settings.debuffStatusThreshold.weak.large &&
               debuffRate > settings.debuffStatusThreshold.weak.small
             );
-          }).map((statusName) => settings.debuffStatusIcons[statusName].small)
+          }).map((statusName) => $gameSystem.smallDebuffStatusIconIndex(statusName))
         );
       this.changeTextColor(this.systemColor());
       this.drawText(settings.weakElementAndStateLabel, x, y, width);
@@ -1690,7 +1369,7 @@
           const elementRate = this.elementRate(elementId);
           return elementRate < 1 && (!settings.devideResistAndNoEffect || elementRate > 0);
         })
-        .map((elementId) => settings.elementIcons[elementId])
+        .map((elementId) => $gameSystem.elementIconIndex(elementId))
         .concat(
           $dataStates
             .filter((state) => {
@@ -1714,7 +1393,7 @@
               debuffRate < settings.debuffStatusThreshold.resist.large &&
               (!settings.devideResistAndNoEffect || debuffRate > 0)
             );
-          }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+          }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
         )
         .concat(
           STATUS_NAMES.filter((_, index) => {
@@ -1724,7 +1403,7 @@
               debuffRate >= settings.debuffStatusThreshold.resist.large &&
               debuffRate < settings.debuffStatusThreshold.resist.small
             );
-          }).map((statusName) => settings.debuffStatusIcons[statusName].small)
+          }).map((statusName) => $gameSystem.smallDebuffStatusIconIndex(statusName))
         );
       this.changeTextColor(this.systemColor());
       this.drawText(settings.resistElementAndStateLabel, x, y, width);
@@ -1756,7 +1435,7 @@
       const targetIcons = $dataSystem.elements
         .map((_, index) => index)
         .filter((elementId) => this.elementRate(elementId) <= 0)
-        .map((elementId) => settings.elementIcons[elementId])
+        .map((elementId) => $gameSystem.elementIconIndex(elementId))
         .concat(
           $dataStates
             .filter((state) => state && this.stateRate(state.id) <= 0 && !this.isExcludedResistState(state.id))
@@ -1765,7 +1444,7 @@
         .concat(
           STATUS_NAMES.filter((_, index) => {
             return settings.displayDebuffStatus && this.debuffRate(index) <= 0;
-          }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+          }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
         );
       this.drawNoEffectsLabel(x, y, width);
       const iconBaseY = y + this.lineHeight();
@@ -1874,90 +1553,10 @@
       }
     }, []);
   };
-  /**
-   * @param {Scene_Battle.prototype} sceneBattle
-   */
-  function Scene_Battle_EnemyBookMixIn(sceneBattle) {
-    const _createWindowLayer = sceneBattle.createWindowLayer;
-    sceneBattle.createWindowLayer = function () {
-      _createWindowLayer.call(this);
-      this.createEnemyBookWindowLayer();
-    };
-    sceneBattle.createEnemyBookWindowLayer = function () {
-      if (settings.enableInBattle) {
-        this._enemyBookLayer = new WindowLayer();
-        this._enemyBookLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-        this._enemyBookLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-        this.addChild(this._enemyBookLayer);
-      }
-    };
-    const _createAllWindows = sceneBattle.createAllWindows;
-    sceneBattle.createAllWindows = function () {
-      _createAllWindows.call(this);
-      if (settings.enableInBattle) {
-        this.createEnemyBookWindows();
-      }
-    };
-    const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
-    sceneBattle.createPartyCommandWindow = function () {
-      _createPartyCommandWindow.call(this);
-      if (settings.enableInBattle) {
-        this._partyCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-      }
-    };
-    const _createActorCommandWindow = sceneBattle.createActorCommandWindow;
-    sceneBattle.createActorCommandWindow = function () {
-      _createActorCommandWindow.call(this);
-      if (settings.enableInBattle) {
-        this._actorCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-      }
-    };
-    const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
-    sceneBattle.isAnyInputWindowActive = function () {
-      return _isAnyInputWindowActive.call(this) || (settings.enableInBattle && this._enemyBookWindows.isActive());
-    };
-    sceneBattle.createEnemyBookWindows = function () {
-      this._enemyBookWindows = new EnemyBookWindows(
-        this.closeEnemyBook.bind(this),
-        this._enemyBookLayer,
-        Scene_EnemyBook.prototype.percentWindowRect.call(this),
-        Scene_EnemyBook.prototype.indexWindowRect.call(this),
-        Scene_EnemyBook.prototype.mainWindowRect.call(this),
-        true
-      );
-      this.closeEnemyBook();
-    };
-    sceneBattle.percentWindowHeight = function () {
-      return Scene_EnemyBook.prototype.percentWindowHeight.call(this);
-    };
-    sceneBattle.indexWindowWidth = function () {
-      return Scene_EnemyBook.prototype.indexWindowWidth.call(this);
-    };
-    sceneBattle.indexWindowHeight = function () {
-      return Scene_EnemyBook.prototype.indexWindowHeight.call(this);
-    };
-    sceneBattle.closeEnemyBook = function () {
-      this._enemyBookWindows.close();
-      if (this._returnFromEnemyBook) {
-        this._returnFromEnemyBook.activate();
-        this._returnFromEnemyBook = null;
-      }
-    };
-    sceneBattle.openEnemyBook = function () {
-      this._returnFromEnemyBook = this.inputtingWindow();
-      if (this._returnFromEnemyBook) {
-        this._returnFromEnemyBook.deactivate();
-      }
-      this._enemyBookWindows.open();
-    };
-  }
-  Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
-  Scene_Battle_EnemyBookMixIn(Scene_Battle.prototype);
-  Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_PartyCommand.prototype, 'enemyBook');
-  Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_ActorCommand.prototype, 'enemyBook');
   globalThis.EnemyBook = EnemyBook;
   globalThis.EnemyBookPage = EnemyBookPage;
   globalThis.Scene_EnemyBook = Scene_EnemyBook;
+  globalThis.EnemyBookWindows = EnemyBookWindows;
   globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
   globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
   globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
