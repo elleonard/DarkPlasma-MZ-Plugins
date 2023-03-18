@@ -1,0 +1,67 @@
+DarkPlasma_EnemyBookInBattle:
+  name: DarkPlasma_EnemyBookInBattle
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/03/18
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+    - en
+  plugindesc:
+    ja: '戦闘中に敵キャラ図鑑を開く'
+    en: 'open enemy book in battle.'
+  parameters:
+    - param: openKeyInBattle
+      text:
+        ja: 図鑑ウィンドウボタン
+        en: Open Key In Battle
+      desc:
+        ja: 戦闘中に図鑑ウィンドウを開閉するためのボタン。戦闘中に開ける設定の場合のみ有効です
+        en: Open key for enemy book window in battle
+      type: select
+      default: shift
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+    - param: skipToBattlerEnemy
+      text:
+        ja: 出現モンスターフォーカス
+        en: Skip To Battle Enemy
+      desc:
+        ja: pageup,pagedownキーで出現モンスターにフォーカスします。
+        en: Skip to battle enemy when pageup or pagedown key pressed.
+      type: boolean
+      default: false
+    - param: battlerEnemyToTop
+      text:
+        ja: 出現モンスター最上部表示
+        en: Battler Enemy to Top
+      desc:
+        ja: ONの場合、出現モンスターを最上部に表示する
+        en: Display battler enemy to top of the list.
+      type: boolean
+      default: true
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_EnemyBook
+        version: 5.0.0
+    orderAfter:
+      - name: DarkPlasma_EnemyBook
+    orderBefore: []
+  help:
+    ja: |
+      戦闘中に敵キャラ図鑑を開きます。
+      戦闘中に開いた場合、出現している敵がリスト中でハイライトされます。
+    en: |
+      You can open enemy book in battle.
+      
+      If you open enemy book in battle,
+      highlight enemy names included in the troop.
