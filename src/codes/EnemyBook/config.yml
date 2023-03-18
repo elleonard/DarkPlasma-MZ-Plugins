@@ -3,6 +3,11 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/03/18
+      version: 5.0.0
+      description: 'デフォルト言語を日本語に修正'
+    - description: 'アイコン設定をSystemTypeIconに切り出す'
+    - description: '戦闘中に開く機能をEnemyBookInBattleに切り出す'
     - date: 2023/02/23
       version: 4.5.3
       description: 'デフォルト言語を日本語に変更'
@@ -117,7 +122,7 @@ DarkPlasma_EnemyBook:
     - ja
     - en
   plugindesc:
-    ja: 'モンスター図鑑'
+    ja: '敵キャラ図鑑'
     en: 'Displays detailed statuses of enemies.'
   parameters:
     - param: unknownData
@@ -169,25 +174,6 @@ DarkPlasma_EnemyBook:
           value: 0
         - name: 1/X
           value: 1
-    - param: elementIcons
-      text:
-        ja: 属性アイコンリスト
-        en: Element Icons
-      desc:
-        ja: 属性アイコンリストを設定します（順序はデータベースのタイプ設定に対応します）
-        en: Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
-      type: number[]
-      default:
-        - 0
-        - 76
-        - 64
-        - 65
-        - 66
-        - 67
-        - 68
-        - 69
-        - 70
-        - 71
     - param: weakElementAndStateLabel
       text:
         ja: 弱点ラベル
@@ -260,37 +246,6 @@ DarkPlasma_EnemyBook:
       type: boolean
       default: true
       parent: debuffStatus
-    - param: debuffStatusIcons
-      text:
-        ja: ステータス弱体アイコン
-        en: Debuff Status Icons
-      parent: debuffStatus
-      type: DebuffStatusIcons
-      default:
-        mhp:
-          small: 48
-          large: 56
-        mmp:
-          small: 49
-          large: 57
-        atk:
-          small: 50
-          large: 58
-        def:
-          small: 51
-          large: 59
-        mat:
-          small: 52
-          large: 60
-        mdf:
-          small: 53
-          large: 61
-        agi:
-          small: 54
-          large: 62
-        luk:
-          small: 55
-          large: 63
     - param: debuffStatusThreshold
       text:
         ja: 弱体有効度閾値
@@ -304,57 +259,15 @@ DarkPlasma_EnemyBook:
         resist:
           small: 100
           large: 50
-    - param: enableInBattle
-      text:
-        ja: 戦闘中に開く
-        en: Enable In Battle
-      desc:
-        ja: 戦闘中に図鑑ウィンドウを開けるかどうか
-        en: Enable enemy book in battle
-      type: boolean
-      default: true
-    - param: openKeyInBattle
-      text:
-        ja: 図鑑ウィンドウボタン
-        en: Open Key In Battle
-      desc:
-        ja: 戦闘中に図鑑ウィンドウを開閉するためのボタン。戦闘中に開ける設定の場合のみ有効です
-        en: Open key for enemy book window in battle
-      type: select
-      default: shift
-      options:
-        - name: pageup
-        - name: pagedown
-        - name: shift
-        - name: control
-        - name: tab
     - param: highlightColor
       text:
-        ja: 出現モンスター色
+        ja: ハイライト色
         ex: Battler Enemy Highlight Color
       desc:
-        ja: 戦闘中に図鑑を開いた場合のリスト中の出現モンスターの名前につける色
-        en: Highlight color for enemy in troop.
+        ja: 図鑑のモンスターリストをハイライトする際の色を設定します。
+        en: Highlight color for enemy list.
       type: number
       default: 2
-    - param: skipToBattlerEnemy
-      text:
-        ja: 出現モンスターフォーカス
-        en: Skip To Battle Enemy
-      desc:
-        ja: pageup,pagedownキーで出現モンスターにフォーカスします。
-        en: Skip to battle enemy when pageup or pagedown key pressed.
-      type: boolean
-      default: false
-    - param: battlerEnemyToTop
-      text:
-        ja: 出現モンスター最上部表示
-        en: Battler Enemy to Top
-      desc:
-        ja: ONの場合、出現モンスターを最上部に表示する
-        en: Display battler enemy to top of the list.
-      type: boolean
-      default: true
     - param: enemyImageView
       text:
         ja: 敵キャラ画像表示設定
@@ -412,82 +325,6 @@ DarkPlasma_EnemyBook:
         ja: 図鑑の内容を初期化します。
         en: Clear enemy book.
   structures:
-    DebuffStatusIcons:
-      - param: mhp
-        text:
-          ja: 最大HP弱体アイコン
-          en: Debuff max hp icons
-        type: DebuffStatusIcon
-        default:
-          small: 48
-          large: 56
-      - param: mmp
-        text:
-          ja: 最大MP弱体アイコン
-          en: Debuff max mp icons
-        type: DebuffStatusIcon
-        default:
-          small: 49
-          large: 57
-      - param: atk
-        text:
-          ja: 攻撃力弱体アイコン
-          en: Debuff attack icons
-        type: DebuffStatusIcon
-        default:
-          small: 50
-          large: 58
-      - param: def
-        text:
-          ja: 防御力弱体アイコン
-          en: Debuff defense icons
-        type: DebuffStatusIcon
-        default:
-          small: 51
-          large: 59
-      - param: mat
-        text:
-          ja: 魔法力弱体アイコン
-          en: Debuff magical attack icons
-        type: DebuffStatusIcon
-        default:
-          small: 52
-          large: 60
-      - param: mdf
-        text:
-          ja: 魔法防御弱体アイコン
-          en: Debuff magical defense icons
-        type: DebuffStatusIcon
-        default:
-          small: 53
-          large: 61
-      - param: agi
-        text:
-          ja: 敏捷性弱体アイコン
-          en: Debuff agility icons
-        type: DebuffStatusIcon
-        default:
-          small: 54
-          large: 62
-      - param: luk
-        text:
-          ja: 運弱体アイコン
-          en: Debuff luck icons
-        type: DebuffStatusIcon
-        default:
-          small: 55
-          large: 63
-    DebuffStatusIcon:
-      - param: small
-        text:
-          ja: 弱体アイコン（小）
-          en: Debuff status icon Lv1.
-        type: number
-      - param: large
-        text:
-          ja: 弱体アイコン（大）
-          en: Debuff status icon Lv2.
-        type: number
     DebuffStatusThresholds:
       - param: weak
         text:
@@ -537,6 +374,8 @@ DarkPlasma_EnemyBook:
     base:
       - name: DarkPlasma_CustomKeyHandler
         version: 1.2.1
+      - name: DarkPlasma_SystemTypeIcon
+        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
     orderBefore: []
@@ -560,6 +399,8 @@ DarkPlasma_EnemyBook:
         <scaleInBook:80> # 図鑑上の画像の拡大率
 
       DarkPlasma_OrderIdAlias と併用することにより、図鑑の並び順を制御できます。
+      DarkPlasma_EnemyBookInBattle と併用することにより、
+      戦闘中に図鑑を開けます。
     en: |
       The original plugin is RMMV official plugin written by Yoji Ojima.
       Arranged by DarkPlasma.
@@ -575,4 +416,5 @@ DarkPlasma_EnemyBook:
         <book:no>        # This enemy does not appear in the enemy book
         <scaleInBook:80> # Enemy image scale in book
 
-      You can control order of enemies by using DarkPlasma_OrderIdAlias.
+      You can control order of enemies with DarkPlasma_OrderIdAlias.
+      You can open enemy book in battle with DarkPlasma_EnemyBookInBattle.

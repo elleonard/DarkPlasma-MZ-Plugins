@@ -1,7 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../../common/scene/battleInputtingWindowInterface.d.ts" />
-/// <reference path="../../codes/CustomKeyHandler/CustomKeyHandler.d.ts" />
-/// <reference path="../../codes/CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
+/// <reference path="../SystemTypeIcon/SystemTypeIcon.d.ts" />
 
 declare namespace MZ {
   declare interface Enemy {
@@ -43,8 +41,23 @@ declare interface Scene_Battle extends Scene_BookLayoutMixIn {
   closeEnemyBook(): void;
 }
 
-declare interface Window_EnemyBookIndex extends Window_Selectable {
+declare interface EnemyBookWindows {
+  new(
+    cancelHandler: () => void,
+    parentLayer: WindowLayer,
+    percentWindowRect: Rectangle,
+    indexWindowRect: Rectangle,
+    statusWindowRect: Rectangle,
+    isInBattle: boolean
+  );
+}
 
+declare interface Window_EnemyBookIndex extends Window_Selectable {
+  _isInBattle: boolean;
+  _list: MZ.Enemy[];
+  forcusOnFirst(): void;
+  mustHighlight(enemy: MZ.Enemy): boolean;
+  makeItemList(): void;
 }
 
 declare interface Window_EnemyBookStatus extends Window_Base {

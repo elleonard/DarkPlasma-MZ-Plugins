@@ -4,7 +4,6 @@ import { LabelAndValueText } from '../../common/object/labelAndValueText';
 import { pluginName } from './../../common/pluginName';
 import { settings } from './_build/DarkPlasma_EnemyBook_parameters';
 import { Window_LabelAndValueTexts } from '../../common/window/labelAndValueTextsWindow';
-import { Scene_Battle_InputtingWindowMixIn } from '../../common/scene/battleInputtingWindow';
 import { orderIdSort } from '../../common/orderIdSort';
 
 const STATUS_NAMES: ('mhp'|'mmp'|'atk'|'def'|'mat'|'mdf'|'agi'|'luk')[] = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
@@ -388,7 +387,6 @@ class Window_EnemyBookIndex extends Window_Selectable {
   _statusWindow: Window_EnemyBookStatus;
 
   _isInBattle: boolean;
-  _battlerEnemyIndexes: number[];
   _list: MZ.Enemy[];
 
   static lastTopRow: number;
@@ -398,25 +396,13 @@ class Window_EnemyBookIndex extends Window_Selectable {
     super.initialize(rect);
     this._isInBattle = isInBattle;
     this.refresh();
-    if (this._isInBattle) {
-      this._battlerEnemyIndexes = Array.from(
-        new Set(
-          $gameTroop
-            .members()
-            .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
-            .filter((index) => index >= 0)
-        )
-      ).sort((a, b) => a - b);
-      const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : -1;
-      if (firstIndex >= 0) {
-        this.setTopRow(firstIndex);
-        this.select(firstIndex);
-      }
-    } else {
-      this.setTopRow(Window_EnemyBookIndex.lastTopRow);
-      this.select(Window_EnemyBookIndex.lastIndex);
-    }
+    this.forcusOnFirst();
     this.activate();
+  }
+
+  forcusOnFirst() {
+    this.setTopRow(Window_EnemyBookIndex.lastTopRow);
+    this.select(Window_EnemyBookIndex.lastIndex);
   }
 
   /**
@@ -458,11 +444,6 @@ class Window_EnemyBookIndex extends Window_Selectable {
       return;
     }
     this._list = registerableEnemies();
-    if (this._isInBattle && settings.battlerEnemyToTop) {
-      this._list = this._list
-        .filter((enemy) => $gameTroop.members().some((gameEnemy) => gameEnemy.enemy() === enemy))
-        .concat(this._list.filter((enemy) => $gameTroop.members().every((gameEnemy) => gameEnemy.enemy() !== enemy)));
-    }
   }
 
   refresh() {
@@ -514,14 +495,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
    * @return {boolean}
    */
   mustHighlight(enemy: MZ.Enemy): boolean {
-    return this._isInBattle && $gameTroop.members().some((battlerEnemy) => battlerEnemy.enemyId() === enemy.id);
-  }
-
-  processHandling() {
-    super.processHandling();
-    if (this.active && $gameParty.inBattle() && Input.isTriggered(settings.openKeyInBattle)) {
-      this.processCancel();
-    }
+    return false;
   }
 
   processOk() {}
@@ -530,37 +504,6 @@ class Window_EnemyBookIndex extends Window_Selectable {
     super.processCancel();
     Window_EnemyBookIndex.lastTopRow = this.topRow();
     Window_EnemyBookIndex.lastIndex = this.index();
-  }
-
-  battlerEnemyIsInBook() {
-    return this._battlerEnemyIndexes && this._battlerEnemyIndexes.length > 0;
-  }
-
-  cursorPagedown() {
-    if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
-      this.selectNextBattlerEnemy();
-    } else {
-      super.cursorPagedown();
-    }
-  }
-
-  cursorPageup() {
-    if (this.battlerEnemyIsInBook() && settings.skipToBattlerEnemy) {
-      this.selectPreviousBattlerEnemy();
-    } else {
-      super.cursorPageup();
-    }
-  }
-
-  selectNextBattlerEnemy() {
-    const nextIndex = this._battlerEnemyIndexes.find((index) => index > this.index()) || this._battlerEnemyIndexes[0];
-    this.smoothSelect(nextIndex);
-  }
-
-  selectPreviousBattlerEnemy() {
-    const candidates = this._battlerEnemyIndexes.filter((index) => index < this.index());
-    const prevIndex = candidates.length > 0 ? candidates.slice(-1)[0] : this._battlerEnemyIndexes.slice(-1)[0];
-    this.smoothSelect(prevIndex);
   }
 }
 
@@ -865,7 +808,7 @@ class Window_EnemyBookStatus extends Window_Base {
     const targetIcons = $dataSystem.elements
       .map((_, index) => index)
       .filter((elementId) => this.elementRate(elementId) > 1)
-      .map((elementId) => settings.elementIcons[elementId])
+      .map((elementId) => $gameSystem.elementIconIndex(elementId))
       .concat(
         $dataStates
           .filter((state) => state && this.stateRate(state.id) > 1 && !this.isExcludedWeakState(state.id))
@@ -874,7 +817,7 @@ class Window_EnemyBookStatus extends Window_Base {
       .concat(
         STATUS_NAMES.filter((_, index) => {
           return settings.displayDebuffStatus && this.debuffRate(index) > settings.debuffStatusThreshold.weak.large;
-        }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+        }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
       )
       .concat(
         STATUS_NAMES.filter((_, index) => {
@@ -884,7 +827,7 @@ class Window_EnemyBookStatus extends Window_Base {
             debuffRate <= settings.debuffStatusThreshold.weak.large &&
             debuffRate > settings.debuffStatusThreshold.weak.small
           );
-        }).map((statusName) => settings.debuffStatusIcons[statusName].small)
+        }).map((statusName) => $gameSystem.smallDebuffStatusIconIndex(statusName))
       );
     this.changeTextColor(this.systemColor());
     this.drawText(settings.weakElementAndStateLabel, x, y, width);
@@ -921,7 +864,7 @@ class Window_EnemyBookStatus extends Window_Base {
         const elementRate = this.elementRate(elementId);
         return elementRate < 1 && (!settings.devideResistAndNoEffect || elementRate > 0);
       })
-      .map((elementId) => settings.elementIcons[elementId])
+      .map((elementId) => $gameSystem.elementIconIndex(elementId))
       .concat(
         $dataStates
           .filter((state) => {
@@ -945,7 +888,7 @@ class Window_EnemyBookStatus extends Window_Base {
             debuffRate < settings.debuffStatusThreshold.resist.large &&
             (!settings.devideResistAndNoEffect || debuffRate > 0)
           );
-        }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+        }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
       )
       .concat(
         STATUS_NAMES.filter((_, index) => {
@@ -955,7 +898,7 @@ class Window_EnemyBookStatus extends Window_Base {
             debuffRate >= settings.debuffStatusThreshold.resist.large &&
             debuffRate < settings.debuffStatusThreshold.resist.small
           );
-        }).map((statusName) => settings.debuffStatusIcons[statusName].small)
+        }).map((statusName) => $gameSystem.smallDebuffStatusIconIndex(statusName))
       );
     this.changeTextColor(this.systemColor());
     this.drawText(settings.resistElementAndStateLabel, x, y, width);
@@ -990,7 +933,7 @@ class Window_EnemyBookStatus extends Window_Base {
     const targetIcons = $dataSystem.elements
       .map((_, index) => index)
       .filter((elementId) => this.elementRate(elementId) <= 0)
-      .map((elementId) => settings.elementIcons[elementId])
+      .map((elementId) => $gameSystem.elementIconIndex(elementId))
       .concat(
         $dataStates
           .filter((state) => state && this.stateRate(state.id) <= 0 && !this.isExcludedResistState(state.id))
@@ -999,7 +942,7 @@ class Window_EnemyBookStatus extends Window_Base {
       .concat(
         STATUS_NAMES.filter((_, index) => {
           return settings.displayDebuffStatus && this.debuffRate(index) <= 0;
-        }).map((statusName) => settings.debuffStatusIcons[statusName].large)
+        }).map((statusName) => $gameSystem.largeDebuffStatusIconIndex(statusName))
       );
     this.drawNoEffectsLabel(x, y, width);
 
@@ -1129,104 +1072,10 @@ Game_Enemy.prototype.makeDropItems = function () {
   }, []);
 };
 
-/**
- * @param {Scene_Battle.prototype} sceneBattle
- */
-function Scene_Battle_EnemyBookMixIn(sceneBattle: Scene_Battle) {
-  const _createWindowLayer = sceneBattle.createWindowLayer;
-  sceneBattle.createWindowLayer = function () {
-    _createWindowLayer.call(this);
-    this.createEnemyBookWindowLayer();
-  };
-
-  sceneBattle.createEnemyBookWindowLayer = function () {
-    if (settings.enableInBattle) {
-      this._enemyBookLayer = new WindowLayer();
-      this._enemyBookLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-      this._enemyBookLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-      this.addChild(this._enemyBookLayer);
-    }
-  };
-
-  const _createAllWindows = sceneBattle.createAllWindows;
-  sceneBattle.createAllWindows = function () {
-    _createAllWindows.call(this);
-    if (settings.enableInBattle) {
-      this.createEnemyBookWindows();
-    }
-  };
-
-  const _createPartyCommandWindow = sceneBattle.createPartyCommandWindow;
-  sceneBattle.createPartyCommandWindow = function () {
-    _createPartyCommandWindow.call(this);
-    if (settings.enableInBattle) {
-      this._partyCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-    }
-  };
-
-  const _createActorCommandWindow = sceneBattle.createActorCommandWindow;
-  sceneBattle.createActorCommandWindow = function () {
-    _createActorCommandWindow.call(this);
-    if (settings.enableInBattle) {
-      this._actorCommandWindow.setHandler('enemyBook', this.openEnemyBook.bind(this));
-    }
-  };
-
-  const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
-  sceneBattle.isAnyInputWindowActive = function () {
-    return _isAnyInputWindowActive.call(this) || (settings.enableInBattle && this._enemyBookWindows.isActive());
-  };
-
-  sceneBattle.createEnemyBookWindows = function () {
-    this._enemyBookWindows = new EnemyBookWindows(
-      this.closeEnemyBook.bind(this),
-      this._enemyBookLayer,
-      Scene_EnemyBook.prototype.percentWindowRect.call(this),
-      Scene_EnemyBook.prototype.indexWindowRect.call(this),
-      Scene_EnemyBook.prototype.mainWindowRect.call(this),
-      true
-    );
-    this.closeEnemyBook();
-  };
-
-  sceneBattle.percentWindowHeight = function () {
-    return Scene_EnemyBook.prototype.percentWindowHeight.call(this);
-  };
-
-  sceneBattle.indexWindowWidth = function () {
-    return Scene_EnemyBook.prototype.indexWindowWidth.call(this);
-  };
-
-  sceneBattle.indexWindowHeight = function () {
-    return Scene_EnemyBook.prototype.indexWindowHeight.call(this);
-  };
-
-  sceneBattle.closeEnemyBook = function () {
-    this._enemyBookWindows.close();
-    if (this._returnFromEnemyBook) {
-      this._returnFromEnemyBook.activate();
-      this._returnFromEnemyBook = null;
-    }
-  };
-
-  sceneBattle.openEnemyBook = function () {
-    this._returnFromEnemyBook = this.inputtingWindow();
-    if (this._returnFromEnemyBook) {
-      this._returnFromEnemyBook.deactivate();
-    }
-    this._enemyBookWindows.open();
-  };
-}
-
-Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
-Scene_Battle_EnemyBookMixIn(Scene_Battle.prototype);
-
-Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_PartyCommand.prototype, 'enemyBook');
-Window_CustomKeyHandlerMixIn(settings.openKeyInBattle, Window_ActorCommand.prototype, 'enemyBook');
-
 type _EnemyBook = typeof EnemyBook;
 type _EnemyBookPage = typeof EnemyBookPage;
 type _Scene_EnemyBook = typeof Scene_EnemyBook;
+type _EnemyBookWindows = typeof EnemyBookWindows;
 type _Window_EnemyBookPercent = typeof Window_EnemyBookPercent;
 type _Window_EnemyBookIndex = typeof Window_EnemyBookIndex;
 type _Window_EnemyBookStatus = typeof Window_EnemyBookStatus;
@@ -1235,6 +1084,7 @@ declare global {
   var EnemyBook: _EnemyBook;
   var EnemyBookPage: _EnemyBookPage;
   var Scene_EnemyBook: _Scene_EnemyBook;
+  var EnemyBookWindows: _EnemyBookWindows;
   var Window_EnemyBookPercent: _Window_EnemyBookPercent;
   var Window_EnemyBookIndex: _Window_EnemyBookIndex;
   var Window_EnemyBookStatus: _Window_EnemyBookStatus;
@@ -1243,6 +1093,7 @@ declare global {
 globalThis.EnemyBook = EnemyBook;
 globalThis.EnemyBookPage = EnemyBookPage;
 globalThis.Scene_EnemyBook = Scene_EnemyBook;
+globalThis.EnemyBookWindows = EnemyBookWindows;
 globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
 globalThis.Window_EnemyBookIndex = Window_EnemyBookIndex;
 globalThis.Window_EnemyBookStatus = Window_EnemyBookStatus;
