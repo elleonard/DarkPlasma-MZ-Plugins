@@ -326,7 +326,7 @@ function generateHeader(config) {
   const topCommentLine = generateTopComments(config.name, version, config.year, config.license);
   const historyLine = generateHistories(config.histories);
 
-  const description = config.locates
+  const description = config.locates.sort((a, b) => a === "ja" ? 1 : b === "ja" ? -1 : 0)
     .map((language, index) => {
       const dependenciesText = config.dependencies
         ? ['base', 'orderAfter', 'orderBefore']
