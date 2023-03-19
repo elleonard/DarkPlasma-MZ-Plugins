@@ -1,0 +1,37 @@
+DarkPlasma_ControlAutoplay:
+  name: DarkPlasma_ControlAutoplay
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/03/19
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップのBGM/BGSの自動演奏を制御する'
+  parameters:
+    - param: disableAutoplayBgmSwitch
+      text:
+        ja: BGM自動演奏無効スイッチ
+      type: switch
+      default: 0
+    - param: disableAutoplayBgsSwitch
+      text:
+        ja: BGS自動演奏無効スイッチ
+      type: switch
+      default: 0
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      マップに設定したBGM/BGSの自動再生を
+      設定したスイッチがONの間だけ無効にします。
+
+      設定したスイッチがONの間に対象マップに移動しても
+      BGM/BGSの自動演奏は開始されません。
