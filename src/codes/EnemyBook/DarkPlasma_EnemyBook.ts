@@ -477,7 +477,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
     let name: string;
     if ($gameSystem.isInEnemyBook(enemy)) {
       if (this.mustHighlight(enemy)) {
-        this.changeTextColor(ColorManager.textColor(settings.highlightColor));
+        this.changeTextColor(ColorManager.textColor(this.highlightColor(enemy)));
       }
       name = enemy.name;
     } else {
@@ -498,12 +498,24 @@ class Window_EnemyBookIndex extends Window_Selectable {
     return false;
   }
 
+  highlightColor(enemy: MZ.Enemy): number {
+    return settings.highlightColor;
+  }
+
   processOk() {}
 
   processCancel() {
     super.processCancel();
     Window_EnemyBookIndex.lastTopRow = this.topRow();
     Window_EnemyBookIndex.lastIndex = this.index();
+  }
+
+  enemy(index: number): MZ.Enemy|undefined {
+    return this._list[index];
+  }
+
+  currentEnemy(): MZ.Enemy|undefined {
+    return this.enemy(this.index());
   }
 }
 

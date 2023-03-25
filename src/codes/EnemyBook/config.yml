@@ -3,6 +3,9 @@ DarkPlasma_EnemyBook:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/03/25
+      version: 5.1.0
+      description: '選択ウィンドウの敵キャラを取得するインターフェースを追加'
     - date: 2023/03/18
       version: 5.0.0
       description: 'デフォルト言語を日本語に修正'

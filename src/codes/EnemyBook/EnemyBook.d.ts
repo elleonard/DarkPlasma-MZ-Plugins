@@ -50,6 +50,17 @@ declare interface EnemyBookWindows {
     statusWindowRect: Rectangle,
     isInBattle: boolean
   );
+
+  readonly indexWindow: Window_EnemyBookIndex;
+  readonly statusWindow: Window_EnemyBookStatus;
+  readonly percentWindow: Window_EnemyBookPercent;
+}
+
+/**
+ * TODO: 拡張の時に困ったらちゃんと継承元の型をなんとかする
+ */
+declare interface Window_EnemyBookPercent extends Window_Base {
+
 }
 
 declare interface Window_EnemyBookIndex extends Window_Selectable {
@@ -57,7 +68,13 @@ declare interface Window_EnemyBookIndex extends Window_Selectable {
   _list: MZ.Enemy[];
   forcusOnFirst(): void;
   mustHighlight(enemy: MZ.Enemy): boolean;
+  highlightColor(enemy: MZ.Enemy): number;
   makeItemList(): void;
+
+  isEnabled(index: number): boolean;
+  isCurrentItemEnabled(): boolean;
+  enemy(index: number): MZ.Enemy|undefined;
+  currentEnemy(): MZ.Enemy|undefined;
 }
 
 declare interface Window_EnemyBookStatus extends Window_Base {
