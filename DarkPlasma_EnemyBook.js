@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.0.0
+// DarkPlasma_EnemyBook 5.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/03/25 5.1.0 選択ウィンドウの敵キャラを取得するインターフェースを追加
  * 2023/03/18 5.0.0 デフォルト言語を日本語に修正
  *                  アイコン設定をSystemTypeIconに切り出す
  *                  戦闘中に開く機能をEnemyBookInBattleに切り出す
@@ -189,7 +190,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.0.0
+ * version: 5.1.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -384,7 +385,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.0.0
+ * version: 5.1.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1023,7 +1024,7 @@
       let name;
       if ($gameSystem.isInEnemyBook(enemy)) {
         if (this.mustHighlight(enemy)) {
-          this.changeTextColor(ColorManager.textColor(settings.highlightColor));
+          this.changeTextColor(ColorManager.textColor(this.highlightColor(enemy)));
         }
         name = enemy.name;
       } else {
@@ -1042,11 +1043,20 @@
     mustHighlight(enemy) {
       return false;
     }
+    highlightColor(enemy) {
+      return settings.highlightColor;
+    }
     processOk() {}
     processCancel() {
       super.processCancel();
       Window_EnemyBookIndex.lastTopRow = this.topRow();
       Window_EnemyBookIndex.lastIndex = this.index();
+    }
+    enemy(index) {
+      return this._list[index];
+    }
+    currentEnemy() {
+      return this.enemy(this.index());
     }
   }
   Window_EnemyBookIndex.lastTopRow = 0;
