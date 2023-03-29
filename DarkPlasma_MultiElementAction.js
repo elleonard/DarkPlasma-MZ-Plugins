@@ -1,10 +1,11 @@
-// DarkPlasma_MultiElementAction 1.0.0
+// DarkPlasma_MultiElementAction 1.1.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/03/29 1.0.0 公開
+ * 2023/03/29 1.1.0 行動の攻撃属性一覧を取得するインターフェースを追加
+ *            1.0.0 公開
  */
 
 /*:
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * スキルやアイテムに属性を追加します。
  *
  * 属性を追加したいスキルやアイテムのメモ欄に
@@ -44,24 +45,20 @@
   'use strict';
 
   function Game_Action_MultiElementActionMixIn(gameAction) {
-    const _calcElementRate = gameAction.calcElementRate;
     gameAction.calcElementRate = function (target) {
+      return this.elementsMaxRate(target, this.actionAttackElements());
+    };
+    gameAction.actionAttackElements = function () {
       const additionalElementIds = String(this.item().meta.additionalElements || '')
         .split(',')
         .map((elementName) => $dataSystem.elements.indexOf(elementName));
-      if (additionalElementIds.length > 0) {
-        if (additionalElementIds.some((elementId) => elementId < 0) || this.item().damage.elementId < 0) {
-          return this.elementsMaxRate(
-            target,
-            this.subject()
-              .attackElements()
-              .concat([this.item().damage.elementId], additionalElementIds)
-              .filter((elementId) => elementId >= 0)
-          );
-        }
-        return this.elementsMaxRate(target, additionalElementIds.concat([this.item().damage.elementId]));
+      if (additionalElementIds.some((elementId) => elementId < 0) || this.item().damage.elementId < 0) {
+        return this.subject()
+          .attackElements()
+          .concat([this.item().damage.elementId], additionalElementIds)
+          .filter((elementId) => elementId >= 0);
       }
-      return _calcElementRate.call(this, target);
+      return additionalElementIds.concat([this.item().damage.elementId]);
     };
   }
   Game_Action_MultiElementActionMixIn(Game_Action.prototype);
