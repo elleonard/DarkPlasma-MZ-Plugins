@@ -1,0 +1,40 @@
+DarkPlasma_MultiElementRate:
+  name: DarkPlasma_MultiElementRate
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/03/29
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '攻撃属性すべてを計算に用いる'
+  parameters:
+    - param: addition
+      text:
+        ja: 加算するか
+      desc:
+        ja: 計算時に全属性の有効度を加算するかどうか。OFFの場合は乗算する
+      type: boolean
+      default: false
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      攻撃に付与されている属性が複数ある場合、
+      その攻撃の属性すべてをダメージ計算に使用します。
+
+      城さんと加算で計算方法が異なります。
+      例えば、火＋光属性の攻撃を、火有効度200％ 光有効度150％の敵に使用すると
+      以下のようになります。
+      乗算の場合: 2 x 1.5 = 300％
+      加算の場合: 2 + 1.5 = 350％
+
+      加算の場合、火有効度100％かつ光有効度100％の敵に火＋光属性攻撃を行うと
+      1 + 1 = 200％となってしまうことに注意してください。
