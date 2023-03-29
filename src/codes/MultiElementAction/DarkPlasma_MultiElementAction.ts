@@ -1,25 +1,22 @@
 /// <reference path="./MultiElementAction.d.ts" />
 
 function Game_Action_MultiElementActionMixIn(gameAction: Game_Action) {
-  const _calcElementRate = gameAction.calcElementRate;
   gameAction.calcElementRate = function (target) {
+    return this.elementsMaxRate(target,this.actionAttackElements());
+  };
+
+  gameAction.actionAttackElements = function () {
     const additionalElementIds = String(this.item()!.meta.additionalElements || "")
       .split(',')
       .map(elementName => $dataSystem.elements.indexOf(elementName));
-    if (additionalElementIds.length > 0) {
-      if (additionalElementIds.some(elementId => elementId < 0) || this.item()!.damage.elementId < 0) {
-        return this.elementsMaxRate(
-          target,
-          this.subject().attackElements()
-            .concat(
-              [this.item()!.damage.elementId],
-              additionalElementIds
-            ).filter(elementId => elementId >= 0)
-        );
-      }
-      return this.elementsMaxRate(target, additionalElementIds.concat([this.item()!.damage.elementId]));
+    if (additionalElementIds.some(elementId => elementId < 0) || this.item()!.damage.elementId < 0) {
+      return this.subject().attackElements()
+        .concat(
+          [this.item()!.damage.elementId],
+          additionalElementIds
+        ).filter(elementId => elementId >= 0);
     }
-    return _calcElementRate.call(this, target);
+    return additionalElementIds.concat([this.item()!.damage.elementId]);
   };
 }
 
