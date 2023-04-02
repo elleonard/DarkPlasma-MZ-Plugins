@@ -3,6 +3,9 @@ DarkPlasma_OrderEquip:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/04/02
+      version: 1.0.2
+      description: 'typescript移行'
     - date: 2022/05/23
       version: 1.0.1
       description: '装備アイテム選択時の並び順に対応'
