@@ -1,14 +1,15 @@
-// DarkPlasma_OrderEquip 1.0.1
+// DarkPlasma_OrderEquip 1.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/04/02 1.0.2 typescript移行
  * 2022/05/23 1.0.1 装備アイテム選択時の並び順に対応
  * 2022/05/22 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 装備の並び順を指定する
  * @author DarkPlasma
  * @license MIT
@@ -93,7 +94,7 @@
  * @default asc
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 武器・防具の並び順を指定します。
  *
  * プラグインパラメータの並び順指定に従って表示します。
@@ -117,13 +118,13 @@
 
   const settings = {
     weaponSortKeys: JSON.parse(pluginParameters.weaponSortKeys || '["id"]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
-    weaponOrder: String(pluginParameters.weaponOrder || 'asc'),
+    weaponOrder: String(pluginParameters.weaponOrder || `asc`),
     armorSortKeys: JSON.parse(pluginParameters.armorSortKeys || '["id"]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
-    armorOrder: String(pluginParameters.armorOrder || 'asc'),
+    armorOrder: String(pluginParameters.armorOrder || `asc`),
   };
 
   const paramsKeyMap = {
@@ -136,13 +137,6 @@
     agi: 6,
     luk: 7,
   };
-
-  /**
-   * プラグインパラメータで指定したソートキーから値を返す
-   * @param {MZ.Weapon|MZ.Armor} equip
-   * @param {string} key
-   * @return {number}
-   */
   function equipSortKeyMap(equip, key) {
     switch (key) {
       case 'mhp':
@@ -157,16 +151,10 @@
       case 'id':
         return equip.orderId || equip.id;
       default:
-        return equip[key];
+        const result = DataManager.isWeapon(equip) ? equip[key] : equip[key];
+        return Number.isFinite(result) ? Number(result) : 0;
     }
   }
-
-  /**
-   *
-   * @param {MZ.Weapon|MZ.Armor} a
-   * @param {MZ.Weapon|MZ.Armor} b
-   * @param {string[]} keys
-   */
   function compareEquip(a, b, keys) {
     if (a === null && b === null) {
       // 両方nullなら順不同
@@ -183,35 +171,19 @@
     }
     return diff;
   }
-
-  /**
-   * 武器・防具ソート用関数は各所で使えるようにしておく
-   * @param {Window_Selectable.prototype} windowClass
-   */
   function Window_OrderEquipMixIn(windowClass) {
-    /**
-     * @param {MZ.Weapon[]} weapons
-     * @return {MZ.Weapon[]}
-     */
     windowClass.sortWeapons = function (weapons) {
       return weapons.sort(
         (a, b) => (settings.weaponOrder === 'desc' ? -1 : 1) * compareEquip(a, b, settings.weaponSortKeys.slice())
       );
     };
-
-    /**
-     * @param {MZ.Armor[]} armors
-     * @return {MZ.Armor[]}
-     */
     windowClass.sortArmors = function (armors) {
       return armors.sort(
         (a, b) => (settings.armorOrder === 'desc' ? -1 : 1) * compareEquip(a, b, settings.armorSortKeys.slice())
       );
     };
   }
-
   Window_OrderEquipMixIn(Window_Selectable.prototype);
-
   /**
    * @param {Window_ItemList.prototype} windowClass
    */
@@ -221,7 +193,6 @@
       _makeItemList.call(this);
       this.sortEquips();
     };
-
     windowClass.sortEquips = function () {
       if (this.isWeaponList()) {
         this._data = this.sortWeapons(this._data);
@@ -229,18 +200,14 @@
         this._data = this.sortArmors(this._data);
       }
     };
-
     windowClass.isWeaponList = function () {
       return this._category === 'weapon';
     };
-
     windowClass.isArmorList = function () {
       return this._category === 'armor';
     };
   }
-
   Window_ItemList_OrderEquipMixIn(Window_ItemList.prototype);
-
   /**
    * @param {Window_EquipItem.prototype} windowClass
    */
@@ -248,11 +215,9 @@
     windowClass.isWeaponList = function () {
       return this.etypeId() === 1;
     };
-
     windowClass.isArmorList = function () {
       return this.etypeId() > 1;
     };
   }
-
   Window_EquipItem_OrderEquipMixIn(Window_EquipItem.prototype);
 })();

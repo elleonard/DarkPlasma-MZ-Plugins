@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.3.0
+// DarkPlasma_ItemStorage 1.3.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/04/02 1.3.1 typescript移行
  * 2022/05/22 1.3.0 DarkPlasma_OrderEquipに対応
  * 2022/05/14 1.2.0 アイテム出し入れ時に説明文が更新されない不具合を修正
  *                  DarkPlasma_OrderIdAliasに対応
@@ -14,7 +15,7 @@
  * 2022/01/10 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc アイテム倉庫
  * @author DarkPlasma
  * @license MIT
@@ -52,7 +53,7 @@
  * @default false
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -76,6 +77,17 @@
     return arguments[1];
   });
 
+  function parseArgs_openStorage(args) {
+    return {
+      item: String(args.item || true) === 'true',
+      weapon: String(args.weapon || true) === 'true',
+      armor: String(args.armor || true) === 'true',
+      keyItem: String(args.keyItem || false) === 'true',
+    };
+  }
+
+  const command_openStorage = 'openStorage';
+
   const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
 
   const pluginParameters = pluginParametersOf(pluginName);
@@ -84,18 +96,11 @@
     maxItems: Number(pluginParameters.maxItems || 99),
   };
 
-  const PLUGIN_COMMAND = 'openStorage';
-
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND, function (args) {
-    $gameTemp.createStorageCategories(
-      (args.item || 'true') === 'true',
-      (args.weapon || 'true') === 'true',
-      (args.armor || 'true') === 'true',
-      (args.keyItem || 'false') === 'true'
-    );
+  PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
+    const parsedArgs = parseArgs_openStorage(args);
+    $gameTemp.createStorageCategories(parsedArgs.item, parsedArgs.weapon, parsedArgs.armor, parsedArgs.keyItem);
     SceneManager.push(Scene_ItemStorage);
   });
-
   class StorageCategories {
     constructor(item, weapon, armor, keyItem) {
       this._item = item;
@@ -103,31 +108,38 @@
       this._armor = armor;
       this._keyItem = keyItem;
     }
-
     get item() {
       return this._item;
     }
-
     get weapon() {
       return this._weapon;
     }
-
     get armor() {
       return this._armor;
     }
-
     get keyItem() {
       return this._keyItem;
     }
-
-    /**
-     * @return {number}
-     */
+    categories() {
+      const result = [];
+      if (this.item) {
+        result.push('item');
+      }
+      if (this.weapon) {
+        result.push('weapon');
+      }
+      if (this.armor) {
+        result.push('armor');
+      }
+      if (this.keyItem) {
+        result.push('keyItem');
+      }
+      return result;
+    }
     count() {
       return [this.item, this.weapon, this.armor, this.keyItem].filter((category) => category).length;
     }
   }
-
   /**
    * @param {Game_Temp.prototype} gameTemp
    */
@@ -137,57 +149,32 @@
       _initialize.call(this);
       this._storageCategories = null;
     };
-
     gameTemp.createStorageCategories = function (item, weapon, armor, keyItem) {
       this._storageCategories = new StorageCategories(item, weapon, armor, keyItem);
     };
-
     gameTemp.storageCategories = function () {
       return this._storageCategories;
     };
   }
-
   Game_Temp_ItemStorageMixIn(Game_Temp.prototype);
-
   class Game_StorageItems {
     constructor() {
       this._items = {};
       this._weapons = {};
       this._armors = {};
     }
-
-    /**
-     * @return {MZ.Item[]}
-     */
     items() {
-      return Object.keys(this._items).map((id) => $dataItems[id]);
+      return Object.keys(this._items).map((id) => $dataItems[Number(id)]);
     }
-
-    /**
-     * @return {MZ.Weapon[]}
-     */
     weapons() {
-      return Object.keys(this._weapons).map((id) => $dataWeapons[id]);
+      return Object.keys(this._weapons).map((id) => $dataWeapons[Number(id)]);
     }
-
-    /**
-     * @return {MZ.Armor[]}
-     */
     armors() {
-      return Object.keys(this._armors).map((id) => $dataArmors[id]);
+      return Object.keys(this._armors).map((id) => $dataArmors[Number(id)]);
     }
-
-    /**
-     * @return {(MZ.Item | MZ.Weapon | MZ.Armor)[]}
-     */
     allItems() {
-      return this.items().concat(this.weapons()).concat(this.armors());
+      return [...this.items(), ...this.weapons(), ...this.armors()];
     }
-
-    /**
-     * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-     * @return {Object.<number, MZ.Item | MZ.Weapon | MZ.Armor>}
-     */
     itemContainer(item) {
       if (!item) {
         return null;
@@ -201,36 +188,16 @@
         return null;
       }
     }
-
-    /**
-     * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-     * @return {number}
-     */
     numItems(item) {
       const container = this.itemContainer(item);
       return container ? container[item.id] || 0 : 0;
     }
-
-    /**
-     * @return {number}
-     */
     maxItems() {
       return settings.maxItems;
     }
-
-    /**
-     * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-     * @return {boolean}
-     */
     hasItem(item) {
       return this.numItems(item) > 0;
     }
-
-    /**
-     * 指定個数分だけアイテムを倉庫に入れる
-     * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-     * @param {number} amount
-     */
     storeItem(item, amount) {
       const container = this.itemContainer(item);
       if (container) {
@@ -241,19 +208,10 @@
         }
       }
     }
-
-    /**
-     * 指定個数分だけアイテムを取り出す
-     * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-     * @param {number} amount
-     */
     fetchItem(item, amount) {
       this.storeItem(item, -amount);
     }
   }
-
-  window.Game_StorageItems = Game_StorageItems;
-
   /**
    * @param {Game_Party.prototype} gameParty
    */
@@ -263,21 +221,15 @@
       _initialize.call(this);
       this.initStorageItems();
     };
-
     gameParty.initStorageItems = function () {
       this._storageItems = new Game_StorageItems();
     };
-
-    /**
-     * @return {Game_StorageItems}
-     */
     gameParty.storageItems = function () {
       if (!this._storageItems) {
         this.initStorageItems();
       }
       return this._storageItems;
     };
-
     /**
      * 倉庫にアイテムを預ける
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -287,7 +239,6 @@
       this.loseItem(item, amount, false);
       this.storageItems().storeItem(item, amount);
     };
-
     /**
      * 倉庫からアイテムを引き出す
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -298,9 +249,7 @@
       this.storageItems().fetchItem(item, amount);
     };
   }
-
   Game_Party_ItemStorageMixIn(Game_Party.prototype);
-
   class Scene_ItemStorage extends Scene_MenuBase {
     create() {
       super.create();
@@ -314,7 +263,6 @@
         this.onCategoryOk();
       }
     }
-
     createCategoryWindow() {
       this._categoryWindow = new Window_StorageItemCategory(this.categoryWindowRect());
       this._categoryWindow.setHelpWindow(this._helpWindow);
@@ -327,14 +275,9 @@
         this._categoryWindow.deactivate();
       }
     }
-
-    /**
-     * @return {Rectangle}
-     */
     categoryWindowRect() {
       return new Rectangle(0, this.mainAreaTop(), Graphics.boxWidth, this.calcWindowHeight(1, true));
     }
-
     createInventoryWindow() {
       this._inventoryWindow = new Window_StorageItemsParty(this.inventoryWindowRect());
       this._inventoryWindow.setHelpWindow(this._helpWindow);
@@ -343,15 +286,10 @@
       this.addWindow(this._inventoryWindow);
       this._categoryWindow.setItemWindow(this._inventoryWindow);
     }
-
-    /**
-     * @return {Rectangle}
-     */
     inventoryWindowRect() {
       const y = this._categoryWindow.y + this._categoryWindow.height;
       return new Rectangle(0, y, Graphics.boxWidth / 2, this.mainAreaBottom() - y);
     }
-
     createStorageWindow() {
       this._storageWindow = new Window_StorageItems(this.storageWindowRect());
       this._storageWindow.setHelpWindow(this._helpWindow);
@@ -362,10 +300,6 @@
       this._storageWindow.setAnotherWindow(this._inventoryWindow);
       this._inventoryWindow.setAnotherWindow(this._storageWindow);
     }
-
-    /**
-     * @return {Rectangle}
-     */
     storageWindowRect() {
       return new Rectangle(
         Graphics.boxWidth / 2,
@@ -374,7 +308,6 @@
         this._inventoryWindow.height
       );
     }
-
     createNumberWindow() {
       this._numberWindow = new Window_StorageNumber(this.numberWindowRect());
       this._numberWindow.hide();
@@ -382,19 +315,13 @@
       this._numberWindow.setHandler('cancel', this.onNumberCancel.bind(this));
       this.addWindow(this._numberWindow);
     }
-
-    /**
-     * @return {Rectangle}
-     */
     numberWindowRect() {
       return this.inventoryWindowRect();
     }
-
     onCategoryOk() {
       this._inventoryWindow.activate();
       this._inventoryWindow.selectLast();
     }
-
     onInventoryOk() {
       this._inventoryWindow.deactivate();
       this._numberWindow.setup(this._inventoryWindow.item(), true);
@@ -402,7 +329,6 @@
       this._numberWindow.activate();
       this._storeMode = true;
     }
-
     onStorageOk() {
       this._storageWindow.deactivate();
       this._numberWindow.setup(this._storageWindow.item(), false);
@@ -410,7 +336,6 @@
       this._numberWindow.activate();
       this._storeMode = false;
     }
-
     onItemCancel() {
       this._inventoryWindow.deactivate();
       this._storageWindow.deactivate();
@@ -420,7 +345,6 @@
         this.popScene();
       }
     }
-
     onNumberOk() {
       if (this._storeMode) {
         $gameParty.storeItemToStorage(this._inventoryWindow.item(), this._numberWindow.number());
@@ -436,12 +360,10 @@
         this._storageWindow.updateHelp();
       }
     }
-
     onNumberCancel() {
       SoundManager.playCancel();
       this.endNumberInput();
     }
-
     endNumberInput() {
       this._numberWindow.hide();
       if (this._storeMode) {
@@ -451,88 +373,65 @@
       }
     }
   }
-
-  window.Scene_ItemStorage = Scene_ItemStorage;
-
   class Window_StorageItemCategory extends Window_ItemCategory {
     maxCols() {
       return $gameTemp.storageCategories().count();
     }
-
-    /**
-     * @param {Window_StorageItems} storageWindow
-     */
     setStorageWindow(storageWindow) {
       this._storageWindow = storageWindow;
     }
-
     update() {
       super.update();
       if (this._storageWindow) {
         this._storageWindow.setCategory(this.currentSymbol());
       }
     }
-
-    /**
-     * @param {string} name
-     * @return {boolean}
-     */
     needsCommand(name) {
-      return super.needsCommand(name) && $gameTemp.storageCategories()[name];
+      return super.needsCommand(name) && !!$gameTemp.storageCategories()?.categories().includes(name);
     }
   }
-
   class Window_StorageItems extends Window_ItemList {
     maxCols() {
       return 1;
     }
-
     /**
      * @param {Window_StorageItems} anotherWindow
      */
     setAnotherWindow(anotherWindow) {
       this._anotherWindow = anotherWindow;
     }
-
     cursorDown(wrap) {
       if (this.maxItems() === 0) {
         return;
       }
       super.cursorDown(wrap);
     }
-
     cursorUp(wrap) {
       if (this.maxItems() === 0) {
         return;
       }
       super.cursorUp(wrap);
     }
-
     cursorRight() {
       this.toggleWindow();
     }
-
     cursorLeft() {
       this.toggleWindow();
     }
-
     processTouch() {
       if (!this.active && this._anotherWindow.active && TouchInput.isHovered() && this.isHovered()) {
         this._anotherWindow.toggleWindow();
       }
       super.processTouch();
     }
-
     isHovered() {
       const touchPos = new Point(TouchInput.x, TouchInput.y);
       const localPos = this.worldTransform.applyInverse(touchPos);
       return this.innerRect.contains(localPos.x, localPos.y);
     }
-
     isPartyItem() {
       return false;
     }
-
     isEnabled(item) {
       return (
         !!item &&
@@ -541,11 +440,9 @@
           : $gameParty.numItems(item) < $gameParty.maxItems(item))
       );
     }
-
     isCursorMovable() {
       return this.isOpenAndActive();
     }
-
     makeItemList() {
       const allItems = this.isPartyItem() ? $gameParty.allItems() : $gameParty.storageItems().allItems();
       this._data = allItems.filter((item) => this.includes(item)).sort(orderIdSort);
@@ -556,16 +453,13 @@
         this.sortEquips();
       }
     }
-
     select(index) {
       super.select(index);
       this._lastSelected = this.index();
     }
-
     selectLast() {
       this.select(this._lastSelected > 0 ? this._lastSelected : 0);
     }
-
     toggleWindow() {
       if (this._wait > 0) {
         return;
@@ -576,20 +470,17 @@
       this._anotherWindow.selectLast();
       this._anotherWindow.inputWait();
     }
-
     drawItemNumber(item, x, y, width) {
       if (this.isPartyItem()) {
         super.drawItemNumber(item, x, y, width);
       } else {
         this.drawText(':', x, y, width - this.textWidth(`${settings.maxItems}`), 'right');
-        this.drawText($gameParty.storageItems().numItems(item), x, y, width, 'right');
+        this.drawText(`${$gameParty.storageItems().numItems(item)}`, x, y, width, 'right');
       }
     }
-
     inputWait() {
       this._wait = 5;
     }
-
     update() {
       super.update();
       if (this._wait > 0) {
@@ -597,13 +488,11 @@
       }
     }
   }
-
   class Window_StorageItemsParty extends Window_StorageItems {
     isPartyItem() {
       return true;
     }
   }
-
   /**
    * Window_ShopNumberから数値入力ボタン系のメソッドを抜き出す
    * @param {Window_MenuNumber.prototype} windowClass
@@ -612,51 +501,40 @@
     windowClass.createButtons = function () {
       Window_ShopNumber.prototype.createButtons.call(this);
     };
-
     windowClass.placeButtons = function () {
       Window_ShopNumber.prototype.placeButtons.call(this);
     };
-
     windowClass.totalButtonWidth = function () {
       return Window_ShopNumber.prototype.totalButtonWidth.call(this);
     };
-
     windowClass.buttonSpacing = function () {
       return Window_ShopNumber.prototype.buttonSpacing.call(this);
     };
-
     windowClass.buttonY = function () {
       /**
        * totalPriceYに依存するのは微妙なため上書き
        */
       return Math.floor(this.itemNameY() + this.lineHeight() * 2);
     };
-
     windowClass.isTouchOkEnabled = function () {
       return false;
     };
-
     windowClass.onButtonUp = function () {
       Window_ShopNumber.prototype.onButtonUp.call(this);
     };
-
     windowClass.onButtonUp2 = function () {
       Window_ShopNumber.prototype.onButtonUp2.call(this);
     };
-
     windowClass.onButtonDown = function () {
       Window_ShopNumber.prototype.onButtonDown.call(this);
     };
-
     windowClass.onButtonDown2 = function () {
       Window_ShopNumber.prototype.onButtonDown2.call(this);
     };
-
     windowClass.onButtonOk = function () {
       Window_ShopNumber.prototype.onButtonOk.call(this);
     };
   }
-
   class Window_MenuNumber extends Window_Selectable {
     initialize(rect) {
       super.initialize(rect);
@@ -667,57 +545,46 @@
       this.select(0);
       this._canRepeat = false;
     }
-
     isScrollEnabled() {
       return false;
     }
-
     number() {
       return this._number;
     }
-
     drawMultiplicationSign(x, y) {
       const sign = this.multiplicationSign();
       const width = this.textWidth(sign);
       this.resetTextColor();
       this.drawText(sign, x, y, width);
     }
-
     drawNumber(x, y) {
       const width = this.cursorWidth() - this.itemPadding();
       this.resetTextColor();
-      this.drawText(this._number, x, y, width, 'right');
+      this.drawText(`${this._number}`, x, y, width, 'right');
     }
-
     drawHorzLine(x, y, width) {
       this.drawRect(x, y, width, 5);
     }
-
     multiplicationSign() {
       return '\u00d7';
     }
-
     multiplicationSignX() {
       const sign = this.multiplicationSign();
       const width = this.textWidth(sign);
       return this.cursorX() - width * 2;
     }
-
     cursorWidth() {
       const padding = this.itemPadding();
       const digitWidth = this.textWidth('0');
       return this.maxDigits() * digitWidth + padding * 2;
     }
-
     cursorX() {
       const padding = this.itemPadding();
       return this.innerWidth - this.cursorWidth() - padding * 2;
     }
-
     maxDigits() {
       return 2;
     }
-
     processNumberChange() {
       if (Input.isRepeated('right')) {
         this.changeNumber(1);
@@ -732,7 +599,6 @@
         this.changeNumber(-10);
       }
     }
-
     changeNumber(amount) {
       const lastNumber = this._number;
       this._number = (this._number + amount).clamp(1, this._max);
@@ -741,9 +607,27 @@
         this.refresh();
       }
     }
+    createButtons() {}
+    placeButtons() {}
+    totalButtonWidth() {
+      return 0;
+    }
+    buttonSpacing() {
+      return 0;
+    }
+    buttonY() {
+      return 0;
+    }
+    onButtonUp() {}
+    onButtonUp2() {}
+    onButtonDown() {}
+    onButtonDown2() {}
+    onButtonOk() {}
+    itemNameY() {
+      return 0;
+    }
   }
   Window_MenuNumberButtonMixIn(Window_MenuNumber.prototype);
-
   class Window_StorageNumber extends Window_MenuNumber {
     setup(item, toStorage) {
       this._item = item;
@@ -765,7 +649,6 @@
       this.placeButtons();
       this.refresh();
     }
-
     refresh() {
       super.refresh();
       this.drawItemBackground(0);
@@ -775,7 +658,6 @@
       this.drawHorzLine();
       this.drawNumberChange();
     }
-
     drawCurrentItemName() {
       const padding = this.itemPadding();
       const x = padding * 2;
@@ -783,7 +665,6 @@
       const width = this.multiplicationSignX() - padding * 3;
       this.drawItemName(this._item, x, y, width);
     }
-
     drawHorzLine() {
       const padding = this.itemPadding();
       const lineHeight = this.lineHeight();
@@ -793,7 +674,6 @@
       const width = this.innerWidth - padding * 2;
       super.drawHorzLine(x, y, width);
     }
-
     drawNumberChange() {
       if (!this._item) {
         return;
@@ -814,22 +694,20 @@
       );
       this.resetTextColor();
     }
-
     itemNameY() {
       return Math.floor(this.innerHeight / 2 - this.lineHeight() * 1.5);
     }
-
     maxDigits() {
       return Math.floor(Math.log10(settings.maxItems)) + 1;
     }
-
     update() {
       super.update();
       this.processNumberChange();
     }
-
     itemRect() {
       return new Rectangle(this.cursorX(), this.itemNameY(), this.cursorWidth(), this.lineHeight());
     }
   }
+  globalThis.Game_StorageItems = Game_StorageItems;
+  globalThis.Scene_ItemStorage = Scene_ItemStorage;
 })();
