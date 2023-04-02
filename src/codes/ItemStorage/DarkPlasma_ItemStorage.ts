@@ -1,47 +1,66 @@
 import { orderIdSort } from '../../common/orderIdSort';
 import { pluginName } from '../../common/pluginName';
+import { command_openStorage, parseArgs_openStorage } from './_build/DarkPlasma_ItemStorage_commands';
 import { settings } from './_build/DarkPlasma_ItemStorage_parameters';
 
-const PLUGIN_COMMAND = 'openStorage';
-
-PluginManager.registerCommand(pluginName, PLUGIN_COMMAND, function (args) {
+PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
+  const parsedArgs = parseArgs_openStorage(args);
   $gameTemp.createStorageCategories(
-    (args.item || 'true') === 'true',
-    (args.weapon || 'true') === 'true',
-    (args.armor || 'true') === 'true',
-    (args.keyItem || 'false') === 'true'
+    parsedArgs.item,
+    parsedArgs.weapon,
+    parsedArgs.armor,
+    parsedArgs.keyItem
   );
   SceneManager.push(Scene_ItemStorage);
 });
 
 class StorageCategories {
-  constructor(item, weapon, armor, keyItem) {
+  _item: boolean;
+  _weapon: boolean;
+  _armor: boolean;
+  _keyItem: boolean;
+
+  constructor(item: boolean, weapon: boolean, armor: boolean, keyItem: boolean) {
     this._item = item;
     this._weapon = weapon;
     this._armor = armor;
     this._keyItem = keyItem;
   }
 
-  get item() {
+  get item(): boolean {
     return this._item;
   }
 
-  get weapon() {
+  get weapon(): boolean {
     return this._weapon;
   }
 
-  get armor() {
+  get armor(): boolean {
     return this._armor;
   }
 
-  get keyItem() {
+  get keyItem(): boolean {
     return this._keyItem;
   }
 
-  /**
-   * @return {number}
-   */
-  count() {
+  categories() {
+    const result = [];
+    if (this.item) {
+      result.push('item');
+    }
+    if (this.weapon) {
+      result.push('weapon');
+    }
+    if (this.armor) {
+      result.push('armor');
+    }
+    if (this.keyItem) {
+      result.push('keyItem');
+    }
+    return result;
+  }
+
+  count(): number {
     return [this.item, this.weapon, this.armor, this.keyItem].filter((category) => category).length;
   }
 }
@@ -49,7 +68,7 @@ class StorageCategories {
 /**
  * @param {Game_Temp.prototype} gameTemp
  */
-function Game_Temp_ItemStorageMixIn(gameTemp) {
+function Game_Temp_ItemStorageMixIn(gameTemp: Game_Temp) {
   const _initialize = gameTemp.initialize;
   gameTemp.initialize = function () {
     _initialize.call(this);
@@ -68,45 +87,37 @@ function Game_Temp_ItemStorageMixIn(gameTemp) {
 Game_Temp_ItemStorageMixIn(Game_Temp.prototype);
 
 class Game_StorageItems {
+  _items: {[id: number]: number};
+  _weapons: {[id: number]: number};
+  _armors: {[id: number]: number};
+
   constructor() {
     this._items = {};
     this._weapons = {};
     this._armors = {};
   }
 
-  /**
-   * @return {MZ.Item[]}
-   */
-  items() {
-    return Object.keys(this._items).map((id) => $dataItems[id]);
+  items(): MZ.Item[] {
+    return Object.keys(this._items).map((id) => $dataItems[Number(id)]);
   }
 
-  /**
-   * @return {MZ.Weapon[]}
-   */
-  weapons() {
-    return Object.keys(this._weapons).map((id) => $dataWeapons[id]);
+  weapons(): MZ.Weapon[] {
+    return Object.keys(this._weapons).map((id) => $dataWeapons[Number(id)]);
   }
 
-  /**
-   * @return {MZ.Armor[]}
-   */
-  armors() {
-    return Object.keys(this._armors).map((id) => $dataArmors[id]);
+  armors(): MZ.Armor[] {
+    return Object.keys(this._armors).map((id) => $dataArmors[Number(id)]);
   }
 
-  /**
-   * @return {(MZ.Item | MZ.Weapon | MZ.Armor)[]}
-   */
-  allItems() {
-    return this.items().concat(this.weapons()).concat(this.armors());
+  allItems(): (MZ.Item|MZ.Weapon|MZ.Armor)[] {
+    return [
+      ...this.items(),
+      ...this.weapons(),
+      ...this.armors()
+    ];
   }
 
-  /**
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   * @return {Object.<number, MZ.Item | MZ.Weapon | MZ.Armor>}
-   */
-  itemContainer(item) {
+  itemContainer(item: MZ.Item|MZ.Weapon|MZ.Armor): {[id: number]: number}|null {
     if (!item) {
       return null;
     } else if (DataManager.isItem(item)) {
@@ -120,36 +131,20 @@ class Game_StorageItems {
     }
   }
 
-  /**
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   * @return {number}
-   */
-  numItems(item) {
+  numItems(item: MZ.Item|MZ.Weapon|MZ.Armor): number {
     const container = this.itemContainer(item);
     return container ? container[item.id] || 0 : 0;
   }
 
-  /**
-   * @return {number}
-   */
-  maxItems() {
+  maxItems(): number {
     return settings.maxItems;
   }
 
-  /**
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   * @return {boolean}
-   */
-  hasItem(item) {
+  hasItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean {
     return this.numItems(item) > 0;
   }
 
-  /**
-   * 指定個数分だけアイテムを倉庫に入れる
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   * @param {number} amount
-   */
-  storeItem(item, amount) {
+  storeItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void {
     const container = this.itemContainer(item);
     if (container) {
       const newNumber = this.numItems(item) + amount;
@@ -160,22 +155,15 @@ class Game_StorageItems {
     }
   }
 
-  /**
-   * 指定個数分だけアイテムを取り出す
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
-   * @param {number} amount
-   */
-  fetchItem(item, amount) {
+  fetchItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void {
     this.storeItem(item, -amount);
   }
 }
 
-window.Game_StorageItems = Game_StorageItems;
-
 /**
  * @param {Game_Party.prototype} gameParty
  */
-function Game_Party_ItemStorageMixIn(gameParty) {
+function Game_Party_ItemStorageMixIn(gameParty: Game_Party) {
   const _initialize = gameParty.initialize;
   gameParty.initialize = function () {
     _initialize.call(this);
@@ -186,9 +174,6 @@ function Game_Party_ItemStorageMixIn(gameParty) {
     this._storageItems = new Game_StorageItems();
   };
 
-  /**
-   * @return {Game_StorageItems}
-   */
   gameParty.storageItems = function () {
     if (!this._storageItems) {
       this.initStorageItems();
@@ -220,6 +205,12 @@ function Game_Party_ItemStorageMixIn(gameParty) {
 Game_Party_ItemStorageMixIn(Game_Party.prototype);
 
 class Scene_ItemStorage extends Scene_MenuBase {
+  _categoryWindow: Window_StorageItemCategory;
+  _inventoryWindow: Window_StorageItemsParty;
+  _storageWindow: Window_StorageItems;
+  _numberWindow: Window_StorageNumber;
+  _storeMode: boolean;
+
   create() {
     super.create();
     this.createHelpWindow();
@@ -235,7 +226,7 @@ class Scene_ItemStorage extends Scene_MenuBase {
 
   createCategoryWindow() {
     this._categoryWindow = new Window_StorageItemCategory(this.categoryWindowRect());
-    this._categoryWindow.setHelpWindow(this._helpWindow);
+    this._categoryWindow.setHelpWindow(this._helpWindow!);
     this._categoryWindow.setHandler('ok', this.onCategoryOk.bind(this));
     this._categoryWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._categoryWindow);
@@ -246,25 +237,19 @@ class Scene_ItemStorage extends Scene_MenuBase {
     }
   }
 
-  /**
-   * @return {Rectangle}
-   */
   categoryWindowRect() {
     return new Rectangle(0, this.mainAreaTop(), Graphics.boxWidth, this.calcWindowHeight(1, true));
   }
 
   createInventoryWindow() {
     this._inventoryWindow = new Window_StorageItemsParty(this.inventoryWindowRect());
-    this._inventoryWindow.setHelpWindow(this._helpWindow);
+    this._inventoryWindow.setHelpWindow(this._helpWindow!);
     this._inventoryWindow.setHandler('ok', this.onInventoryOk.bind(this));
     this._inventoryWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._inventoryWindow);
     this._categoryWindow.setItemWindow(this._inventoryWindow);
   }
 
-  /**
-   * @return {Rectangle}
-   */
   inventoryWindowRect() {
     const y = this._categoryWindow.y + this._categoryWindow.height;
     return new Rectangle(0, y, Graphics.boxWidth / 2, this.mainAreaBottom() - y);
@@ -272,7 +257,7 @@ class Scene_ItemStorage extends Scene_MenuBase {
 
   createStorageWindow() {
     this._storageWindow = new Window_StorageItems(this.storageWindowRect());
-    this._storageWindow.setHelpWindow(this._helpWindow);
+    this._storageWindow.setHelpWindow(this._helpWindow!);
     this._storageWindow.setHandler('ok', this.onStorageOk.bind(this));
     this._storageWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._storageWindow);
@@ -281,9 +266,6 @@ class Scene_ItemStorage extends Scene_MenuBase {
     this._inventoryWindow.setAnotherWindow(this._storageWindow);
   }
 
-  /**
-   * @return {Rectangle}
-   */
   storageWindowRect() {
     return new Rectangle(
       Graphics.boxWidth / 2,
@@ -301,9 +283,6 @@ class Scene_ItemStorage extends Scene_MenuBase {
     this.addWindow(this._numberWindow);
   }
 
-  /**
-   * @return {Rectangle}
-   */
   numberWindowRect() {
     return this.inventoryWindowRect();
   }
@@ -315,7 +294,7 @@ class Scene_ItemStorage extends Scene_MenuBase {
 
   onInventoryOk() {
     this._inventoryWindow.deactivate();
-    this._numberWindow.setup(this._inventoryWindow.item(), true);
+    this._numberWindow.setup(this._inventoryWindow.item()!, true);
     this._numberWindow.show();
     this._numberWindow.activate();
     this._storeMode = true;
@@ -323,7 +302,7 @@ class Scene_ItemStorage extends Scene_MenuBase {
 
   onStorageOk() {
     this._storageWindow.deactivate();
-    this._numberWindow.setup(this._storageWindow.item(), false);
+    this._numberWindow.setup(this._storageWindow.item()!, false);
     this._numberWindow.show();
     this._numberWindow.activate();
     this._storeMode = false;
@@ -341,9 +320,9 @@ class Scene_ItemStorage extends Scene_MenuBase {
 
   onNumberOk() {
     if (this._storeMode) {
-      $gameParty.storeItemToStorage(this._inventoryWindow.item(), this._numberWindow.number());
+      $gameParty.storeItemToStorage(this._inventoryWindow.item()!, this._numberWindow.number());
     } else {
-      $gameParty.fetchItemFromStorage(this._storageWindow.item(), this._numberWindow.number());
+      $gameParty.fetchItemFromStorage(this._storageWindow.item()!, this._numberWindow.number());
     }
     this.endNumberInput();
     this._inventoryWindow.refresh();
@@ -370,37 +349,35 @@ class Scene_ItemStorage extends Scene_MenuBase {
   }
 }
 
-window.Scene_ItemStorage = Scene_ItemStorage;
 
 class Window_StorageItemCategory extends Window_ItemCategory {
+  _storageWindow: Window_StorageItems;
+
   maxCols() {
-    return $gameTemp.storageCategories().count();
+    return $gameTemp.storageCategories()!.count();
   }
 
-  /**
-   * @param {Window_StorageItems} storageWindow
-   */
-  setStorageWindow(storageWindow) {
+  setStorageWindow(storageWindow: Window_StorageItems) {
     this._storageWindow = storageWindow;
   }
 
   update() {
     super.update();
     if (this._storageWindow) {
-      this._storageWindow.setCategory(this.currentSymbol());
+      this._storageWindow.setCategory(this.currentSymbol()!);
     }
   }
 
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
-  needsCommand(name) {
-    return super.needsCommand(name) && $gameTemp.storageCategories()[name];
+  needsCommand(name: string): boolean {
+    return super.needsCommand(name) && !!$gameTemp.storageCategories()?.categories().includes(name);
   }
 }
 
 class Window_StorageItems extends Window_ItemList {
+  _anotherWindow: Window_StorageItems;
+  _lastSelected: number;
+  _wait: number;
+
   maxCols() {
     return 1;
   }
@@ -408,18 +385,18 @@ class Window_StorageItems extends Window_ItemList {
   /**
    * @param {Window_StorageItems} anotherWindow
    */
-  setAnotherWindow(anotherWindow) {
+  setAnotherWindow(anotherWindow: Window_StorageItems) {
     this._anotherWindow = anotherWindow;
   }
 
-  cursorDown(wrap) {
+  cursorDown(wrap: boolean) {
     if (this.maxItems() === 0) {
       return;
     }
     super.cursorDown(wrap);
   }
 
-  cursorUp(wrap) {
+  cursorUp(wrap: boolean) {
     if (this.maxItems() === 0) {
       return;
     }
@@ -451,7 +428,7 @@ class Window_StorageItems extends Window_ItemList {
     return false;
   }
 
-  isEnabled(item) {
+  isEnabled(item: MZ.Item): boolean {
     return (
       !!item &&
       (this.isPartyItem()
@@ -475,7 +452,7 @@ class Window_StorageItems extends Window_ItemList {
     }
   }
 
-  select(index) {
+  select(index: number) {
     super.select(index);
     this._lastSelected = this.index();
   }
@@ -495,12 +472,12 @@ class Window_StorageItems extends Window_ItemList {
     this._anotherWindow.inputWait();
   }
 
-  drawItemNumber(item, x, y, width) {
+  drawItemNumber(item: MZ.Item|MZ.Weapon|MZ.Armor, x: number, y: number, width: number) {
     if (this.isPartyItem()) {
       super.drawItemNumber(item, x, y, width);
     } else {
       this.drawText(':', x, y, width - this.textWidth(`${settings.maxItems}`), 'right');
-      this.drawText($gameParty.storageItems().numItems(item), x, y, width, 'right');
+      this.drawText(`${$gameParty.storageItems().numItems(item)}`, x, y, width, 'right');
     }
   }
 
@@ -526,7 +503,7 @@ class Window_StorageItemsParty extends Window_StorageItems {
  * Window_ShopNumberから数値入力ボタン系のメソッドを抜き出す
  * @param {Window_MenuNumber.prototype} windowClass
  */
-function Window_MenuNumberButtonMixIn(windowClass) {
+function Window_MenuNumberButtonMixIn(windowClass: Window_MenuNumber) {
   windowClass.createButtons = function () {
     Window_ShopNumber.prototype.createButtons.call(this);
   };
@@ -576,7 +553,11 @@ function Window_MenuNumberButtonMixIn(windowClass) {
 }
 
 class Window_MenuNumber extends Window_Selectable {
-  initialize(rect) {
+  _item: MZ.Item|MZ.Weapon|MZ.Armor|null;
+  _max: number;
+  _number: number;
+
+  initialize(rect: Rectangle) {
     super.initialize(rect);
     this._item = null;
     this._max = 1;
@@ -594,20 +575,20 @@ class Window_MenuNumber extends Window_Selectable {
     return this._number;
   }
 
-  drawMultiplicationSign(x, y) {
+  drawMultiplicationSign(x: number, y: number) {
     const sign = this.multiplicationSign();
     const width = this.textWidth(sign);
     this.resetTextColor();
     this.drawText(sign, x, y, width);
   }
 
-  drawNumber(x, y) {
+  drawNumber(x: number, y: number) {
     const width = this.cursorWidth() - this.itemPadding();
     this.resetTextColor();
-    this.drawText(this._number, x, y, width, 'right');
+    this.drawText(`${this._number}`, x, y, width, 'right');
   }
 
-  drawHorzLine(x, y, width) {
+  drawHorzLine(x: number, y: number, width: number) {
     this.drawRect(x, y, width, 5);
   }
 
@@ -651,7 +632,7 @@ class Window_MenuNumber extends Window_Selectable {
     }
   }
 
-  changeNumber(amount) {
+  changeNumber(amount: number) {
     const lastNumber = this._number;
     this._number = (this._number + amount).clamp(1, this._max);
     if (this._number !== lastNumber) {
@@ -659,11 +640,24 @@ class Window_MenuNumber extends Window_Selectable {
       this.refresh();
     }
   }
+
+  createButtons(): void {};
+  placeButtons(): void {};
+  totalButtonWidth(): number { return 0; };
+  buttonSpacing(): number { return 0; };
+  buttonY(): number {return 0; };
+  onButtonUp(): void {};
+  onButtonUp2(): void {};
+  onButtonDown(): void {};
+  onButtonDown2(): void {};
+  onButtonOk(): void {};
+  itemNameY(): number { return 0; };
 }
 Window_MenuNumberButtonMixIn(Window_MenuNumber.prototype);
 
 class Window_StorageNumber extends Window_MenuNumber {
-  setup(item, toStorage) {
+  _toStorage: boolean;
+  setup(item: MZ.Item|MZ.Weapon|MZ.Armor, toStorage: boolean) {
     this._item = item;
     this._number = 1;
     this._toStorage = toStorage;
@@ -750,3 +744,13 @@ class Window_StorageNumber extends Window_MenuNumber {
     return new Rectangle(this.cursorX(), this.itemNameY(), this.cursorWidth(), this.lineHeight());
   }
 }
+
+type _Game_StorageItems = typeof Game_StorageItems;
+type _Scene_ItemStorage = typeof Scene_ItemStorage;
+declare global {
+  var Game_StorageItems: _Game_StorageItems;
+  var Scene_ItemStorage: _Scene_ItemStorage;
+}
+
+globalThis.Game_StorageItems = Game_StorageItems;
+globalThis.Scene_ItemStorage = Scene_ItemStorage;
