@@ -15,3 +15,10 @@ GitHubにサインインしていれば、本ブログの記事にコメント�
 
 Twitter:[DarkPlasma](https://twitter.com/plasma_dark) (R18)
 Twitter:[NPlasma](https://twitter.com/elleonard_f) (全年齢)
+
+# ci-en
+
+[ci-en](https://ci-en.net/creator/15997)ではプラグイン作成・更新の最新情報を毎月お届けしています。
+RPGツクールMZ（MV）向けの技術的なご相談もお受けしています。
+
+有料プランではDarkPlasma（Plasma）が実践しているプラグインの書き方についての詳しい解説をご覧いただけます。
