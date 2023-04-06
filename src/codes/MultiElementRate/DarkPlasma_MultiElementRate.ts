@@ -6,7 +6,7 @@ function Game_Action_MultiElementRateMixIn(gameAction: Game_Action) {
   const _elementsMaxRate = gameAction.elementsMaxRate;
   gameAction.elementsMaxRate = function (target, elements) {
     if (elements.length > 0) {
-      return elements.reduce((result, elementId) => {
+      return [...new Set(elements)].reduce((result, elementId) => {
         return settings.addition ? result + target.elementRate(elementId) : result * target.elementRate(elementId);
       }, 1);
     }
