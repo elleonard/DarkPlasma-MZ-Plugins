@@ -1,9 +1,10 @@
-// DarkPlasma_MultiElementRate 1.0.0
+// DarkPlasma_MultiElementRate 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/04/06 1.0.1 同一属性が重複して計算される不具合を修正
  * 2023/03/29 1.0.0 公開
  */
 
@@ -22,7 +23,7 @@
  * @default false
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 攻撃に付与されている属性が複数ある場合、
  * その攻撃の属性すべてをダメージ計算に使用します。
  *
@@ -55,7 +56,7 @@
     const _elementsMaxRate = gameAction.elementsMaxRate;
     gameAction.elementsMaxRate = function (target, elements) {
       if (elements.length > 0) {
-        return elements.reduce((result, elementId) => {
+        return [...new Set(elements)].reduce((result, elementId) => {
           return settings.addition ? result + target.elementRate(elementId) : result * target.elementRate(elementId);
         }, 1);
       }
