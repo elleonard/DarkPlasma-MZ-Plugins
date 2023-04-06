@@ -27,3 +27,18 @@ declare interface Game_Party {
   storeItemToStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   fetchItemFromStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
 }
+
+declare interface Scene_ItemStorage extends Scene_MenuBase {
+  _inventoryWindow: Window_StorageItemsParty;
+  _storageWindow: Window_StorageItems;
+  createInventoryWindow(): void;
+  createStorageWindow(): void;
+}
+
+declare interface Window_StorageItems extends Window_ItemList {
+
+}
+
+declare interface Window_StorageItemsParty extends Window_StorageItems {
+
+}
