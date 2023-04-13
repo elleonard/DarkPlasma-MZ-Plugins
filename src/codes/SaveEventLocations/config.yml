@@ -1,0 +1,39 @@
+DarkPlasma_SaveEventLocations:
+  name: DarkPlasma_SaveEventLocations
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/04/13
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップ上のイベント位置と向きを記録する'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      RPGツクールMZでは、マップのロード時に
+      イベントの位置と向きを初期化します。
+      本プラグインはマップ上のイベント位置と向きを記録し、
+      再びそのマップをロードした際に、その情報を元に
+      イベントの位置と向きを復元します。
+      
+      マップのメモ欄に以下のように記述すると
+      そのマップのイベントすべての位置と向きを記録します。
+      <saveEventLocations>
+
+      イベントのメモ欄に以下のように記述すると
+      そのイベントの位置と向きを記録します。
+      <saveLocation>
+
+      記録した位置と向きはセーブデータに含まれます。
+      記録するイベントの数が多いほど、
+      セーブデータの容量も大きくなります。
