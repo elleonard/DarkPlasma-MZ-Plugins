@@ -1,0 +1,26 @@
+DarkPlasma_AutoStoreItemToStorage:
+  name: DarkPlasma_AutoStoreItemToStorage
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/04/16
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '溢れたアイテムを自動で倉庫に送る'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_ItemStorage
+        version: 1.3.1
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      入手するアイテムのうち、
+      所持限界を超える数を自動で倉庫に送ります。
