@@ -24,3 +24,11 @@ tags:
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ItemStorage.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
+
+# 追加プラグイン
+
+## 溢れたアイテムを自動で倉庫に送る
+
+イベントコマンドのアイテム増減や、戦闘終了時のドロップアイテムで入手したアイテムが所持上限を超えている場合、超えている分だけ自動で倉庫に送ります。
+
+[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AutoStoreItemToStorage.js)

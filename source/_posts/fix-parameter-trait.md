@@ -9,6 +9,7 @@ tags:
   - 装備
   - ステート
   - 能力値
+  - MV版あり
 ---
 
 # 概要
@@ -22,5 +23,15 @@ tags:
 
 # ダウンロードリンク
 
-[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FixParameterTrait.js)
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FixParameterTrait.js)
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_FixParameterTrait.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
+
+# 前提プラグイン
+
+## 独自の特徴IDを確保する
+
+能力値を固定する特徴プラグインを利用するには本プラグインが必要になります。
+
+[GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js)
+[GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js)
