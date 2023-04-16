@@ -22,7 +22,7 @@
             
             <tag> イベント </tag>
             
-            <tag> MV版有り </tag>
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -334,7 +334,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/"/>
       <url>/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、指定の能力値または追加能力値を固定する特徴を追加します。<br>この特徴による能力値の固定は、他の装備や特徴による能力値の増減を無視して適用されます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FixParameterTrait.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、指定の能力値または追加能力値を固定する特徴を追加します。<br>この特徴による能力値の固定は、他の装備や特徴による能力値の増減を無視して適用されます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FixParameterTrait.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_FixParameterTrait.js">GitHub(MV版)</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><h2 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h2><p>能力値を固定する特徴プラグインを利用するには本プラグインが必要になります。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub(MV版)</a></p>]]></content>
       
       
       <categories>
@@ -355,6 +355,8 @@
             <tag> ステート </tag>
             
             <tag> 能力値 </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
