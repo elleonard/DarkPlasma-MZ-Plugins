@@ -12,17 +12,6 @@ const ENCOUNTER_SITUATION = {
 };
 
 function BattleManager_SymbolEncounterMixIn(battleManager: typeof BattleManager) {
-  const _setup = battleManager.setup;
-  battleManager.setup = function (troopId, canEspace, canLose) {
-    _setup.call(this, troopId, canEspace, canLose);
-    /**
-     * 敵シンボルと遭遇した場合は先制・不意打ち判定を行う
-     */
-    if ($gameTemp.isSymbolEncounter()) {
-      this.onEncounter();
-    }
-  };
-
   const _ratePreemptive = battleManager.ratePreemptive;
   battleManager.ratePreemptive = function () {
     if ($gameTemp.isSymbolEncounter()) {
@@ -34,6 +23,8 @@ function BattleManager_SymbolEncounterMixIn(battleManager: typeof BattleManager)
         case ENCOUNTER_SITUATION.SURPRISE:
           return 0;
       }
+    } else if (settings.surpriseOnlySymbol) {
+      return 0;
     }
     return _ratePreemptive.call(this);
   };
@@ -49,6 +40,8 @@ function BattleManager_SymbolEncounterMixIn(battleManager: typeof BattleManager)
         case ENCOUNTER_SITUATION.SURPRISE:
           return $gameParty.surpriseRateByBackAttacked();
       }
+    } else if (settings.surpriseOnlySymbol) {
+      return 0;
     }
     return _rateSurprise.call(this);
   };

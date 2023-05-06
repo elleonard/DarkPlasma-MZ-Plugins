@@ -3,6 +3,10 @@ DarkPlasma_SurpriseControlWithSymbolEncounter:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/05/06
+      version: 2.0.0
+      description: '前提プラグインを追加'
+    - description: 'シンボルでのみ先制・不意打ちを発生させる設定を追加'
     - date: 2022/10/22
       version: 1.1.0
       description: '背後からの接触以外で先制・不意打ちを発生させない設定を追加'
@@ -41,15 +45,23 @@ DarkPlasma_SurpriseControlWithSymbolEncounter:
       text:
         ja: 背後接触のみで先制・不意打ち
       desc:
-        ja: ONにすると背後からの接触以外で先制・不意打ちを発生させません。
+        ja: 背後からの接触でのみ先制・不意打ちを発生させます。
+      type: boolean
+      default: false
+    - param: surpriseOnlySymbol
+      text:
+        ja: シンボルのみ先制・不意打ち
+      desc:
+        ja: シンボルメモタグのついているイベントの戦闘でのみ先制・不意打ちを発生させます。
       type: boolean
       default: false
   commands: []
   structures:
   dependencies:
-    base: []
-    orderAfter:
-      - name: DarkPlasma_SurpriseControl
+    base:
+      - name: DarkPlasma_SurpriseControlWithEventBattle
+        version: 1.0.0
+    orderAfter: []
     orderBefore: []
   help:
     ja: |
