@@ -3,20 +3,24 @@ DarkPlasma_SurpriseControl:
   year: 2020
   license: MIT
   histories:
-    - date: '2021/07/05'
-      version: '2.0.2'
+    - date: 2023/05/06
+      version: 3.0.0
+      description: 'イベントコマンド時の先制判定を別プラグインに分離'
+    - description: 'typescript移行'
+    - date: 2021/07/05
+      version: 2.0.2
       description: 'MZ 1.3.2に対応'
-    - date: '2021/06/22'
-      version: '2.0.1'
+    - date: 2021/06/22
+      version: 2.0.1
       description: 'サブフォルダからの読み込みに対応'
-    - date: '2020/09/08'
-      version: '2.0.0'
+    - date: 2020/09/08
+      version: 2.0.0
       description: 'パラメータ名を変更'
-    - date: '2020/08/27'
-      version: '1.0.1'
+    - date: 2020/08/27
+      version: 1.0.1
       description: 'イベントコマンドの戦闘の処理で無限に戦闘が繰り返される不具合を修正'
-    - date: '2020/08/26'
-      version: '1.0.0'
+    - date: 2020/08/26
+      version: 1.0.0
       description: 'MZ版公開'
 
   locates:
@@ -52,13 +56,6 @@ DarkPlasma_SurpriseControl:
         ja: 指定したスイッチがONのとき、エネミーサイドが確実に先制攻撃します
       type: switch
       default: 0
-    - param: enableWithEventCommand
-      text:
-        ja: 戦闘の処理でも有効
-      desc:
-        ja: イベントコマンド「戦闘の処理」でも先制判定を行うかどうか
-      type: boolean
-      default: true
   commands: []
   structures:
   help:
@@ -84,3 +81,8 @@ DarkPlasma_SurpriseControl:
       上記が複数含まれるパターンの戦闘においては、優先度は以下のようになります。
 
       必ず先制攻撃する > 必ず先制攻撃される > 先制攻撃しない/されない
+
+      イベントコマンド「戦闘の処理」による戦闘ではRPGツクールMZの仕様上
+      先制/不意打ち判定が行われません。
+      DarkPlasma_SurpriseControlWithEventBattle と併用することで
+      イベントコマンドでの戦闘にも本プラグインの設定を適用できます。
