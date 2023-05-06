@@ -1,14 +1,16 @@
-// DarkPlasma_SurpriseControlWithSymbolEncounter 1.1.0
+// DarkPlasma_SurpriseControlWithSymbolEncounter 2.0.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/06 2.0.0 前提プラグインを追加
+ *                  シンボルでのみ先制・不意打ちを発生させる設定を追加
  * 2022/10/22 1.1.0 背後からの接触以外で先制・不意打ちを発生させない設定を追加
  * 2022/09/25 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc シンボルエンカウントにおける先制・不意打ちを制御する
  * @author DarkPlasma
  * @license MIT
@@ -16,7 +18,7 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
- * @orderAfter DarkPlasma_SurpriseControl
+ * @base DarkPlasma_SurpriseControlWithEventBattle
  *
  * @param preemptiveRate
  * @desc 背後をとった際の先制攻撃率（％）
@@ -37,13 +39,19 @@
  * @default ["se"]
  *
  * @param surpriseOnlyBackAttack
- * @desc ONにすると背後からの接触以外で先制・不意打ちを発生させません。
+ * @desc 背後からの接触でのみ先制・不意打ちを発生させます。
  * @text 背後接触のみで先制・不意打ち
  * @type boolean
  * @default false
  *
+ * @param surpriseOnlySymbol
+ * @desc シンボルメモタグのついているイベントの戦闘でのみ先制・不意打ちを発生させます。
+ * @text シンボルのみ先制・不意打ち
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.1.0
+ * version: 2.0.0
  * シンボルエンカウントシステムにおいて、先制・不意打ちを制御します。
  *
  * 敵シンボルとなるイベントには、
@@ -53,8 +61,8 @@
  * 対象イベントの実行において戦闘の処理があった場合、
  * プレイヤーとそのイベントの向きに応じて先制・不意打ちを発生させます。
  *
- * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * DarkPlasma_SurpriseControl
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_SurpriseControlWithEventBattle version:1.0.0
  */
 
 (() => {
@@ -72,9 +80,10 @@
     preemptiveRate: Number(pluginParameters.preemptiveRate || 100),
     surpriseRate: Number(pluginParameters.surpriseRate || 100),
     symbolTags: JSON.parse(pluginParameters.symbolTags || '["se"]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
     surpriseOnlyBackAttack: String(pluginParameters.surpriseOnlyBackAttack || false) === 'true',
+    surpriseOnlySymbol: String(pluginParameters.surpriseOnlySymbol || false) === 'true',
   };
 
   /**
@@ -86,16 +95,6 @@
     SURPRISE: 2, // 敵による不意打ち
   };
   function BattleManager_SymbolEncounterMixIn(battleManager) {
-    const _setup = battleManager.setup;
-    battleManager.setup = function (troopId, canEspace, canLose) {
-      _setup.call(this, troopId, canEspace, canLose);
-      /**
-       * 敵シンボルと遭遇した場合は先制・不意打ち判定を行う
-       */
-      if ($gameTemp.isSymbolEncounter()) {
-        this.onEncounter();
-      }
-    };
     const _ratePreemptive = battleManager.ratePreemptive;
     battleManager.ratePreemptive = function () {
       if ($gameTemp.isSymbolEncounter()) {
@@ -107,6 +106,8 @@
           case ENCOUNTER_SITUATION.SURPRISE:
             return 0;
         }
+      } else if (settings.surpriseOnlySymbol) {
+        return 0;
       }
       return _ratePreemptive.call(this);
     };
@@ -121,6 +122,8 @@
           case ENCOUNTER_SITUATION.SURPRISE:
             return $gameParty.surpriseRateByBackAttacked();
         }
+      } else if (settings.surpriseOnlySymbol) {
+        return 0;
       }
       return _rateSurprise.call(this);
     };
