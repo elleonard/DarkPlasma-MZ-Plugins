@@ -157,6 +157,19 @@ function Scene_Boot_EquipTypeStatusBonusTraitMixIn(sceneBoot: Scene_Boot) {
 
 Scene_Boot_EquipTypeStatusBonusTraitMixIn(Scene_Boot.prototype);
 
+function Game_BattlerBase_EquipTypeStatusBonusTraitMixIn(gameBattlerBase: Game_BattlerBase) {
+  const _xparam = gameBattlerBase.xparam;
+  gameBattlerBase.xparam = function (xparamId) {
+    return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
+  };
+
+  gameBattlerBase.xparamPlusWithEquipTypeTraits = function (xparamId) {
+    return 0;
+  };
+}
+
+Game_BattlerBase_EquipTypeStatusBonusTraitMixIn(Game_BattlerBase.prototype);
+
 function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   const _paramPlus = gameActor.paramPlus;
   gameActor.paramPlus = function (paramId) {
@@ -168,7 +181,7 @@ function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
   };
 
   gameActor.equipsForEquipTypeStatusBonus = function () {
-    return this.equips();
+    return this.equips().filter((equip): equip is MZ.Weapon|MZ.Armor => !!equip);
   };
 
   gameActor.validParamPlusWithEquipTypeTraits = function (paramId: number) {
@@ -181,11 +194,6 @@ function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor: Game_Actor) {
         : paramPlusWithArmorTypeTraitId.id;
       return result.concat(this.traitsWithId(traitId, dataId));
     }, []);
-  };
-
-  const _xparam = gameActor.xparam;
-  gameActor.xparam = function (xparamId) {
-    return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
   };
 
   gameActor.xparamPlusWithEquipTypeTraits = function (xparamId) {

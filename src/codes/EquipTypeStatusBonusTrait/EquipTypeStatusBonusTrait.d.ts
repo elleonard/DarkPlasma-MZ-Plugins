@@ -13,6 +13,10 @@ declare interface Scene_Boot {
   loadExtraTraits(): void;
 }
 
+declare interface Game_BattlerBase {
+  xparamPlusWithEquipTypeTraits(xparamId: number): number;
+}
+
 declare namespace Game_Battler {
   let TRAIT_PARAM_PLUS_WITH_WEAPON_TYPE: number;
   let TRAIT_XPARAM_PLUS_WITH_WEAPON_TYPE: number;
