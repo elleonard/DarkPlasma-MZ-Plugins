@@ -20,7 +20,8 @@ DarkPlasma_FixParameterTrait:
     base:
       - name: DarkPlasma_AllocateUniqueTraitId
         version: 1.0.1
-    orderAfter: []
+    orderAfter:
+      - name: DarkPlasma_EquipTypeStatusBonusTrait
     orderBefore: []
   help:
     ja: |
