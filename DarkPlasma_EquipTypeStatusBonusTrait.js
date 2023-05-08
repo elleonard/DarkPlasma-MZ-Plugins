@@ -1,9 +1,10 @@
-// DarkPlasma_EquipTypeStatusBonusTrait 2.3.0
+// DarkPlasma_EquipTypeStatusBonusTrait 2.3.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/09 2.3.1 DarkPlasma_FixParameterTrait.jsと一緒に使うと追加能力値が固定できない不具合を修正
  * 2022/11/12 2.3.0 ステータスボーナスのための武器タイプID、防具タイプID取得用のインターフェース追加
  * 2022/10/29 2.2.0 特徴ID定数を追加
  * 2022/10/22 2.1.0 対象装備差し替え用のインターフェース追加
@@ -11,7 +12,7 @@
  *            1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 装備種別によるステータスボーナス特徴
  * @author DarkPlasma
  * @license MIT
@@ -23,7 +24,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 2.3.0
+ * version: 2.3.1
  * アクター/職業/武器/防具/ステートのメモ欄に、
  * 指定の形式でメモタグを記述することで
  * 特定の武器・防具タイプを装備していたときに
@@ -221,6 +222,16 @@
     };
   }
   Scene_Boot_EquipTypeStatusBonusTraitMixIn(Scene_Boot.prototype);
+  function Game_BattlerBase_EquipTypeStatusBonusTraitMixIn(gameBattlerBase) {
+    const _xparam = gameBattlerBase.xparam;
+    gameBattlerBase.xparam = function (xparamId) {
+      return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
+    };
+    gameBattlerBase.xparamPlusWithEquipTypeTraits = function (xparamId) {
+      return 0;
+    };
+  }
+  Game_BattlerBase_EquipTypeStatusBonusTraitMixIn(Game_BattlerBase.prototype);
   function Game_Actor_EquipTypeStatusBonusTraitMixIn(gameActor) {
     const _paramPlus = gameActor.paramPlus;
     gameActor.paramPlus = function (paramId) {
@@ -230,7 +241,7 @@
       return this.validParamPlusWithEquipTypeTraits(paramId).reduce((result, trait) => result + trait.value, 0);
     };
     gameActor.equipsForEquipTypeStatusBonus = function () {
-      return this.equips();
+      return this.equips().filter((equip) => !!equip);
     };
     gameActor.validParamPlusWithEquipTypeTraits = function (paramId) {
       return this.equipsForEquipTypeStatusBonus()
@@ -244,10 +255,6 @@
             : paramPlusWithArmorTypeTraitId.id;
           return result.concat(this.traitsWithId(traitId, dataId));
         }, []);
-    };
-    const _xparam = gameActor.xparam;
-    gameActor.xparam = function (xparamId) {
-      return _xparam.call(this, xparamId) + this.xparamPlusWithEquipTypeTraits(xparamId);
     };
     gameActor.xparamPlusWithEquipTypeTraits = function (xparamId) {
       return this.validXParamPlusWithEquipTypeTraits(xparamId).reduce((result, trait) => result + trait.value, 0);

@@ -8,7 +8,7 @@
  *            1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 能力値を固定する特徴
  * @author DarkPlasma
  * @license MIT
@@ -17,6 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_EquipTypeStatusBonusTrait
  *
  * @help
  * version: 1.0.1
@@ -58,6 +59,8 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_AllocateUniqueTraitId version:1.0.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_EquipTypeStatusBonusTrait
  */
 
 (() => {
