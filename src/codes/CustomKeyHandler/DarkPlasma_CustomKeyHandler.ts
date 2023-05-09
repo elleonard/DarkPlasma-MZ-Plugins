@@ -1,12 +1,11 @@
 /// <reference path="./CustomKeyHandler.d.ts" />
 
 class CustomKeyMethod {
-  /**
-   * @param {() => boolean} isTriggered
-   * @param {(Window_Selectable) => void} process
-   * @param {(Window_Selectable) => boolean} isEnabled
-   */
-  constructor(isTriggered: () => boolean, process: (self: Window_Selectable) => void, isEnabled: (self: Window_Selectable) => boolean) {
+  constructor(
+    isTriggered: () => boolean,
+    process: (self: Window_Selectable) => void,
+    isEnabled: (self: Window_Selectable) => boolean
+  ) {
     this._isTriggered = isTriggered;
     this._process = process;
     this._isEnabled = isEnabled;
@@ -25,11 +24,6 @@ class CustomKeyMethod {
   }
 }
 
-/**
- * @param {string} key キー
- * @param {Window_Selectable.prototype} windowClass
- * @param {?string} handlerName
- */
 function Window_CustomKeyHandlerMixIn(key: string, windowClass: Window_Selectable, handlerName?: string): void {
   if (!windowClass.customKeyMethods) {
     windowClass.customKeyMethods = [];
@@ -56,13 +50,28 @@ function Window_CustomKeyHandlerMixIn(key: string, windowClass: Window_Selectabl
     new CustomKeyMethod(
       () => Input.isTriggered(key),
       (self) => {
-        self.playCursorSound();
+        self.playCustomKeySound(key);
         self.updateInputData();
         self.callHandler(handlerName || key);
       },
       (self) => self.isCustomKeyEnabled(key)
     )
   );
+
+  windowClass.playCustomKeySound = function (key) {
+    const se = this.customKeySound(key);
+    if (!se) {
+      this.playCursorSound();
+    } else {
+      AudioManager.playStaticSe(se);
+    }
+  };
+
+  if (!windowClass.customKeySound) {
+    windowClass.customKeySound = function (key) {
+      return undefined;
+    };
+  }
 }
 
 globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;

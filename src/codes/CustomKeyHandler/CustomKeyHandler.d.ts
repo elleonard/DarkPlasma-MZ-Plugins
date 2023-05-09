@@ -9,4 +9,6 @@ declare interface CustomKeyMethod {
 declare interface Window_Selectable {
   customKeyMethods: CustomKeyMethod[];
   isCustomKeyEnabled(key: string): boolean;
+  playCustomKeySound(key: string): void;
+  customKeySound(key: string): MZ.AudioFile|undefined;
 }
