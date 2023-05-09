@@ -1,9 +1,10 @@
-// DarkPlasma_CustomKeyHandler 1.2.2
+// DarkPlasma_CustomKeyHandler 1.3.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/09 1.3.0 操作SEの設定を追加
  * 2022/09/10 1.2.2 isCustomKeyEnabledを初回のみ定義するよう修正
  * 2022/08/21 1.2.1 typescript移行
  * 2022/08/16 1.2.0 キー有効チェックの仕組みを追加
@@ -11,7 +12,7 @@
  * 2021/10/10 1.0.0 初版
  */
 
-/*:ja
+/*:
  * @plugindesc ウィンドウのハンドラにカスタムキーを追加する
  * @author DarkPlasma
  * @license MIT
@@ -20,7 +21,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.2.2
+ * version: 1.3.0
  * shiftなどを押した際のハンドラを追加できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -36,17 +37,16 @@
  * キーの有効状態をチェックしたい場合、
  * 対象ウィンドウクラスの isCustomKeyEnabled メソッドをフックし、
  * keyが"hoge"の際に評価する条件式を記述してください。
+ *
+ * 操作SEを変更したい場合、
+ * 対象ウィンドウクラスの customKeySound メソッドを定義し、
+ * MZ.AudioFile型のオブジェクトを返してください。
  */
 
 (() => {
   'use strict';
 
   class CustomKeyMethod {
-    /**
-     * @param {() => boolean} isTriggered
-     * @param {(Window_Selectable) => void} process
-     * @param {(Window_Selectable) => boolean} isEnabled
-     */
     constructor(isTriggered, process, isEnabled) {
       this._isTriggered = isTriggered;
       this._process = process;
@@ -62,11 +62,6 @@
       return this._isEnabled(self);
     }
   }
-  /**
-   * @param {string} key キー
-   * @param {Window_Selectable.prototype} windowClass
-   * @param {?string} handlerName
-   */
   function Window_CustomKeyHandlerMixIn(key, windowClass, handlerName) {
     if (!windowClass.customKeyMethods) {
       windowClass.customKeyMethods = [];
@@ -90,13 +85,26 @@
       new CustomKeyMethod(
         () => Input.isTriggered(key),
         (self) => {
-          self.playCursorSound();
+          self.playCustomKeySound(key);
           self.updateInputData();
           self.callHandler(handlerName || key);
         },
         (self) => self.isCustomKeyEnabled(key)
       )
     );
+    windowClass.playCustomKeySound = function (key) {
+      const se = this.customKeySound(key);
+      if (!se) {
+        this.playCursorSound();
+      } else {
+        AudioManager.playStaticSe(se);
+      }
+    };
+    if (!windowClass.customKeySound) {
+      windowClass.customKeySound = function (key) {
+        return undefined;
+      };
+    }
   }
   globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
 })();
