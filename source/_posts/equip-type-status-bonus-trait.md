@@ -21,3 +21,12 @@ tags:
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EquipTypeStatusBonusTrait.js)
 Rawボタンを右クリックして対象をファイルに保存してください。
+
+## 前提プラグイン
+
+### 独自の特徴IDを確保する
+
+独自の特徴を追加するため、利用には本プラグインが必要になります。
+
+- [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js)
+
