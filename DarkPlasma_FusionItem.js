@@ -1,9 +1,11 @@
-// DarkPlasma_FusionItem 1.2.3
+// DarkPlasma_FusionItem 1.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/13 1.3.0 価格描画を関数に切り出す
+ *                  商品ウィンドウクラス定義をグローバルに公開
  * 2022/12/11 1.2.3 リファクタ
  * 2022/09/04 1.2.2 typescript移行
  * 2022/07/03 1.2.1 コマンドウィンドウのコマンド表示幅変更
@@ -45,7 +47,7 @@
  * @type number[]
  *
  * @help
- * version: 1.2.3
+ * version: 1.3.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -724,7 +726,6 @@
       }
     }
   }
-  globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
   class Window_FusionShopBuy extends Window_ShopBuy {
     constructor() {
       super(...arguments);
@@ -798,12 +799,14 @@
       const price = this.priceAt(index);
       const rect = this.itemLineRect(index);
       const priceWidth = this.priceWidth();
-      const priceX = rect.x + rect.width - priceWidth;
       const nameWidth = rect.width - priceWidth;
       this.changePaintOpacity(this.isEnabled(index));
       this.drawItemName(item, rect.x, rect.y, nameWidth);
-      this.drawText(`${price}`, priceX, rect.y, priceWidth, 'right');
+      this.drawPrice(price, rect.x + rect.width - priceWidth, rect.y, priceWidth);
       this.changePaintOpacity(true);
+    }
+    drawPrice(price, x, y, width) {
+      this.drawText(`${price}`, x, y, width, 'right');
     }
     updateHelp() {
       super.updateHelp();
@@ -812,4 +815,6 @@
       }
     }
   }
+  globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
+  globalThis.Window_FusionShopBuy = Window_FusionShopBuy;
 })();
