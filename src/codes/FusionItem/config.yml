@@ -3,6 +3,10 @@ DarkPlasma_FusionItem:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/05/13
+      version: 1.3.0
+      description: '価格描画を関数に切り出す'
+    - description: '商品ウィンドウクラス定義をグローバルに公開'
     - date: 2022/12/11
       version: 1.2.3
       description: 'リファクタ'

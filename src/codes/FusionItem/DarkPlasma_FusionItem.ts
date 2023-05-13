@@ -443,12 +443,6 @@ class Window_FusionShopStatus extends Window_ShopStatus {
   }
 }
 
-type _Window_FusionShopStatus = typeof Window_FusionShopStatus;
-declare global {
-  var Window_FusionShopStatus: _Window_FusionShopStatus;
-}
-globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
-
 class Window_FusionShopBuy extends Window_ShopBuy {
   _fusionGoods: FusionItemGoods[] = [];
   _materials: FusionItemMaterial[][] = [];
@@ -528,12 +522,15 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     const price = this.priceAt(index);
     const rect = this.itemLineRect(index);
     const priceWidth = this.priceWidth();
-    const priceX = rect.x + rect.width - priceWidth;
     const nameWidth = rect.width - priceWidth;
     this.changePaintOpacity(this.isEnabled(index));
     this.drawItemName(item, rect.x, rect.y, nameWidth);
-    this.drawText(`${price}`, priceX, rect.y, priceWidth, 'right');
+    this.drawPrice(price, rect.x + rect.width - priceWidth, rect.y, priceWidth);
     this.changePaintOpacity(true);
+  }
+
+  drawPrice(price: number, x: number, y: number, width: number) {
+    this.drawText(`${price}`, x, y, width, 'right');
   }
 
   updateHelp() {
@@ -543,3 +540,12 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     }
   }
 }
+
+type _Window_FusionShopStatus = typeof Window_FusionShopStatus;
+type _Window_FusionShopBuy = typeof Window_FusionShopBuy;
+declare global {
+  var Window_FusionShopStatus: _Window_FusionShopStatus;
+  var Window_FusionShopBuy: _Window_FusionShopBuy;
+}
+globalThis.Window_FusionShopStatus = Window_FusionShopStatus;
+globalThis.Window_FusionShopBuy = Window_FusionShopBuy;

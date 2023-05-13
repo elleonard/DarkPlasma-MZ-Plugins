@@ -89,6 +89,7 @@ declare class Scene_ShopLike<TGoods, TBuyWindow> extends Scene_MenuBase {
   onCategoryOk(): void;
   onCategoryCancel(): void;
   onBuyOk(): void;
+  onBuyCancel(): void;
   onSellOk(): void;
   onSellCancel(): void;
   onNumberOk(): void;
@@ -115,5 +116,6 @@ declare interface Window_FusionShopStatus extends Window_ShopStatus {
 }
 
 declare interface Window_FusionShopBuy extends Window_ShopBuy {
-
+  setupFusionGoods(fusionGoods: FusionItemGoods[]): void;
+  drawPrice(price: number, x: number, y: number, width: number): void;
 }
