@@ -1,3 +1,5 @@
+/// <reference path="./TinyMedal.d.ts" />
+
 import { pluginName } from '../../common/pluginName';
 import { command_gotoSceneMedal, command_processTinyMedal } from './_build/DarkPlasma_TinyMedal_commands';
 import { settings } from './_build/DarkPlasma_TinyMedal_parameters';
@@ -11,15 +13,19 @@ const ITEM_KIND = {
 /**
  * @type {RewardMessage[]}
  */
-let reservedRewardMessages = [];
+let reservedRewardMessages: RewardMessage[] = [];
 
 class RewardItem {
+  _id: number;
+  _kind: number;
+  _medalCount: number;
+
   /**
    * @param {number} id ID
    * @param {number} kind アイテム種別
    * @param {number} medalCount 必要メダル数
    */
-  constructor(id, kind, medalCount) {
+  constructor(id: number, kind: number, medalCount: number) {
     this._id = id;
     this._kind = kind;
     this._medalCount = medalCount;
@@ -30,7 +36,7 @@ class RewardItem {
    * @param {number} kind アイテム種別
    * @return {RewardItem}
    */
-  static fromObject(object, kind) {
+  static fromObject(object: { id: number, medalCount: number }, kind: number): RewardItem {
     return new RewardItem(object.id, kind, object.medalCount);
   }
 
@@ -55,7 +61,7 @@ class RewardItem {
    * 報酬獲得フラグ用のキー
    * @return {string}
    */
-  rewardKey() {
+  rewardKey(): string {
     return `${this._medalCount}_${this._kind}_${this._id}`;
   }
 
@@ -63,11 +69,15 @@ class RewardItem {
    * 報酬アイテムを入手する
    */
   complete() {
-    $gameParty.gainItem(this.itemData, 1);
+    const item = this.itemData;
+    if (!item) {
+      return;
+    }
+    $gameParty.gainItem(item, 1);
     $gameSystem.completeMedalReward(this.rewardKey());
     rewardMessages
       .map((message) => {
-        return new RewardMessage(this.itemData.name, message);
+        return new RewardMessage(item.name, this._medalCount, message);
       })
       .forEach((message) => message.reserve());
   }
@@ -75,20 +85,23 @@ class RewardItem {
   /**
    * @return {boolean} 入手済みかどうか
    */
-  completed() {
+  completed(): boolean {
     return $gameSystem.isMedalRewardCompleted(this.rewardKey());
   }
 }
 
-globalThis.Data_TinyMedal_RewardItem = RewardItem;
-
 class RewardMessage {
-  /**
-   * @param {string} itemName アイテム名
-   * @param {RewardMessageStatic} staticMessage 固定部分
-   */
-  constructor(itemName, staticMessage) {
+  _itemName: string;
+  _requiredMedalCount: number;
+  _staticMessage: RewardMessageStatic;
+
+  constructor(
+    itemName: string,
+    requiredMedalCount: number,
+    staticMessage: RewardMessageStatic
+  ) {
     this._itemName = itemName;
+    this._requiredMedalCount = requiredMedalCount;
     this._staticMessage = staticMessage;
   }
 
@@ -100,7 +113,7 @@ class RewardMessage {
    * アイテムを入手した際の報酬メッセージを表示する
    */
   show() {
-    this._staticMessage.show(this._itemName);
+    this._staticMessage.show(this._itemName, this._requiredMedalCount);
   }
 }
 
@@ -108,23 +121,28 @@ class RewardMessage {
  * 報酬メッセージの固定部分
  */
 class RewardMessageStatic {
-  constructor(message, faceFile, faceIndex) {
+  _message: string;
+  _faceFile: string;
+  _faceIndex: number;
+
+  constructor(message: string, faceFile: string, faceIndex: number) {
     this._message = message;
     this._faceFile = faceFile;
     this._faceIndex = faceIndex;
   }
 
-  static fromObject(object) {
+  static fromObject(object: { message: string, faceFile: string, faceIndex: number }) {
     return new RewardMessageStatic(object.message, object.faceFile, object.faceIndex);
   }
 
   /**
    * アイテムを入手した際の報酬メッセージを表示する
-   * @param {string} itemName アイテム名
    */
-  show(itemName) {
+  show(itemName: string, requiredMedalCount: number) {
     this.showFace();
-    const message = this._message.replace(/\$\{itemName\}/gi, itemName);
+    const message = this._message
+      .replace(/\$\{itemName\}/gi, itemName)
+      .replace(/\$\{medalCount\}/gi, `${requiredMedalCount}`);
     $gameMessage.add(message);
   }
 
@@ -140,7 +158,7 @@ class RewardMessageStatic {
 /**
  * @type {RewardItem[]}
  */
-const rewardItems = settings.rewardItems
+const rewardItems: RewardItem[] = settings.rewardItems
   .map((rewardItem) => RewardItem.fromObject(rewardItem, ITEM_KIND.ITEM))
   .concat(settings.rewardWeapons.map((rewardWeapon) => RewardItem.fromObject(rewardWeapon, ITEM_KIND.WEAPON)))
   .concat(settings.rewardArmors.map((rewardArmor) => RewardItem.fromObject(rewardArmor, ITEM_KIND.ARMOR)));
@@ -158,7 +176,7 @@ PluginManager.registerCommand(pluginName, command_processTinyMedal, function () 
   $gameSystem.processTinyMedal();
   if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
     const reservedMessage = reservedRewardMessages.shift();
-    reservedMessage.show();
+    reservedMessage?.show();
   }
 });
 
@@ -167,8 +185,8 @@ PluginManager.registerCommand(pluginName, command_processTinyMedal, function () 
  * @param {boolean[]} v2Array
  * @return {{[key: string]: boolean}}
  */
-function convertV2DataToV3(v2Array) {
-  const result = {};
+function convertV2DataToV3(v2Array: boolean[]) {
+  const result: { [key: string]: boolean } = {};
   if (v2Array.length === 0) {
     return result;
   }
@@ -187,7 +205,7 @@ function convertV2DataToV3(v2Array) {
 /**
  * @param {Game_System.prototype} gameSystem
  */
-function Game_System_TinyMedalMixIn(gameSystem) {
+function Game_System_TinyMedalMixIn(gameSystem: Game_System) {
   const _initialize = gameSystem.initialize;
   gameSystem.initialize = function () {
     _initialize.call(this);
@@ -205,7 +223,7 @@ function Game_System_TinyMedalMixIn(gameSystem) {
    * メダル報酬獲得フラグの更新
    * @param {string} rewardKey 報酬ID
    */
-  gameSystem.completeMedalReward = function (rewardKey) {
+  gameSystem.completeMedalReward = function (rewardKey: string) {
     this._medalRewardsCompletion[rewardKey] = true;
   };
 
@@ -245,18 +263,18 @@ Game_System_TinyMedalMixIn(Game_System.prototype);
 /**
  * @param {Game_Party.prototype} gameParty
  */
-function Game_Party_TinyMedalMixIn(gameParty) {
+function Game_Party_TinyMedalMixIn(gameParty: Game_Party) {
   /**
    * @return {number} メダルアイテムの数
    */
-  gameParty.numMedalItems = function () {
+  gameParty.numMedalItems = function (): number {
     return this.numItems($dataItems[settings.medalItem]);
   };
 
   /**
    * @return {boolean} メダルアイテムを持っているかどうか
    */
-  gameParty.hasMedalItem = function () {
+  gameParty.hasMedalItem = function (): boolean {
     return this.hasItem($dataItems[settings.medalItem]);
   };
 
@@ -264,7 +282,7 @@ function Game_Party_TinyMedalMixIn(gameParty) {
    * 所持しているメダルアイテムをすべて失う
    */
   gameParty.loseAllMedalItem = function () {
-    this.loseItem($dataItems[settings.medalItem], this.numMedalItems());
+    this.loseItem($dataItems[settings.medalItem], this.numMedalItems(), false);
   };
 }
 
@@ -273,7 +291,7 @@ Game_Party_TinyMedalMixIn(Game_Party.prototype);
 /**
  * @param {Game_Interpreter.prototype} gameInterpreter
  */
-function Game_Interpreter_TinyMedalMixIn(gameInterpreter) {
+function Game_Interpreter_TinyMedalMixIn(gameInterpreter: Game_Interpreter) {
   const _executeCommand = gameInterpreter.executeCommand;
   gameInterpreter.executeCommand = function () {
     /**
@@ -292,7 +310,7 @@ function Game_Interpreter_TinyMedalMixIn(gameInterpreter) {
   gameInterpreter.processReservedRewardMessages = function () {
     if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
       const reservedMessage = reservedRewardMessages.shift();
-      reservedMessage.show();
+      reservedMessage?.show();
     }
   };
 }
@@ -300,10 +318,12 @@ function Game_Interpreter_TinyMedalMixIn(gameInterpreter) {
 Game_Interpreter_TinyMedalMixIn(Game_Interpreter.prototype);
 
 class Scene_TinyMedal extends Scene_Base {
-  constructor() {
-    super();
-    this.initialize.apply(this, arguments);
-  }
+  _rewardsAutoGained: boolean;
+  _backgroundSprite: Sprite;
+  _helpWindow: Window_Help;
+  _menuWindow: Window_MedalMenu;
+  _rewardsWindow: Window_MedalRewardList;
+  _countWindow: Window_MedalCount;
 
   initialize() {
     Scene_Base.prototype.initialize.call(this);
@@ -341,32 +361,20 @@ class Scene_TinyMedal extends Scene_Base {
     this.addChild(this._countWindow);
   }
 
-  /**
-   * @return {Rectangle}
-   */
   helpWindowRect() {
     return new Rectangle(0, 0, Graphics.boxWidth, this.calcWindowHeight(2, false));
   }
 
-  /**
-   * @return {Rectangle}
-   */
   medalMenuWindowRect() {
     return new Rectangle(0, this._helpWindow.height, 240, this.calcWindowHeight(3, true));
   }
 
-  /**
-   * @return {Rectangle}
-   */
   medalRewardListWindowRect() {
     const x = this._menuWindow.width;
     const y = this._helpWindow.height;
     return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
   }
 
-  /**
-   * @return {Rectangle}
-   */
   medalCountWindowRect() {
     const height = this.calcWindowHeight(1, true);
     return new Rectangle(0, Graphics.boxHeight - height, 240, height);
@@ -389,7 +397,6 @@ class Scene_TinyMedal extends Scene_Base {
 
   commandShowRewards() {
     this._menuWindow.deselect();
-    this._rewardsWindow.selectLast();
     this._rewardsWindow.activate();
   }
 
@@ -408,10 +415,92 @@ class Window_MedalMenu extends Window_Command {
   }
 }
 
-class Window_MedalRewardList extends Window_ItemList {
-  constructor(rect) {
+type Constructor<T = Window_Selectable> = new (...args: any[]) => T;
+function Window_ItemListLikeMixIn<TWindow extends Constructor, TItem>(windowClass: TWindow) {
+  return class extends windowClass {
+    _data: TItem[];
+
+    maxCols() {
+      return 2;
+    };
+
+    public colSpacing(): number {
+      return 16;
+    }
+
+    public maxItems(): number {
+      return this._data ? this._data.length : 1;
+    }
+
+    item(): TItem | null {
+      return this.itemAt(this.index());
+    }
+
+    itemAt(index: number): TItem | null {
+      return this._data && index >= 0 ? this._data[index] : null;
+    }
+
+    public isCurrentItemEnabled(): boolean {
+      return this.isEnabled(this.item());
+    }
+
+    isEnabled(item: TItem | null): boolean {
+      return false;
+    }
+
+    includes(item: TItem): boolean {
+      return false;
+    }
+
+    makeItemList(): void {
+    }
+
+    public drawItem(index: number): void {
+      const item = this.itemAt(index);
+      if (item) {
+        const numberWidth = this.numberWidth();
+        const rect = this.itemLineRect(index);
+        this.changePaintOpacity(this.isEnabled(item));
+        this.drawItemName(this.drawableItem(item), rect.x, rect.y, rect.width - numberWidth);
+        this.drawItemNumber(item, rect.x, rect.y, rect.width);
+        this.changePaintOpacity(true);
+      }
+    }
+
+    drawableItem(item: TItem): DataManager.DrawableItem|null {
+      return null;
+    }
+
+    numberWidth(): number {
+      return this.textWidth("000");
+    }
+
+    needsNumber(): boolean {
+      return false;
+    }
+
+    drawItemNumber(item: TItem, x: number, y: number, width: number) {
+      if (this.needsNumber()) {
+        this.drawText(":", x, y, width - this.textWidth("00"), "right");
+        this.drawText(`${this.number(item)}`, x, y, width, "right");
+      }
+    }
+
+    number(item: TItem): number {
+      return 0;
+    }
+
+    refresh() {
+      this.makeItemList();
+      super.refresh();
+    }
+  }
+}
+
+class Window_MedalRewardList extends Window_ItemListLikeMixIn<typeof Window_Selectable, RewardItem>(Window_Selectable) {
+  constructor(rect: Rectangle) {
     super(rect);
-    this.initialize.apply(this, arguments);
+    this.initialize(rect);
     this.refresh();
   }
 
@@ -419,7 +508,7 @@ class Window_MedalRewardList extends Window_ItemList {
     return 1;
   }
 
-  isEnabled(item) {
+  isEnabled(item: RewardItem): boolean {
     return !item.completed();
   }
 
@@ -427,26 +516,24 @@ class Window_MedalRewardList extends Window_ItemList {
     this._data = rewardItems;
   }
 
-  drawItem(index) {
-    const item = this._data[index];
-    if (item) {
-      const numberWidth = this.numberWidth();
-      let rect = this.itemRect(index);
-      rect.width -= this.itemPadding();
-      this.changePaintOpacity(this.isEnabled(item));
-      this.drawItemName(item.itemData, rect.x, rect.y, rect.width - numberWidth);
-      this.drawItemNumber(item, rect.x, rect.y, rect.width);
-      this.changePaintOpacity(1);
-    }
+  includes(item: RewardItem): boolean {
+    return true;
   }
 
-  drawItemNumber(item, x, y, width) {
-    this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-    this.drawText(item.medalCount, x, y, width, 'right');
+  drawableItem(item: RewardItem): DataManager.DrawableItem | null {
+    return item.itemData;
+  }
+
+  needsNumber(): boolean {
+    return true;
+  }
+
+  number(item: RewardItem): number {
+    return item.medalCount;
   }
 
   updateHelp() {
-    this.setHelpWindowItem(this.item().itemData);
+    this.setHelpWindowItem(this.item()?.itemData || null);
   }
 }
 
@@ -459,3 +546,8 @@ class Window_MedalCount extends Window_Gold {
     return settings.medalUnit;
   }
 }
+
+declare global {
+  var Data_TinyMedal_RewardItem: typeof RewardItem;
+}
+globalThis.Data_TinyMedal_RewardItem = RewardItem;

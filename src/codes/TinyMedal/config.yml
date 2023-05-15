@@ -3,6 +3,10 @@ DarkPlasma_TinyMedal:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/05/15
+      version: 3.1.0
+      description: 'typescript移行'
+    - description: '報酬メッセージに交換に必要な枚数を含める機能追加'
     - date: 2022/05/14
       version: 3.0.0
       description: '報酬獲得済みフラグのキーを変更（2.x以前とセーブデータ互換性がありません）'
@@ -87,7 +91,9 @@ DarkPlasma_TinyMedal:
         ja: 報酬メッセージ
       type: RewardMessage[]
       default:
-        - message: '${itemName} を手に入れた！'
+        - message: |
+            メダルを${medalCount}個集めた。
+            「${itemName}」を手に入れた！
           faceFile: ''
           faceIndex: 0
     - param: migrateV2ToV3
@@ -157,11 +163,13 @@ DarkPlasma_TinyMedal:
     RewardMessage:
       - param: message
         desc:
-          ja: 報酬をもらった際のメッセージ
+          ja: 報酬をもらった際のメッセージ。特殊な書式はヘルプ参照
         text:
           ja: 報酬メッセージ
         type: multiline_string
-        default: ${itemName} を手に入れた！
+        default: |
+            メダルを${medalCount}個集めた。
+            「${itemName}」を手に入れた！
       - param: faceFile
         desc:
           ja: 報酬メッセージの顔グラファイル
@@ -195,6 +203,15 @@ DarkPlasma_TinyMedal:
 
       ゲームのリリース後にキーとなる値を変更してしまうと、
       セーブデータ互換性を破壊することに注意してください。
+
+      報酬メッセージの特殊な書式
+      ${itemName}: 報酬アイテム名
+      ${medalCount}: その報酬獲得に必要なメダル数
+
+      報酬メッセージの例:
+      よし！ それでは メダルを
+      ${medalCount}枚 集めた ほうびとして
+      ${itemName} を さずけようぞ！
 
       2.xからのセーブデータ変換について
       この機能をONにした場合、2.x以前を使用していたときのセーブデータを
