@@ -115,7 +115,9 @@ class TypedParameter {
                     })
                     .join(',')
                 );
-                return withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`;
+                return withoutExtraQuotes
+                  ? `{${objectKeyValue}}`
+                  : `"{${objectKeyValue.replace(/\n/, '\\n')}}"`;
               })
               .join(',')}]`;
             return result;

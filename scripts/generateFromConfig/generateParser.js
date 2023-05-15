@@ -72,7 +72,7 @@ function generateParser(config, parameter, symbolType) {
 
 function stringParser(parameter, symbolType) {
   const default_ = parameter.default ? (parameter.default.ja ? parameter.default.ja : parameter.default) : '';
-  return `String(${parameterSymbol(parameter, symbolType)} || \`${default_}\`)`;
+  return `String(${parameterSymbol(parameter, symbolType)} || \`${default_.replace(/\n/g, '\\n')}\`)`;
 }
 
 function numberParser(parameter, symbolType) {
@@ -92,7 +92,11 @@ function arrayParser(config, parameter, symbolType) {
   if (parameter.options) {
     subParameter.options = parameter.options;
   }
-  const default_ = parameter.default ? parameterObject.defaultText('ja', true).replace(/\\/g, '') : '[]';
+  const default_ = parameter.default
+    ? parameterObject.defaultText('ja', true)
+        .replace(/\\/g, '')
+        .replace(/\n/g, '\\n')
+    : '[]';
   return `JSON.parse(${parameterSymbol(parameter, symbolType)} || '${default_}').map(${subParameter.symbol} => {
     return ${generateParser(config, subParameter, symbolType)};
   })`;
@@ -102,7 +106,11 @@ function structParser(config, parameter, symbolType) {
   const structure = config.structures[parameter.type];
   if (!structure) throw `unknown structure: ${parameter.type}`;
   const parameterObject = new PluginParameter(parameter);
-  const default_ = parameter.default ? parameterObject.defaultText('ja', true).replace(/\\/g, '') : '{}';
+  const default_ = parameter.default
+    ? parameterObject.defaultText('ja', true)
+        .replace(/\\/g, '')
+        .replace(/\n/g, '\\n')
+    : '{}';
   return `((parameter) => {
     const parsed = JSON.parse(parameter);
     return {
