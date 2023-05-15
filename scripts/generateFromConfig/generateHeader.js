@@ -117,7 +117,7 @@ class TypedParameter {
                 );
                 return withoutExtraQuotes
                   ? `{${objectKeyValue}}`
-                  : `"{${objectKeyValue.replace(/\n/, '\\n')}}"`;
+                  : `"{${objectKeyValue}}"`;
               })
               .join(',')}]`;
             return result;
@@ -226,7 +226,7 @@ class PluginParameter extends TypedParameter {
       }
       const default_ = this.defaultText(language);
       if (default_ || typeof default_ === 'boolean' || Number.isFinite(default_)) {
-        result.push(` * @default ${default_}`);
+        result.push(` * @default ${default_}`.replace(/\n/g, '\\n'));
       }
     }
     ['parent', 'min', 'max', 'dir']
@@ -275,7 +275,7 @@ class PluginCommandArgument extends TypedParameter {
     }
     const default_ = this.defaultText(language);
     if (default_ || typeof default_ === 'boolean' || Number.isFinite(default_)) {
-      result.push(` * @default ${default_}`);
+      result.push(` * @default ${default_}`.replace(/\n/g, '\\n'));
     }
     ['min', 'max', 'dir']
       .filter((annotation) => {
