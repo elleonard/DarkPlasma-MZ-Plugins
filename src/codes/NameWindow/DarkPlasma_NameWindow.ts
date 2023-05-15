@@ -1,10 +1,12 @@
 /// <reference path="./NameWindow.d.ts" />
+
 import { settings } from './_build/DarkPlasma_NameWindow_parameters';
-function ColorManager_NameWindowMixIn(colorManager) {
+
+function ColorManager_NameWindowMixIn(colorManager: typeof ColorManager) {
   /**
    * アクター名から名前の色を返す
    */
-  colorManager.colorByName = function (name) {
+  colorManager.colorByName = function (name: string): string | number {
     const actor = $gameActors.byName(name);
     if (actor) {
       const colorSetting = settings.actorColors.find(
@@ -14,17 +16,20 @@ function ColorManager_NameWindowMixIn(colorManager) {
     }
     return settings.defaultTextColor;
   };
+
   /**
    * 色付け制御文字を加えた名前
    */
-  colorManager.coloredName = function (name) {
+  colorManager.coloredName = function (name: string): string {
     return name
       ? name.replace(new RegExp(`^${name}$`, 'gi'), `\\C[${ColorManager.colorByName(name)}]${name}\\C[0]`)
       : '';
   };
 }
+
 ColorManager_NameWindowMixIn(ColorManager);
-function Game_Actors_NameWindowMixIn(gameActors) {
+
+function Game_Actors_NameWindowMixIn(gameActors: Game_Actors) {
   /**
    * アクター名からアクターを取得する
    */
@@ -39,8 +44,10 @@ function Game_Actors_NameWindowMixIn(gameActors) {
     return null;
   };
 }
+
 Game_Actors_NameWindowMixIn(Game_Actors.prototype);
-function Game_Message_NameWindowMixIn(gameMessage) {
+
+function Game_Message_NameWindowMixIn(gameMessage: Game_Message) {
   const _setSpeakerName = gameMessage.setSpeakerName;
   gameMessage.setSpeakerName = function (speakerName) {
     if (!/\\C[#?0-9+]*/gi.test(speakerName)) {
@@ -50,12 +57,15 @@ function Game_Message_NameWindowMixIn(gameMessage) {
     }
   };
 }
+
 Game_Message_NameWindowMixIn(Game_Message.prototype);
-function Window_Message_NameWindowMixIn(windowClass) {
+
+function Window_Message_NameWindowMixIn(windowClass: Window_Message) {
   windowClass.convertEscapeCharacters = function (text) {
     text = Window_Base.prototype.convertEscapeCharacters.call(this, text);
     return this.convertNameWindow(text);
   };
+
   /**
    * 指定したテキストの中から名前ウィンドウにすべき箇所を探す
    */
@@ -79,12 +89,13 @@ function Window_Message_NameWindowMixIn(windowClass) {
       })
       .find((hit) => hit.idOrName && hit.idOrName[1]);
     if (hit) {
-      const name = hit.isActorId ? this.actorName(Number(hit.idOrName[1])) : hit.idOrName[1];
+      const name = hit.isActorId ? this.actorName(Number(hit.idOrName![1])) : hit.idOrName![1];
       return {
         name: ColorManager.coloredName(name),
         eraseTarget: hit.regExp,
       };
     }
+
     if (settings.autoNameWindow) {
       // 名前＋開きカッコを見つけ次第、名前ウィンドウを設定する
       const speakerReg = new RegExp('^(.+)(「|（)', 'gi');
@@ -101,6 +112,7 @@ function Window_Message_NameWindowMixIn(windowClass) {
             return ColorManager.coloredName(speakerName);
           }, this)
           .join('＆');
+
         if (target.length > 0) {
           return {
             name: speakerNameString,
@@ -111,6 +123,7 @@ function Window_Message_NameWindowMixIn(windowClass) {
     }
     return null;
   };
+
   windowClass.convertNameWindow = function (text) {
     const nameWindowTextInfo = this.findNameWindowTextInfo(text);
     if (nameWindowTextInfo) {
@@ -120,4 +133,5 @@ function Window_Message_NameWindowMixIn(windowClass) {
     return text;
   };
 }
+
 Window_Message_NameWindowMixIn(Window_Message.prototype);
