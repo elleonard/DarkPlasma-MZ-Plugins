@@ -1,9 +1,11 @@
-// DarkPlasma_TinyMedal 3.0.0
+// DarkPlasma_TinyMedal 3.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/15 3.1.0 typescript移行
+ *                  報酬メッセージに交換に必要な枚数を含める機能追加
  * 2022/05/14 3.0.0 報酬獲得済みフラグのキーを変更（2.x以前とセーブデータ互換性がありません）
  * 2021/07/05 2.2.2 MZ 1.3.2に対応
  * 2021/06/22 2.2.1 サブフォルダからの読み込みに対応
@@ -16,7 +18,7 @@
  * 2020/08/25 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc ちいさなメダルシステム
  * @author DarkPlasma
  * @license MIT
@@ -65,7 +67,7 @@
  * @desc 報酬メッセージリスト
  * @text 報酬メッセージ
  * @type struct<RewardMessage>[]
- * @default ["{\"message\":\"${itemName} を手に入れた！\",\"faceFile\":\"\",\"faceIndex\":\"0\"}"]
+ * @default ["{\"message\":\"メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n\",\"faceFile\":\"\",\"faceIndex\":\"0\"}"]
  *
  * @param migrateV2ToV3
  * @desc 2.xからバージョンアップする際のセーブデータ変換をするかどうか。詳細はヘルプ
@@ -82,7 +84,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 3.0.0
+ * version: 3.1.0
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  *
  * 同じメダル数で同じアイテム・武器・防具の報酬を
@@ -98,6 +100,15 @@
  *
  * ゲームのリリース後にキーとなる値を変更してしまうと、
  * セーブデータ互換性を破壊することに注意してください。
+ *
+ * 報酬メッセージの特殊な書式
+ * ${itemName}: 報酬アイテム名
+ * ${medalCount}: その報酬獲得に必要なメダル数
+ *
+ * 報酬メッセージの例:
+ * よし！ それでは メダルを
+ * ${medalCount}枚 集めた ほうびとして
+ * ${itemName} を さずけようぞ！
  *
  * 2.xからのセーブデータ変換について
  * この機能をONにした場合、2.x以前を使用していたときのセーブデータを
@@ -151,10 +162,10 @@
  */
 /*~struct~RewardMessage:
  * @param message
- * @desc 報酬をもらった際のメッセージ
+ * @desc 報酬をもらった際のメッセージ。特殊な書式はヘルプ参照
  * @text 報酬メッセージ
  * @type multiline_string
- * @default ${itemName} を手に入れた！
+ * @default メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n
  *
  * @param faceFile
  * @desc 報酬メッセージの顔グラファイル
@@ -187,7 +198,7 @@
   const settings = {
     medalItem: Number(pluginParameters.medalItem || 1),
     medalCountVariable: Number(pluginParameters.medalCountVariable || 1),
-    medalUnit: String(pluginParameters.medalUnit || '枚'),
+    medalUnit: String(pluginParameters.medalUnit || `枚`),
     rewardItems: JSON.parse(pluginParameters.rewardItems || '[]').map((e) => {
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
@@ -216,13 +227,14 @@
       })(e || '{}');
     }),
     rewardMessages: JSON.parse(
-      pluginParameters.rewardMessages || '[{"message":"${itemName} を手に入れた！","faceFile":"","faceIndex":"0"}]'
+      pluginParameters.rewardMessages ||
+        '[{"message":"メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n","faceFile":"","faceIndex":"0"}]'
     ).map((e) => {
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
-          message: String(parsed.message || '${itemName} を手に入れた！'),
-          faceFile: String(parsed.faceFile || ''),
+          message: String(parsed.message || `メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n`),
+          faceFile: String(parsed.faceFile || ``),
           faceIndex: Number(parsed.faceIndex || 0),
         };
       })(e || '{}');
@@ -235,12 +247,10 @@
     WEAPON: 2,
     ARMOR: 3,
   };
-
   /**
    * @type {RewardMessage[]}
    */
   let reservedRewardMessages = [];
-
   class RewardItem {
     /**
      * @param {number} id ID
@@ -252,7 +262,6 @@
       this._kind = kind;
       this._medalCount = medalCount;
     }
-
     /**
      * @param {object} object パース済みオブジェクト
      * @param {number} kind アイテム種別
@@ -261,11 +270,9 @@
     static fromObject(object, kind) {
       return new RewardItem(object.id, kind, object.medalCount);
     }
-
     get medalCount() {
       return this._medalCount;
     }
-
     get itemData() {
       switch (this._kind) {
         case ITEM_KIND.ITEM:
@@ -278,7 +285,6 @@
           return null;
       }
     }
-
     /**
      * 報酬獲得フラグ用のキー
      * @return {string}
@@ -286,20 +292,22 @@
     rewardKey() {
       return `${this._medalCount}_${this._kind}_${this._id}`;
     }
-
     /**
      * 報酬アイテムを入手する
      */
     complete() {
-      $gameParty.gainItem(this.itemData, 1);
+      const item = this.itemData;
+      if (!item) {
+        return;
+      }
+      $gameParty.gainItem(item, 1);
       $gameSystem.completeMedalReward(this.rewardKey());
       rewardMessages
         .map((message) => {
-          return new RewardMessage(this.itemData.name, message);
+          return new RewardMessage(item.name, this._medalCount, message);
         })
         .forEach((message) => message.reserve());
     }
-
     /**
      * @return {boolean} 入手済みかどうか
      */
@@ -307,31 +315,22 @@
       return $gameSystem.isMedalRewardCompleted(this.rewardKey());
     }
   }
-
-  globalThis.Data_TinyMedal_RewardItem = RewardItem;
-
   class RewardMessage {
-    /**
-     * @param {string} itemName アイテム名
-     * @param {RewardMessageStatic} staticMessage 固定部分
-     */
-    constructor(itemName, staticMessage) {
+    constructor(itemName, requiredMedalCount, staticMessage) {
       this._itemName = itemName;
+      this._requiredMedalCount = requiredMedalCount;
       this._staticMessage = staticMessage;
     }
-
     reserve() {
       reservedRewardMessages.push(this);
     }
-
     /**
      * アイテムを入手した際の報酬メッセージを表示する
      */
     show() {
-      this._staticMessage.show(this._itemName);
+      this._staticMessage.show(this._itemName, this._requiredMedalCount);
     }
   }
-
   /**
    * 報酬メッセージの固定部分
    */
@@ -341,21 +340,19 @@
       this._faceFile = faceFile;
       this._faceIndex = faceIndex;
     }
-
     static fromObject(object) {
       return new RewardMessageStatic(object.message, object.faceFile, object.faceIndex);
     }
-
     /**
      * アイテムを入手した際の報酬メッセージを表示する
-     * @param {string} itemName アイテム名
      */
-    show(itemName) {
+    show(itemName, requiredMedalCount) {
       this.showFace();
-      const message = this._message.replace(/\$\{itemName\}/gi, itemName);
+      const message = this._message
+        .replace(/\$\{itemName\}/gi, itemName)
+        .replace(/\$\{medalCount\}/gi, `${requiredMedalCount}`);
       $gameMessage.add(message);
     }
-
     showFace() {
       if (this._faceFile) {
         $gameMessage.setFaceImage(this._faceFile, this._faceIndex);
@@ -364,7 +361,6 @@
       }
     }
   }
-
   /**
    * @type {RewardItem[]}
    */
@@ -372,24 +368,20 @@
     .map((rewardItem) => RewardItem.fromObject(rewardItem, ITEM_KIND.ITEM))
     .concat(settings.rewardWeapons.map((rewardWeapon) => RewardItem.fromObject(rewardWeapon, ITEM_KIND.WEAPON)))
     .concat(settings.rewardArmors.map((rewardArmor) => RewardItem.fromObject(rewardArmor, ITEM_KIND.ARMOR)));
-
   /**
    * @type {RewardMessageStatic[]}
    */
   const rewardMessages = settings.rewardMessages.map((rewardMessage) => RewardMessageStatic.fromObject(rewardMessage));
-
   PluginManager.registerCommand(pluginName, command_gotoSceneMedal, function () {
     SceneManager.push(Scene_TinyMedal);
   });
-
   PluginManager.registerCommand(pluginName, command_processTinyMedal, function () {
     $gameSystem.processTinyMedal();
     if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
       const reservedMessage = reservedRewardMessages.shift();
-      reservedMessage.show();
+      reservedMessage?.show();
     }
   });
-
   /**
    * 2.xのデータから3.xのデータに変換する
    * @param {boolean[]} v2Array
@@ -411,7 +403,6 @@
     });
     return result;
   }
-
   /**
    * @param {Game_System.prototype} gameSystem
    */
@@ -421,14 +412,12 @@
       _initialize.call(this);
       this.initializeMedalRewardsCompletion();
     };
-
     /**
      * メダル報酬獲得フラグの初期化
      */
     gameSystem.initializeMedalRewardsCompletion = function () {
       this._medalRewardsCompletion = {};
     };
-
     /**
      * メダル報酬獲得フラグの更新
      * @param {string} rewardKey 報酬ID
@@ -436,11 +425,9 @@
     gameSystem.completeMedalReward = function (rewardKey) {
       this._medalRewardsCompletion[rewardKey] = true;
     };
-
     gameSystem.isMedalRewardCompleted = function (rewardKey) {
       return this._medalRewardsCompletion[rewardKey] || false;
     };
-
     const _onAfterLoad = gameSystem.onAfterLoad;
     gameSystem.onAfterLoad = function () {
       _onAfterLoad.call(this);
@@ -454,7 +441,6 @@
         this._medalRewardsCompletion = convertV2DataToV3(this._medalRewardsCompletion);
       }
     };
-
     gameSystem.processTinyMedal = function () {
       const beforeCount = $gameVariables.value(settings.medalCountVariable);
       $gameVariables.setValue(settings.medalCountVariable, beforeCount + $gameParty.numMedalItems());
@@ -467,9 +453,7 @@
       gainRewards.forEach((rewardItem) => rewardItem.complete());
     };
   }
-
   Game_System_TinyMedalMixIn(Game_System.prototype);
-
   /**
    * @param {Game_Party.prototype} gameParty
    */
@@ -480,24 +464,20 @@
     gameParty.numMedalItems = function () {
       return this.numItems($dataItems[settings.medalItem]);
     };
-
     /**
      * @return {boolean} メダルアイテムを持っているかどうか
      */
     gameParty.hasMedalItem = function () {
       return this.hasItem($dataItems[settings.medalItem]);
     };
-
     /**
      * 所持しているメダルアイテムをすべて失う
      */
     gameParty.loseAllMedalItem = function () {
-      this.loseItem($dataItems[settings.medalItem], this.numMedalItems());
+      this.loseItem($dataItems[settings.medalItem], this.numMedalItems(), false);
     };
   }
-
   Game_Party_TinyMedalMixIn(Game_Party.prototype);
-
   /**
    * @param {Game_Interpreter.prototype} gameInterpreter
    */
@@ -513,31 +493,22 @@
       }
       return _executeCommand.call(this);
     };
-
     /**
      * 報酬メッセージを表示する
      */
     gameInterpreter.processReservedRewardMessages = function () {
       if (!$gameMessage.isBusy() && reservedRewardMessages.length > 0) {
         const reservedMessage = reservedRewardMessages.shift();
-        reservedMessage.show();
+        reservedMessage?.show();
       }
     };
   }
-
   Game_Interpreter_TinyMedalMixIn(Game_Interpreter.prototype);
-
   class Scene_TinyMedal extends Scene_Base {
-    constructor() {
-      super();
-      this.initialize.apply(this, arguments);
-    }
-
     initialize() {
       Scene_Base.prototype.initialize.call(this);
       this._rewardsAutoGained = false;
     }
-
     create() {
       Scene_Base.prototype.create.call(this);
       this.createBackground();
@@ -546,13 +517,11 @@
         this.createMedalWindow();
       }
     }
-
     createBackground() {
       this._backgroundSprite = new Sprite();
       this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
       this.addChild(this._backgroundSprite);
     }
-
     createMedalWindow() {
       this._helpWindow = new Window_Help(this.helpWindowRect());
       this._menuWindow = new Window_MedalMenu(this.medalMenuWindowRect());
@@ -568,45 +537,27 @@
       this.addChild(this._rewardsWindow);
       this.addChild(this._countWindow);
     }
-
-    /**
-     * @return {Rectangle}
-     */
     helpWindowRect() {
       return new Rectangle(0, 0, Graphics.boxWidth, this.calcWindowHeight(2, false));
     }
-
-    /**
-     * @return {Rectangle}
-     */
     medalMenuWindowRect() {
       return new Rectangle(0, this._helpWindow.height, 240, this.calcWindowHeight(3, true));
     }
-
-    /**
-     * @return {Rectangle}
-     */
     medalRewardListWindowRect() {
       const x = this._menuWindow.width;
       const y = this._helpWindow.height;
       return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
     }
-
-    /**
-     * @return {Rectangle}
-     */
     medalCountWindowRect() {
       const height = this.calcWindowHeight(1, true);
       return new Rectangle(0, Graphics.boxHeight - height, 240, height);
     }
-
     /**
      * メダルを預かってもらう
      */
     processMedal() {
       $gameSystem.processTinyMedal();
     }
-
     /**
      * 所持しているメダルを預かってもらう
      */
@@ -614,20 +565,16 @@
       this.processMedal();
       this.popScene();
     }
-
     commandShowRewards() {
       this._menuWindow.deselect();
-      this._rewardsWindow.selectLast();
       this._rewardsWindow.activate();
     }
-
     onRewardsListCancel() {
       this._rewardsWindow.deselect();
       this._menuWindow.activate();
       this._menuWindow.selectSymbol('showRewards');
     }
   }
-
   class Window_MedalMenu extends Window_Command {
     makeCommandList() {
       this.addCommand('メダルを預ける', 'pushMedal', $gameParty.hasMedalItem());
@@ -635,56 +582,106 @@
       this.addCommand('閉じる', 'cancel');
     }
   }
-
-  class Window_MedalRewardList extends Window_ItemList {
+  function Window_ItemListLikeMixIn(windowClass) {
+    return class extends windowClass {
+      maxCols() {
+        return 2;
+      }
+      colSpacing() {
+        return 16;
+      }
+      maxItems() {
+        return this._data ? this._data.length : 1;
+      }
+      item() {
+        return this.itemAt(this.index());
+      }
+      itemAt(index) {
+        return this._data && index >= 0 ? this._data[index] : null;
+      }
+      isCurrentItemEnabled() {
+        return this.isEnabled(this.item());
+      }
+      isEnabled(item) {
+        return false;
+      }
+      includes(item) {
+        return false;
+      }
+      makeItemList() {}
+      drawItem(index) {
+        const item = this.itemAt(index);
+        if (item) {
+          const numberWidth = this.numberWidth();
+          const rect = this.itemLineRect(index);
+          this.changePaintOpacity(this.isEnabled(item));
+          this.drawItemName(this.drawableItem(item), rect.x, rect.y, rect.width - numberWidth);
+          this.drawItemNumber(item, rect.x, rect.y, rect.width);
+          this.changePaintOpacity(true);
+        }
+      }
+      drawableItem(item) {
+        return null;
+      }
+      numberWidth() {
+        return this.textWidth('000');
+      }
+      needsNumber() {
+        return false;
+      }
+      drawItemNumber(item, x, y, width) {
+        if (this.needsNumber()) {
+          this.drawText(':', x, y, width - this.textWidth('00'), 'right');
+          this.drawText(`${this.number(item)}`, x, y, width, 'right');
+        }
+      }
+      number(item) {
+        return 0;
+      }
+      refresh() {
+        this.makeItemList();
+        super.refresh();
+      }
+    };
+  }
+  class Window_MedalRewardList extends Window_ItemListLikeMixIn(Window_Selectable) {
     constructor(rect) {
       super(rect);
-      this.initialize.apply(this, arguments);
+      this.initialize(rect);
       this.refresh();
     }
-
     maxCols() {
       return 1;
     }
-
     isEnabled(item) {
       return !item.completed();
     }
-
     makeItemList() {
       this._data = rewardItems;
     }
-
-    drawItem(index) {
-      const item = this._data[index];
-      if (item) {
-        const numberWidth = this.numberWidth();
-        let rect = this.itemRect(index);
-        rect.width -= this.itemPadding();
-        this.changePaintOpacity(this.isEnabled(item));
-        this.drawItemName(item.itemData, rect.x, rect.y, rect.width - numberWidth);
-        this.drawItemNumber(item, rect.x, rect.y, rect.width);
-        this.changePaintOpacity(1);
-      }
+    includes(item) {
+      return true;
     }
-
-    drawItemNumber(item, x, y, width) {
-      this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-      this.drawText(item.medalCount, x, y, width, 'right');
+    drawableItem(item) {
+      return item.itemData;
     }
-
+    needsNumber() {
+      return true;
+    }
+    number(item) {
+      return item.medalCount;
+    }
     updateHelp() {
-      this.setHelpWindowItem(this.item().itemData);
+      this.setHelpWindowItem(this.item()?.itemData || null);
     }
   }
-
   class Window_MedalCount extends Window_Gold {
     value() {
       return $gameParty.numMedalItems();
     }
-
     currencyUnit() {
       return settings.medalUnit;
     }
   }
+  globalThis.Data_TinyMedal_RewardItem = RewardItem;
 })();

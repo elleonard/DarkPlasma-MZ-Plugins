@@ -10,7 +10,7 @@
  * 2020/09/11 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc 戦闘でアイテムを選択した際、即座に消費する
  * @author DarkPlasma
  * @license MIT

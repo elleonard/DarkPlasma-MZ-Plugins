@@ -1,16 +1,18 @@
-// DarkPlasma_NameWindow 2.0.2
+// DarkPlasma_NameWindow 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/15 2.0.3 プラグインパラメータの型を変更
+ *                  typescript移行
  * 2021/07/05 2.0.2 MZ 1.3.2に対応
  * 2021/06/22 2.0.1 サブフォルダからの読み込みに対応
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc 会話イベント中に名前ウィンドウを表示する
  * @author DarkPlasma
  * @license MIT
@@ -21,7 +23,7 @@
  * @param defaultTextColor
  * @desc 名前ウィンドウのデフォルト文字色
  * @text デフォルト文字色
- * @type number
+ * @type color
  * @default 6
  *
  * @param actorColors
@@ -43,7 +45,7 @@
  * @default true
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * メッセージテキストに以下のように記述すると名前ウィンドウを表示します。
  *
  * \n<***>
@@ -60,7 +62,7 @@
  * @param color
  * @desc 名前の色。色番号
  * @text 名前の色
- * @type string
+ * @type color
  * @default 6
  */
 (() => {
@@ -75,13 +77,15 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    defaultTextColor: Number(pluginParameters.defaultTextColor || 6),
+    defaultTextColor: pluginParameters.defaultTextColor?.startsWith('#')
+      ? String(pluginParameters.defaultTextColor)
+      : Number(pluginParameters.defaultTextColor || 6),
     actorColors: JSON.parse(pluginParameters.actorColors || '[]').map((e) => {
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
           actor: Number(parsed.actor || 0),
-          color: String(parsed.color || '6'),
+          color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 6),
         };
       })(e || '{}');
     }),
@@ -89,127 +93,125 @@
     forceAutoNameColor: String(pluginParameters.forceAutoNameColor || true) === 'true',
   };
 
-  Window_Message.prototype.convertEscapeCharacters = function (text) {
-    text = Window_Base.prototype.convertEscapeCharacters.call(this, text);
-    return this.convertNameWindow(text);
-  };
-
-  /**
-   * 指定したテキストの中から名前ウィンドウにすべき箇所を探す
-   */
-  Window_Message.prototype.findNameWindowTextInfo = function (text) {
-    const regExpAndPositions = [
-      {
-        regExp: /\x1bN\<(.*?)\>/gi,
-      },
-      {
-        regExp: /\x1bNDP\<(.*?)\>/gi,
-        isActorId: true,
-      },
-    ];
-    const hit = regExpAndPositions
-      .map((regExpAndPosition) => {
-        return {
-          regExp: new RegExp(regExpAndPosition.regExp),
-          idOrName: regExpAndPosition.regExp.exec(text),
-          isActorId: regExpAndPosition.isActorId,
-        };
-      })
-      .find((hit) => hit.idOrName && hit.idOrName[1]);
-    if (hit) {
-      name = hit.isActorId ? this.actorName(hit.idOrName[1]) : hit.idOrName[1];
-      return {
-        name: ColorManager.colorEscapedName(name),
-        eraseTarget: hit.regExp,
-      };
-    }
-
-    if (settings.autoNameWindow) {
-      // 名前＋開きカッコを見つけ次第、名前ウィンドウを設定する
-      const speakerReg = new RegExp('^(.+)(「|（)', 'gi');
-      const speaker = speakerReg.exec(text);
-      if (speaker !== null) {
-        let target = speaker[1].replace('\x1b}', '');
-        const eraseTarget = target;
-        if (settings.forceAutoNameColor) {
-          target = target.replace(/\x1bC\[(#?[0-9]*)\]/gi, '');
+  function ColorManager_NameWindowMixIn(colorManager) {
+    /**
+     * アクター名から名前の色を返す
+     */
+    colorManager.colorByName = function (name) {
+      const actor = $gameActors.byName(name);
+      if (actor) {
+        const colorSetting = settings.actorColors.find(
+          (actorColor) => Number(actorColor.actor) === Number(actor.actorId())
+        );
+        return colorSetting ? colorSetting.color : settings.defaultTextColor;
+      }
+      return settings.defaultTextColor;
+    };
+    /**
+     * 色付け制御文字を加えた名前
+     */
+    colorManager.coloredName = function (name) {
+      return name
+        ? name.replace(new RegExp(`^${name}$`, 'gi'), `\\C[${ColorManager.colorByName(name)}]${name}\\C[0]`)
+        : '';
+    };
+  }
+  ColorManager_NameWindowMixIn(ColorManager);
+  function Game_Actors_NameWindowMixIn(gameActors) {
+    /**
+     * アクター名からアクターを取得する
+     */
+    gameActors.byName = function (name) {
+      const actor = $dataActors.find((actor) => actor && actor.name === name);
+      if (actor) {
+        if (!this._data[actor.id]) {
+          this._data[actor.id] = new Game_Actor(actor.id);
         }
-        const speakerNames = target.split('＆');
-        const speakerNameString = speakerNames
-          .map((speakerName) => {
-            return ColorManager.colorEscapedName(speakerName);
-          }, this)
-          .join('＆');
-
-        if (target.length > 0) {
+        return this._data[actor.id];
+      }
+      return null;
+    };
+  }
+  Game_Actors_NameWindowMixIn(Game_Actors.prototype);
+  function Game_Message_NameWindowMixIn(gameMessage) {
+    const _setSpeakerName = gameMessage.setSpeakerName;
+    gameMessage.setSpeakerName = function (speakerName) {
+      if (!/\\C[#?0-9+]*/gi.test(speakerName)) {
+        _setSpeakerName.call(this, ColorManager.coloredName(speakerName));
+      } else {
+        _setSpeakerName.call(this, speakerName);
+      }
+    };
+  }
+  Game_Message_NameWindowMixIn(Game_Message.prototype);
+  function Window_Message_NameWindowMixIn(windowClass) {
+    windowClass.convertEscapeCharacters = function (text) {
+      text = Window_Base.prototype.convertEscapeCharacters.call(this, text);
+      return this.convertNameWindow(text);
+    };
+    /**
+     * 指定したテキストの中から名前ウィンドウにすべき箇所を探す
+     */
+    windowClass.findNameWindowTextInfo = function (text) {
+      const regExpAndPositions = [
+        {
+          regExp: /\x1bN\<(.*?)\>/gi,
+        },
+        {
+          regExp: /\x1bNDP\<(.*?)\>/gi,
+          isActorId: true,
+        },
+      ];
+      const hit = regExpAndPositions
+        .map((regExpAndPosition) => {
           return {
-            name: speakerNameString,
-            eraseTarget: eraseTarget,
+            regExp: new RegExp(regExpAndPosition.regExp),
+            idOrName: regExpAndPosition.regExp.exec(text),
+            isActorId: regExpAndPosition.isActorId,
           };
+        })
+        .find((hit) => hit.idOrName && hit.idOrName[1]);
+      if (hit) {
+        const name = hit.isActorId ? this.actorName(Number(hit.idOrName[1])) : hit.idOrName[1];
+        return {
+          name: ColorManager.coloredName(name),
+          eraseTarget: hit.regExp,
+        };
+      }
+      if (settings.autoNameWindow) {
+        // 名前＋開きカッコを見つけ次第、名前ウィンドウを設定する
+        const speakerReg = new RegExp('^(.+)(「|（)', 'gi');
+        const speaker = speakerReg.exec(text);
+        if (speaker !== null) {
+          let target = speaker[1].replace('\x1b}', '');
+          const eraseTarget = target;
+          if (settings.forceAutoNameColor) {
+            target = target.replace(/\x1bC\[(#?[0-9]*)\]/gi, '');
+          }
+          const speakerNames = target.split('＆');
+          const speakerNameString = speakerNames
+            .map((speakerName) => {
+              return ColorManager.coloredName(speakerName);
+            }, this)
+            .join('＆');
+          if (target.length > 0) {
+            return {
+              name: speakerNameString,
+              eraseTarget: eraseTarget,
+            };
+          }
         }
       }
-    }
-    return null;
-  };
-
-  Window_Message.prototype.convertNameWindow = function (text) {
-    const nameWindowTextInfo = this.findNameWindowTextInfo(text);
-    if (nameWindowTextInfo) {
-      text = text.replace(nameWindowTextInfo.eraseTarget, '');
-      $gameMessage.setSpeakerName(nameWindowTextInfo.name);
-    }
-    return text;
-  };
-
-  /**
-   * アクター名から名前の色を返す
-   * @param {string} name アクター名
-   * @return {string|number}
-   */
-  ColorManager.colorByName = function (name) {
-    const actor = $gameActors.byName(name);
-    if (actor) {
-      const colorSetting = settings.actorColors.find(
-        (actorColor) => Number(actorColor.actor) === Number(actor.actorId())
-      );
-      return colorSetting ? colorSetting.color : settings.defaultTextColor;
-    }
-    return settings.defaultTextColor;
-  };
-
-  /**
-   * 色付けエスケープ文字を加えた名前
-   * @param {string} name 名前
-   * @return {string}
-   */
-  ColorManager.colorEscapedName = function (name) {
-    return name
-      ? name.replace(new RegExp(`^${name}$`, 'gi'), `\\C[${ColorManager.colorByName(name)}]${name}\\C[0]`)
-      : null;
-  };
-
-  /**
-   * アクター名からアクターを取得する
-   * @param {string} name アクター名
-   * @return {Game_Actor}
-   */
-  Game_Actors.prototype.byName = function (name) {
-    const actor = $dataActors.find((actor) => actor && actor.name === name);
-    if (actor) {
-      if (!this._data[actor.id]) {
-        this._data[actor.id] = new Game_Actor(actor.id);
+      return null;
+    };
+    windowClass.convertNameWindow = function (text) {
+      const nameWindowTextInfo = this.findNameWindowTextInfo(text);
+      if (nameWindowTextInfo) {
+        text = text.replace(nameWindowTextInfo.eraseTarget, '');
+        $gameMessage.setSpeakerName(nameWindowTextInfo.name);
       }
-      return this._data[actor.id];
-    }
-    return null;
-  };
-
-  const _Game_Message_setSpeakerName = Game_Message.prototype.setSpeakerName;
-  Game_Message.prototype.setSpeakerName = function (speakerName) {
-    if (!/\\C[#?0-9+]*/gi.test(speakerName)) {
-      _Game_Message_setSpeakerName.call(this, ColorManager.colorEscapedName(speakerName));
-    } else {
-      _Game_Message_setSpeakerName.call(this, speakerName);
-    }
-  };
+      return text;
+    };
+  }
+  Window_Message_NameWindowMixIn(Window_Message.prototype);
 })();
