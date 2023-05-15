@@ -38,6 +38,8 @@ function paramToType(pluginId, param) {
     case TYPE_CATEGORIES.STRING:
     case TYPE_CATEGORIES.BOOLEAN:
       return typeCategory;
+    case TYPE_CATEGORIES.COLOR:
+      return "string|number";
     case TYPE_CATEGORIES.ARRAY:
       const arrayOf = {
         type: param.type.replace('[]', ''),

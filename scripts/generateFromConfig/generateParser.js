@@ -6,6 +6,7 @@ const TYPE_CATEGORIES = {
   BOOLEAN: "boolean",
   ARRAY: "array",
   STRUCT: "struct",
+  COLOR: "color",
 };
 
 function toJsTypeCategory(parameter) {
@@ -28,7 +29,6 @@ function toJsTypeCategory(parameter) {
     case 'switch':
     case 'variable':
     case 'common_event':
-    case 'color':
     case 'icon':
       return TYPE_CATEGORIES.NUMBER;
     case 'boolean':
@@ -39,6 +39,8 @@ function toJsTypeCategory(parameter) {
       } else {
         return TYPE_CATEGORIES.STRING;
       }
+    case 'color': // #始まりの16進数を許可する
+      return TYPE_CATEGORIES.COLOR;
     default:
       // structure or array
       if (parameter.type.endsWith('[]')) {
@@ -59,6 +61,9 @@ function generateParser(config, parameter, symbolType) {
       break;
     case TYPE_CATEGORIES.BOOLEAN:
       parser = booleanParser(parameter, symbolType);
+      break;
+    case TYPE_CATEGORIES.COLOR:
+      parser = colorParser(parameter, symbolType);
       break;
     case TYPE_CATEGORIES.ARRAY:
       parser = arrayParser(config, parameter, symbolType);
@@ -81,6 +86,10 @@ function numberParser(parameter, symbolType) {
 
 function booleanParser(parameter, symbolType) {
   return `String(${parameterSymbol(parameter, symbolType)} || ${parameter.default}) === 'true'`;
+}
+
+function colorParser(parameter, symbolType) {
+  return `${parameterSymbol(parameter, symbolType)}?.startsWith("#") ? String(${parameterSymbol(parameter, symbolType)}) : ${numberParser(parameter, symbolType)}`;
 }
 
 function arrayParser(config, parameter, symbolType) {
