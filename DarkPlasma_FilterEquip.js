@@ -1,9 +1,11 @@
-// DarkPlasma_FilterEquip 1.1.1
+// DarkPlasma_FilterEquip 1.2.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/21 1.2.0 絞り込み操作のキーを追加
+ *                  色設定のパラメータの型を変更
  * 2022/09/10 1.1.1 typescript移行
  * 2022/05/28 1.1.0 独自特徴IDの仕組みをDarkPlasma_AllocateUniqueTraitIdに分離
  * 2022/02/06 1.0.0 正式版公開
@@ -15,7 +17,7 @@
  * 2021/08/24 0.0.1 試作公開
  */
 
-/*:ja
+/*:
  * @plugindesc 装備絞り込み機能
  * @author DarkPlasma
  * @license MIT
@@ -37,13 +39,23 @@
  * @type struct<TraitName>
  *
  * @param selectedItemColor
- * @desc 絞り込みONの項目の色
+ * @desc 絞り込みONの項目の色を設定します。
  * @text 絞り込み色
- * @type number
+ * @type color
  * @default 2
  *
+ * @param key
+ * @desc 絞り込み操作を行うためのキーを設定します。
+ * @text 絞り込みキー
+ * @type select
+ * @option shift
+ * @option menu
+ * @option tab
+ * @option control
+ * @default shift
+ *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -85,7 +97,7 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_ParameterText version:1.0.4
- * DarkPlasma_CustomKeyHandler version:1.1.0
+ * DarkPlasma_CustomKeyHandler version:1.3.0
  * DarkPlasma_AllocateUniqueTraitId version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
@@ -248,34 +260,46 @@
     traitName: ((parameter) => {
       const parsed = JSON.parse(parameter);
       return {
-        elementRate: String(parsed.elementRate || '属性耐性'),
-        debuffRate: String(parsed.debuffRate || '弱体耐性'),
-        stateRate: String(parsed.stateRate || 'ステート耐性'),
-        stateResist: String(parsed.stateResist || 'ステート無効'),
-        xparam: String(parsed.xparam || '追加能力値'),
-        sparam: String(parsed.sparam || '特殊能力値'),
-        attackElement: String(parsed.attackElement || '攻撃時属性'),
-        attackState: String(parsed.attackState || '攻撃時ステート'),
-        attackSpeed: String(parsed.attackSpeed || '攻撃速度補正'),
-        attackTimes: String(parsed.attackTimes || '攻撃追加回数'),
-        attackSkill: String(parsed.attackSkill || '攻撃スキル'),
-        stypeAdd: String(parsed.stypeAdd || 'スキルタイプ追加'),
-        stypeSeal: String(parsed.stypeSeal || 'スキルタイプ封印'),
-        skillAdd: String(parsed.skillAdd || 'スキル追加'),
-        skillSeal: String(parsed.skillSeal || 'スキル封印'),
-        equipWtype: String(parsed.equipWtype || '武器タイプ装備'),
-        equipAtype: String(parsed.equipAtype || '防具タイプ装備'),
-        equipLock: String(parsed.equipLock || '装備固定'),
-        equipSeal: String(parsed.equipSeal || '装備封印'),
-        slotType: String(parsed.slotType || 'スロットタイプ'),
-        actionPlus: String(parsed.actionPlus || '行動回数追加'),
-        specialFlag: String(parsed.specialFlag || '特殊フラグ'),
-        partyAbility: String(parsed.partyAbility || 'パーティ能力'),
+        elementRate: String(parsed.elementRate || `属性耐性`),
+        debuffRate: String(parsed.debuffRate || `弱体耐性`),
+        stateRate: String(parsed.stateRate || `ステート耐性`),
+        stateResist: String(parsed.stateResist || `ステート無効`),
+        xparam: String(parsed.xparam || `追加能力値`),
+        sparam: String(parsed.sparam || `特殊能力値`),
+        attackElement: String(parsed.attackElement || `攻撃時属性`),
+        attackState: String(parsed.attackState || `攻撃時ステート`),
+        attackSpeed: String(parsed.attackSpeed || `攻撃速度補正`),
+        attackTimes: String(parsed.attackTimes || `攻撃追加回数`),
+        attackSkill: String(parsed.attackSkill || `攻撃スキル`),
+        stypeAdd: String(parsed.stypeAdd || `スキルタイプ追加`),
+        stypeSeal: String(parsed.stypeSeal || `スキルタイプ封印`),
+        skillAdd: String(parsed.skillAdd || `スキル追加`),
+        skillSeal: String(parsed.skillSeal || `スキル封印`),
+        equipWtype: String(parsed.equipWtype || `武器タイプ装備`),
+        equipAtype: String(parsed.equipAtype || `防具タイプ装備`),
+        equipLock: String(parsed.equipLock || `装備固定`),
+        equipSeal: String(parsed.equipSeal || `装備封印`),
+        slotType: String(parsed.slotType || `スロットタイプ`),
+        actionPlus: String(parsed.actionPlus || `行動回数追加`),
+        specialFlag: String(parsed.specialFlag || `特殊フラグ`),
+        partyAbility: String(parsed.partyAbility || `パーティ能力`),
       };
     })(pluginParameters.traitName || '{}'),
-    selectedItemColor: Number(pluginParameters.selectedItemColor || 2),
+    selectedItemColor: pluginParameters.selectedItemColor?.startsWith('#')
+      ? String(pluginParameters.selectedItemColor)
+      : Number(pluginParameters.selectedItemColor || 2),
+    key: String(pluginParameters.key || `shift`),
   };
 
+  const FILTER_HANDLER_NAME = 'filter';
+  function ColorManager_FilterEquipMixIn(colorManager) {
+    colorManager.filterOnColor = function () {
+      return typeof settings.selectedItemColor === 'string'
+        ? settings.selectedItemColor
+        : this.textColor(settings.selectedItemColor);
+    };
+  }
+  ColorManager_FilterEquipMixIn(ColorManager);
   function Scene_Equip_FilterEquipMixIn(sceneEquip) {
     const _create = sceneEquip.create;
     sceneEquip.create = function () {
@@ -285,7 +309,7 @@
     const _createItemWindow = sceneEquip.createItemWindow;
     sceneEquip.createItemWindow = function () {
       _createItemWindow.call(this);
-      this._itemWindow.setHandler('shift', this.onFilterOpen.bind(this));
+      this._itemWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterOpen.bind(this));
     };
     /**
      * 装備の絞り込み機能用のウィンドウを生成する
@@ -297,13 +321,13 @@
       this.addChild(this._filterWindowLayer);
       this._filterTraitWindow = new Window_EquipFilterTrait(this.equipFilterTraitWindowRect());
       this._filterTraitWindow.setHandler('ok', this.onFilterTraitOk.bind(this));
-      this._filterTraitWindow.setHandler('shift', this.onFilterClose.bind(this));
+      this._filterTraitWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
       this._filterTraitWindow.setHandler('cancel', this.onFilterClose.bind(this));
       this._filterTraitWindow.setItemWindow(this._itemWindow);
       this._filterTraitWindow.hide();
       this._filterWindowLayer.addChild(this._filterTraitWindow);
       this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
-      this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
+      this._filterEffectWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
       this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
       this._filterEffectWindow.setItemWindow(this._itemWindow);
       this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
@@ -950,7 +974,7 @@
     drawItem(index) {
       const rect = this.itemLineRect(index);
       if (this.isFilterOn(index)) {
-        this.changeTextColor(ColorManager.textColor(settings.selectedItemColor));
+        this.changeTextColor(ColorManager.filterOnColor());
       } else {
         this.resetTextColor();
       }
@@ -1040,9 +1064,9 @@
       return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);
     }
   }
-  Window_CustomKeyHandlerMixIn('shift', Window_EquipItem.prototype);
-  Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterTrait.prototype);
-  Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterEffect.prototype);
+  Window_CustomKeyHandlerMixIn(settings.key, Window_EquipItem.prototype, FILTER_HANDLER_NAME);
+  Window_CustomKeyHandlerMixIn(settings.key, Window_EquipFilterTrait.prototype, FILTER_HANDLER_NAME);
+  Window_CustomKeyHandlerMixIn(settings.key, Window_EquipFilterEffect.prototype, FILTER_HANDLER_NAME);
   function Window_EquipItem_FilterEquipMixIn(windowClass) {
     windowClass.setFilter = function (filter) {
       if (this._filter !== filter) {
