@@ -4,6 +4,10 @@
 /// <reference path="../CustomKeyHandler/CustomKeyHandler.d.ts" />
 /// <reference path="../CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
 
+declare namespace ColorManager {
+  function filterOnColor(): string;
+}
+
 declare interface EquipFilterBuilder {
   build(): EquipFilter;
   withTrait(traitId: number): EquipFilterBuilder;

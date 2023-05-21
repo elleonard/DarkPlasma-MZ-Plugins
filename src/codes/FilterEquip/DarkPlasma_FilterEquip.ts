@@ -1,6 +1,18 @@
 /// <reference path="./FilterEquip.d.ts" />
 import { settings } from './_build/DarkPlasma_FilterEquip_parameters';
 
+const FILTER_HANDLER_NAME = 'filter';
+
+function ColorManager_FilterEquipMixIn(colorManager: typeof ColorManager) {
+  colorManager.filterOnColor = function () {
+    return typeof settings.selectedItemColor === "string"
+      ? settings.selectedItemColor
+      : this.textColor(settings.selectedItemColor);
+  };
+}
+
+ColorManager_FilterEquipMixIn(ColorManager);
+
 function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
   const _create = sceneEquip.create;
   sceneEquip.create = function () {
@@ -11,7 +23,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
   const _createItemWindow = sceneEquip.createItemWindow;
   sceneEquip.createItemWindow = function () {
     _createItemWindow.call(this);
-    this._itemWindow.setHandler('shift', this.onFilterOpen.bind(this));
+    this._itemWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterOpen.bind(this));
   };
   
   /**
@@ -25,14 +37,14 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
   
     this._filterTraitWindow = new Window_EquipFilterTrait(this.equipFilterTraitWindowRect());
     this._filterTraitWindow.setHandler('ok', this.onFilterTraitOk.bind(this));
-    this._filterTraitWindow.setHandler('shift', this.onFilterClose.bind(this));
+    this._filterTraitWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
     this._filterTraitWindow.setHandler('cancel', this.onFilterClose.bind(this));
     this._filterTraitWindow.setItemWindow(this._itemWindow);
     this._filterTraitWindow.hide();
     this._filterWindowLayer.addChild(this._filterTraitWindow);
   
     this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
-    this._filterEffectWindow.setHandler('shift', this.onFilterClose.bind(this));
+    this._filterEffectWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
     this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
     this._filterEffectWindow.setItemWindow(this._itemWindow);
     this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
@@ -768,7 +780,7 @@ class Window_EquipFilter extends Window_Selectable {
   drawItem(index: number) {
     const rect = this.itemLineRect(index);
     if (this.isFilterOn(index)) {
-      this.changeTextColor(ColorManager.textColor(settings.selectedItemColor));
+      this.changeTextColor(ColorManager.filterOnColor());
     } else {
       this.resetTextColor();
     }
@@ -879,9 +891,9 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
   }
 }
 
-Window_CustomKeyHandlerMixIn('shift', Window_EquipItem.prototype);
-Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterTrait.prototype);
-Window_CustomKeyHandlerMixIn('shift', Window_EquipFilterEffect.prototype);
+Window_CustomKeyHandlerMixIn(settings.key, Window_EquipItem.prototype, FILTER_HANDLER_NAME);
+Window_CustomKeyHandlerMixIn(settings.key, Window_EquipFilterTrait.prototype, FILTER_HANDLER_NAME);
+Window_CustomKeyHandlerMixIn(settings.key, Window_EquipFilterEffect.prototype, FILTER_HANDLER_NAME);
 
 function Window_EquipItem_FilterEquipMixIn(windowClass: Window_EquipItem) {
   windowClass.setFilter = function (filter) {
