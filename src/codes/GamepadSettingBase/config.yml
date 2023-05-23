@@ -1,0 +1,89 @@
+DarkPlasma_GamepadSettingBase:
+  name: DarkPlasma_GamepadSettingBase
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/05/23
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ゲームパッド設定の基底'
+  parameters:
+    - param: keyMapper
+      text:
+        ja: キーマッピング
+      desc:
+        ja: キーボード操作のマッピングを設定します。
+      type: KeyMapping[]
+      default:
+        - keyCode: 77
+          action: menu
+        - keyCode: 83
+          action: special2
+    - param: gamepadMapper
+      text:
+        ja: ゲームパッドマッピング
+      desc:
+        ja: ゲームパッド操作のマッピングを設定します。
+      type: KeyMapping[]
+      default:
+        - keyCode: 6
+          action: special2
+    - param: colsWidth
+      text:
+        ja: 項目幅
+      type: number
+      default: 124
+  commands: []
+  structures:
+    KeyMapping:
+      - param: keyCode
+        text:
+          ja: キー番号
+        desc:
+          ja: キーまたはゲームパッドのボタンの番号を設定します。
+        type: number
+      - param: action
+        text:
+          ja: 動作
+        desc:
+          ja: キーを押した際の動作を表す文字列を設定します。
+        type: select
+        options:
+          - name: menu
+          - name: special2
+  dependencies:
+    base: []
+    orderAfter:
+      - name: PluginCommonBase
+    orderBefore: []
+  help:
+    ja: |
+      オプションにゲームパッド設定を提供します。
+
+      テキスト中で \GAMEPAD[操作名] と入力すると
+      操作説明ボタン表記に変換されます。
+
+      操作名一覧
+      ok: 決定
+      cancel: キャンセル
+      menu: メニュー
+      pageup: 左切替
+      pagedown: 右切替
+      shift: 特殊操作1
+      special2: 特殊操作2
+
+      入力例: \GAMEPAD[special2]
+
+      Window_Base.prototype.getManualButtonName メソッドにより
+      操作ボタン表記を取得できます。
+
+      ゲームパッド設定を更にカスタマイズする場合は、
+      追加プラグインで以下のメソッドを上書きしてください。
+
+      Input.inputSymbols(): InputSymbol
+      Input.inputSymbolKeys(): string[]
+      Input.inputSymbolKeyName(key: string): string
