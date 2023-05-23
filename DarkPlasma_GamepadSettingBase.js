@@ -59,8 +59,8 @@
  * 追加プラグインで以下のメソッドを上書きしてください。
  *
  * Input.inputSymbols(): InputSymbol
- * Input.inputSymbolKeys(): string[]
- * Input.inputSymbolKeyName(key: string): string
+ * Input.inputBehaviorKeys(): string[]
+ * Input.inputBehaviorKeyName(key: string): string
  *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * PluginCommonBase
