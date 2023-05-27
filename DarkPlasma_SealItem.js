@@ -1,10 +1,11 @@
-// DarkPlasma_SealItem 2.0.0
+// DarkPlasma_SealItem 2.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/05/27 2.0.0 TypeScript移行
+ * 2023/05/27 2.0.1 全アイテム禁止マップかどうか取得するインターフェース追加
+ *            2.0.0 TypeScript移行
  *                  特徴の制御をAllocateUniqueTraitIdに任せる
  *                  マップのメモ欄に対応
  * 2021/07/05 1.0.2 MZ 1.3.2に対応
@@ -24,7 +25,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * メモ欄に特定の書式で記述することにより、
  * 特定のアイテムが使用不能になる特徴を追加します。
  * <sealAllItem>
@@ -155,6 +156,9 @@
         (!!$dataMap.meta.sealHealItem && DataManager.isHealItem(item)) ||
         (!!$dataMap.meta.sealResurrectionItem && DataManager.isResurrectionItem(item))
       );
+    };
+    gameMap.isAllItemSealed = function () {
+      return !!$dataMap?.meta.sealAllItem;
     };
   }
   Game_Map_SealItemMixIn(Game_Map.prototype);
