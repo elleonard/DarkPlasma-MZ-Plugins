@@ -3,14 +3,19 @@ DarkPlasma_SealItem:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/07/05'
-      version: '1.0.2'
+    - date: 2023/05/27
+      version: 2.0.0
+      description: 'TypeScript移行'
+    - description: '特徴の制御をAllocateUniqueTraitIdに任せる'
+    - description: 'マップのメモ欄に対応'
+    - date: 2021/07/05
+      version: 1.0.2
       description: 'MZ 1.3.2に対応'
-    - date: '2021/06/22'
-      version: '1.0.1'
+    - date: 2021/06/22
+      version: 1.0.1
       description: 'サブフォルダからの読み込みに対応'
-    - date: '2021/03/13'
-      version: '1.0.0'
+    - date: 2021/03/13
+      version: 1.0.0
       description: '公開'
 
   locates:
@@ -22,19 +27,23 @@ DarkPlasma_SealItem:
   structures:
   dependencies:
     base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
     orderAfter:
-    orderBefore:
+      - name: DarkPlasma_AllocateUniqueTraitId
+    orderBefore: []
   help:
     ja: |
-      メモ欄に特定の書式で記述することにより、特定のアイテムを使用不能にします。
+      メモ欄に特定の書式で記述することにより、
+      特定のアイテムが使用不能になる特徴を追加します。
+      <sealAllItem>
+        全てのアイテムが使用できなくなります。
       <sealItems:1,2>
-       アイテムID1及び2のアイテムが使用できなくなります。
+        アイテムID1及び2のアイテムが使用できなくなります。
       <sealHealItem>
-       HPまたはMP回復アイテムが使用不能になります。
+        HPまたはMP回復アイテムが使用できなくなります。
       <sealResurrectionItem>
-       戦闘不能解除の効果を持つアイテムが使用不能になります。
+        戦闘不能解除の効果を持つアイテムが使用できなくなります。
 
-      アクターのメモ欄: 対象のアクターは使用不能
-      職業のメモ欄: 対象の職業のアクターは使用不能
-      武器・防具のメモ欄: 対象を装備したアクターは使用不能
-      ステート: 対象ステートにかかったアクターは使用不能
+      同様のタグをマップのメモ欄に記述することにより、
+      対象マップ内では特定のアイテムが使用不能になります。
