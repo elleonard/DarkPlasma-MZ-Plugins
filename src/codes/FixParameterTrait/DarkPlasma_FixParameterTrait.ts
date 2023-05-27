@@ -1,6 +1,7 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="./FixParameterTrait.d.ts" />
 
 import { pluginName } from '../../common/pluginName';
+import { hasTraits } from '../../common/data/hasTraits';
 
 const localTraitId = 1;
 const fixParameterTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, "通常能力値固定");
@@ -36,14 +37,10 @@ function DataManager_FixParameterTraitMixIn() {
   const _extractMetadata = DataManager.extractMetadata;
   DataManager.extractMetadata = function (data: DataManager.NoteHolder) {
     _extractMetadata.call(this, data);
-    if (hasTrait(data)) {
+    if (hasTraits(data)) {
       extractFixParameterTrait(data);
     }
   };
-
-  function hasTrait(data: DataManager.NoteHolder): data is MZ.Actor | MZ.Class | MZ.Weapon | MZ.Armor | MZ.State | MZ.Enemy {
-    return "traits" in data;
-  }
 
   function extractFixParameterTrait(data: MZ.Actor | MZ.Class | MZ.Weapon | MZ.Armor | MZ.State | MZ.Enemy) {
     if (data.meta.fixParameter) {

@@ -3,6 +3,9 @@ DarkPlasma_FixParameterTrait:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/05/27
+      version: 1.0.2
+      description: '特徴を持つオブジェクト判定を共通コードに切り出す'
     - date: 2022/08/21
       version: 1.0.1
       description: '追加能力値が指定値の100倍になる不具合を修正'
