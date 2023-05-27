@@ -4,7 +4,9 @@ DarkPlasma_SealItem:
   license: MIT
   histories:
     - date: 2023/05/27
-      version: 2.0.0
+      version: 2.0.1
+      description: '全アイテム禁止マップかどうか取得するインターフェース追加'
+    - version: 2.0.0
       description: 'TypeScript移行'
     - description: '特徴の制御をAllocateUniqueTraitIdに任せる'
     - description: 'マップのメモ欄に対応'

@@ -9,6 +9,7 @@ declare namespace DataManager {
 
 declare interface Game_Map {
   isItemSealed(item: MZ.Item): boolean;
+  isAllItemSealed(): boolean;
 }
 
 declare interface Game_Actor {

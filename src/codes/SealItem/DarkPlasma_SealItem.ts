@@ -95,6 +95,10 @@ function Game_Map_SealItemMixIn(gameMap: Game_Map) {
       || !!$dataMap.meta.sealHealItem && DataManager.isHealItem(item)
       || !!$dataMap.meta.sealResurrectionItem && DataManager.isResurrectionItem(item);
   };
+
+  gameMap.isAllItemSealed = function () {
+    return !!$dataMap?.meta.sealAllItem;
+  };
 }
 
 Game_Map_SealItemMixIn(Game_Map.prototype);
