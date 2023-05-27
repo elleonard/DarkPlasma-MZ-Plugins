@@ -1,9 +1,10 @@
-// DarkPlasma_FixParameterTrait 1.0.1
+// DarkPlasma_FixParameterTrait 1.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/05/27 1.0.2 特徴を持つオブジェクト判定を共通コードに切り出す
  * 2022/08/21 1.0.1 追加能力値が指定値の100倍になる不具合を修正
  *            1.0.0 公開
  */
@@ -20,7 +21,7 @@
  * @orderAfter DarkPlasma_EquipTypeStatusBonusTrait
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * 能力値を固定する特徴を付与します。
  * 同一のパラメータについて、複数の固定値特徴を付与した場合の挙動は未定義です。
@@ -70,6 +71,10 @@
     return arguments[1];
   });
 
+  function hasTraits(data) {
+    return 'traits' in data;
+  }
+
   const localTraitId = 1;
   const fixParameterTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, '通常能力値固定');
   const fixXParameterTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 1, '追加能力値固定');
@@ -85,13 +90,10 @@
     const _extractMetadata = DataManager.extractMetadata;
     DataManager.extractMetadata = function (data) {
       _extractMetadata.call(this, data);
-      if (hasTrait(data)) {
+      if (hasTraits(data)) {
         extractFixParameterTrait(data);
       }
     };
-    function hasTrait(data) {
-      return 'traits' in data;
-    }
     function extractFixParameterTrait(data) {
       if (data.meta.fixParameter) {
         const lines = String(data.meta.fixParameter).split('\n');
