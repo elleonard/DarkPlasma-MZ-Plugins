@@ -7,6 +7,7 @@ DarkPlasma_AutoHighlight:
       version: 2.0.0
       description: '色設定をMZ1.6.0形式に変更'
     - description: 'ベースプラグインを追加'
+    - description: 'TypeScript移行'
     - date: 2022/06/08
       version: 1.0.1
       description: '対象ウィンドウのクラス名がグローバルに展開されていなくても有効にする'
