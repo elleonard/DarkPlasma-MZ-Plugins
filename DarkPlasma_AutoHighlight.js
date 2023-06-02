@@ -1,20 +1,25 @@
-// DarkPlasma_AutoHighlight 1.0.1
+// DarkPlasma_AutoHighlight 2.0.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/02 2.0.0 色設定をMZ1.6.0形式に変更
+ *                  ベースプラグインを追加
+ *                  TypeScript移行
  * 2022/06/08 1.0.1 対象ウィンドウのクラス名がグローバルに展開されていなくても有効にする
  * 2022/01/02 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 指定した語句に自動で色をつける
  * @author DarkPlasma
  * @license MIT
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_SetColorByCode
  *
  * @param highlightGroups
  * @desc ハイライトする際の色と語句を設定します。
@@ -29,19 +34,22 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 1.0.1
+ * version: 2.0.0
  * 指定した語句を指定した色でハイライトします。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_SetColorByCode version:1.0.0
  */
 /*~struct~HighlightGroup:
  * @param title
- * @desc 色と語句設定の名前を指定します。ご自身にとってわかりやすい名前をつけてください。
+ * @desc 色と語句設定の管理用の名前を指定します。わかりやすい名前をつけてください。
  * @text 名前
  * @type string
  *
  * @param color
- * @desc 色番号を指定します。
+ * @desc 色を指定します。#から始まるカラーコードも指定可能です。
  * @text 色
- * @type string
+ * @type color
  *
  * @param texts
  * @desc ハイライトしたい語句を指定します。
@@ -77,10 +85,10 @@
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
-          title: String(parsed.title || ''),
-          color: String(parsed.color || ''),
+          title: String(parsed.title || ``),
+          color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 0),
           texts: JSON.parse(parsed.texts || '[]').map((e) => {
-            return String(e || '');
+            return String(e || ``);
           }),
           skills: JSON.parse(parsed.skills || '[]').map((e) => {
             return Number(e || 0);
@@ -92,35 +100,36 @@
       })(e || '{}');
     }),
     targetWindows: JSON.parse(pluginParameters.targetWindows || '["Window_Message"]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
   };
 
+  function ColorManagerMixIn(colorManager) {
+    colorManager.convertColorParameter = function (colorParameter) {
+      return typeof colorParameter === 'string' ? colorParameter : this.textColor(colorParameter);
+    };
+  }
+
+  ColorManagerMixIn(ColorManager);
   class HighlightWords {
     constructor() {
       this._highlightWords = [];
       this._sortedWords = null;
-      this._colors = null;
+      this._colors = {};
+      this._needsRefreshCache = false;
     }
-
-    /**
-     * @return {RegExp}
-     */
     getRegExp() {
       return new RegExp(`(${this.sortedWords().join('|')})`, 'gi');
     }
-
     /**
      * 長さ順にソートしたハイライト語句一覧
-     * @return {string[]}
      */
     sortedWords() {
       if (!this._sortedWords || this._needsRefreshCache) {
         this.refreshCache();
       }
-      return this._sortedWords;
+      return this._sortedWords || [];
     }
-
     /**
      * @param {HighlightWord} highlightWord ハイライトする語句と色
      */
@@ -128,7 +137,6 @@
       this._highlightWords.push(highlightWord);
       this._needsRefreshCache = true;
     }
-
     refreshCache() {
       /**
        * 毎度ソートするのはパフォーマンス的に許容できないため、キャッシュする
@@ -143,7 +151,6 @@
       });
       this._needsRefreshCache = false;
     }
-
     /**
      * ハイライト色を返す
      * @param {string} word ハイライトする語句
@@ -153,9 +160,8 @@
       if (!this._colors) {
         this.refreshCache();
       }
-      return this._colors[word].startsWith('#') ? this._colors[word] : Number(this._colors[word]);
+      return this._colors[word];
     }
-
     /**
      * テキスト内の指定語句をハイライトして返す
      * @param {string} text ハイライト対象テキスト
@@ -167,24 +173,19 @@
       });
     }
   }
-
   class HighlightWord {
     constructor(word, color) {
       this._word = word;
       this._color = color;
     }
-
     get word() {
       return this._word;
     }
-
     get color() {
-      return this._color;
+      return ColorManager.convertColorParameter(this._color);
     }
   }
-
   const highlightWords = new HighlightWords();
-
   /**
    * @param {Scene_Boot.prototype} sceneBoot
    */
@@ -216,19 +217,19 @@
       });
     };
   }
-
   Scene_Boot_AutoHighlightMixIn(Scene_Boot.prototype);
-
-  const _Window_Base_convertEscapeCharacters = Window_Base.prototype.convertEscapeCharacters;
-  Window_Base.prototype.convertEscapeCharacters = function (text) {
-    text = _Window_Base_convertEscapeCharacters.call(this, text);
-    if (this.isHighlightWindow()) {
-      return highlightWords.highlightText(text);
-    }
-    return text;
-  };
-
-  Window_Base.prototype.isHighlightWindow = function () {
-    return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
-  };
+  function Window_AutoHighlightMixIn(windowClass) {
+    const _convertEscapeCharacters = windowClass.convertEscapeCharacters;
+    windowClass.convertEscapeCharacters = function (text) {
+      text = _convertEscapeCharacters.call(this, text);
+      if (this.isHighlightWindow()) {
+        return highlightWords.highlightText(text);
+      }
+      return text;
+    };
+    windowClass.isHighlightWindow = function () {
+      return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
+    };
+  }
+  Window_AutoHighlightMixIn(Window_Base.prototype);
 })();

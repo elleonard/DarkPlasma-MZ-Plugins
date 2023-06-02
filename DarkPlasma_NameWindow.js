@@ -1,9 +1,10 @@
-// DarkPlasma_NameWindow 2.0.3
+// DarkPlasma_NameWindow 2.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/02 2.0.4 自動名前色強制パラメータで、#から始まるカラーコードを無視できない不具合を修正
  * 2023/05/15 2.0.3 プラグインパラメータの型を変更
  *                  typescript移行
  * 2021/07/05 2.0.2 MZ 1.3.2に対応
@@ -45,7 +46,7 @@
  * @default true
  *
  * @help
- * version: 2.0.3
+ * version: 2.0.4
  * メッセージテキストに以下のように記述すると名前ウィンドウを表示します。
  *
  * \n<***>
@@ -186,7 +187,7 @@
           let target = speaker[1].replace('\x1b}', '');
           const eraseTarget = target;
           if (settings.forceAutoNameColor) {
-            target = target.replace(/\x1bC\[(#?[0-9]*)\]/gi, '');
+            target = target.replace(/\x1bC\[(#?[0-9a-fA-F]*)\]/gi, '');
           }
           const speakerNames = target.split('＆');
           const speakerNameString = speakerNames
