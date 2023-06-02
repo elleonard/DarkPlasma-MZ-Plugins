@@ -104,7 +104,7 @@ function Window_Message_NameWindowMixIn(windowClass: Window_Message) {
         let target = speaker[1].replace('\x1b}', '');
         const eraseTarget = target;
         if (settings.forceAutoNameColor) {
-          target = target.replace(/\x1bC\[(#?[0-9]*)\]/gi, '');
+          target = target.replace(/\x1bC\[(#?[0-9a-fA-F]*)\]/gi, '');
         }
         const speakerNames = target.split('＆');
         const speakerNameString = speakerNames
