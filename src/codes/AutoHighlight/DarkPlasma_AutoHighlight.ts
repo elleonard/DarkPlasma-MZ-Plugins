@@ -1,33 +1,45 @@
 /// <reference path="./AutoHighlight.d.ts" />
+
 import { settings } from './_build/DarkPlasma_AutoHighlight_parameters';
 import { ColorManagerMixIn } from '../../common/manager/ColorManagerMixIn';
+
 ColorManagerMixIn(ColorManager);
+
 class HighlightWords {
+  _highlightWords: HighlightWord[];
+  _sortedWords: string[] | null;
+  _colors: { [word: string]: string };
+  _needsRefreshCache: boolean;
+
   constructor() {
     this._highlightWords = [];
     this._sortedWords = null;
     this._colors = {};
     this._needsRefreshCache = false;
   }
-  getRegExp() {
+
+  getRegExp(): RegExp {
     return new RegExp(`(${this.sortedWords().join('|')})`, 'gi');
   }
+
   /**
    * 長さ順にソートしたハイライト語句一覧
    */
-  sortedWords() {
+  sortedWords(): string[] {
     if (!this._sortedWords || this._needsRefreshCache) {
       this.refreshCache();
     }
     return this._sortedWords || [];
   }
+
   /**
    * @param {HighlightWord} highlightWord ハイライトする語句と色
    */
-  add(highlightWord) {
+  add(highlightWord: HighlightWord): void {
     this._highlightWords.push(highlightWord);
     this._needsRefreshCache = true;
   }
+
   refreshCache() {
     /**
      * 毎度ソートするのはパフォーマンス的に許容できないため、キャッシュする
@@ -42,45 +54,55 @@ class HighlightWords {
     });
     this._needsRefreshCache = false;
   }
+
   /**
    * ハイライト色を返す
    * @param {string} word ハイライトする語句
    * @return {string|number}
    */
-  findColorByWord(word) {
+  findColorByWord(word: string): string | number {
     if (!this._colors) {
       this.refreshCache();
     }
     return this._colors[word];
   }
+
   /**
    * テキスト内の指定語句をハイライトして返す
    * @param {string} text ハイライト対象テキスト
    * @return {string}
    */
-  highlightText(text) {
+  highlightText(text: string): string {
     return text.replace(this.getRegExp(), (match) => {
       return `\x1bC[${this.findColorByWord(match)}]${match}\x1bC[0]`;
     });
   }
 }
+
 class HighlightWord {
-  constructor(word, color) {
+  _word: string;
+  _color: string | number;
+
+  constructor(word: string, color: string | number) {
     this._word = word;
     this._color = color;
   }
-  get word() {
+
+  get word(): string {
     return this._word;
   }
-  get color() {
+
+  get color(): string {
     return ColorManager.convertColorParameter(this._color);
   }
 }
+
 const highlightWords = new HighlightWords();
+
 /**
  * @param {Scene_Boot.prototype} sceneBoot
  */
-function Scene_Boot_AutoHighlightMixIn(sceneBoot) {
+function Scene_Boot_AutoHighlightMixIn(sceneBoot: Scene_Boot) {
   const _start = sceneBoot.start;
   sceneBoot.start = function () {
     _start.call(this);
@@ -108,8 +130,10 @@ function Scene_Boot_AutoHighlightMixIn(sceneBoot) {
     });
   };
 }
+
 Scene_Boot_AutoHighlightMixIn(Scene_Boot.prototype);
-function Window_AutoHighlightMixIn(windowClass) {
+
+function Window_AutoHighlightMixIn(windowClass: Window_Base) {
   const _convertEscapeCharacters = windowClass.convertEscapeCharacters;
   windowClass.convertEscapeCharacters = function (text) {
     text = _convertEscapeCharacters.call(this, text);
@@ -118,8 +142,10 @@ function Window_AutoHighlightMixIn(windowClass) {
     }
     return text;
   };
+
   windowClass.isHighlightWindow = function () {
     return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
   };
 }
+
 Window_AutoHighlightMixIn(Window_Base.prototype);

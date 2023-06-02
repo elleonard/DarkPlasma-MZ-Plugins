@@ -3,6 +3,10 @@ DarkPlasma_AutoHighlight:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/06/02
+      version: 2.0.0
+      description: '色設定をMZ1.6.0形式に変更'
+    - description: 'ベースプラグインを追加'
     - date: 2022/06/08
       version: 1.0.1
       description: '対象ウィンドウのクラス名がグローバルに展開されていなくても有効にする'
@@ -37,14 +41,14 @@ DarkPlasma_AutoHighlight:
         text:
           ja: 名前
         desc:
-          ja: 色と語句設定の名前を指定します。ご自身にとってわかりやすい名前をつけてください。
+          ja: 色と語句設定の管理用の名前を指定します。わかりやすい名前をつけてください。
         type: string
       - param: color
         text:
           ja: 色
         desc:
-          ja: 色番号を指定します。
-        type: string
+          ja: 色を指定します。#から始まるカラーコードも指定可能です。
+        type: color
       - param: texts
         text:
           ja: 語句
@@ -67,7 +71,9 @@ DarkPlasma_AutoHighlight:
         type: item[]
         default: []
   dependencies:
-    base: []
+    base:
+      - name: DarkPlasma_SetColorByCode
+        version: 1.0.0
     orderAfter: []
     orderBefore: []
   help:
