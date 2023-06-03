@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.1.0
+// DarkPlasma_EnemyBook 5.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/03 5.1.1 リファクタ
  * 2023/03/25 5.1.0 選択ウィンドウの敵キャラを取得するインターフェースを追加
  * 2023/03/18 5.0.0 デフォルト言語を日本語に修正
  *                  アイコン設定をSystemTypeIconに切り出す
@@ -190,7 +191,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.1.0
+ * version: 5.1.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -385,7 +386,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.1.0
+ * version: 5.1.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -729,7 +730,6 @@
     }
     /**
      * エネミー登録率を百分率で返す
-     * @return {number}
      */
     percentRegisteredEnemy() {
       const registerableEnemyCount = registerableEnemies().length;
@@ -743,7 +743,6 @@
     }
     /**
      * ドロップアイテム登録率を百分率で返す
-     * @return {number}
      */
     percentRegisteredDropItem() {
       const registerableDropItemCount = registerableEnemies().reduce(
@@ -784,7 +783,6 @@
     }
     /**
      * 図鑑に指定したエネミーを登録する
-     * @param {number} enemyId 敵ID
      */
     register(enemyId) {
       if (this._pages[enemyId]) {
@@ -793,8 +791,6 @@
     }
     /**
      * 図鑑に指定したエネミーのドロップアイテムを登録する
-     * @param {number} enemyId 敵ID
-     * @param {number} index ドロップアイテム番号
      */
     registerDropItem(enemyId, index) {
       if (this._pages[enemyId]) {
@@ -803,7 +799,6 @@
     }
     /**
      * 図鑑から指定したエネミーを登録解除する
-     * @param {number} enemyId 敵ID
      */
     unregister(enemyId) {
       if (this._pages[enemyId]) {
@@ -862,7 +857,6 @@
   /**
    * 敵図鑑情報
    * Game_Systemからのみ直接アクセスされる
-   * @type {EnemyBook}
    */
   let enemyBook = null;
   function enemyBookInstance() {
@@ -1161,22 +1155,14 @@
         this.drawTextEx(String(enemy.meta.desc2), this.descriptionX(), this.descriptionY() + lineHeight);
       }
     }
-    /**
-     * @return {number}
-     */
     descriptionX() {
       return settings.devideResistAndNoEffect ? this.contentsWidth() / 2 + this.itemPadding() / 2 : 0;
     }
-    /**
-     * @return {number}
-     */
     descriptionY() {
       return this.itemPadding() + this.lineHeight() * 14;
     }
     /**
      * レベルを描画する
-     * @param {number} x X座標
-     * @param {number} y Y座標
      */
     drawLevel(x, y) {
       const enemy = this._enemy;
@@ -1189,8 +1175,6 @@
     }
     /**
      * ステータスを描画する
-     * @param {number} x X座標
-     * @param {number} y Y座標
      */
     drawStatus(x, y) {
       const lineHeight = this.lineHeight();
@@ -1205,8 +1189,6 @@
     }
     /**
      * 経験値とゴールドを描画する
-     * @param {number} x X座標
-     * @param {number} y Y座標
      */
     drawExpAndGold(x, y) {
       const enemy = this._enemy;
@@ -1224,9 +1206,6 @@
     }
     /**
      * ドロップアイテムを描画する
-     * @param {number} x X座標
-     * @param {number} y Y座標
-     * @param {number} rewardsWidth 報酬欄の横幅
      */
     drawDropItems(x, y, rewardsWidth) {
       const enemy = this._enemy;
@@ -1257,10 +1236,6 @@
     }
     /**
      * ドロップ率を描画する
-     * @param {number} denominator 確率
-     * @param {number} x X座標
-     * @param {number} y Y座標
-     * @param {number} width 横幅
      */
     drawDropRate(denominator, x, y, width) {
       if (!settings.displayDropRate || !denominator) {
@@ -1527,42 +1502,48 @@
     };
   }
   Game_System_EnemyBookMixIn(Game_System.prototype);
-  const _Game_Troop_setup = Game_Troop.prototype.setup;
-  Game_Troop.prototype.setup = function (troopId) {
-    _Game_Troop_setup.call(this, troopId);
-    this.members().forEach(function (enemy) {
-      if (enemy.isAppeared()) {
-        $gameSystem.addToEnemyBook(enemy.enemyId());
-      }
-    }, this);
-  };
-  const _Game_Enemy_appear = Game_Enemy.prototype.appear;
-  Game_Enemy.prototype.appear = function () {
-    _Game_Enemy_appear.call(this);
-    $gameSystem.addToEnemyBook(this._enemyId);
-  };
-  const _Game_Enemy_transform = Game_Enemy.prototype.transform;
-  Game_Enemy.prototype.transform = function (enemyId) {
-    _Game_Enemy_transform.call(this, enemyId);
-    $gameSystem.addToEnemyBook(enemyId);
-  };
-  Game_Enemy.prototype.dropItemLots = function (dropItem) {
-    return dropItem.kind > 0 && Math.random() * dropItem.denominator < this.dropItemRate();
-  };
-  /**
-   * ドロップアイテムリスト生成メソッド 上書き
-   */
-  Game_Enemy.prototype.makeDropItems = function () {
-    return this.enemy().dropItems.reduce((accumlator, dropItem, index) => {
-      const dropItemObject = this.itemObject(dropItem.kind, dropItem.dataId);
-      if (dropItemObject && this.dropItemLots(dropItem)) {
-        $gameSystem.addDropItemToEnemyBook(this.enemy().id, index);
-        return accumlator.concat(dropItemObject);
-      } else {
-        return accumlator;
-      }
-    }, []);
-  };
+  function Game_Troop_EnemyBookMixIn(gameTroop) {
+    const _setup = gameTroop.setup;
+    gameTroop.setup = function (troopId) {
+      _setup.call(this, troopId);
+      this.members().forEach(function (enemy) {
+        if (enemy.isAppeared()) {
+          $gameSystem.addToEnemyBook(enemy.enemyId());
+        }
+      }, this);
+    };
+  }
+  Game_Troop_EnemyBookMixIn(Game_Troop.prototype);
+  function Game_Enemy_EnemyBookMixIn(gameEnemy) {
+    const _appear = gameEnemy.appear;
+    gameEnemy.appear = function () {
+      _appear.call(this);
+      $gameSystem.addToEnemyBook(this._enemyId);
+    };
+    const _transform = gameEnemy.transform;
+    gameEnemy.transform = function (enemyId) {
+      _transform.call(this, enemyId);
+      $gameSystem.addToEnemyBook(enemyId);
+    };
+    gameEnemy.dropItemLots = function (dropItem) {
+      return dropItem.kind > 0 && Math.random() * dropItem.denominator < this.dropItemRate();
+    };
+    /**
+     * ドロップアイテムリスト生成メソッド 上書き
+     */
+    gameEnemy.makeDropItems = function () {
+      return this.enemy().dropItems.reduce((accumlator, dropItem, index) => {
+        const dropItemObject = this.itemObject(dropItem.kind, dropItem.dataId);
+        if (dropItemObject && this.dropItemLots(dropItem)) {
+          $gameSystem.addDropItemToEnemyBook(this.enemy().id, index);
+          return accumlator.concat(dropItemObject);
+        } else {
+          return accumlator;
+        }
+      }, []);
+    };
+  }
+  Game_Enemy_EnemyBookMixIn(Game_Enemy.prototype);
   globalThis.EnemyBook = EnemyBook;
   globalThis.EnemyBookPage = EnemyBookPage;
   globalThis.Scene_EnemyBook = Scene_EnemyBook;
