@@ -1,9 +1,19 @@
+/// <reference path="./MasterVolume.d.ts" />
+
 import { settings } from './_build/DarkPlasma_MasterVolume_parameters';
 
-/**
- * @param {typeof ConfigManager} configManager
- */
-function ConfigManager_MasterVolumeMixIn(configManager) {
+function WebAudio_MasterVolumeMixIn(webAudio: typeof WebAudio) {
+  const _initialize = webAudio.initialize;
+  webAudio.initialize = function () {
+    const result = _initialize.call(this);
+    this.setMasterVolume(settings.defaultVolume);
+    return result;
+  };
+}
+
+WebAudio_MasterVolumeMixIn(WebAudio);
+
+function ConfigManager_MasterVolumeMixIn(configManager: typeof ConfigManager) {
   Object.defineProperty(configManager, 'masterVolume', {
     get: function () {
       return AudioManager._masterVolume;
@@ -32,31 +42,28 @@ function ConfigManager_MasterVolumeMixIn(configManager) {
 
 ConfigManager_MasterVolumeMixIn(ConfigManager);
 
-/**
- * @param {typeof AudioManager} audioManager
- */
-function AudioManager_MasterVolumeMixIn(audioManager) {
-  audioManager._masterVolume = 100;
-
+function AudioManager_MasterVolumeMixIn(audioManager: typeof AudioManager) {
   Object.defineProperty(audioManager, 'masterVolume', {
     get: function () {
       return this._masterVolume;
     },
-    set: function (value) {
+    set: function (this: typeof AudioManager, value) {
       this._masterVolume = value;
       WebAudio.setMasterVolume(this._masterVolume / 100);
       Video.setVolume(this._masterVolume / 100);
+      if (this._currentBgm) {
+        this.updateBgmParameters(this._currentBgm);
+      }
     },
     configurable: true,
   });
+
+  audioManager.masterVolume = settings.defaultVolume;
 }
 
 AudioManager_MasterVolumeMixIn(AudioManager);
 
-/**
- * @param {Scene_Options.prototype} sceneOptions
- */
-function Scene_Options_MasterVolumeMixIn(sceneOptions) {
+function Scene_Options_MasterVolumeMixIn(sceneOptions: Scene_Options) {
   const _maxCommands = sceneOptions.maxCommands;
   sceneOptions.maxCommands = function () {
     return _maxCommands.call(this) + 1;
@@ -65,10 +72,7 @@ function Scene_Options_MasterVolumeMixIn(sceneOptions) {
 
 Scene_Options_MasterVolumeMixIn(Scene_Options.prototype);
 
-/**
- * @param {Window_Options.prototype} windowClass
- */
-function Window_Options_MasterVolumeMixIn(windowClass) {
+function Window_Options_MasterVolumeMixIn(windowClass: Window_Options) {
   const _addVolumeOptions = windowClass.addVolumeOptions;
   windowClass.addVolumeOptions = function () {
     this.addCommand(settings.optionName, 'masterVolume');
