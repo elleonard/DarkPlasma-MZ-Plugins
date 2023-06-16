@@ -1,0 +1,45 @@
+DarkPlasma_RegenerateByValueTrait:
+  name: DarkPlasma_RegenerateByValueTrait
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/06/16
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'HP再生値 MP再生値特徴'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueTraitId
+    orderBefore: []
+  help:
+    ja: |
+      HP再生値、MP再生値特徴を定義します。
+      再生値特徴は再生率と異なり、HPやMPの上限値に対する割合ではなく、
+      値によってターン経過時に回復・スリップダメージを受けます。
+      
+      設定例:
+      <hpRegenerationValue:10>
+      HPを毎ターン10回復する特徴を追加します。
+
+      <mpRegenerationValue:-10>
+      MPを毎ターン10消費する特徴を追加します。
+
+      特徴による回復量を動的に変動させたい場合は、
+      カスタムIDを定義した上で追加のプラグインを書いてください。
+
+      <hpRegenerationCustomId:1>
+      <mpRegenerationCustomId:1>
+
+      追加プラグインの書き方の例については、
+      DarkPlasma_RegenerateByValueTraitCustomSample
+      を参照してください。

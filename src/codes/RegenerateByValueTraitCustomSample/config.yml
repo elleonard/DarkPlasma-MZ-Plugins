@@ -1,0 +1,35 @@
+DarkPlasma_RegenerateByValueTraitCustomSample:
+  name: DarkPlasma_RegenerateByValueTraitCustomSample
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/06/16
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'HP再生値 MP再生値特徴のカスタムIDサンプル'
+  parameters:
+    - param: variableId
+      text:
+        ja: 変数
+      type: variable
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_RegenerateByValueTrait
+        version: 1.0.0
+    orderAfter:
+      - name: DarkPlasma_RegenerateByValueTrait
+    orderBefore: []
+  help:
+    ja: |
+      DarkPlasma_RegenerateByValueTrait で定義するカスタムIDの実装サンプルです。
+      HP再生値のカスタムID:1について、パラメータで指定した変数の値分回復します。
+      
+      サンプルのための特徴は以下のように定義します。
+      <hpRegenerationValue:0> (この0は任意の数値で構いません。無視されます)
+      <hpRegenerationCustomId:1>
