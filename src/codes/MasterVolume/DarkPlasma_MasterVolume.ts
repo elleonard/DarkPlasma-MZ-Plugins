@@ -6,7 +6,7 @@ function WebAudio_MasterVolumeMixIn(webAudio: typeof WebAudio) {
   const _initialize = webAudio.initialize;
   webAudio.initialize = function () {
     const result = _initialize.call(this);
-    this.setMasterVolume(settings.defaultVolume);
+    this.setMasterVolume(settings.defaultVolume/100);
     return result;
   };
 }
