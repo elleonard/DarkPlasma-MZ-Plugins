@@ -1,9 +1,10 @@
-// DarkPlasma_MasterVolume 1.0.2
+// DarkPlasma_MasterVolume 1.0.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/16 1.0.3 11以上の初期値を設定するとBGMが壊れる不具合を修正
  * 2023/06/14 1.0.2 typescript移行
  *                  初期値の設定が効かない不具合を修正
  * 2022/08/07 1.0.1 マスターボリューム0で保存するとデフォルトに戻される不具合を修正
@@ -35,7 +36,7 @@
  * @default 20
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * オプション画面にマスターボリュームを追加します。
  * BGM/BGS/ME/SEすべての音量を一括調整できます。
  *
@@ -63,7 +64,7 @@
     const _initialize = webAudio.initialize;
     webAudio.initialize = function () {
       const result = _initialize.call(this);
-      this.setMasterVolume(settings.defaultVolume);
+      this.setMasterVolume(settings.defaultVolume / 100);
       return result;
     };
   }
