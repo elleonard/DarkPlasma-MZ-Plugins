@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>HP再生値 MP再生値特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/06/16/regenerate-by-value-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/06/16/regenerate-by-value-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>HP再生値、MP再生値特徴を定義します。<br>再生値特徴は再生率と異なり、HPやMPの上限値に対する割合ではなく、値によってターン経過時に回復・スリップダメージを受けます。</p><h1 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h1><p><img src="setting1.png" alt="設定例" title="設定例"></p><p>アクター「リード」に、毎ターンHPが10回復する特徴を追加します。</p><h1 id="ダウンロードリンク"><a href="#ダウンロードリンク" class="headerlink" title="ダウンロードリンク"></a>ダウンロードリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RegenerateByValueTrait.js">GitHub</a><br>Rawボタンを右クリックして対象をファイルに保存してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自の特徴を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></li></ul><h2 id="カスタムIDサンプルプラグイン"><a href="#カスタムIDサンプルプラグイン" class="headerlink" title="カスタムIDサンプルプラグイン"></a>カスタムIDサンプルプラグイン</h2><p>特徴による回復量を動的に変動させたい場合は、カスタムIDを定義した上で追加のプラグインを書いてください。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RegenerateByValueTraitCustomSample.js">サンプルプラグイン</a></p><p><img src="setting2.png" alt="設定例2" title="設定例2"></p><p>サンプルプラグインのパラメータで指定した変数の値分だけ毎ターン回復する特徴を武器「ロングソード」に追加します。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><h2 id="RegenerationFixed-js-トリアコンタンさん"><a href="#RegenerationFixed-js-トリアコンタンさん" class="headerlink" title="RegenerationFixed.js(トリアコンタンさん)"></a><a href="https://github.com/triacontane/RPGMakerMV/blob/mz_master/RegenerationFixed.js">RegenerationFixed.js</a>(トリアコンタンさん)</h2><p>HP再生値、MP再生値、TP再生値を設定できます。<br>これらの固定値を倍率指定で変動させる設定もできます。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 敵キャラ </tag>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 職業 </tag>
+            
+            <tag> アクター </tag>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>戦闘開始時にステート/強化/弱体にかかる</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/06/03/state-buff-on-battle-start/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/06/03/state-buff-on-battle-start/</url>
