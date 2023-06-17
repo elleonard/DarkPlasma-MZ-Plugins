@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/06/17
+      version: 2.0.0
+      description: '待機メンバーウィンドウを縦スクロールする機能追加'
     - date: 2023/03/07
       version: 1.4.2
       description: 'FesCursor.jsとの競合を解消'
@@ -138,6 +141,9 @@ DarkPlasma_Formation:
       メニューの挙動を変えるプラグインと併用することで、変えることができます。
       例えば、DarkPlasma_FormationInMenuや
       トリアコンタンさんのMenuSubCommandがご利用いただけます。
+
+      バージョン2.0.0以降、FormationInBattleも
+      2.0.0に更新する必要があることに注意してください。
 
       並び替えシーン開始スクリプト:
       SceneManager.push(Scene_Formation);

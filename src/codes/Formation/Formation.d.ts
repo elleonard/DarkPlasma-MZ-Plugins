@@ -36,15 +36,15 @@ declare interface Scene_Formation extends Scene_FormationMixInClass {
   toggleParamWindow(): void;
 }
 
-declare interface Window_DrawActorCharacter extends Window_StatusBase {
+declare interface Window_FormationMember extends Window_StatusBase {
 
 }
 
-declare interface Window_FormationBattleMember extends Window_DrawActorCharacter {
+declare interface Window_FormationBattleMember extends Window_FormationMember {
 
 }
 
-declare interface Window_FormationWaitingMember extends Window_DrawActorCharacter {
+declare interface Window_FormationWaitingMember extends Window_FormationMember {
 
 }
 
@@ -57,7 +57,8 @@ declare interface Window_FormationStatus {
 }
 
 declare class Scene_FormationMixInClass extends Scene_Base {
-  _selectWindowLayer: WindowLayer;
+  _currentWindow: Window_FormationMember;
+  _pendingWindow: Window_FormationMember|undefined;
 
   helpWindowRect(): Rectangle;
   statusWindowRect(): Rectangle;
@@ -68,15 +69,20 @@ declare class Scene_FormationMixInClass extends Scene_Base {
   waitingMemberWindowRect(): Rectangle;
   waitingMemberWindowHeight(): number;
   cancelButtonWidth(): number;
+
   formationHelpWindow(): Window_Help;
   formationBattleMemberWindow(): Window_FormationBattleMember;
   formationWaitingMemberWindow(): Window_FormationWaitingMember;
-  formationSelectWindow(): Window_FormationSelect;
+  currentActiveWindow(): Window_FormationMember;
+  pendingWindow(): Window_FormationMember|undefined;
+
   formationStatusWindow(): Window_FormationStatus;
   formationStatusParamsWindow(): Window_StatusParams;
   formationEquipStatusWindow(): Window_StatusEquip;
-  setupFormationSelectWindow(): void;
-  selectWindowRect(): Rectangle;
+  setupFormationWindows(): void;
+
+  activateBattleMemberWindow(): void;
+  activateWaitingMemberWindow(): void;
 
   onFormationOk(): void;
   onFormationCancel(): void;
