@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 1.4.2
+// DarkPlasma_Formation 2.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/17 2.0.0 待機メンバーウィンドウを縦スクロールする機能追加
  * 2023/03/07 1.4.2 FesCursor.jsとの競合を解消
  * 2022/09/10 1.4.1 FormationInBattleと組み合わせて戦闘開始時にエラーで停止する不具合を修正
  * 2022/09/04 1.4.0 typescript移行
@@ -83,7 +84,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 1.4.2
+ * version: 2.0.0
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -92,6 +93,9 @@
  * メニューの挙動を変えるプラグインと併用することで、変えることができます。
  * 例えば、DarkPlasma_FormationInMenuや
  * トリアコンタンさんのMenuSubCommandがご利用いただけます。
+ *
+ * バージョン2.0.0以降、FormationInBattleも
+ * 2.0.0に更新する必要があることに注意してください。
  *
  * 並び替えシーン開始スクリプト:
  * SceneManager.push(Scene_Formation);
@@ -246,9 +250,6 @@
       formationWaitingMemberWindow() {
         return new Window_FormationWaitingMember(new Rectangle(0, 0, 0, 0));
       }
-      formationSelectWindow() {
-        return new Window_FormationSelect(new Rectangle(0, 0, 0, 0));
-      }
       formationStatusWindow() {
         return new Window_FormationStatus(new Rectangle(0, 0, 0, 0));
       }
@@ -258,23 +259,27 @@
       formationEquipStatusWindow() {
         return new Window_StatusEquip(new Rectangle(0, 0, 0, 0));
       }
-      setupFormationSelectWindow() {
-        this.formationSelectWindow().setStatusWindow(this.formationStatusWindow());
-        this.formationSelectWindow().setBattleMemberWindow(this.formationBattleMemberWindow());
-        this.formationSelectWindow().setWaitingMemberWindow(this.formationWaitingMemberWindow());
-        this.formationSelectWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
-        this.formationSelectWindow().setEquipWindow(this.formationEquipStatusWindow());
-        this.formationSelectWindow().setHandler('ok', this.onFormationOk.bind(this));
-        this.formationSelectWindow().setHandler('cancel', this.onFormationCancel.bind(this));
-        this.formationSelectWindow().select(0);
-        /**
-         * 透明なウィンドウを重ねることでカーソル表示を実現するため、専用レイヤーを用意する
-         */
-        this._selectWindowLayer = new WindowLayer();
-        this._selectWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-        this._selectWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-        this.addChild(this._selectWindowLayer);
-        this._selectWindowLayer.addChild(this.formationSelectWindow());
+      currentActiveWindow() {
+        return this._currentWindow;
+      }
+      pendingWindow() {
+        return this._pendingWindow;
+      }
+      setupFormationWindows() {
+        this.formationWaitingMemberWindow().setActivateAnotherWindow(() => this.activateBattleMemberWindow());
+        this.formationWaitingMemberWindow().setStatusWindow(this.formationStatusWindow());
+        this.formationWaitingMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
+        this.formationWaitingMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
+        this.formationWaitingMemberWindow().setHandler('ok', () => this.onFormationOk());
+        this.formationWaitingMemberWindow().setHandler('cancel', () => this.onFormationCancel());
+        this.formationWaitingMemberWindow().select(0);
+        this.formationBattleMemberWindow().setActivateAnotherWindow(() => this.activateWaitingMemberWindow());
+        this.formationBattleMemberWindow().setStatusWindow(this.formationStatusWindow());
+        this.formationBattleMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
+        this.formationBattleMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
+        this.formationBattleMemberWindow().setHandler('ok', () => this.onFormationOk());
+        this.formationBattleMemberWindow().setHandler('cancel', () => this.onFormationCancel());
+        this.formationBattleMemberWindow().select(0);
       }
       /**
        * @return {Rectangle}
@@ -288,26 +293,59 @@
         );
       }
       onFormationOk() {
-        const index = this.formationSelectWindow().index();
-        const pendingIndex = this.formationSelectWindow().pendingIndex();
+        const pendingIndex = this.pendingWindow()?.pendingIndexInParty() ?? -1;
         if (pendingIndex >= 0) {
+          const index = this.currentActiveWindow().indexInParty();
           $gameParty.swapOrder(index, pendingIndex);
-          this.formationSelectWindow().setPendingIndex(-1);
+          this.pendingWindow()?.setPendingIndex(-1);
+          this._pendingWindow = undefined;
           $gameTemp.requestFormationMemberWindowsRefresh();
         } else {
-          this.formationSelectWindow().setPendingIndex(index);
+          const index = this.currentActiveWindow().index();
+          this.currentActiveWindow().setPendingIndex(index);
+          this._pendingWindow = this.currentActiveWindow();
         }
-        this.formationSelectWindow().activate();
+        this.currentActiveWindow().activate();
       }
       onFormationCancel() {
-        if (this.formationSelectWindow().pendingIndex() >= 0) {
-          this.formationSelectWindow().setPendingIndex(-1);
-          this.formationSelectWindow().activate();
+        if (this.pendingWindow()?.pendingIndex() ?? -1 >= 0) {
+          this.pendingWindow()?.setPendingIndex(-1);
+          this.currentActiveWindow().activate();
         } else {
           this.quitFromFormation();
         }
       }
       quitFromFormation() {}
+      activateWaitingMemberWindow() {
+        this.formationBattleMemberWindow().deactivate();
+        this.formationWaitingMemberWindow().activate();
+        let rowOffset = this.formationBattleMemberWindow().row() - this.formationBattleMemberWindow().topRow();
+        let targetIndex = () =>
+          (this.formationWaitingMemberWindow().topRow() + rowOffset) * this.formationWaitingMemberWindow().maxCols();
+        while (targetIndex() >= this.formationWaitingMemberWindow().maxItems()) {
+          rowOffset--;
+        }
+        this.formationWaitingMemberWindow().smoothSelect(targetIndex());
+        this._currentWindow = this.formationWaitingMemberWindow();
+      }
+      activateBattleMemberWindow() {
+        this.formationWaitingMemberWindow().deactivate();
+        this.formationBattleMemberWindow().activate();
+        let rowOffset = this.formationWaitingMemberWindow().row() - this.formationWaitingMemberWindow().topRow();
+        let colOffset = this.formationBattleMemberWindow().maxCols() - 1;
+        let targetIndex = () =>
+          (this.formationBattleMemberWindow().topRow() + rowOffset) * this.formationBattleMemberWindow().maxCols() +
+          colOffset;
+        while (targetIndex() >= this.formationBattleMemberWindow().maxItems()) {
+          if (rowOffset > 0) {
+            rowOffset--;
+          } else {
+            colOffset--;
+          }
+        }
+        this.formationBattleMemberWindow().smoothSelect(targetIndex());
+        this._currentWindow = this.formationBattleMemberWindow();
+      }
     };
   }
   globalThis.Scene_FormationMixIn = Scene_FormationMixIn;
@@ -316,7 +354,6 @@
       super(...arguments);
       this._backgroundSprite = null;
       this._cancelButton = null;
-      this._selectWindow = null;
       this._helpWindow = null;
       this._statusWindow = null;
       this._statusParamsWindow = null;
@@ -335,11 +372,12 @@
       this.createStatusWindow();
       this.createStatusParamsWindow();
       this.createStatusEquipWindow();
-      this.createSelectWindow();
+      this.setupFormationWindows();
     }
     start() {
       super.start();
-      this._selectWindow.activate();
+      this._battleMemberWindow.activate();
+      this._currentWindow = this._battleMemberWindow;
     }
     createBackground() {
       if (settings.inheritMenuBackground && SceneManager.isPreviousSceneExtendsMenuBase()) {
@@ -424,6 +462,7 @@
     }
     createBattleMemberWindow() {
       this._battleMemberWindow = new Window_FormationBattleMember(this.battleMemberWindowRect());
+      this._battleMemberWindow.setHandler('ok', () => this.onFormationOk());
       this.addWindow(this._battleMemberWindow);
     }
     formationBattleMemberWindow() {
@@ -435,13 +474,6 @@
     }
     formationWaitingMemberWindow() {
       return this._waitingMemberWindow;
-    }
-    createSelectWindow() {
-      this._selectWindow = new Window_FormationSelect(this.selectWindowRect());
-      this.setupFormationSelectWindow();
-    }
-    formationSelectWindow() {
-      return this._selectWindow;
     }
     quitFromFormation() {
       $gamePlayer.refresh();
@@ -481,11 +513,30 @@
       }
     }
   }
-  class Window_DrawActorCharacter extends Window_StatusBase {
+  class Window_FormationMember extends Window_StatusBase {
+    constructor() {
+      super(...arguments);
+      this._statusWindow = null;
+      this._statusParamsWindow = null;
+      this._equipWindow = null;
+    }
     initialize(rect) {
       super.initialize(rect);
       this._bitmapsMustBeRedraw = [];
+      this._pendingIndex = -1;
       this.refresh();
+    }
+    setActivateAnotherWindow(func) {
+      this._activateAnotherWindow = func;
+    }
+    setStatusWindow(statusWindow) {
+      this._statusWindow = statusWindow;
+    }
+    setStatusParamsWindow(statusParamsWindow) {
+      this._statusParamsWindow = statusParamsWindow;
+    }
+    setEquipWindow(equipWindow) {
+      this._equipWindow = equipWindow;
     }
     drawActorCharacter(actor, x, y) {
       super.drawActorCharacter(actor, x, y);
@@ -507,8 +558,14 @@
         this._bitmapsMustBeRedraw.push(bitmap);
       }
     }
+    actor() {
+      return $gameParty.allMembers()[this.index()];
+    }
     members() {
       return [];
+    }
+    maxItems() {
+      return this.members().length;
     }
     spacing() {
       return 12;
@@ -517,15 +574,51 @@
       return 0;
     }
     offsetY() {
-      return 0;
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 4;
     }
     itemHeight() {
-      return settings.characterHeight + 8;
+      return settings.characterHeight + this.spacing();
+    }
+    /**
+     * スクロール高さ制限のため
+     */
+    overallHeight() {
+      return this.maxRows() * this.itemHeight();
     }
     itemRect(index) {
-      const x = this.x + this.offsetX() + (index % this.maxCols()) * (settings.characterWidth + this.spacing());
-      const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
+      const x = this.offsetX() + (index % this.maxCols()) * this.itemHeight() - this.scrollBaseX();
+      const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * this.itemHeight() - this.scrollBaseY();
       return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
+    }
+    pendingIndex() {
+      return this._pendingIndex;
+    }
+    pendingIndexInParty() {
+      return this._pendingIndex;
+    }
+    indexInParty() {
+      return this.index();
+    }
+    setPendingIndex(pendingIndex) {
+      if (this._pendingIndex !== pendingIndex) {
+        this._pendingIndex = pendingIndex;
+        this.refresh();
+      }
+    }
+    select(index) {
+      super.select(index);
+      const actor = this.actor();
+      if (actor) {
+        if (this._statusWindow) {
+          this._statusWindow.setActor(actor);
+        }
+        if (this._statusParamsWindow) {
+          this._statusParamsWindow.setActor(actor);
+        }
+        if (this._equipWindow) {
+          this._equipWindow.setActor(actor);
+        }
+      }
     }
     update() {
       super.update();
@@ -537,17 +630,17 @@
         this._bitmapsMustBeRedraw = [];
       }
     }
-    refresh() {
-      this.contents.clear();
-      this.members().forEach((actor, index) => {
+    drawAllItems() {
+      this.drawPendingItemBackGround();
+      this.members().forEach((actor, i) => {
         const x =
           this.offsetX() +
           settings.characterWidth / 2 +
-          (index % this.maxCols()) * (settings.characterWidth + this.spacing());
+          (i % this.maxCols()) * (settings.characterWidth + this.spacing());
         const y =
           this.offsetY() +
           settings.characterHeight +
-          Math.floor(index / this.maxCols()) * (settings.characterHeight + this.spacing());
+          Math.floor(i / this.maxCols() - this.topRow()) * (settings.characterHeight + this.spacing());
         if (settings.characterDirectionToLeft) {
           this.drawActorCharacterLeft(actor, x, y);
         } else {
@@ -555,201 +648,23 @@
         }
       });
     }
-  }
-  class Window_FormationBattleMember extends Window_DrawActorCharacter {
-    update() {
-      super.update();
-      if ($gameTemp.isFormationBattleMemberWindowRefreshRequested()) {
-        this.refresh();
-        $gameTemp.clearFormationBattleMemberWindowRefreshRequest();
+    drawPendingItemBackGround() {
+      if (this._pendingIndex >= 0) {
+        const rect = this.itemRect(this._pendingIndex);
+        const color = ColorManager.pendingColor();
+        this.changePaintOpacity(false);
+        this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
+        this.changePaintOpacity(true);
       }
     }
-    members() {
-      return $gameParty.battleMembers();
-    }
-    maxCols() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
-        ? $gameParty.maxBattleMembers()
-        : $gameParty.maxBattleMembers() / 2;
-    }
-    offsetX() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 12;
-    }
-    offsetY() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 4;
-    }
-    spacing() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 24 : 12;
-    }
-  }
-  class Window_FormationWaitingMember extends Window_DrawActorCharacter {
-    update() {
-      super.update();
-      if ($gameTemp.isFormationWaitingMemberWindowRefreshRequested()) {
-        this.refresh();
-        $gameTemp.clearFormationWaitingMemberWindowRefreshRequest();
-      }
-    }
-    members() {
-      return $gameParty.allMembers().filter((actor) => !actor.isBattleMember());
-    }
-    maxCols() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 11;
-    }
-  }
-  class Window_FormationSelect extends Window_Selectable {
-    constructor() {
-      super(...arguments);
-      this._pendingIndex = -1;
-      this._pendingCursorSprite = null;
-      this._pendingCursorRect = new Rectangle(0, 0, 0, 0);
-      this._statusWindow = null;
-      this._battleMemberWindow = null;
-      this._waitingMemberWindow = null;
-      this._statusParamsWindow = null;
-      this._equipWindow = null;
-    }
-    initialize(rect) {
-      super.initialize(rect);
-      this.setBackgroundType(2);
-      if (!this._pendingCursorSprite) {
-        this._pendingCursorSprite = new Sprite();
-        this.addChild(this._pendingCursorSprite);
-      }
-    }
-    setStatusWindow(statusWindow) {
-      this._statusWindow = statusWindow;
-    }
-    setBattleMemberWindow(battleMemberWindow) {
-      this._battleMemberWindow = battleMemberWindow;
-    }
-    setWaitingMemberWindow(waitingMemberWindow) {
-      this._waitingMemberWindow = waitingMemberWindow;
-    }
-    setStatusParamsWindow(statusParamsWindow) {
-      this._statusParamsWindow = statusParamsWindow;
-    }
-    setEquipWindow(equipWindow) {
-      this._equipWindow = equipWindow;
-    }
-    maxCols() {
-      return this.maxItems();
-    }
-    maxItems() {
-      return $gameParty.allMembers().length;
-    }
-    isHorizontal() {
-      return true;
-    }
-    isSelectBattleMember() {
-      return this.index() < $gameParty.battleMembers().length;
-    }
-    isSelectUpperLineBattleMember() {
-      return !this.useTallCharacter() && this.index() < this._battleMemberWindow.maxCols();
-    }
-    isSelectLowerLineBattleMember() {
-      return (
-        !this.useTallCharacter() &&
-        this.index() >= this._battleMemberWindow.maxCols() &&
-        this.index() < $gameParty.battleMembers().length
-      );
-    }
-    isSelectRightLineBattleMember() {
-      const maxCols = this.isSelectUpperLineBattleMember()
-        ? Math.ceil(this._battleMemberWindow.maxCols())
-        : Math.floor(this._battleMemberWindow.maxCols());
-      return (
-        !this.useTallCharacter() &&
-        this.index() < $gameParty.battleMembers().length &&
-        this.index() % maxCols === maxCols - 1
-      );
-    }
-    isSelectUpperLineWaitingMember() {
-      return (
-        !this.useTallCharacter() &&
-        this.index() >= $gameParty.battleMembers().length &&
-        this.index() < $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
-      );
-    }
-    isSelectLowerLineWaitingMember() {
-      return (
-        !this.useTallCharacter() &&
-        this.index() >= $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
-      );
-    }
-    isSelectLeftLineWaitingMember() {
-      return (
-        !this.useTallCharacter() &&
-        this.index() >= $gameParty.battleMembers().length &&
-        (this.index() - $gameParty.battleMembers().length) % this._waitingMemberWindow.maxCols() === 0
-      );
-    }
-    /**
-     * デフォルトよりも背の高いキャラグラを使用しているか
-     * @return {boolean}
-     */
-    useTallCharacter() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE;
-    }
-    cursorDown() {
-      if (this.isSelectUpperLineBattleMember()) {
-        if (this.index() + Math.ceil(this._battleMemberWindow.maxCols()) < $gameParty.battleMembers().length) {
-          this.select(this.index() + Math.ceil(this._battleMemberWindow.maxCols()));
-        } else if ($gameParty.battleMembers().length > Math.ceil(this._battleMemberWindow.maxCols())) {
-          this.select($gameParty.battleMembers().length - 1);
-        }
-      } else if (
-        this.isSelectUpperLineWaitingMember() &&
-        this.index() + this._waitingMemberWindow.maxCols() < this.maxItems()
-      ) {
-        this.select(this.index() + this._waitingMemberWindow.maxCols());
-      }
-    }
-    cursorUp() {
-      if (this.isSelectLowerLineBattleMember()) {
-        this.select(this.index() - Math.floor(this._battleMemberWindow.maxCols()));
-      } else if (this.isSelectLowerLineWaitingMember()) {
-        this.select(this.index() - this._waitingMemberWindow.maxCols());
-      }
-    }
-    cursorRight() {
-      if (this.isSelectRightLineBattleMember() && this.maxItems() > $gameParty.battleMembers().length) {
-        if (
-          this.isSelectLowerLineBattleMember() &&
-          this.maxItems() > $gameParty.battleMembers().length + this._waitingMemberWindow.maxCols()
-        ) {
-          this.select($gameParty.battleMembers().length + this._waitingMemberWindow.maxCols());
-        } else {
-          this.select($gameParty.battleMembers().length);
-        }
+    refreshCursor() {
+      /**
+       * アクティブでない場合には選択カーソル非表示
+       */
+      if (!this.active) {
+        this.setCursorRect(0, 0, 0, 0);
       } else {
-        super.cursorRight(true);
-      }
-    }
-    cursorLeft() {
-      if (this.isSelectLeftLineWaitingMember()) {
-        if (this.isSelectUpperLineWaitingMember()) {
-          this.select(Math.ceil(this._battleMemberWindow.maxCols()) - 1);
-        } else {
-          this.select($gameParty.battleMembers().length - 1);
-        }
-      } else {
-        super.cursorLeft(true);
-      }
-    }
-    actor() {
-      return $gameParty.allMembers()[this.index()];
-    }
-    select(index) {
-      super.select(index);
-      if (this._statusWindow) {
-        this._statusWindow.setActor(this.actor());
-      }
-      if (this._statusParamsWindow) {
-        this._statusParamsWindow.setActor(this.actor());
-      }
-      if (this._equipWindow) {
-        this._equipWindow.setActor(this.actor());
+        super.refreshCursor();
       }
     }
     processCancel() {
@@ -768,37 +683,86 @@
       }
       return !$gameParty.isAllDead();
     }
-    itemRect(index) {
-      if (index < $gameParty.battleMembers().length) {
-        /**
-         * メンバーウィンドウ生成前に呼ばれた場合は適当に誤魔化す
-         */
-        return this._battleMemberWindow?.itemRect(index) || super.itemRect(index);
-      } else {
-        return this._waitingMemberWindow?.itemRect(index - $gameParty.battleMembers().length) || super.itemRect(index);
+  }
+  class Window_FormationBattleMember extends Window_FormationMember {
+    update() {
+      super.update();
+      if ($gameTemp.isFormationBattleMemberWindowRefreshRequested()) {
+        this.refresh();
+        $gameTemp.clearFormationBattleMemberWindowRefreshRequest();
       }
     }
-    pendingIndex() {
-      return this._pendingIndex;
+    members() {
+      return $gameParty.battleMembers();
     }
-    setPendingIndex(pendingIndex) {
-      this._pendingIndex = pendingIndex;
-      this.drawPendingItemBackGround();
+    maxCols() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? $gameParty.maxBattleMembers()
+        : $gameParty.maxBattleMembers() / 2;
     }
-    drawPendingItemBackGround() {
-      if (this._pendingIndex >= 0) {
-        const rect = this.itemRect(this._pendingIndex);
-        const color = ColorManager.pendingColor();
-        this.changePaintOpacity(false);
-        this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
-        this.changePaintOpacity(true);
+    offsetX() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 12;
+    }
+    spacing() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 24 : 12;
+    }
+    cursorRight(wrap) {
+      if (this.index() % this.maxCols() === this.maxCols() - 1 || this.index() === this.maxItems() - 1) {
+        this._activateAnotherWindow();
+        this.playCursorSound();
+        this.updateInputData();
       } else {
-        this.contents.clear();
+        super.cursorRight();
+      }
+    }
+    cursorLeft(wrap) {
+      /**
+       * 直感に反するため、左端で左キーを押したときは何もしない
+       */
+      if (this.index() % this.maxCols() !== 0) {
+        super.cursorLeft();
+      }
+    }
+  }
+  class Window_FormationWaitingMember extends Window_FormationMember {
+    actor() {
+      return this.index() >= 0 ? $gameParty.allMembers()[this.index() + $gameParty.battleMembers().length] : undefined;
+    }
+    pendingIndexInParty() {
+      return this.pendingIndex() >= 0 ? this.pendingIndex() + $gameParty.battleMembers().length : -1;
+    }
+    indexInParty() {
+      return this.index() + $gameParty.battleMembers().length;
+    }
+    update() {
+      super.update();
+      if ($gameTemp.isFormationWaitingMemberWindowRefreshRequested()) {
+        this.refresh();
+        $gameTemp.clearFormationWaitingMemberWindowRefreshRequest();
+      }
+    }
+    members() {
+      return $gameParty.allMembers().filter((actor) => !actor.isBattleMember());
+    }
+    maxCols() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 10;
+    }
+    cursorLeft(wrap) {
+      if (this.index() % this.maxCols() === 0) {
+        this._activateAnotherWindow();
+        this.playCursorSound();
+        this.updateInputData();
+      } else {
+        super.cursorLeft();
+      }
+    }
+    cursorRight(wrap) {
+      if (this.index() % this.maxCols() !== this.maxCols() - 1) {
+        super.cursorRight();
       }
     }
   }
   globalThis.Window_FormationStatus = Window_FormationStatus;
   globalThis.Window_FormationBattleMember = Window_FormationBattleMember;
   globalThis.Window_FormationWaitingMember = Window_FormationWaitingMember;
-  globalThis.Window_FormationSelect = Window_FormationSelect;
 })();
