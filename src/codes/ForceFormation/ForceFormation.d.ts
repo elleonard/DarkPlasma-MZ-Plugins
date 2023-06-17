@@ -1,5 +1,11 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 
+declare namespace BattleManager {
+  declare interface LogWindow<Battler, Action> {
+    displayForceChangedFormation(): void;
+  }
+}
+
 declare interface Game_Party {
   _forceFormationChanged: boolean;
 
