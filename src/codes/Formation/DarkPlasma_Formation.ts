@@ -251,10 +251,11 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
       let colOffset = this.formationBattleMemberWindow().maxCols() - 1;
       let targetIndex = () => (this.formationBattleMemberWindow().topRow() + rowOffset) * this.formationBattleMemberWindow().maxCols() + colOffset;
       while (targetIndex() >= this.formationBattleMemberWindow().maxItems()) {
-        if (rowOffset > 0) {
-          rowOffset--;
-        } else {
+        if (colOffset > 0) {
           colOffset--;
+        } else {
+          colOffset = this.formationBattleMemberWindow().maxCols() - 1;
+          rowOffset--;
         }
       }
       this.formationBattleMemberWindow().smoothSelect(targetIndex());
@@ -539,6 +540,10 @@ class Window_FormationMember extends Window_StatusBase {
     return settings.characterHeight + this.spacing();
   }
 
+  maxColsForRect() {
+    return this.maxCols();
+  }
+
   /**
    * スクロール高さ制限のため
    */
@@ -547,8 +552,8 @@ class Window_FormationMember extends Window_StatusBase {
   }
 
   itemRect(index: number) {
-    const x = this.offsetX() + (index % this.maxCols()) * this.itemHeight() - this.scrollBaseX();
-    const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * this.itemHeight() - this.scrollBaseY();
+    const x = this.offsetX() + (index % this.maxColsForRect()) * this.itemWidth() - this.scrollBaseX();
+    const y = -4 + this.offsetY() + Math.floor(index / this.maxColsForRect()) * this.itemHeight() - this.scrollBaseY();
     return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
   }
 
@@ -604,11 +609,11 @@ class Window_FormationMember extends Window_StatusBase {
       const x =
         this.offsetX() +
         settings.characterWidth / 2 +
-        (i % this.maxCols()) * (settings.characterWidth + this.spacing());
+        (i % this.maxColsForRect()) * this.itemWidth();
       const y =
         this.offsetY() +
         settings.characterHeight +
-        Math.floor(i / this.maxCols() - this.topRow()) * (settings.characterHeight + this.spacing());
+        Math.floor(i / this.maxColsForRect() - this.topRow()) * this.itemHeight();
       if (settings.characterDirectionToLeft) {
         this.drawActorCharacterLeft(actor, x, y);
       } else {
@@ -671,6 +676,16 @@ class Window_FormationBattleMember extends Window_FormationMember {
   }
 
   maxCols() {
+    return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+      ? $gameParty.maxBattleMembers()
+      : Math.ceil($gameParty.maxBattleMembers() / 2);
+  }
+
+  /**
+   * 戦闘メンバーの数が奇数だった場合に2段目の位置をいい感じにするためのもの
+   * 少数で割った余りを計算するので気持ち悪いが……。
+   */
+  maxColsForRect(): number {
     return settings.characterHeight > DEFAULT_CHARACTER_SIZE
       ? $gameParty.maxBattleMembers()
       : $gameParty.maxBattleMembers() / 2;
