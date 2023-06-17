@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 2.0.0
+// DarkPlasma_Formation 2.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/18 2.0.1 戦闘メンバーの上限が奇数だった場合に戦闘メンバーと待機メンバーを行き来すると正常に動作しない不具合を修正
  * 2023/06/17 2.0.0 待機メンバーウィンドウを縦スクロールする機能追加
  * 2023/03/07 1.4.2 FesCursor.jsとの競合を解消
  * 2022/09/10 1.4.1 FormationInBattleと組み合わせて戦闘開始時にエラーで停止する不具合を修正
@@ -84,7 +85,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -337,10 +338,11 @@
           (this.formationBattleMemberWindow().topRow() + rowOffset) * this.formationBattleMemberWindow().maxCols() +
           colOffset;
         while (targetIndex() >= this.formationBattleMemberWindow().maxItems()) {
-          if (rowOffset > 0) {
-            rowOffset--;
-          } else {
+          if (colOffset > 0) {
             colOffset--;
+          } else {
+            colOffset = this.formationBattleMemberWindow().maxCols() - 1;
+            rowOffset--;
           }
         }
         this.formationBattleMemberWindow().smoothSelect(targetIndex());
@@ -579,6 +581,9 @@
     itemHeight() {
       return settings.characterHeight + this.spacing();
     }
+    maxColsForRect() {
+      return this.maxCols();
+    }
     /**
      * スクロール高さ制限のため
      */
@@ -586,8 +591,9 @@
       return this.maxRows() * this.itemHeight();
     }
     itemRect(index) {
-      const x = this.offsetX() + (index % this.maxCols()) * this.itemHeight() - this.scrollBaseX();
-      const y = -4 + this.offsetY() + Math.floor(index / this.maxCols()) * this.itemHeight() - this.scrollBaseY();
+      const x = this.offsetX() + (index % this.maxColsForRect()) * this.itemWidth() - this.scrollBaseX();
+      const y =
+        -4 + this.offsetY() + Math.floor(index / this.maxColsForRect()) * this.itemHeight() - this.scrollBaseY();
       return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
     }
     pendingIndex() {
@@ -633,14 +639,11 @@
     drawAllItems() {
       this.drawPendingItemBackGround();
       this.members().forEach((actor, i) => {
-        const x =
-          this.offsetX() +
-          settings.characterWidth / 2 +
-          (i % this.maxCols()) * (settings.characterWidth + this.spacing());
+        const x = this.offsetX() + settings.characterWidth / 2 + (i % this.maxColsForRect()) * this.itemWidth();
         const y =
           this.offsetY() +
           settings.characterHeight +
-          Math.floor(i / this.maxCols() - this.topRow()) * (settings.characterHeight + this.spacing());
+          Math.floor(i / this.maxColsForRect() - this.topRow()) * this.itemHeight();
         if (settings.characterDirectionToLeft) {
           this.drawActorCharacterLeft(actor, x, y);
         } else {
@@ -696,6 +699,15 @@
       return $gameParty.battleMembers();
     }
     maxCols() {
+      return settings.characterHeight > DEFAULT_CHARACTER_SIZE
+        ? $gameParty.maxBattleMembers()
+        : Math.ceil($gameParty.maxBattleMembers() / 2);
+    }
+    /**
+     * 戦闘メンバーの数が奇数だった場合に2段目の位置をいい感じにするためのもの
+     * 少数で割った余りを計算するので気持ち悪いが……。
+     */
+    maxColsForRect() {
       return settings.characterHeight > DEFAULT_CHARACTER_SIZE
         ? $gameParty.maxBattleMembers()
         : $gameParty.maxBattleMembers() / 2;
