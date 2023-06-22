@@ -1,0 +1,27 @@
+DarkPlasma_RemoveStateByMp:
+  name: DarkPlasma_RemoveStateByMp
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/06/22
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'MPが一定値以下になった際に解除するステート'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      ステートのメモ欄に以下のように記述すると
+      対象ステートはMPが一定値以下になった場合に解除されます。
+
+      <removeByMpLTE:0>
+      MPが0以下になったら解除
