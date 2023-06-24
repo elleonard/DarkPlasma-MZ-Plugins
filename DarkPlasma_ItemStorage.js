@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.3.1
+// DarkPlasma_ItemStorage 1.4.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/06/24 1.4.0 所持している数、倉庫に入っている数のテキスト設定を追加
  * 2023/04/02 1.3.1 typescript移行
  * 2022/05/22 1.3.0 DarkPlasma_OrderEquipに対応
  * 2022/05/14 1.2.0 アイテム出し入れ時に説明文が更新されない不具合を修正
@@ -29,6 +30,16 @@
  * @type number
  * @default 99
  *
+ * @param partyItemCountText
+ * @text 所持している数テキスト
+ * @type string
+ * @default 所持している数
+ *
+ * @param storageItemCountText
+ * @text 倉庫に入っている数テキスト
+ * @type string
+ * @default 倉庫に入っている数
+ *
  * @command openStorage
  * @text 倉庫を開く
  * @arg item
@@ -53,7 +64,7 @@
  * @default false
  *
  * @help
- * version: 1.3.1
+ * version: 1.4.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -94,6 +105,8 @@
 
   const settings = {
     maxItems: Number(pluginParameters.maxItems || 99),
+    partyItemCountText: String(pluginParameters.partyItemCountText || `所持している数`),
+    storageItemCountText: String(pluginParameters.storageItemCountText || `倉庫に入っている数`),
   };
 
   PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
@@ -679,8 +692,8 @@
         return;
       }
       this.changeTextColor(ColorManager.systemColor());
-      this.drawText('所持している数:', 0, 0);
-      this.drawText('倉庫に入っている数:', 0, this.lineHeight());
+      this.drawText(`${settings.partyItemCountText}:`, 0, 0);
+      this.drawText(`${settings.storageItemCountText}:`, 0, this.lineHeight());
       const changePartyItemNumber = this._toStorage ? -this._number : this._number;
       this.changeTextColor(ColorManager.paramchangeTextColor(changePartyItemNumber));
       this.drawText(`${$gameParty.numItems(this._item) + changePartyItemNumber}`, 0, 0, this.innerWidth, 'right');
