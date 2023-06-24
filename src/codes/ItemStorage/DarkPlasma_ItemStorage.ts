@@ -711,8 +711,8 @@ class Window_StorageNumber extends Window_MenuNumber {
       return;
     }
     this.changeTextColor(ColorManager.systemColor());
-    this.drawText('所持している数:', 0, 0);
-    this.drawText('倉庫に入っている数:', 0, this.lineHeight());
+    this.drawText(`${settings.partyItemCountText}:`, 0, 0);
+    this.drawText(`${settings.storageItemCountText}:`, 0, this.lineHeight());
     const changePartyItemNumber = this._toStorage ? -this._number : this._number;
     this.changeTextColor(ColorManager.paramchangeTextColor(changePartyItemNumber));
     this.drawText(`${$gameParty.numItems(this._item) + changePartyItemNumber}`, 0, 0, this.innerWidth, 'right');

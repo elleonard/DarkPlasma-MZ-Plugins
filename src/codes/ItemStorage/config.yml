@@ -3,6 +3,9 @@ DarkPlasma_ItemStorage:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/06/24
+      version: 1.4.0
+      description: '所持している数、倉庫に入っている数のテキスト設定を追加'
     - date: 2023/04/02
       version: 1.3.1
       description: 'typescript移行'
@@ -37,6 +40,16 @@ DarkPlasma_ItemStorage:
         ja: 倉庫内に格納できるアイテム1種類の最大数を設定します。
       type: number
       default: 99
+    - param: partyItemCountText
+      text:
+        ja: 所持している数テキスト
+      type: string
+      default: 所持している数
+    - param: storageItemCountText
+      text:
+        ja: 倉庫に入っている数テキスト
+      type: string
+      default: 倉庫に入っている数
   commands:
     - command: openStorage
       text:
