@@ -20,10 +20,10 @@ tags:
 
 ファイアⅠを全体化可能にし、全体化した際のアニメーションを70番に変更する設定です。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpandTargetScope.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 # 関連プラグイン
 

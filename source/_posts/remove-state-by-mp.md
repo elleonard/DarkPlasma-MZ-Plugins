@@ -18,7 +18,7 @@ MPが一定値以下になったときに解除されるステートを作成で
 MPを毎ターン5％消費する代わりに会心率を+100％するステートです。
 MPが0以下になると解除されます。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RemoveStateByMp.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

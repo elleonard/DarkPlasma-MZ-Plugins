@@ -22,10 +22,10 @@ HP再生値、MP再生値特徴を定義します。
 
 アクター「リード」に、毎ターンHPが10回復する特徴を追加します。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RegenerateByValueTrait.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 ## 前提プラグイン
 

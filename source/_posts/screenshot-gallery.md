@@ -21,7 +21,7 @@ tags:
 ※画像へのカーソル画像表示は本プラグインの機能には含まれません。
 [FesCursor.js](https://awaya3ji.seesaa.net/article/488927664.html)等をご利用ください。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ScreenshotGallery.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

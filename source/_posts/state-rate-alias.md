@@ -17,7 +17,7 @@ tags:
 
 設定例では、ID:41の猛毒ステートを付与しようとする際、成功判定にID:40の毒ステートの有効度及び無効フラグを用います。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateRateAlias.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

@@ -42,7 +42,7 @@ Balloon.pngをコピーして色相をいじった BalloonAnother.png を作り�
 
 ![設定例](setting5.png "設定例5")
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExtraBalloon.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

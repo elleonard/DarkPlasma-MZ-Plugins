@@ -25,7 +25,7 @@ tags:
 メモ欄のみで指定するためページごとに範囲を変えることができません。
 矩形のみでなく、ひし形や円形、三角形に近似した範囲を設定できます。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AreaEvent.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

@@ -14,8 +14,8 @@ tags:
 - パーティメンバーの現在の装備セットを記録する
 - パーティメンバーに記録した装備セットを復元する
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SaveEquipSet.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SaveEquipSet.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

@@ -21,7 +21,7 @@ tags:
 ![設定例-マップ](dark-map-setting1.png "マップの設定例")
 ![設定例-イベント](dark-map-setting-event.png "イベントの設定例")
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DarkMap.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

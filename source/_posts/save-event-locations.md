@@ -21,8 +21,8 @@ RPGツクールMZ（MV）においては、以下の状況でマップのロー�
 
 ![設定例](event.png "設定例")
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SaveEventLocations.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/master/src/codes/SaveEventLocations/DarkPlasma_SaveEventLocations.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

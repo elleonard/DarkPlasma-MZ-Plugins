@@ -21,8 +21,8 @@ tags:
 
 詳しくは[【RPGツクールMV/MZ】行動による逃走とその仕様](https://elleonard.github.io/nplus_doc/2022/08/13/engineering/rmmz/escape-by-action/)にて解説しています。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RemoveBuffAtBattleEnd.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_RemoveBuffAtBattleEnd.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

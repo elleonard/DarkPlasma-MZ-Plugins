@@ -20,8 +20,8 @@ RPGツクールMZ（MV）デフォルトの仕様として、攻撃属性が複�
 
 - [複数の属性を持つスキル・アイテム(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiElementAction.js)
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiElementRate.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_MultiElementRate.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

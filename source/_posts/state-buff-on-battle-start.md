@@ -19,10 +19,10 @@ tags:
 
 戦闘開始時にID41,42のステートにかかります。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateBuffOnBattleStart.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 ## 前提プラグイン
 

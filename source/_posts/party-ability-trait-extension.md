@@ -20,7 +20,7 @@ tags:
 ![設定例](party-ability-trait-extension.png "設定例")
 パーティ全体の床ダメージ率を0％乗算します。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_PartyAbilityTraitExtension.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

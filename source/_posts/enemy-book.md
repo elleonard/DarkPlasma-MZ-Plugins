@@ -27,11 +27,11 @@ tags:
 
 - {% post_link order-id-alias DarkPlasma_OrderIdAlias %}で表示順を設定できる
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyBook.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_EnemyBook.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 ## 前提プラグイン
 

@@ -11,7 +11,7 @@ tags:
 
 本プラグインを導入した場合、ウィンドウがアクティブでない時にもゲームを止めません。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AlwaysActive.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

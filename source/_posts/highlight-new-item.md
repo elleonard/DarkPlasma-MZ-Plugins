@@ -19,9 +19,8 @@ tags:
 入手したハイポーションが強調表示されています。
 カーソルを合わせて1操作すると新規入手フラグが消え、通常の色に戻ります。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_HighlightNewItem.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_HighlightNewItem.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
-
+ダウンロード方法については {% post_link about %} を参照してください。

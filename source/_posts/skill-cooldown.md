@@ -20,11 +20,11 @@ tags:
 
 スキルID172（強撃）の使用をトリガーにして、3ターンの間同スキルが使えなくする設定です。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillCooldown.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillCooldown.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 # 派生プラグイン
 

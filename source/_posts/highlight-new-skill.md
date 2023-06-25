@@ -17,7 +17,7 @@ tags:
 
 カーソルを合わせて1操作すると新規習得フラグが消え、通常の色に戻ります。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_HighlightNewSkill.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

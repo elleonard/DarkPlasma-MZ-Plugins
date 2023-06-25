@@ -48,8 +48,8 @@ kienさんが配布されている[元プラグイン](https://forum.tkool.jp/in
 セーブデータが対象のゲームのものであるかどうかは、セーブデータに含まれるゲームタイトルと、インポートしようとしているゲームタイトルの設定が等しいかどうかで判定しています。
 データベース システム1のゲームタイトル設定を変更すると、変更前にエクスポートしたセーブデータはインポートできなくなります。
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ImportExportSaveFile.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_ImportExportSaveFile.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。

@@ -25,11 +25,11 @@ tags:
 
 [【RPGツクールMZプラグイン】 スキルに詳細解説をつけたい人なら必須プラグイン！ 「DarkPlasma_SkillDetail.js」](https://youtube.com/shorts/katnCYZdVOY?feature=share)
 
-# ダウンロードリンク
+# ダウンロードページへのリンク
 
 [GitHub(MZ版)](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetail.js)
 [GitHub(MV版)](https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_SkillDetail.js)
-Rawボタンを右クリックして対象をファイルに保存してください。
+ダウンロード方法については {% post_link about %} を参照してください。
 
 # 前提プラグイン
 
