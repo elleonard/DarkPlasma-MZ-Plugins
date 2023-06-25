@@ -18,8 +18,13 @@ Twitter:[NPlasma](https://twitter.com/elleonard_f) (全年齢)
 
 # プラグインのダウンロード方法
 
-GitHubの各ファイルのページにある Download raw file ボタンからダウンロードできます。
+GitHubの各ファイルのページにあるボタンからダウンロードできます。
+
+GitHubにログイン済みの場合: Download raw file ボタンをクリックします。
 ![ダウンロードボタン](download.png "ダウンロードボタン")
+
+GitHubにログインしていない場合: Raw ボタンを右クリックして対象をファイルに保存します。
+![Rawボタン](download-not-login.png "Rawボタン")
 
 # ci-en
 
