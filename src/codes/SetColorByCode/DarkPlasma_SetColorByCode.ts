@@ -5,6 +5,7 @@ import { Window_ObtainEscapeParamTextMixIn } from '../../common/window/obtainEsc
 Window_ObtainEscapeParamTextMixIn(Window_Base.prototype);
 
 function Window_SetColorByCodeMixIn(windowClass: Window_Base) {
+  const _processEscapeCharacter = windowClass.processEscapeCharacter;
   windowClass.processEscapeCharacter = function (code, textState) {
     if (code === "C") {
       const color = this.obtainEscapeParamText(textState);
@@ -13,6 +14,8 @@ function Window_SetColorByCodeMixIn(windowClass: Window_Base) {
       } else {
         this.processColorChange(Number(color));
       }
+    } else {
+      _processEscapeCharacter.call(this, code, textState);
     }
   };
 }
