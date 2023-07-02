@@ -10,11 +10,8 @@ DarkPlasmaが作成したRPGツクールMZ向けプラグインの使い方を�
 
 # プラグインや当サイトに関するお問い合わせ
 
-DarkPlasmaが作成したプラグインや当サイトについては、Twitterや[GitHubのIssues](https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues)にてお問い合わせください。
+DarkPlasmaが作成したプラグインや当サイトについては、[マシュマロ](https://marshmallow-qa.com/elleonard_f?utm_medium=url_text&utm_source=promotion)、[Discordサーバー](https://discord.gg/E3STkJuAnZ)、[GitHubのIssues](https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues)などにてお問い合わせください。
 GitHubにサインインしていれば、本ブログの記事にコメントを書くこともできます。
-
-Twitter:[DarkPlasma](https://twitter.com/plasma_dark) (R18)
-Twitter:[NPlasma](https://twitter.com/elleonard_f) (全年齢)
 
 # プラグインのダウンロード方法
 
