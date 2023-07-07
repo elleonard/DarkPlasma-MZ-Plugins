@@ -1,9 +1,10 @@
-// DarkPlasma_SaveEquipSet 1.1.2
+// DarkPlasma_SaveEquipSet 1.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/07 1.2.0 復元による装備可能判定のインターフェース追加
  * 2022/11/13 1.1.2 typescript移行
  *                  装備セットに含まれる空欄を復元できない不具合を修正
  * 2022/07/23 1.1.1 セーブデータを正しくロードできない不具合を修正
@@ -11,7 +12,7 @@
  * 2022/04/22 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc パーティメンバーの装備セットを記録する
  * @author DarkPlasma
  * @license MIT
@@ -77,7 +78,7 @@
  * @default 0
  *
  * @help
- * version: 1.1.2
+ * version: 1.2.0
  * パーティメンバーの装備セットを記録し、復元するプラグインコマンドを提供します。
  *
  * 以下に該当する場合、復元時にその装備は無視され、復元されません。
@@ -238,6 +239,12 @@
       }
       return this._equipSets;
     };
+    gameActor.canEquipByLoad = function (equipSlot) {
+      return (
+        !equipSlot.item ||
+        ($gameParty.hasItem(equipSlot.item) && this.canEquip(equipSlot.item) && this.isEquipChangeOk(equipSlot.slotId))
+      );
+    };
     gameActor.equipSetAt = function (index) {
       return this.equipSets()[index];
     };
@@ -256,13 +263,7 @@
       const equipSet = this.equipSetAt(index);
       if (settings.equipSetCount > index && equipSet) {
         equipSet
-          .filter(
-            (equipSlot) =>
-              !equipSlot.item ||
-              ($gameParty.hasItem(equipSlot.item) &&
-                this.canEquip(equipSlot.item) &&
-                this.isEquipChangeOk(equipSlot.slotId))
-          )
+          .filter((equipSlot) => this.canEquipByLoad(equipSlot))
           .forEach((equipSlot) => this.changeEquip(equipSlot.slotId, equipSlot.item));
       }
     };
