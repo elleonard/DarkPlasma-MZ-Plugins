@@ -70,7 +70,7 @@ class Game_EquipSlot {
    * @param {number} slotId
    * @param {MZ.Weapon | MZ.Armor} item
    */
-  constructor(slotId: number, item: MZ.Weapon|MZ.Armor) {
+  constructor(slotId: number, item: MZ.Weapon|MZ.Armor|null) {
     this._slotId = slotId;
     this.initIdAndKind(item);
   }
@@ -99,7 +99,7 @@ class Game_EquipSlot {
     }
   }
 
-  initIdAndKind(item: MZ.Weapon|MZ.Armor) {
+  initIdAndKind(item: MZ.Weapon|MZ.Armor|null) {
     this._itemId = item ? item.id : null;
     this._kind = item
       ? (() => {
@@ -136,6 +136,14 @@ function Game_Actor_SaveEquipSetMixIn(gameActor: Game_Actor) {
     return this._equipSets;
   };
 
+  gameActor.canEquipByLoad = function (equipSlot) {
+    return !equipSlot.item ||
+      $gameParty.hasItem(equipSlot.item) &&
+      this.canEquip(equipSlot.item) &&
+      this.isEquipChangeOk(equipSlot.slotId);
+  };
+
+
   gameActor.equipSetAt = function (index) {
     return this.equipSets()[index];
   };
@@ -158,13 +166,7 @@ function Game_Actor_SaveEquipSetMixIn(gameActor: Game_Actor) {
     const equipSet = this.equipSetAt(index);
     if (settings.equipSetCount > index && equipSet) {
       equipSet
-        .filter(
-          (equipSlot: Game_EquipSlot) =>
-            !equipSlot.item ||
-            $gameParty.hasItem(equipSlot.item) &&
-            this.canEquip(equipSlot.item) &&
-            this.isEquipChangeOk(equipSlot.slotId)
-        )
+        .filter((equipSlot: Game_EquipSlot) => this.canEquipByLoad(equipSlot))
         .forEach((equipSlot: Game_EquipSlot) => this.changeEquip(equipSlot.slotId, equipSlot.item));
     }
   };

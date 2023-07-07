@@ -16,6 +16,7 @@ declare interface Game_Actor {
   _equipSet?: Game_EquipSlot[];
   _equipSets: Game_EquipSlot[][];
 
+  canEquipByLoad(equipSlot: Game_EquipSlot): boolean;
   equipSets(): Game_EquipSlot[][];
   equipSetAt(index: number): Game_EquipSlot[];
   saveEquipSet(): void;
