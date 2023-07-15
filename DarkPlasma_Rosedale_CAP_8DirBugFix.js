@@ -1,10 +1,11 @@
-// DarkPlasma_Rosedale_CAP_8DirBugFix 1.0.0
+// DarkPlasma_Rosedale_CAP_8DirBugFix 1.1.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/07/16 1.0.0 公開
+ * 2023/07/16 1.1.0 デフォルト歩行グラパターンのインターフェース追加
+ *            1.0.0 公開
  */
 
 /*:
@@ -19,7 +20,7 @@
  * @orderBefore DarkPlasma_ExpandCharacterPattern
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 公式DLC Rosedale_CollisionAlteringPlugin の以下の不具合を修正します。
  *
  * 8方向歩行グラフィックを用いるとセーブ画面などで
@@ -59,6 +60,9 @@
     gameActor.maxCharacterPattern = function () {
       return ImageManager.isBigCharacter(this.characterName()) ? 3 : 12;
     };
+    gameActor.defaultCharacterPattern = function () {
+      return 1;
+    };
     gameActor.characterPatternYCount = function () {
       return ImageManager.isBigCharacter(this.characterName()) ? 8 : 16;
     };
@@ -71,7 +75,7 @@
       const pw = bitmap.width / actor.maxCharacterPattern();
       const ph = bitmap.height / actor.characterPatternYCount();
       const n = big ? 0 : actor.characterIndex();
-      const sx = ((n % 4) * 3 + 1) * pw;
+      const sx = ((n % 4) * 3 + actor.defaultCharacterPattern()) * pw;
       const sy = (Math.floor(n / 4) * 4 + 1) * ph;
       this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
     };
