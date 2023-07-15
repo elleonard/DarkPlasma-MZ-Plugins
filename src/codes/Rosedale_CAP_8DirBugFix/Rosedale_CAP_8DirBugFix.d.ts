@@ -10,6 +10,7 @@ declare namespace DataManager {
 
 declare interface Game_Actor {
   maxCharacterPattern(): number;
+  defaultCharacterPattern(): number;
   characterPatternYCount(): number;
 }
 

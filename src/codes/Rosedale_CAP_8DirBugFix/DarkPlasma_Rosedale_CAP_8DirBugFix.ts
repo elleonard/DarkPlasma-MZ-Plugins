@@ -23,6 +23,10 @@ function Game_Actor_CAP_BugFixMixIn(gameActor: Game_Actor) {
     return ImageManager.isBigCharacter(this.characterName()) ? 3 : 12;
   };
 
+  gameActor.defaultCharacterPattern = function () {
+    return 1;
+  };
+
   gameActor.characterPatternYCount = function () {
     return ImageManager.isBigCharacter(this.characterName()) ? 8 : 16;
   };
@@ -37,7 +41,7 @@ function Window_CAP_BugFixMixIn(windowClass: Window_Base) {
     const pw = bitmap.width / actor.maxCharacterPattern();
     const ph = bitmap.height / actor.characterPatternYCount();
     const n = big ? 0 : actor.characterIndex();
-    const sx = ((n % 4) * 3 + 1) * pw;
+    const sx = ((n % 4) * 3 + actor.defaultCharacterPattern()) * pw;
     const sy = (Math.floor(n / 4) * 4 + 1) * ph;
     this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
   };
