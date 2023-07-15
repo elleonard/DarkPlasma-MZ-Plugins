@@ -1,0 +1,56 @@
+DarkPlasma_ExpandCharacterPattern:
+  name: DarkPlasma_ExpandCharacterPattern
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/07/15
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '歩行グラフィックのアニメーションパターンを増やす'
+  parameters: []
+  commands:
+    - command: expandPattern
+      text:
+        ja: 拡張パターン設定
+      desc:
+        ja: 歩行グラフィックのアニメーションパターンを設定します。ページ内で1回のみ有効です。
+      args:
+        - arg: maxPattern
+          text:
+            ja: 最大パターン数
+          type: number
+          default: 4
+        - arg: defaultPattern
+          text:
+            ja: デフォルトパターン
+          type: number
+          default: 1
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      歩行グラフィックのアニメーションパターンを3通りよりも増やします。
+      歩行グラフィック画像の左端から順に再生し、
+      右端にたどり着いたら左端から再生します。
+
+      アニメーションパターンを増やすキャラクターの歩行グラフィック画像は
+      画像左上端から開始して1キャラ分のみとしてください。
+      横幅は余分な空白を含めないようにしてください。
+      高さは2キャラクター分必要になります。
+
+      アクターのメモ欄:
+      <maxPattern:n>
+      歩行グラフィックのアニメーションパターン数をnに設定します。
+      <defaultPattern:n>
+      歩行グラフィックのデフォルトパターンをnに設定します。
+      設定しない場合、デフォルトパターンは1になります。
+
+      本プラグインはセーブデータに以下の要素を追加します。
+      - イベントごとのアニメーションパターン拡張情報
