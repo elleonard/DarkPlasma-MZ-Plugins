@@ -1,0 +1,35 @@
+DarkPlasma_Rosedale_CAP_8DirBugFix:
+  name: DarkPlasma_Rosedale_CAP_8DirBugFix
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/07/16
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'Rosedale_CollisionAlteringPluginの8方向歩行グラの不具合修正パッチ'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: Rosedale_CollisionAlteringPlugin
+        version: 1.1.0
+    orderAfter: []
+    orderBefore:
+      - name: DarkPlasma_ExpandCharacterPattern
+  help:
+    ja: |
+      公式DLC Rosedale_CollisionAlteringPlugin の以下の不具合を修正します。
+      
+      8方向歩行グラフィックを用いるとセーブ画面などで
+      キャラクター正常に表示されない。
+
+      本プラグインは公式DLCプラグインのバグ修正パッチプラグインです。
+      公式DLC本体に修正が入り次第、本プラグインの公開を終了します。
+
+      本プラグインはグローバルセーブデータ以下の情報を追加します。
+      - 各セーブデータのパーティメンバーのアクターID
