@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 1.1.1
+// DarkPlasma_TextLog 1.1.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/22 1.1.2 名前の制御文字をログ記録時点で展開するように修正
  * 2023/01/30 1.1.1 決定キーでログウィンドウが閉じない不具合を修正
  * 2022/11/03 1.1.0 開閉キーのpageup/pagedownを非推奨化
  *                  開閉キーでログウィンドウを閉じられない不具合を修正
@@ -11,7 +12,7 @@
  * 2022/11/02 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc イベントテキストのログを保持・表示する
  * @author DarkPlasma
  * @license MIT
@@ -137,7 +138,7 @@
  * @type string
  *
  * @help
- * version: 1.1.1
+ * version: 1.1.2
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -154,7 +155,7 @@
 
   function parseArgs_insertTextLog(args) {
     return {
-      text: String(args.text || ''),
+      text: String(args.text || ``),
     };
   }
 
@@ -171,21 +172,21 @@
   const settings = {
     disableLoggingSwitch: Number(pluginParameters.disableLoggingSwitch || 0),
     openLogKeys: JSON.parse(pluginParameters.openLogKeys || '["tab"]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
     disableLogWindowSwitch: Number(pluginParameters.disableLogWindowSwitch || 0),
     lineSpacing: Number(pluginParameters.lineSpacing || 0),
     messageSpacing: Number(pluginParameters.messageSpacing || 0),
-    logSplitter: String(pluginParameters.logSplitter || '-------------------------------------------------------'),
+    logSplitter: String(pluginParameters.logSplitter || `-------------------------------------------------------`),
     autoSplit: String(pluginParameters.autoSplit || true) === 'true',
-    choiceFormat: String(pluginParameters.choiceFormat || '選択肢:{choice}'),
+    choiceFormat: String(pluginParameters.choiceFormat || `選択肢:{choice}`),
     choiceColor: Number(pluginParameters.choiceColor || 17),
-    choiceCancelText: String(pluginParameters.choiceCancelText || 'キャンセル'),
+    choiceCancelText: String(pluginParameters.choiceCancelText || `キャンセル`),
     smoothBackFromLog: String(pluginParameters.smoothBackFromLog || true) === 'true',
-    backgroundImage: String(pluginParameters.backgroundImage || ''),
+    backgroundImage: String(pluginParameters.backgroundImage || ``),
     showLogWindowFrame: String(pluginParameters.showLogWindowFrame || true) === 'true',
     escapeCharacterCodes: JSON.parse(pluginParameters.escapeCharacterCodes || '[]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
     scrollSpeed: Number(pluginParameters.scrollSpeed || 1),
     scrollSpeedHigh: Number(pluginParameters.scrollSpeedHigh || 10),
@@ -638,7 +639,10 @@
         if ($gameMessage.allText()) {
           $gameTemp
             .currentEventLog()
-            .pushLog($gameMessage.speakerName(), this.convertEscapeCharacters($gameMessage.allText()));
+            .pushLog(
+              this.convertEscapeCharacters($gameMessage.speakerName()),
+              this.convertEscapeCharacters($gameMessage.allText())
+            );
         }
         if ($gameMessage.isChoice()) {
           $gameTemp
