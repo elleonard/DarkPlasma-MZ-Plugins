@@ -539,7 +539,10 @@ function Window_Message_TextLogMixIn(windowClass: Window_Message) {
   windowClass.terminateMessage = function () {
     if (!settings.disableLoggingSwitch || !$gameSwitches.value(settings.disableLoggingSwitch)) {
       if ($gameMessage.allText()) {
-        $gameTemp.currentEventLog().pushLog($gameMessage.speakerName(), this.convertEscapeCharacters($gameMessage.allText()));
+        $gameTemp.currentEventLog().pushLog(
+          this.convertEscapeCharacters($gameMessage.speakerName()),
+          this.convertEscapeCharacters($gameMessage.allText())
+        );
       }
       if ($gameMessage.isChoice()) {
         $gameTemp.currentEventLog().pushLog("", settings.choiceFormat.replace(/{choice}/gi, `\x1bC[${settings.choiceColor}]${$gameMessage.chosenText()}\x1bC[0]`));
