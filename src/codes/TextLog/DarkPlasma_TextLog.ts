@@ -204,12 +204,14 @@ Game_Interpreter_TextLogMixIn(Game_Interpreter.prototype);
 class Scene_TextLog extends Scene_Base {
   _backgroundSprite: Sprite;
   _textLogWindow: Window_TextLog;
+  _cancelButton: Sprite_Button|undefined;
 
   create() {
     super.create();
     this.createBackground();
     this.createWindowLayer();
     this.createTextLogWindow();
+    this.createButtons();
   }
 
   createBackground() {
@@ -235,7 +237,22 @@ class Scene_TextLog extends Scene_Base {
   }
 
   textLogWindowRect() {
-    return new Rectangle(0, 0, Graphics.boxWidth, Graphics.boxHeight);
+    const y = ConfigManager.touchUI ? this.buttonAreaBottom() : 0;
+    return new Rectangle(
+      0,
+      y,
+      Graphics.boxWidth,
+      Graphics.boxHeight - y
+    );
+  }
+
+  createButtons() {
+    if (ConfigManager.touchUI) {
+      this._cancelButton = new Sprite_Button('cancel');
+      this._cancelButton.x = Graphics.boxWidth - this._cancelButton.width - 4;
+      this._cancelButton.y = this.buttonY();
+      this.addChild(this._cancelButton);
+    }
   }
 }
 
