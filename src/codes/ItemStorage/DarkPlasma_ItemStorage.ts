@@ -187,8 +187,8 @@ function Game_Party_ItemStorageMixIn(gameParty: Game_Party) {
    * @param {number} amount
    */
   gameParty.storeItemToStorage = function (item, amount) {
-    this.loseItem(item, amount, false);
     this.storageItems().storeItem(item, amount);
+    this.loseItem(item, amount, false);
   };
 
   /**
@@ -747,10 +747,13 @@ class Window_StorageNumber extends Window_MenuNumber {
 
 type _Game_StorageItems = typeof Game_StorageItems;
 type _Scene_ItemStorage = typeof Scene_ItemStorage;
+type _Window_StorageItems = typeof Window_StorageItems;
 declare global {
   var Game_StorageItems: _Game_StorageItems;
   var Scene_ItemStorage: _Scene_ItemStorage;
+  var Window_StorageItems: _Window_StorageItems;
 }
 
 globalThis.Game_StorageItems = Game_StorageItems;
 globalThis.Scene_ItemStorage = Scene_ItemStorage;
+globalThis.Window_StorageItems = Window_StorageItems;

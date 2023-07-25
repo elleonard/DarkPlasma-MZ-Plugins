@@ -3,6 +3,10 @@ DarkPlasma_ItemStorage:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/07/25
+      version: 1.5.0
+      description: 'Window_StorageItemsのインターフェースを公開'
+    - description: '倉庫に預ける際の処理順変更'
     - date: 2023/06/24
       version: 1.4.0
       description: '所持している数、倉庫に入っている数のテキスト設定を追加'

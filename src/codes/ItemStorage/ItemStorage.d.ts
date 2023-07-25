@@ -7,6 +7,8 @@ declare interface StorageCategories {
 }
 
 declare interface Game_StorageItems {
+  items(): MZ.Item[];
+
   storeItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   fetchItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   numItems(item: MZ.Item|MZ.Weapon|MZ.Armor): number;
@@ -31,12 +33,17 @@ declare interface Game_Party {
 declare interface Scene_ItemStorage extends Scene_MenuBase {
   _inventoryWindow: Window_StorageItemsParty;
   _storageWindow: Window_StorageItems;
+  _storeMode: boolean;
   createInventoryWindow(): void;
   createStorageWindow(): void;
+
+  onInventoryOk(): void;
+  onStorageOk(): void;
+  onNumberOk(): void;
 }
 
 declare interface Window_StorageItems extends Window_ItemList {
-
+  isPartyItem(): boolean;
 }
 
 declare interface Window_StorageItemsParty extends Window_StorageItems {
