@@ -1,9 +1,11 @@
-// DarkPlasma_ItemStorage 1.4.0
+// DarkPlasma_ItemStorage 1.5.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/25 1.5.0 Window_StorageItemsのインターフェースを公開
+ *                  倉庫に預ける際の処理順変更
  * 2023/06/24 1.4.0 所持している数、倉庫に入っている数のテキスト設定を追加
  * 2023/04/02 1.3.1 typescript移行
  * 2022/05/22 1.3.0 DarkPlasma_OrderEquipに対応
@@ -64,7 +66,7 @@
  * @default false
  *
  * @help
- * version: 1.4.0
+ * version: 1.5.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -249,8 +251,8 @@
      * @param {number} amount
      */
     gameParty.storeItemToStorage = function (item, amount) {
-      this.loseItem(item, amount, false);
       this.storageItems().storeItem(item, amount);
+      this.loseItem(item, amount, false);
     };
     /**
      * 倉庫からアイテムを引き出す
@@ -723,4 +725,5 @@
   }
   globalThis.Game_StorageItems = Game_StorageItems;
   globalThis.Scene_ItemStorage = Scene_ItemStorage;
+  globalThis.Window_StorageItems = Window_StorageItems;
 })();
