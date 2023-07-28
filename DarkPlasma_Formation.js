@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 2.0.1
+// DarkPlasma_Formation 2.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/29 2.0.2 左端、右端にカーソルがいることの抽象化
  * 2023/06/18 2.0.1 戦闘メンバーの上限が奇数だった場合に戦闘メンバーと待機メンバーを行き来すると正常に動作しない不具合を修正
  * 2023/06/17 2.0.0 待機メンバーウィンドウを縦スクロールする機能追加
  * 2023/03/07 1.4.2 FesCursor.jsとの競合を解消
@@ -85,7 +86,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -718,8 +719,14 @@
     spacing() {
       return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 24 : 12;
     }
+    isAtRightEnd() {
+      return this.index() % this.maxCols() === this.maxCols() - 1 || this.index() === this.maxItems() - 1;
+    }
+    isAtLeftEnd() {
+      return this.index() % this.maxCols() === 0;
+    }
     cursorRight(wrap) {
-      if (this.index() % this.maxCols() === this.maxCols() - 1 || this.index() === this.maxItems() - 1) {
+      if (this.isAtRightEnd()) {
         this._activateAnotherWindow();
         this.playCursorSound();
         this.updateInputData();
@@ -731,7 +738,7 @@
       /**
        * 直感に反するため、左端で左キーを押したときは何もしない
        */
-      if (this.index() % this.maxCols() !== 0) {
+      if (!this.isAtLeftEnd()) {
         super.cursorLeft();
       }
     }
@@ -759,6 +766,12 @@
     maxCols() {
       return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 10;
     }
+    isAtLeftEnd() {
+      return this.index() % this.maxCols() === 0;
+    }
+    isAtRightEnd() {
+      return this.index() % this.maxCols() === this.maxCols() - 1;
+    }
     cursorLeft(wrap) {
       if (this.index() % this.maxCols() === 0) {
         this._activateAnotherWindow();
@@ -769,7 +782,7 @@
       }
     }
     cursorRight(wrap) {
-      if (this.index() % this.maxCols() !== this.maxCols() - 1) {
+      if (!this.isAtRightEnd()) {
         super.cursorRight();
       }
     }
