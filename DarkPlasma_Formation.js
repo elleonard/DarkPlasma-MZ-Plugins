@@ -1,10 +1,11 @@
-// DarkPlasma_Formation 2.0.2
+// DarkPlasma_Formation 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/07/29 2.0.2 左端、右端にカーソルがいることの抽象化
+ * 2023/07/29 2.1.0 ウィンドウ遷移時のindex計算インターフェース公開
+ *            2.0.2 左端、右端にカーソルがいることの抽象化
  * 2023/06/18 2.0.1 戦闘メンバーの上限が奇数だった場合に戦闘メンバーと待機メンバーを行き来すると正常に動作しない不具合を修正
  * 2023/06/17 2.0.0 待機メンバーウィンドウを縦スクロールする機能追加
  * 2023/03/07 1.4.2 FesCursor.jsとの競合を解消
@@ -86,7 +87,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.0.2
+ * version: 2.1.0
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -321,18 +322,25 @@
       activateWaitingMemberWindow() {
         this.formationBattleMemberWindow().deactivate();
         this.formationWaitingMemberWindow().activate();
+        this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
+        this._currentWindow = this.formationWaitingMemberWindow();
+      }
+      targetIndexOfActivateWaitingMember() {
         let rowOffset = this.formationBattleMemberWindow().row() - this.formationBattleMemberWindow().topRow();
         let targetIndex = () =>
           (this.formationWaitingMemberWindow().topRow() + rowOffset) * this.formationWaitingMemberWindow().maxCols();
         while (targetIndex() >= this.formationWaitingMemberWindow().maxItems()) {
           rowOffset--;
         }
-        this.formationWaitingMemberWindow().smoothSelect(targetIndex());
-        this._currentWindow = this.formationWaitingMemberWindow();
+        return targetIndex();
       }
       activateBattleMemberWindow() {
         this.formationWaitingMemberWindow().deactivate();
         this.formationBattleMemberWindow().activate();
+        this.formationBattleMemberWindow().smoothSelect(this.targetIndexOfActivateBattleMember());
+        this._currentWindow = this.formationBattleMemberWindow();
+      }
+      targetIndexOfActivateBattleMember() {
         let rowOffset = this.formationWaitingMemberWindow().row() - this.formationWaitingMemberWindow().topRow();
         let colOffset = this.formationBattleMemberWindow().maxCols() - 1;
         let targetIndex = () =>
@@ -346,8 +354,7 @@
             rowOffset--;
           }
         }
-        this.formationBattleMemberWindow().smoothSelect(targetIndex());
-        this._currentWindow = this.formationBattleMemberWindow();
+        return targetIndex();
       }
     };
   }

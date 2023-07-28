@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 2.0.0
+// DarkPlasma_FormationInBattle 2.1.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/29 2.1.0 DarkPlasma_Formation 2.1.0対応
  * 2023/06/17 2.0.0 DarkPlasma_Formation 2.0.0対応
  *                  TypeScript移行
  * 2022/08/02 1.2.7 リファクタ
@@ -58,7 +59,7 @@
  * @default true
  *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * 戦闘シーンで並び替えできるようになります。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
@@ -367,6 +368,12 @@
     };
     sceneBattle.activateWaitingMemberWindow = function () {
       baseClass.activateWaitingMemberWindow.call(this);
+    };
+    sceneBattle.targetIndexOfActivateBattleMember = function () {
+      return baseClass.targetIndexOfActivateBattleMember.call(this);
+    };
+    sceneBattle.targetIndexOfActivateWaitingMember = function () {
+      return baseClass.targetIndexOfActivateWaitingMember.call(this);
     };
     const _updateCancelButton = sceneBattle.updateCancelButton;
     sceneBattle.updateCancelButton = function () {
