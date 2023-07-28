@@ -83,6 +83,8 @@ declare class Scene_FormationMixInClass extends Scene_Base {
 
   activateBattleMemberWindow(): void;
   activateWaitingMemberWindow(): void;
+  targetIndexOfActivateBattleMember(): number;
+  targetIndexOfActivateWaitingMember(): number;
 
   onFormationOk(): void;
   onFormationCancel(): void;

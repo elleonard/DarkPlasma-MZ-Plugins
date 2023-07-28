@@ -333,6 +333,14 @@ function Scene_Battle_FormationMixIn(sceneBattle: Scene_Battle) {
     baseClass.activateWaitingMemberWindow.call(this);
   };
 
+  sceneBattle.targetIndexOfActivateBattleMember = function () {
+    return baseClass.targetIndexOfActivateBattleMember.call(this);
+  };
+
+  sceneBattle.targetIndexOfActivateWaitingMember = function () {
+    return baseClass.targetIndexOfActivateWaitingMember.call(this);
+  };
+
   const _updateCancelButton = sceneBattle.updateCancelButton;
   sceneBattle.updateCancelButton = function () {
     _updateCancelButton.call(this);

@@ -4,7 +4,9 @@ DarkPlasma_Formation:
   license: MIT
   histories:
     - date: 2023/07/29
-      version: 2.0.2
+      version: 2.1.0
+      description: 'ウィンドウ遷移時のindex計算インターフェース公開'
+    - version: 2.0.2
       description: '左端、右端にカーソルがいることの抽象化'
     - date: 2023/06/18
       version: 2.0.1

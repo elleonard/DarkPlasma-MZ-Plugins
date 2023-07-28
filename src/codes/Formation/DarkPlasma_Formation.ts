@@ -235,18 +235,27 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
     activateWaitingMemberWindow(): void {
       this.formationBattleMemberWindow().deactivate();
       this.formationWaitingMemberWindow().activate();
+      this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
+      this._currentWindow = this.formationWaitingMemberWindow();
+    }
+
+    targetIndexOfActivateWaitingMember() {
       let rowOffset = this.formationBattleMemberWindow().row() - this.formationBattleMemberWindow().topRow();
       let targetIndex = () => (this.formationWaitingMemberWindow().topRow() + rowOffset) * this.formationWaitingMemberWindow().maxCols();
       while (targetIndex() >= this.formationWaitingMemberWindow().maxItems()) {
         rowOffset--;
       }
-      this.formationWaitingMemberWindow().smoothSelect(targetIndex());
-      this._currentWindow = this.formationWaitingMemberWindow();
+      return targetIndex();
     }
 
     activateBattleMemberWindow(): void {
       this.formationWaitingMemberWindow().deactivate();
       this.formationBattleMemberWindow().activate();
+      this.formationBattleMemberWindow().smoothSelect(this.targetIndexOfActivateBattleMember());
+      this._currentWindow = this.formationBattleMemberWindow();
+    }
+
+    targetIndexOfActivateBattleMember() {
       let rowOffset = this.formationWaitingMemberWindow().row() - this.formationWaitingMemberWindow().topRow();
       let colOffset = this.formationBattleMemberWindow().maxCols() - 1;
       let targetIndex = () => (this.formationBattleMemberWindow().topRow() + rowOffset) * this.formationBattleMemberWindow().maxCols() + colOffset;
@@ -258,8 +267,7 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
           rowOffset--;
         }
       }
-      this.formationBattleMemberWindow().smoothSelect(targetIndex());
-      this._currentWindow = this.formationBattleMemberWindow();
+      return targetIndex();
     }
   };
 }
