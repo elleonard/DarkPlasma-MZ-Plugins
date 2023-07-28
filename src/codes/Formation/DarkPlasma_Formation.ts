@@ -699,8 +699,16 @@ class Window_FormationBattleMember extends Window_FormationMember {
     return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 24 : 12;
   }
 
+  isAtRightEnd() {
+    return this.index() % this.maxCols() === this.maxCols() - 1 || this.index() === this.maxItems() - 1;
+  }
+
+  isAtLeftEnd() {
+    return this.index() % this.maxCols() === 0;
+  }
+
   public cursorRight(wrap?: boolean | undefined): void {
-    if (this.index() % this.maxCols() === this.maxCols() - 1 || this.index() === this.maxItems() - 1) {
+    if (this.isAtRightEnd()) {
       this._activateAnotherWindow();
       this.playCursorSound();
       this.updateInputData();
@@ -713,7 +721,7 @@ class Window_FormationBattleMember extends Window_FormationMember {
     /**
      * 直感に反するため、左端で左キーを押したときは何もしない
      */
-    if (this.index() % this.maxCols() !== 0) {
+    if (!this.isAtLeftEnd()) {
       super.cursorLeft();
     }
   }
@@ -748,6 +756,14 @@ class Window_FormationWaitingMember extends Window_FormationMember {
     return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 10;
   }
 
+  isAtLeftEnd() {
+    return this.index() % this.maxCols() === 0;
+  }
+
+  isAtRightEnd() {
+    return this.index() % this.maxCols() === this.maxCols() - 1;
+  }
+
   public cursorLeft(wrap?: boolean | undefined): void {
     if (this.index() % this.maxCols() === 0) {
       this._activateAnotherWindow();
@@ -759,7 +775,7 @@ class Window_FormationWaitingMember extends Window_FormationMember {
   }
 
   public cursorRight(wrap?: boolean | undefined): void {
-    if (this.index() % this.maxCols() !== this.maxCols() - 1) {
+    if (!this.isAtRightEnd()) {
       super.cursorRight();
     }
   }
