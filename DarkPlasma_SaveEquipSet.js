@@ -1,9 +1,10 @@
-// DarkPlasma_SaveEquipSet 1.2.0
+// DarkPlasma_SaveEquipSet 1.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/07/29 1.3.0 記録コマンドに装備セットインデックス設定追加
  * 2023/07/07 1.2.0 復元による装備可能判定のインターフェース追加
  * 2022/11/13 1.1.2 typescript移行
  *                  装備セットに含まれる空欄を復元できない不具合を修正
@@ -29,11 +30,21 @@
  *
  * @command saveEquipSet
  * @text 装備セットを記録する
- * @desc 現在のパーティメンバーの装備セットを先頭に記録します。
+ * @desc 現在のパーティメンバーの装備セットを指定インデックスに記録します。
+ * @arg index
+ * @text インデックス
+ * @desc 0を先頭とするインデックスを指定します。記録可能なセット数以上の値を指定するとコマンドが無効になります。
+ * @type number
+ * @default 0
  *
  * @command loadEquipSet
  * @text 装備セットを復元する
- * @desc 先頭に記録した装備セットを現在のパーティメンバーに復元します。
+ * @desc 指定インデックスに記録した装備セットを現在のパーティメンバーに復元します。
+ * @arg index
+ * @text インデックス
+ * @desc 0を先頭とするインデックスを指定します。記録可能なセット数以上の値を指定するとコマンドが無効になります。
+ * @type number
+ * @default 0
  *
  * @command saveActorEquipSetAt
  * @text アクターの装備セットを記録する
@@ -78,7 +89,7 @@
  * @default 0
  *
  * @help
- * version: 1.2.0
+ * version: 1.3.0
  * パーティメンバーの装備セットを記録し、復元するプラグインコマンドを提供します。
  *
  * 以下に該当する場合、復元時にその装備は無視され、復元されません。
@@ -92,6 +103,18 @@
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
   });
+
+  function parseArgs_saveEquipSet(args) {
+    return {
+      index: Number(args.index || 0),
+    };
+  }
+
+  function parseArgs_loadEquipSet(args) {
+    return {
+      index: Number(args.index || 0),
+    };
+  }
 
   function parseArgs_saveActorEquipSetAt(args) {
     return {
@@ -134,15 +157,17 @@
     equipSetCount: Number(pluginParameters.equipSetCount || 1),
   };
 
-  PluginManager.registerCommand(pluginName, command_saveEquipSet, function () {
-    $gameParty.allMembers().forEach((actor) => actor.saveEquipSet());
+  PluginManager.registerCommand(pluginName, command_saveEquipSet, function (args) {
+    const parsedArgs = parseArgs_saveEquipSet(args);
+    $gameParty.allMembers().forEach((actor) => actor.saveEquipSetAt(parsedArgs.index));
   });
-  PluginManager.registerCommand(pluginName, command_loadEquipSet, function () {
+  PluginManager.registerCommand(pluginName, command_loadEquipSet, function (args) {
+    const parsedArgs = parseArgs_loadEquipSet(args);
     /**
      * 全員の装備を外してから、所持しているものの中で記録を復元する
      */
     $gameParty.allMembers().forEach((actor) => actor.clearEquipments());
-    $gameParty.allMembers().forEach((actor) => actor.loadEquipSet());
+    $gameParty.allMembers().forEach((actor) => actor.loadEquipSetAt(parsedArgs.index));
   });
   PluginManager.registerCommand(pluginName, command_saveActorEquipSetAt, function (args) {
     const parsedArgs = parseArgs_saveActorEquipSetAt(args);
