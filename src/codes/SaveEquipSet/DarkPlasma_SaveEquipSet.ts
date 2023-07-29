@@ -10,20 +10,24 @@ import {
   command_saveEquipSet,
   parseArgs_deleteActorEquipSetAt,
   parseArgs_loadActorEquipSetAt,
+  parseArgs_loadEquipSet,
   parseArgs_saveActorEquipSetAt,
+  parseArgs_saveEquipSet,
 } from './_build/DarkPlasma_SaveEquipSet_commands';
 import { settings } from './_build/DarkPlasma_SaveEquipSet_parameters';
 
-PluginManager.registerCommand(pluginName, command_saveEquipSet, function () {
-  $gameParty.allMembers().forEach((actor) => actor.saveEquipSet());
+PluginManager.registerCommand(pluginName, command_saveEquipSet, function (args) {
+  const parsedArgs = parseArgs_saveEquipSet(args);
+  $gameParty.allMembers().forEach((actor) => actor.saveEquipSetAt(parsedArgs.index));
 });
 
-PluginManager.registerCommand(pluginName, command_loadEquipSet, function () {
+PluginManager.registerCommand(pluginName, command_loadEquipSet, function (args) {
+  const parsedArgs = parseArgs_loadEquipSet(args);
   /**
    * 全員の装備を外してから、所持しているものの中で記録を復元する
    */
   $gameParty.allMembers().forEach((actor) => actor.clearEquipments());
-  $gameParty.allMembers().forEach((actor) => actor.loadEquipSet());
+  $gameParty.allMembers().forEach((actor) => actor.loadEquipSetAt(parsedArgs.index));
 });
 
 PluginManager.registerCommand(pluginName, command_saveActorEquipSetAt, function (args) {

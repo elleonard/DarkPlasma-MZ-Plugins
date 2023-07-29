@@ -3,6 +3,9 @@ DarkPlasma_SaveEquipSet:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/07/29
+      version: 1.3.0
+      description: '記録コマンドに装備セットインデックス設定追加'
     - date: 2023/07/07
       version: 1.2.0
       description: '復元による装備可能判定のインターフェース追加'
@@ -38,12 +41,28 @@ DarkPlasma_SaveEquipSet:
       text:
         ja: 装備セットを記録する
       desc:
-        ja: 現在のパーティメンバーの装備セットを先頭に記録します。
+        ja: 現在のパーティメンバーの装備セットを指定インデックスに記録します。
+      args:
+        - arg: index
+          text:
+            ja: インデックス
+          desc:
+            ja: 0を先頭とするインデックスを指定します。記録可能なセット数以上の値を指定するとコマンドが無効になります。
+          type: number
+          default: 0
     - command: loadEquipSet
       text:
         ja: 装備セットを復元する
       desc:
-        ja: 先頭に記録した装備セットを現在のパーティメンバーに復元します。
+        ja: 指定インデックスに記録した装備セットを現在のパーティメンバーに復元します。
+      args:
+        - arg: index
+          text:
+            ja: インデックス
+          desc:
+            ja: 0を先頭とするインデックスを指定します。記録可能なセット数以上の値を指定するとコマンドが無効になります。
+          type: number
+          default: 0
     - command: saveActorEquipSetAt
       text:
         ja: アクターの装備セットを記録する
