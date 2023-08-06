@@ -294,6 +294,7 @@ function Scene_Battle_FormationMixIn(sceneBattle: Scene_Battle) {
     this._formationBattleMemberWindow.select(0);
     this._formationBattleMemberWindow.activate();
     this.moveCancelButtonToEdge();
+    this._currentWindow = this._formationBattleMemberWindow;
   };
 
   sceneBattle.hideFormationWindows = function () {
