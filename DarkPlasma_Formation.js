@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 2.1.0
+// DarkPlasma_Formation 2.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/08/06 2.1.1 キャンセルキーの挙動が意図通りでない不具合を修正
  * 2023/07/29 2.1.0 ウィンドウ遷移時のindex計算インターフェース公開
  *            2.0.2 左端、右端にカーソルがいることの抽象化
  * 2023/06/18 2.0.1 戦闘メンバーの上限が奇数だった場合に戦闘メンバーと待機メンバーを行き来すると正常に動作しない不具合を修正
@@ -87,7 +88,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -311,7 +312,7 @@
         this.currentActiveWindow().activate();
       }
       onFormationCancel() {
-        if (this.pendingWindow()?.pendingIndex() ?? -1 >= 0) {
+        if ((this.pendingWindow()?.pendingIndex() ?? -1) >= 0) {
           this.pendingWindow()?.setPendingIndex(-1);
           this.currentActiveWindow().activate();
         } else {
