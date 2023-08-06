@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2023/08/06
+      version: 2.1.1
+      description: 'キャンセルキーの挙動が意図通りでない不具合を修正'
     - date: 2023/07/29
       version: 2.1.0
       description: 'ウィンドウ遷移時のindex計算インターフェース公開'

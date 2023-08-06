@@ -222,7 +222,7 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
     }
 
     onFormationCancel(): void {
-      if (this.pendingWindow()?.pendingIndex() ?? -1 >= 0) {
+      if ((this.pendingWindow()?.pendingIndex() ?? -1) >= 0) {
         this.pendingWindow()?.setPendingIndex(-1);
         this.currentActiveWindow().activate();
       } else {
