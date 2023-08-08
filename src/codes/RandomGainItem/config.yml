@@ -1,0 +1,84 @@
+DarkPlasma_RandomGainItem:
+  name: DarkPlasma_RandomGainItem
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/08/08
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'ランダムにアイテムを入手する'
+  parameters: []
+  commands:
+    - command: randomGainItem
+      text:
+        ja: ランダムにアイテムを入手
+      args:
+        - arg: items
+          text:
+            ja: 抽選対象アイテム
+          type: RandomItem[]
+        - arg: weapons
+          text:
+            ja: 抽選対象武器
+          type: RandomWeapon[]
+        - arg: armors
+          text:
+            ja: 抽選対象防具
+          type: RandomArmor[]
+        - arg: nameVariable
+          text:
+            ja: 名前変数
+          desc:
+            ja: 入手したアイテムの名前を指定した変数に代入します。
+          type: variable
+  structures:
+    RandomItem:
+      - param: id
+        text:
+          ja: アイテム
+        type: item
+      - param: weight
+        text:
+          ja: 重み
+        desc:
+          ja: アイテムが抽選される確率を決めるための重みを指定します。大きいほど確率は高くなります。
+        type: number
+        default: 1
+        min: 1
+    RandomWeapon:
+      - param: id
+        text:
+          ja: 武器
+        type: weapon
+      - param: weight
+        text:
+          ja: 重み
+        desc:
+          ja: アイテムが抽選される確率を決めるための重みを指定します。大きいほど確率は高くなります。
+        type: number
+        default: 1
+        min: 1
+    RandomArmor:
+      - param: id
+        text:
+          ja: 防具
+        type: armor
+      - param: weight
+        text:
+          ja: 重み
+        desc:
+          ja: アイテムが抽選される確率を決めるための重みを指定します。大きいほど確率は高くなります。
+        type: number
+        default: 1
+        min: 1
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      ランダムにアイテムを入手するプラグインコマンドを提供します。
