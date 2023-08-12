@@ -1,0 +1,40 @@
+DarkPlasma_SwapParamState:
+  name: DarkPlasma_SwapParamState
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/08/12
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'パラメータを入れ替えるステート'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      パラメータを入れ替えるステートを実現します。
+
+      ステートのメモ欄に
+      <swapParam:atk,mat>
+      と入力すると、そのステートにかかっている間
+      攻撃力と魔法力を入れ替えます。
+
+      ステート名:
+      mhp: 最大HP
+      mmp: 最大MP
+      atk: 攻撃力
+      def: 防御力
+      mat: 魔法力
+      mdf: 魔法防御
+      agi: 敏捷
+      luk: 運
+
+      同じパラメータを入れ替えるステートは重複できません。
