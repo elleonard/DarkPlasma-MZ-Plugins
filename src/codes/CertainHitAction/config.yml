@@ -1,0 +1,36 @@
+DarkPlasma_CertainHitAction:
+  name: DarkPlasma_CertainHitAction
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/08/12
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'スキルやアイテムを必中・反撃無視・反射無視にする'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      スキルやアイテムのメモ欄に指定のタグを記述することで
+      対象に必中特性、反撃無視特性、反射無視特性を付与します。
+
+      必中特性: <certainHit>
+      命中率による命中判定の成功率を100％にします。
+      回避率・魔法回避率による回避判定の成功率を0％にします。
+      命中タイプ:必中と異なり、物理ダメージ率や魔法ダメージ率の影響は残る他
+      ステートの付与の成功率も通常通りの計算となります。
+
+      反撃無視特性: <ignoreCounter>
+      そのスキルに対する反撃率による反撃判定の成功率を0％にします。
+
+      反射無視特性: <ignoreReflection>
+      そのスキルに対する魔法反射率による反射判定の成功率を0％にします。
