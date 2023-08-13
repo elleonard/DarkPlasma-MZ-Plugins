@@ -1,0 +1,67 @@
+DarkPlasma_TextShadow:
+  name: DarkPlasma_TextShadow
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/08/13
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '文字に影をつける'
+  parameters:
+    - param: shadows
+      text:
+        ja: 影設定一覧
+      type: Shadow[]
+  commands: []
+  structures:
+    Shadow:
+      - param: id
+        text:
+          ja: 設定ID
+        desc:
+          ja: 影設定のIDです。制御文字のパラメータとして利用します。
+        type: number
+        min: 1
+      - param: blur
+        text:
+          ja: ぼかし
+        desc:
+          ja: 影のぼかしを設定します。
+        type: number
+        default: 0
+      - param: color
+        text:
+          ja: 色
+        desc:
+          ja: 影の色を設定します。
+        type: color
+        default: 0
+      - param: offsetX
+        text:
+          ja: 横方向の長さ
+        desc:
+          ja: 横方向の影の長さを設定します。
+        type: number
+        default: 0
+      - param: offsetY
+        text:
+          ja: 縦方向の長さ
+        desc:
+          ja: 縦方向の影の長さを設定します。
+        type: number
+        default: 0
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      制御文字でテキストに影をつけます。
+
+      \SHADOW[設定ID]
+      プラグインパラメータで設定した設定IDを記述します。
+      0とした場合、影を描画しないモードにします。
