@@ -15,11 +15,11 @@ async function generateFromConfig(file) {
   for (let key of Object.keys(config)) {
     const currentConfig = config[key];
     fs.writeFileSync(path.resolve(distDir, `${key}_header.js`), generateHeader(currentConfig));
-    const parameterReader = await generateParameterReader(currentConfig);
+    const parameterReader = await generateParameterReader(currentConfig, distDir);
     fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
-    const parameterReaderFunction = await generateParameterReaderFunction(currentConfig);
+    const parameterReaderFunction = await generateParameterReaderFunction(currentConfig, distDir);
     fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
-    const pluginCommands = await generatePluginCommand(currentConfig);
+    const pluginCommands = await generatePluginCommand(currentConfig, distDir);
     fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
     const parameterType = await generateParameterType(currentConfig, key.replace(`DarkPlasma_`, ''));
     fs.writeFileSync(path.resolve(distDir, `${key}_parameters.d.ts`), parameterType);

@@ -3,10 +3,9 @@ const path = require('path');
 const cpx = require('cpx');
 const YAML = require('yaml');
 
-const srcPluginDirs = [
-  path.join(__dirname, '..', '..', '_dist', 'codes', 'DarkPlasma_*.js'),
-  path.join(__dirname, '..', '..', '_dist', 'excludes', 'DarkPlasma_*.js'),
-];
+const srcPluginDirs = fs.readdirSync(path.join(__dirname, '..', '..', '_dist'))
+  .map(dir => path.join(__dirname, '..', '..', '_dist', dir, 'DarkPlasma_*.js'));
+console.log(srcPluginDirs);
 const isWatch = process.argv.some((n) => n === '-w');
 
 function loadConfig(configPath) {

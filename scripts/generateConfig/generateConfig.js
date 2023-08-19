@@ -6,6 +6,7 @@ const templatePath = path.resolve(__dirname, '..', '..', 'src', 'templates', 'co
 const tsconfigTemplatePath = path.resolve(__dirname, '..', '..', 'tsconfig_template.json');
 
 async function generateConfig(destDir) {
+  console.log(destDir);
   fs.open(path.resolve(destDir, 'config.yml'), 'wx', (err, fd) => {
     if (err) {
       if (err.code === 'EEXIST') {
@@ -39,7 +40,7 @@ async function generateConfig(destDir) {
     const declarationFile = path.resolve(destDir, `${path.basename(destDir)}.d.ts`);
     fs.ensureFile(declarationFile, (err) => {
       if (err) console.error(`generate declaration failed.`);
-      fs.appendFile(declarationFile, `/// <reference path="../../typings/rmmz.d.ts" />`);
+      fs.appendFile(declarationFile, `/// <reference path="${pathToTypings(destDir)}/rmmz.d.ts" />`);
     });
     const tsFile = path.resolve(destDir, `DarkPlasma_${path.basename(destDir)}.ts`);
     fs.ensureFile(tsFile, (err) => {
@@ -48,6 +49,14 @@ async function generateConfig(destDir) {
     });
     fs.copyFileSync(tsconfigTemplatePath, `${destDir}/tsconfig.json`);
   });
+}
+
+const typingsPath = path.resolve(__dirname, '..', '..', 'src', 'typings')
+
+function pathToTypings(destDir) {
+  let result = path.relative(destDir, typingsPath)
+  console.log(result);
+  return `${result}`.replaceAll('\\', '/');
 }
 
 module.exports = {

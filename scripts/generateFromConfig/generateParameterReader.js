@@ -4,14 +4,16 @@ const { generateParser } = require('./generateParser');
 const { SYMBOL_TYPE } = require('./parameterSymbolType');
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
+const pluginParametersDir = path.resolve(__dirname, '..', '..', 'src', 'common', 'pluginParameters');
+const pluginParametersOfDir = path.resolve(__dirname, '..', '..', 'src', 'common', 'pluginParametersOf');
 
-function generateParameterReader(config) {
+function generateParameterReader(config, destDir) {
   const parameters = configToParameters(config, SYMBOL_TYPE.PLUGIN_PARAMETERS);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
-    const pluginParameterPath = '../../../common/pluginParameters';
+    const pluginParameterPath = path.relative(destDir, pluginParametersDir).replaceAll('\\', '/');
     const code = `import { pluginParameters } from '${pluginParameterPath}';
     
     export const settings = {
@@ -23,13 +25,13 @@ function generateParameterReader(config) {
   });
 }
 
-function generateParameterReaderFunction(config) {
+function generateParameterReaderFunction(config, destDir) {
   const parameters = configToParameters(config, SYMBOL_TYPE.PLUGIN_PARAMETERS_OF);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
 
-    const code = `import { pluginParametersOf } from '../../../common/pluginParametersOf';
+    const code = `import { pluginParametersOf } from '${path.relative(destDir, pluginParametersOfDir).replaceAll('\\', '/')}';
 
     export const settingsOf${config.name.replace(/^DarkPlasma_/, "")} = ((pluginName) => {
       return {
