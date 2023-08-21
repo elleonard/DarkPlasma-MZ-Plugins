@@ -53,5 +53,7 @@ function paramToType(pluginId, param) {
 }
 
 module.exports = {
-  generateParameterType
+  generateParameterType,
+  paramToType,
+  structTypeName,
 };

@@ -380,6 +380,7 @@ function generateHeader(config) {
             })
             .join('\n *\n')
         : '';
+      const deprecatedText = config.deprecated ? "\n * @deprecated\n" : "";
       const structuresText = generateStructuresText(config, structureTypes, structureTypes, language);
 
       return `${[generatePluginMetaText(config, language)]
@@ -387,6 +388,7 @@ function generateHeader(config) {
         .concat(parametersText)
         .concat(noteText)
         .concat(commandsText)
+        .concat(deprecatedText)
         .concat([
           [` * @help`]
             .concat(generateHelp(config.help[language], config.histories[0].version, config.dependencies))
