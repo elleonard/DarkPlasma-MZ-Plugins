@@ -54,4 +54,5 @@ function commandNameToSymbol(commandName) {
 
 module.exports = {
   generatePluginCommand,
+  commandNameToSymbol,
 };

@@ -1,6 +1,7 @@
 const path = require('path');
 const prettier = require('prettier');
 const { paramToType, structTypeName } = require('./generateParameterType');
+const { commandNameToSymbol } = require('./generatePluginCommand');
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
 function generateCommandType(config, pluginId) {
@@ -17,16 +18,16 @@ function generateCommandType(config, pluginId) {
         result += '\n';
       }
       if (command.args?.length > 0) {
-        const argsTypeName = `CommandArgs_${pluginId}_${command.command}`;
+        const argsTypeName = `CommandArgs_${pluginId}_${commandNameToSymbol(command.command)}`;
         result += `export type ${argsTypeName} = {`
         command.args.forEach(arg => {
           args[arg.arg] = paramToType(pluginId, arg);
           result += `${arg.arg}: ${paramToType(pluginId, arg)};`;
         });
         result += `};\n`;
-        result += `export function parseArgs_${command.command}(args: any): ${argsTypeName};\n`;
+        result += `export function parseArgs_${commandNameToSymbol(command.command)}(args: any): ${argsTypeName};\n`;
       }
-      result += `export const command_${command.command}: "${command.command}";\n`;
+      result += `export const command_${commandNameToSymbol(command.command)}: "${command.command}";\n`;
     });
   }
   return prettier.resolveConfig(prettierConfig).then((options) => {
