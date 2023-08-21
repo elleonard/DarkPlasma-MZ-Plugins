@@ -2,6 +2,7 @@
 
 import { pluginName } from '../../common/pluginName';
 import { isEnemy } from '../../common/data/isEnemy';
+import type { CommandArgs_RandomTroop_randomTroop } from './_build/DarkPlasma_RandomTroop_commands';
 import { command_randomTroop, parseArgs_randomTroop } from "./_build/DarkPlasma_RandomTroop_commands";
 import { settings } from './_build/DarkPlasma_RandomTroop_parameters';
 
@@ -49,7 +50,7 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
     const randomTroopCommand = this.randomTroopCommand();
 
     if (randomTroopCommand) {
-      const args = parseArgs_randomTroop(randomTroopCommand.parameters[3]);
+      const args: CommandArgs_RandomTroop_randomTroop = parseArgs_randomTroop(randomTroopCommand.parameters[3]);
       args.troop
         .filter(enemy => enemy.rate > Math.randomInt(100))
         .forEach(enemy => {
