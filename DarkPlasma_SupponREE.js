@@ -1,9 +1,10 @@
-// DarkPlasma_SupponREE 1.1.6
+// DarkPlasma_SupponREE 1.1.7
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/08/20 1.1.7 非推奨化
  * 2021/07/31 1.1.6 MV形式のプラグインコマンドを使うと敵IDが文字列型になってしまう不具合を修正
  * 2021/07/05 1.1.5 MZ 1.3.2に対応
  * 2021/06/22 1.1.4 サブフォルダからの読み込みに対応
@@ -18,7 +19,88 @@
  * 2020/08/26 1.0.0 MZ対応
  */
 
-/*:ja
+/*:en
+ * @plugindesc Random Enemies emergence.
+ * @author Suppon, DarkPlasma
+ * @license MIT
+ *
+ * @target MZ
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base PluginCommonBase
+ * @orderAfter PluginCommonBase
+ *
+ * @param autoPositionWidth
+ * @desc If sum of enemy image width is larger than this value, set enemy position front and back.
+ * @text auto position width
+ * @type number
+ * @default 816
+ *
+ * @command supponREE
+ * @text Random encounter
+ * @desc If you write this command in enemy group's battle event page 1, the group become random.
+ * @arg randomEncounter
+ * @text Random Encounter setting
+ * @type struct<RandomEncounterEn>[]
+ *
+
+ * @deprecated
+
+ *
+ * @help
+ * version: 1.1.7
+ * This plugin is deprecated.
+ * Please consider using DarkPlasma_RandomTroop.
+ *
+ * Plugin Command(Deprecated):
+ *   supponREE ratio times id id id....       
+ *   ratio : Emergence probability numer 
+ *   times : Repetition number
+ *   id    : Enemy ID
+ *
+ *   fixedEnemy id id id...
+ *   id    : Enemy ID
+ *
+ *   fixedEnemyType TypeName
+ *   TypeName : Enemy Type Name
+ *
+ * Example
+ *   supponREE 80 20 1 2 3 4
+ *   (Optional) fixedEnemy 1
+ *   (Optional) fixedEnemyType slime1
+ *
+ *   Enter the sentence in Battle Event 1st page of Troops.
+ *   It doesen't work when it put other page.
+ *   Punctuate numbers by space, but don't put space at end.
+ *   It can read and works more than 2 sentence at once.
+ *
+ * Enemy Notes:
+ *   <EnemyType:slime1>
+ *
+ *   You can Enter the enemy types.
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * PluginCommonBase
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * PluginCommonBase
+ */
+/*~struct~RandomEncounterEn:
+ * @param id
+ * @desc Enemy Id for random encounter.If not set this, enemy type name parameter is enabled.
+ * @text Enemy Id
+ * @type enemy
+ *
+ * @param type
+ * @desc pick up enemy what has note tag EnemyType:(this value).
+ * @text Enemy Type Name
+ * @type string
+ *
+ * @param ratio
+ * @desc If you set this value greater than or equal 100, the enemy certainly appear.
+ * @text Appear ratio (%)
+ * @type number
+ */
+/*:
  * @plugindesc モンスターランダム出現
  * @author Suppon, DarkPlasma
  * @license MIT
@@ -42,8 +124,15 @@
  * @text ランダム出現設定
  * @type struct<RandomEncounter>[]
  *
+
+ * @deprecated
+
+ *
  * @help
- * version: 1.1.6
+ * version: 1.1.7
+ * 本プラグインの利用は非推奨となりました。
+ * DarkPlasma_RandomTroopの利用を検討してください。
+ *
  * プラグインコマンド（非推奨）:
  *   supponREE ratio times id id id・・・
  *   ratio : 出現確率％
@@ -97,80 +186,6 @@
  * @param ratio
  * @desc 100以上で確定出現します。全敵キャラの出現判定に失敗した場合、敵が出ずに勝利になります。
  * @text 出現確率（％）
- * @type number
- */
-/*:en
- * @plugindesc Random Enemies emergence.
- * @author Suppon, DarkPlasma
- * @license MIT
- *
- * @target MZ
- * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
- *
- * @base PluginCommonBase
- * @orderAfter PluginCommonBase
- *
- * @param autoPositionWidth
- * @desc If sum of enemy image width is larger than this value, set enemy position front and back.
- * @text auto position width
- * @type number
- * @default 816
- *
- * @command supponREE
- * @text Random encounter
- * @desc If you write this command in enemy group's battle event page 1, the group become random.
- * @arg randomEncounter
- * @text Random Encounter setting
- * @type struct<RandomEncounterEn>[]
- *
- * @help
- * version: 1.1.6
- * Plugin Command(Deprecated):
- *   supponREE ratio times id id id....
- *   ratio : Emergence probability numer
- *   times : Repetition number
- *   id    : Enemy ID
- *
- *   fixedEnemy id id id...
- *   id    : Enemy ID
- *
- *   fixedEnemyType TypeName
- *   TypeName : Enemy Type Name
- *
- * Example
- *   supponREE 80 20 1 2 3 4
- *   (Optional) fixedEnemy 1
- *   (Optional) fixedEnemyType slime1
- *
- *   Enter the sentence in Battle Event 1st page of Troops.
- *   It doesen't work when it put other page.
- *   Punctuate numbers by space, but don't put space at end.
- *   It can read and works more than 2 sentence at once.
- *
- * Enemy Notes:
- *   <EnemyType:slime1>
- *
- *   You can Enter the enemy types.
- *
- * 本プラグインの利用には下記プラグインを必要とします。
- * PluginCommonBase
- * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * PluginCommonBase
- */
-/*~struct~RandomEncounterEn:
- * @param id
- * @desc Enemy Id for random encounter.If not set this, enemy type name parameter is enabled.
- * @text Enemy Id
- * @type enemy
- *
- * @param type
- * @desc pick up enemy what has note tag EnemyType:(this value).
- * @text Enemy Type Name
- * @type string
- *
- * @param ratio
- * @desc If you set this value greater than or equal 100, the enemy certainly appear.
- * @text Appear ratio (%)
  * @type number
  */
 (() => {
