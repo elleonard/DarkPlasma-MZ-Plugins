@@ -27,6 +27,7 @@ tags:
 |:---------|---------:|:----------------|
 |[通知メッセージプラグイン - 鳥小屋](https://torigoya-plugin.rutan.dev/map/notifyMessage/)|1.3.0|Window_NotifyMessage|
 |[メッセージの中央揃えプラグイン](https://github.com/triacontane/RPGMakerMV/blob/mz_master/MessageAlignCenter.js)|1.4.1|Window_MessageDummy|
+|[動的文字列ピクチャ生成プラグイン](https://github.com/triacontane/RPGMakerMV/blob/mz_master/DTextPicture.js)|2.6.1|Window_Dummy|
 
 （※）筆者が確認したバージョン。
 
