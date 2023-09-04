@@ -10,10 +10,7 @@ DataManager.extractMetadata = function (data) {
   }
 };
 
-/**
- * @param {Scene_Skill.prototype} sceneSkill
- */
-function Scene_Skill_SkillDetailMixIn(sceneSkill) {
+function Scene_Skill_SkillDetailMixIn(sceneSkill: Scene_Skill) {
   const _create = sceneSkill.create;
   sceneSkill.create = function () {
     _create.call(this);
@@ -30,16 +27,10 @@ function Scene_Skill_SkillDetailMixIn(sceneSkill) {
     this._itemWindow.activate();
     if (!this._detailWindow.visible) {
       this._detailWindow.show();
-      if (settings.hideListWindow) {
-        this._itemWindow.hide();
-      }
       this._detailWindow.resetCursor();
     } else {
       this._detailWindow.hide();
       this._detailWindow.resetCursor();
-      if (settings.hideListWindow) {
-        this._itemWindow.show();
-      }
     }
   };
 
@@ -62,10 +53,7 @@ Scene_Skill_SkillDetailMixIn(Scene_Skill.prototype);
 
 Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_SkillList.prototype, 'detail');
 
-/**
- * @param {Window_Selectable.prototype} windowClass
- */
-function Window_SkillDetailMixIn(windowClass) {
+function Window_SkillDetailMixIn(windowClass: Window_SkillList) {
   windowClass.setDescriptionWindow = function (detailWindow) {
     this._detailWindow = detailWindow;
     this.callUpdateHelp();
@@ -106,35 +94,26 @@ function Window_SkillDetailMixIn(windowClass) {
 }
 
 Window_SkillDetailMixIn(Window_SkillList.prototype);
-window.Window_SkillDetailMixIn = Window_SkillDetailMixIn;
 
 class Window_SkillDetail extends Window_Base {
-  /**
-   * @param {number} x X座標
-   * @param {number} y Y座標
-   * @param {number} width 横幅
-   * @param {number} height 高さ
-   */
-  initialize(x, y, width, height) {
-    super.initialize(x, y, width, height);
+  _text: string;
+  _cursor: number;
+  _textHeight: number;
+  _lineCount: number;
+
+  initialize(rect: Rectangle) {
+    super.initialize(rect);
     this._text = '';
     this.opacity = 255;
     this._cursor = 0;
     this.hide();
   }
 
-  /**
-   * @param {string} detail 詳細説明
-   */
-  drawDetail(detail) {
+  drawDetail(detail: string) {
     this.drawTextEx(detail, this.lineWidthMargin ? this.lineWidthMargin() : 0, this.baseLineHeight());
   }
 
-  /**
-   * 1行目の描画位置
-   * @return {number}
-   */
-  baseLineHeight() {
+  baseLineHeight(): number {
     return -this._cursor * this.lineHeight();
   }
 
@@ -143,31 +122,22 @@ class Window_SkillDetail extends Window_Base {
     this.drawDetail(this._text);
   }
 
-  /**
-   * @param {MZ.Skill} item スキルオブジェクト
-   */
-  setItem(item) {
+  setItem(item: MZ.Skill) {
     this.setText(item && item.detail ? item.detail : '');
   }
 
-  /**
-   * @param {string} text テキスト
-   */
-  setText(text) {
+  setText(text: string) {
     if (this._text !== text) {
       this._text = text;
-      this._textHeight = this.calcHeight().height;
+      this._textHeight = this.calcHeight();
       this._lineCount = Math.floor(this._textHeight / this.lineHeight());
       this.refresh();
     }
   }
 
-  /**
-   * @return {number} 詳細説明テキストの表示高さ
-   */
-  calcHeight() {
+  calcHeight(): number {
     if (this._text) {
-      return this.textSizeEx(this._text);
+      return this.textSizeEx(this._text).height;
     }
     return 0;
   }
@@ -205,10 +175,7 @@ class Window_SkillDetail extends Window_Base {
     }
   }
 
-  /**
-   * @return {boolean}
-   */
-  isCursorMovable() {
+  isCursorMovable(): boolean {
     return this.visible;
   }
 
@@ -226,10 +193,7 @@ class Window_SkillDetail extends Window_Base {
     }
   }
 
-  /**
-   * @return {boolean}
-   */
-  isCursorMax() {
+  isCursorMax(): boolean {
     return this.maxLine() + this._cursor >= this._lineCount;
   }
 
@@ -241,4 +205,10 @@ class Window_SkillDetail extends Window_Base {
   }
 }
 
-window.Window_SkillDetail = Window_SkillDetail;
+type _Window_SkillDetail = typeof Window_SkillDetail;
+declare global {
+  function Window_SkillDetailMixIn(windowClass: Window_SkillList): void;
+  var Window_SkillDetail: _Window_SkillDetail;
+}
+globalThis.Window_SkillDetailMixIn = Window_SkillDetailMixIn;
+globalThis.Window_SkillDetail = Window_SkillDetail;
