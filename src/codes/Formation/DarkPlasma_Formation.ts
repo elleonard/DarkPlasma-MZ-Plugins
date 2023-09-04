@@ -761,7 +761,7 @@ class Window_FormationWaitingMember extends Window_FormationMember {
   }
 
   maxCols() {
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 10;
+    return Math.floor(this.innerWidth / (settings.characterWidth + this.spacing()));
   }
 
   isAtLeftEnd() {
