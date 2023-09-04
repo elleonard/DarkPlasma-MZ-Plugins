@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 2.1.1
+// DarkPlasma_Formation 2.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/04 2.1.2 キャラクター横配置の総数・間隔をウィンドウサイズに応じて変わるように変更
  * 2023/08/06 2.1.1 キャンセルキーの挙動が意図通りでない不具合を修正
  * 2023/07/29 2.1.0 ウィンドウ遷移時のindex計算インターフェース公開
  *            2.0.2 左端、右端にカーソルがいることの抽象化
@@ -88,7 +89,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.1.1
+ * version: 2.1.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -772,7 +773,7 @@
       return $gameParty.allMembers().filter((actor) => !actor.isBattleMember());
     }
     maxCols() {
-      return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 9 : 10;
+      return Math.floor(this.innerWidth / (settings.characterWidth + this.spacing()));
     }
     isAtLeftEnd() {
       return this.index() % this.maxCols() === 0;
