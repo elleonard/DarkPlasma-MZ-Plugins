@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 5.2.1
+// DarkPlasma_EnemyBook 5.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/09/08 5.2.1 ハイライトする際にエラーが発生する不具合を修正
+ * 2023/09/08 5.2.2 ゲーム開始時点で Game_System インスタンスに図鑑オブジェクトを持たせるよう修正
+ *            5.2.1 ハイライトする際にエラーが発生する不具合を修正
  *            5.2.0 ハイライト色のインターフェース追加
  * 2023/06/03 5.1.1 リファクタ
  * 2023/03/25 5.1.0 選択ウィンドウの敵キャラを取得するインターフェースを追加
@@ -193,7 +194,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.2.1
+ * version: 5.2.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -388,7 +389,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.2.1
+ * version: 5.2.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1460,10 +1461,6 @@
     gameSystem.initialize = function () {
       _initialize.call(this);
       enemyBook = EnemyBook.initialBook();
-    };
-    const _onBeforeSave = gameSystem.onBeforeSave;
-    gameSystem.onBeforeSave = function () {
-      _onBeforeSave.call(this);
       this._enemyBook = enemyBookInstance();
     };
     const _Game_System_onAfterLoad = gameSystem.onAfterLoad;
@@ -1476,6 +1473,7 @@
         }
       } else {
         enemyBook = EnemyBook.initialBook();
+        this._enemyBook = enemyBookInstance();
       }
     };
     gameSystem.addToEnemyBook = function (enemyId) {
