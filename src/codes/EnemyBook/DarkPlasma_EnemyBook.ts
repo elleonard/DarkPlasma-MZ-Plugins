@@ -470,7 +470,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
     let name: string;
     if ($gameSystem.isInEnemyBook(enemy)) {
       if (this.mustHighlight(enemy)) {
-        this.changeTextColor(ColorManager.textColor(this.highlightColor(enemy)));
+        this.changeTextColor(this.highlightColorString(enemy));
       }
       name = enemy.name;
     } else {
@@ -489,6 +489,10 @@ class Window_EnemyBookIndex extends Window_Selectable {
    */
   mustHighlight(enemy: MZ.Enemy): boolean {
     return false;
+  }
+
+  highlightColorString(enemy: MZ.Enemy): string {
+    return this.textColor(this.highlightColor(enemy));
   }
 
   highlightColor(enemy: MZ.Enemy): number {

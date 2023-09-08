@@ -7,6 +7,34 @@ declare namespace MZ {
   }
 }
 
+declare interface EnemyBook {
+  _pages: (EnemyBookPage|null)[];
+  flexPage(): void;
+  percentRegisteredEnemy(): number;
+  percentRegisteredDropItem(): number;
+  isRegistered(enemy: MZ.Enemy): boolean;
+  isDropItemRegistered(enemy: MZ.Enemy, index: number): boolean;
+
+  register(enemyId: number): void;
+  registerDropItem(enemyId: number, index: number): void;
+  unregister(enemyId: number): void;
+  complete(): void;
+  clear(): void;
+}
+
+declare interface EnemyBookPage {
+  _isRegistered: boolean;
+  _dropItems: boolean[];
+
+  readonly isRegistered: boolean;
+
+  isDropItemRegistered(index: number): boolean;
+  registeredDropItemCount(enemy: MZ.Enemy): number;
+  register(): void;
+  registerDropItem(index: number): void;
+  unregister(): void;
+}
+
 declare interface Game_System {
   _enemyBook: EnemyBook;
   addToEnemyBook(enemyId: number): void;
@@ -68,7 +96,12 @@ declare interface Window_EnemyBookIndex extends Window_Selectable {
   _list: MZ.Enemy[];
   forcusOnFirst(): void;
   mustHighlight(enemy: MZ.Enemy): boolean;
+  highlightColorString(enemy: MZ.Enemy): string;
+  /**
+   * @deprecated use hightlightColorString
+   */
   highlightColor(enemy: MZ.Enemy): number;
+
   makeItemList(): void;
 
   isEnabled(index: number): boolean;
@@ -80,6 +113,8 @@ declare interface Window_EnemyBookIndex extends Window_Selectable {
 declare interface Window_EnemyBookStatus extends Window_Base {
   _enemy: MZ.Enemy|null;
   _enemySprite: Sprite;
+  _weakLines: number;
+  _resistLines: number;
   drawPage(): void;
   drawStatus(x: number, y: number): void;
   isExcludedResistState(stateId: number): boolean;
