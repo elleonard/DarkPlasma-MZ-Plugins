@@ -961,11 +961,6 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
   gameSystem.initialize = function () {
     _initialize.call(this);
     enemyBook = EnemyBook.initialBook();
-  };
-  
-  const _onBeforeSave = gameSystem.onBeforeSave;
-  gameSystem.onBeforeSave = function () {
-    _onBeforeSave.call(this);
     this._enemyBook = enemyBookInstance();
   };
   
@@ -979,6 +974,7 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
       }
     } else {
       enemyBook = EnemyBook.initialBook();
+      this._enemyBook = enemyBookInstance();
     }
   };
   
