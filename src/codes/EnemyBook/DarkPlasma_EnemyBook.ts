@@ -492,7 +492,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
   }
 
   highlightColorString(enemy: MZ.Enemy): string {
-    return this.textColor(this.highlightColor(enemy));
+    return ColorManager.textColor(this.highlightColor(enemy));
   }
 
   highlightColor(enemy: MZ.Enemy): number {
