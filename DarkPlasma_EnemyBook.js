@@ -1,10 +1,11 @@
-// DarkPlasma_EnemyBook 5.2.0
+// DarkPlasma_EnemyBook 5.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/09/08 5.2.0 ハイライト色のインターフェース追加
+ * 2023/09/08 5.2.1 ハイライトする際にエラーが発生する不具合を修正
+ *            5.2.0 ハイライト色のインターフェース追加
  * 2023/06/03 5.1.1 リファクタ
  * 2023/03/25 5.1.0 選択ウィンドウの敵キャラを取得するインターフェースを追加
  * 2023/03/18 5.0.0 デフォルト言語を日本語に修正
@@ -192,7 +193,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.2.0
+ * version: 5.2.1
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -387,7 +388,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.2.0
+ * version: 5.2.1
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1039,7 +1040,7 @@
       return false;
     }
     highlightColorString(enemy) {
-      return this.textColor(this.highlightColor(enemy));
+      return ColorManager.textColor(this.highlightColor(enemy));
     }
     highlightColor(enemy) {
       return settings.highlightColor;
