@@ -6,4 +6,6 @@ declare interface Game_System {
   elementIconIndex(elementId: number): number;
   largeDebuffStatusIconIndex(paramName: ParamName): number;
   smallDebuffStatusIconIndex(paramName: ParamName): number;
+  weaponTypeIconIndex(weaponTypeId: number): number;
+  armorTypeIconIndex(armorTypeId: number): number;
 }

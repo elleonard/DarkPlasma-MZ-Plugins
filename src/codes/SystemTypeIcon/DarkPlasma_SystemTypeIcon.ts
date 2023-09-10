@@ -14,6 +14,14 @@ function Game_System_SystemTypeIconMixIn(gameSystem: Game_System) {
   gameSystem.smallDebuffStatusIconIndex = function (paramName) {
     return settings.debuffStatusIcons[paramName]?.small || 0;
   };
+
+  gameSystem.weaponTypeIconIndex = function (weaponTypeId) {
+    return settings.weaponTypeIcons[weaponTypeId] || 0;
+  };
+
+  gameSystem.armorTypeIconIndex = function (armorTypeId) {
+    return settings.armorTypeIcons[armorTypeId] || 0;
+  };
 }
 
 Game_System_SystemTypeIconMixIn(Game_System.prototype);

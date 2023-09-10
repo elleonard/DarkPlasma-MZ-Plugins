@@ -3,6 +3,9 @@ DarkPlasma_SystemTypeIcon:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/09/10
+      version: 1.1.0
+      description: '武器タイプアイコン、防具タイプアイコンを追加'
     - date: 2023/03/18
       version: 1.0.0
       description: '公開'
@@ -20,7 +23,7 @@ DarkPlasma_SystemTypeIcon:
         en: Element Icons
       desc:
         ja: 属性アイコンを設定します（順序はデータベースのタイプ設定に対応します）
-        en: Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
+        en: Element Icons.(The order is corresponding to elements settings in database.)
       type: icon[]
       default:
         - 0
@@ -64,6 +67,43 @@ DarkPlasma_SystemTypeIcon:
         luk:
           small: 55
           large: 63
+    - param: weaponTypeIcons
+      text:
+        ja: 武器タイプアイコン
+        en: Weapon type Icons
+      desc:
+        ja: 武器タイプアイコンを設定します（順序はデータベースのタイプ設定に対応します）
+        en: Weapon type Icons.(The order is corresponding to elements settings in database.)
+      type: icon[]
+      default:
+        - 0
+        - 96
+        - 97
+        - 98
+        - 99
+        - 100
+        - 101
+        - 102
+        - 103
+        - 104
+        - 105
+        - 106
+        - 107
+    - param: armorTypeIcons
+      text:
+        ja: 防具タイプアイコン
+        en: Armor type Icons
+      desc:
+        ja: 防具タイプアイコンを設定します（順序はデータベースのタイプ設定に対応します）
+        en: Equip type Icons.(The order is corresponding to elements settings in database.)
+      type: icon[]
+      default:
+        - 0
+        - 135
+        - 139
+        - 136
+        - 129
+        - 128
   commands: []
   structures:
     DebuffStatusIcons:
