@@ -1,9 +1,10 @@
-// DarkPlasma_SystemTypeIcon 1.0.0
+// DarkPlasma_SystemTypeIcon 1.1.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/10 1.1.0 武器タイプアイコン、防具タイプアイコンを追加
  * 2023/03/18 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param elementIcons
- * @desc Element Icons for weak and resist.(The order is corresponding to elements settings in database.)
+ * @desc Element Icons.(The order is corresponding to elements settings in database.)
  * @text Element Icons
  * @type icon[]
  * @default ["0", "76", "64", "65", "66", "67", "68", "69", "70", "71"]
@@ -27,8 +28,20 @@
  * @default {"mhp":"{\"small\":\"48\", \"large\":\"56\"}", "mmp":"{\"small\":\"49\", \"large\":\"57\"}", "atk":"{\"small\":\"50\", \"large\":\"58\"}", "def":"{\"small\":\"51\", \"large\":\"59\"}", "mat":"{\"small\":\"52\", \"large\":\"60\"}", "mdf":"{\"small\":\"53\", \"large\":\"61\"}", "agi":"{\"small\":\"54\", \"large\":\"62\"}", "luk":"{\"small\":\"55\", \"large\":\"63\"}"}
  * @parent debuffStatus
  *
+ * @param weaponTypeIcons
+ * @desc Weapon type Icons.(The order is corresponding to elements settings in database.)
+ * @text Weapon type Icons
+ * @type icon[]
+ * @default ["0", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107"]
+ *
+ * @param armorTypeIcons
+ * @desc Equip type Icons.(The order is corresponding to elements settings in database.)
+ * @text Armor type Icons
+ * @type icon[]
+ * @default ["0", "135", "139", "136", "129", "128"]
+ *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * Set icons for system types and debuffs.
  */
 /*~struct~DebuffStatusIconsEn:
@@ -101,8 +114,20 @@
  * @default {"mhp":"{\"small\":\"48\", \"large\":\"56\"}", "mmp":"{\"small\":\"49\", \"large\":\"57\"}", "atk":"{\"small\":\"50\", \"large\":\"58\"}", "def":"{\"small\":\"51\", \"large\":\"59\"}", "mat":"{\"small\":\"52\", \"large\":\"60\"}", "mdf":"{\"small\":\"53\", \"large\":\"61\"}", "agi":"{\"small\":\"54\", \"large\":\"62\"}", "luk":"{\"small\":\"55\", \"large\":\"63\"}"}
  * @parent debuffStatus
  *
+ * @param weaponTypeIcons
+ * @desc 武器タイプアイコンを設定します（順序はデータベースのタイプ設定に対応します）
+ * @text 武器タイプアイコン
+ * @type icon[]
+ * @default ["0", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107"]
+ *
+ * @param armorTypeIcons
+ * @desc 防具タイプアイコンを設定します（順序はデータベースのタイプ設定に対応します）
+ * @text 防具タイプアイコン
+ * @type icon[]
+ * @default ["0", "135", "139", "136", "129", "128"]
+ *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * システムのタイプや弱体にアイコンを設定します。
  * 本プラグインは、他プラグインでタイプや弱体に関するアイコンを扱う際に
  * その補助とするための設定プラグインです。
@@ -239,6 +264,17 @@
       pluginParameters.debuffStatusIcons ||
         '{"mhp":{"small":"48", "large":"56"}, "mmp":{"small":"49", "large":"57"}, "atk":{"small":"50", "large":"58"}, "def":{"small":"51", "large":"59"}, "mat":{"small":"52", "large":"60"}, "mdf":{"small":"53", "large":"61"}, "agi":{"small":"54", "large":"62"}, "luk":{"small":"55", "large":"63"}}'
     ),
+    weaponTypeIcons: JSON.parse(
+      pluginParameters.weaponTypeIcons ||
+        '["0", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107"]'
+    ).map((e) => {
+      return Number(e || 0);
+    }),
+    armorTypeIcons: JSON.parse(pluginParameters.armorTypeIcons || '["0", "135", "139", "136", "129", "128"]').map(
+      (e) => {
+        return Number(e || 0);
+      }
+    ),
   };
 
   function Game_System_SystemTypeIconMixIn(gameSystem) {
@@ -250,6 +286,12 @@
     };
     gameSystem.smallDebuffStatusIconIndex = function (paramName) {
       return settings.debuffStatusIcons[paramName]?.small || 0;
+    };
+    gameSystem.weaponTypeIconIndex = function (weaponTypeId) {
+      return settings.weaponTypeIcons[weaponTypeId] || 0;
+    };
+    gameSystem.armorTypeIconIndex = function (armorTypeId) {
+      return settings.armorTypeIcons[armorTypeId] || 0;
     };
   }
   Game_System_SystemTypeIconMixIn(Game_System.prototype);
