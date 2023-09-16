@@ -1,0 +1,43 @@
+DarkPlasma_LevelXState:
+  name: DarkPlasma_LevelXState
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/09/16
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'レベルが特定数値の倍数の対象にのみ有効なステート付加効果'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueEffectCode
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueEffectCode
+    orderBefore: []
+  help:
+    ja: |
+      スキル・アイテムの使用効果に、
+      レベルが特定の数値の倍数の対象にのみ有効なステート付加を追加します。
+
+      対象スキル・アイテムのメモ欄に以下のように記述します。
+      <levelXState:
+        5:1
+      >
+      これにより、レベルが5の倍数の対象に
+      ステート1(戦闘不能)を付加する効果となります。
+
+      このステート付加は、対象のステート有効度が0であるか
+      ステート無効フラグを持っている場合には無効になります。
+      ただし、それ以外の場合には必ず有効になります。
+
+      このステート付加は、対象がレベルを持たない場合には無効になります。
+      敵キャラは本来レベルを持ちませんが、
+      敵キャラにレベルを持たせるプラグインを使うことで
+      このステート付加を敵キャラに対しても有効にすることができます。
