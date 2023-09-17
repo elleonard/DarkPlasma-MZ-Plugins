@@ -4,6 +4,66 @@
   
     
     <entry>
+      <title>レベルが特定数値の倍数の対象にのみ有効なステート付加効果</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/09/17/level-x-state/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/09/17/level-x-state/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>レベルが特定数値の倍数の対象にのみ有効なステート付加を行う使用効果を提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="使用例" title="使用例"></p><p>レベルが5の倍数の対象に戦闘不能を付与する設定です。</p><h1 id="敵キャラへの適用について"><a href="#敵キャラへの適用について" class="headerlink" title="敵キャラへの適用について"></a>敵キャラへの適用について</h1><p>本プラグインで提供する効果は、レベルを持たない対象に効果を発揮しません。<br>RPGツクールMZデフォルトでは敵キャラはレベルを持ちません。</p><p>敵キャラにレベルを追加するプラグインを使用することにより、本プラグインで提供する効果を敵キャラに対しても発揮できるようになります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EnemyLevel.js">DarkPlasma_EnemyLevel</a></li><li><a href="https://newrpg.seesaa.net/article/484538732.html">NRP_EnemyPercentParams</a></li><li><a href="https://github.com/kuroudo119/RPGMZ-Plugin/blob/master/KRD_MZ_EnemyLevel.js">KRD_MZ_EnemyLevel</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_LevelXState.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の効果コードIDを確保する"><a href="#独自の効果コードIDを確保する" class="headerlink" title="独自の効果コードIDを確保する"></a>独自の効果コードIDを確保する</h3><p>独自の使用効果を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueEffectCode.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> スキル </tag>
+            
+            <tag> アイテム </tag>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>アクターコマンドを変更する特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/09/17/actor-command-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/09/17/actor-command-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アクターコマンドを変更する特徴を定義します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p>![設定例](setting.png “設定例)</p><p>暴走モードでは、アクターコマンドがスキル292だけになる設定をしています。</p><p><img src="actor-command-trait.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ActorCommandTrait.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自の特徴を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 職業 </tag>
+            
+            <tag> アクター </tag>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MPが一定値以下になった際に解除するステート</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/06/22/remove-state-by-mp/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/06/22/remove-state-by-mp/</url>
