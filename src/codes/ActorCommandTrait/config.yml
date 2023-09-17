@@ -60,8 +60,9 @@ DarkPlasma_ActorCommandTrait:
         item
       >
 
-      記述例2: (特定のスキルのみのコマンドにする)
+      記述例2: (特定のスキルのみのコマンドにする。優先度1)
       <actorCommand:
+        priority:1
         skill/35
         skill/36
       >
