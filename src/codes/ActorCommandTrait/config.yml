@@ -1,0 +1,67 @@
+DarkPlasma_ActorCommandTrait:
+  name: DarkPlasma_ActorCommandTrait
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/09/17
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アクターコマンドを変更する特徴'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueTraitId
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueTraitId
+    orderBefore: []
+  help:
+    ja: |
+      アクターコマンドを変更する特徴を提供します。
+
+      その特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
+      以下のように記述してください。
+      この特徴が複数設定されている場合、
+      優先度の最も大きいものが使用されます。
+      優先度を省略すると、優先度0として扱われます。
+      <actorCommand:
+        priority:優先度
+        コマンド定義
+        コマンド定義
+        ...
+      >
+
+      コマンド定義の書き方
+      attack
+        通常攻撃コマンド(戦う)
+      
+      skill
+        スキル(スキルタイプの選択)
+
+      skill/スキルID
+        個別スキル
+      
+      guard
+        防御コマンド
+      
+      item
+        アイテムコマンド
+
+      記述例1: (攻撃を除いたコマンドにする)
+      <actorCommand:
+        skill
+        guard
+        item
+      >
+
+      記述例2: (特定のスキルのみのコマンドにする)
+      <actorCommand:
+        skill/35
+        skill/36
+      >
