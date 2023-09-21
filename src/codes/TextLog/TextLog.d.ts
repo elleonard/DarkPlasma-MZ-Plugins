@@ -1,6 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 
-
 declare interface EvacuatedMessageAndSubWindows {
   readonly messageWindow: Window_Message;
   readonly goldWindow: Window_Gold;

@@ -3,6 +3,7 @@
 import { pluginName } from "../../common/pluginName";
 import { command_insertLogSplitter, command_insertTextLog, command_showTextLog, parseArgs_insertTextLog } from "./_build/DarkPlasma_TextLog_commands";
 import { settings } from "./_build/DarkPlasma_TextLog_parameters";
+import { Window_ObtainEscapeParamTextMixIn } from '../../common/window/obtainEscapeParamText';
 
 PluginManager.registerCommand(pluginName, command_showTextLog, function(args) {
   SceneManager.push(Scene_TextLog);
@@ -536,20 +537,9 @@ class Window_TextLog extends Window_Selectable {
       this.obtainEscapeParamText(textState);
     }
   }
-
-  /**
-   * [YYY]のYYYを取り出し、カンマ区切りで配列化して返す
-   */
-  obtainEscapeParamText(textState: Window_Base.TextState) {
-    const arr = /^\[(.+?)\]/.exec(textState.text.slice(textState.index));
-    if (arr) {
-      textState.index += arr[0].length;
-      return arr[1].split(',');
-    } else {
-      return [];
-    }
-  }
 }
+
+Window_ObtainEscapeParamTextMixIn(Window_TextLog.prototype);
 
 function Window_Message_TextLogMixIn(windowClass: Window_Message) {
   const _terminateMessage = windowClass.terminateMessage;
