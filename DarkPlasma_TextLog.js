@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 1.2.0
+// DarkPlasma_TextLog 1.2.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/21 1.2.1 リファクタ
  * 2023/07/22 1.2.0 タッチUIが有効な場合にキャンセルボタンを表示
  *            1.1.2 名前の制御文字をログ記録時点で展開するように修正
  * 2023/01/30 1.1.1 決定キーでログウィンドウが閉じない不具合を修正
@@ -139,7 +140,7 @@
  * @type string
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -192,6 +193,21 @@
     scrollSpeed: Number(pluginParameters.scrollSpeed || 1),
     scrollSpeedHigh: Number(pluginParameters.scrollSpeedHigh || 10),
   };
+
+  function Window_ObtainEscapeParamTextMixIn(windowClass) {
+    /**
+     * [YYY]のYYYを取り出し、カンマ区切りで配列化して返す
+     */
+    windowClass.obtainEscapeParamText = function (textState) {
+      const arr = /^\[(.+?)\]/.exec(textState.text.slice(textState.index));
+      if (arr) {
+        textState.index += arr[0].length;
+        return arr[1].split(',');
+      } else {
+        return [];
+      }
+    };
+  }
 
   PluginManager.registerCommand(pluginName, command_showTextLog, function (args) {
     SceneManager.push(Scene_TextLog);
@@ -630,19 +646,8 @@
         this.obtainEscapeParamText(textState);
       }
     }
-    /**
-     * [YYY]のYYYを取り出し、カンマ区切りで配列化して返す
-     */
-    obtainEscapeParamText(textState) {
-      const arr = /^\[(.+?)\]/.exec(textState.text.slice(textState.index));
-      if (arr) {
-        textState.index += arr[0].length;
-        return arr[1].split(',');
-      } else {
-        return [];
-      }
-    }
   }
+  Window_ObtainEscapeParamTextMixIn(Window_TextLog.prototype);
   function Window_Message_TextLogMixIn(windowClass) {
     const _terminateMessage = windowClass.terminateMessage;
     windowClass.terminateMessage = function () {

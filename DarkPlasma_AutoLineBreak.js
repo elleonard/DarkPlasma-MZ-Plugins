@@ -1,9 +1,10 @@
-// DarkPlasma_AutoLineBreak 1.4.0
+// DarkPlasma_AutoLineBreak 1.4.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/21 1.4.1 リファクタ
  * 2023/01/28 1.4.0 一時的に自動改行を無効にする制御文字を追加
  *                  単語ベース改行が正常に動作しない不具合を修正
  * 2023/01/24 1.3.1 単語ベース改行で改行文字を含むと自動改行判定が狂うことがある不具合を修正
@@ -18,63 +19,6 @@
  * 2021/06/22 1.0.2 名前ウィンドウの表示が崩れる不具合を修正
  *            1.0.1 サブフォルダからの読み込みに対応
  * 2020/12/13 1.0.0 公開
- */
-
-/*:ja
- * @plugindesc ウィンドウ幅を超える文章を自動で折り返す
- * @author DarkPlasma
- * @license MIT
- *
- * @target MZ
- * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
- *
- * @param prohibitLineBreakBefore
- * @desc 行頭に表示してはならない文字
- * @text 行頭禁則文字
- * @type string
- * @default ,)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.
- *
- * @param prohibitLineBreakAfter
- * @desc 行末に表示してはならない文字
- * @text 行末禁則文字
- * @type string
- * @default ([｛〔〈《「『【〘〖〝‘“｟«
- *
- * @param ignoreAutoLineBreakWindows
- * @desc 自動改行しないウィンドウ一覧
- * @text 自動改行無効ウィンドウ
- * @type string[]
- * @default []
- *
- * @param lineWidthMargin
- * @desc 行幅のマージン。禁則文字用に余裕を持たせるための幅
- * @text 行幅のマージン
- * @type number
- * @default 4
- *
- * @param wordBaseLineBreak
- * @desc 単語ベースで自動改行を行うかどうか。半角スペースで区切られたひとかたまりを1単語とみなします。
- * @text 単語ベース改行
- * @type boolean
- * @default false
- *
- * @help
- * version: 1.4.0
- * ウィンドウ幅を超えるような文字列を自動で改行します。
- *
- * 以下の法則でゆるふわ禁則処理します。
- * - 行頭禁則文字は連続1文字の場合、ぶら下げによる処理を行います。
- * - 行頭禁則文字は連続2文字の場合、追い出しによる処理を行います。
- * - 行末禁則文字は追い出しによる処理を行います。
- * - 行末禁則文字が連続する場合をサポートしません。
- *   （行末禁則文字が連続した場合、行末に対象の文字が表示されることがあります）
- * - 行頭行末揃えを行いません。（必ずしも各行の行頭と行末が一直線に揃いません）
- * - 分離禁則を適用しません。（英単語や連数字の途中で改行されることがあります）
- *
- * 下記制御文字を使うことで、一時的に自動改行を無効化/無効化解除できます。
- * この状態はセーブデータに記録されません。
- * \IGNOREAUTOLINEBREAK[START]: 無効化
- * \IGNOREAUTOLINEBREAK[FINISH]: 無効化解除
  */
 
 /*:en
@@ -116,7 +60,7 @@
  * @default false
  *
  * @help
- * version: 1.4.0
+ * version: 1.4.1
  * This is plugin for automatically line break when text width is over window's.
  *
  * Especially, it supports line breaking rule for Japanese (multi byte characters) partially.
@@ -128,6 +72,63 @@
  * These window state is not saved in player data.
  * \IGNOREAUTOLINEBREAK[START]: mark as window that should be ignoring auto line break temporarily.
  * \IGNOREAUTOLINEBREAK[FINISH]: unmark as window that should be ignoring auto line break temporarily.
+ */
+
+/*:
+ * @plugindesc ウィンドウ幅を超える文章を自動で折り返す
+ * @author DarkPlasma
+ * @license MIT
+ *
+ * @target MZ
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @param prohibitLineBreakBefore
+ * @desc 行頭に表示してはならない文字
+ * @text 行頭禁則文字
+ * @type string
+ * @default ,)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.
+ *
+ * @param prohibitLineBreakAfter
+ * @desc 行末に表示してはならない文字
+ * @text 行末禁則文字
+ * @type string
+ * @default ([｛〔〈《「『【〘〖〝‘“｟«
+ *
+ * @param ignoreAutoLineBreakWindows
+ * @desc 自動改行しないウィンドウ一覧
+ * @text 自動改行無効ウィンドウ
+ * @type string[]
+ * @default []
+ *
+ * @param lineWidthMargin
+ * @desc 行幅のマージン。禁則文字用に余裕を持たせるための幅
+ * @text 行幅のマージン
+ * @type number
+ * @default 4
+ *
+ * @param wordBaseLineBreak
+ * @desc 単語ベースで自動改行を行うかどうか。半角スペースで区切られたひとかたまりを1単語とみなします。
+ * @text 単語ベース改行
+ * @type boolean
+ * @default false
+ *
+ * @help
+ * version: 1.4.1
+ * ウィンドウ幅を超えるような文字列を自動で改行します。
+ *
+ * 以下の法則でゆるふわ禁則処理します。
+ * - 行頭禁則文字は連続1文字の場合、ぶら下げによる処理を行います。
+ * - 行頭禁則文字は連続2文字の場合、追い出しによる処理を行います。
+ * - 行末禁則文字は追い出しによる処理を行います。
+ * - 行末禁則文字が連続する場合をサポートしません。
+ *   （行末禁則文字が連続した場合、行末に対象の文字が表示されることがあります）
+ * - 行頭行末揃えを行いません。（必ずしも各行の行頭と行末が一直線に揃いません）
+ * - 分離禁則を適用しません。（英単語や連数字の途中で改行されることがあります）
+ *
+ * 下記制御文字を使うことで、一時的に自動改行を無効化/無効化解除できます。
+ * この状態はセーブデータに記録されません。
+ * \IGNOREAUTOLINEBREAK[START]: 無効化
+ * \IGNOREAUTOLINEBREAK[FINISH]: 無効化解除
  */
 
 (() => {
@@ -144,15 +145,30 @@
   const settings = {
     prohibitLineBreakBefore: String(
       pluginParameters.prohibitLineBreakBefore ||
-        ',)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.'
+        `,)]｝、〕〉》」』】〙〗〟’”｠»ゝゞーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇷ゚ㇺㇻㇼㇽㇾㇿ々〻‐゠–〜～?!‼⁇⁈⁉・:;/。.`
     ),
-    prohibitLineBreakAfter: String(pluginParameters.prohibitLineBreakAfter || '([｛〔〈《「『【〘〖〝‘“｟«'),
+    prohibitLineBreakAfter: String(pluginParameters.prohibitLineBreakAfter || `([｛〔〈《「『【〘〖〝‘“｟«`),
     ignoreAutoLineBreakWindows: JSON.parse(pluginParameters.ignoreAutoLineBreakWindows || '[]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
     lineWidthMargin: Number(pluginParameters.lineWidthMargin || 4),
     wordBaseLineBreak: String(pluginParameters.wordBaseLineBreak || false) === 'true',
   };
+
+  function Window_ObtainEscapeParamTextMixIn(windowClass) {
+    /**
+     * [YYY]のYYYを取り出し、カンマ区切りで配列化して返す
+     */
+    windowClass.obtainEscapeParamText = function (textState) {
+      const arr = /^\[(.+?)\]/.exec(textState.text.slice(textState.index));
+      if (arr) {
+        textState.index += arr[0].length;
+        return arr[1].split(',');
+      } else {
+        return [];
+      }
+    };
+  }
 
   function Window_AutoLineBreakMixIn(windowClass) {
     windowClass.startIgnoreAutoLineBreakTemporary = function () {
@@ -205,7 +221,7 @@
       _processEscapeCharacter.call(this, code, textState);
       switch (code) {
         case 'IGNOREAUTOLINEBREAK':
-          const param = this.obtainEscapeParamText(textState);
+          const param = this.obtainEscapeParamText(textState)[0];
           if (param.toUpperCase() === 'START') {
             this.startIgnoreAutoLineBreakTemporary();
           } else if (param.toUpperCase() === 'FINISH') {
@@ -213,15 +229,6 @@
           }
           break;
       }
-    };
-    windowClass.obtainEscapeParamText = function (textState) {
-      const regExp = /^\[(.+)\]/;
-      const arr = regExp.exec(textState.text.slice(textState.index));
-      if (arr) {
-        textState.index += arr[0].length;
-        return arr[1];
-      }
-      return '';
     };
     const _createTextState = windowClass.createTextState;
     windowClass.createTextState = function (text, x, y, width) {
@@ -322,6 +329,7 @@
     };
   }
   Window_AutoLineBreakMixIn(Window_Base.prototype);
+  Window_ObtainEscapeParamTextMixIn(Window_Base.prototype);
   function Window_DisableAutoLineBreakMixIn(windowClass) {
     windowClass.isAutoLineBreakEnabled = function () {
       return false;

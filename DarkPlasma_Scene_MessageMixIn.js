@@ -1,15 +1,16 @@
-// DarkPlasma_Scene_MessageMixIn 1.0.1
+// DarkPlasma_Scene_MessageMixIn 1.0.2
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/21 1.0.2 TextLogと併用するとログウィンドウを閉じることができない不具合を修正
  * 2023/01/18 1.0.1 すでにお金ウィンドウがあるシーンにはお金ウィンドウを再定義しない
  *                  指定シーンを開こうとするとエラーが起きる不具合を修正
  * 2023/01/13 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 指定のシーンにメッセージウィンドウを表示させる
  * @author DarkPlasma
  * @license MIT
@@ -23,7 +24,7 @@
  * @default []
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
  * $gameMessage.add などでメッセージを追加した際に、
@@ -43,7 +44,7 @@
 
   const settings = {
     scenes: JSON.parse(pluginParameters.scenes || '[]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
   };
 
@@ -125,7 +126,7 @@
       return _isOpenAndActive.call(this);
     };
     windowClass.isAssociatedWithMessageWindow = function () {
-      return !!this._messageWindow;
+      return !!this._messageWindow || this.constructor.name === 'Window_TextLog';
     };
     const _update = windowClass.update;
     windowClass.update = function () {
