@@ -8,7 +8,7 @@ function Window_SetColorByCodeMixIn(windowClass: Window_Base) {
   const _processEscapeCharacter = windowClass.processEscapeCharacter;
   windowClass.processEscapeCharacter = function (code, textState) {
     if (code === "C") {
-      const color = this.obtainEscapeParamText(textState);
+      const color = this.obtainEscapeParamText(textState)[0];
       if (color.startsWith("#")) {
         this.changeTextColor(color);
       } else {
