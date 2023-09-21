@@ -95,7 +95,7 @@ function Window_Selectable_MessageMixIn(windowClass: Window_Selectable) {
   };
 
   windowClass.isAssociatedWithMessageWindow = function () {
-    return !!this._messageWindow;
+    return !!this._messageWindow || this.constructor.name === 'Window_TextLog';
   };
 
   const _update = windowClass.update;
