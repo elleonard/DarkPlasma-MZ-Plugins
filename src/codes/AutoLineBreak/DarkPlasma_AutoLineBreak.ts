@@ -1,4 +1,5 @@
 import { settings } from './_build/DarkPlasma_AutoLineBreak_parameters';
+import { Window_ObtainEscapeParamTextMixIn } from '../../common/window/obtainEscapeParamText';
 
 function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
   windowClass.startIgnoreAutoLineBreakTemporary = function () {
@@ -57,7 +58,7 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
     _processEscapeCharacter.call(this, code, textState);
     switch (code) {
       case "IGNOREAUTOLINEBREAK":
-        const param = this.obtainEscapeParamText(textState);
+        const param = this.obtainEscapeParamText(textState)[0];
         if (param.toUpperCase() === "START") {
           this.startIgnoreAutoLineBreakTemporary();
         } else if (param.toUpperCase() === "FINISH") {
@@ -65,16 +66,6 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
         }
         break;
     }
-  };
-
-  windowClass.obtainEscapeParamText = function (textState) {
-    const regExp = /^\[(.+)\]/;
-    const arr = regExp.exec(textState.text.slice(textState.index));
-    if (arr) {
-      textState.index += arr[0].length;
-      return arr[1];
-    }
-    return "";
   };
 
   const _createTextState = windowClass.createTextState;
@@ -187,6 +178,7 @@ function Window_AutoLineBreakMixIn(windowClass: Window_Base) {
 }
 
 Window_AutoLineBreakMixIn(Window_Base.prototype);
+Window_ObtainEscapeParamTextMixIn(Window_Base.prototype);
 
 function Window_DisableAutoLineBreakMixIn(windowClass: Window_Base) {
   windowClass.isAutoLineBreakEnabled = function () {

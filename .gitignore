@@ -4,6 +4,7 @@ node_modules/
 
 DarkPlasma_*.js
 
+src/common/**/*.js
 src/excludes/
 src/excludeCommon/
 src/.gitignore

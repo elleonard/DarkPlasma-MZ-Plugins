@@ -3,8 +3,6 @@
 declare interface Window_Base {
   _ignoreAutoLineBreakTemporary: boolean;
 
-  obtainEscapeParamText(textState: Window_Base.TextState): string;
-
   startIgnoreAutoLineBreakTemporary(): void;
   finishIgnoreAutoLineBreakTemporary(): void;
 
