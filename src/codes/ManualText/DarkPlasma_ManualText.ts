@@ -74,7 +74,10 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     this._manualTexts.push(text);
   };
 
-  windowClass.manualTexts = function () {
+  windowClass.manualTexts = windowClass.manualTexts || function (this: Window_Base) {
+    if (!this._manualTexts) {
+      this.initManualTexts();
+    }
     return this._manualTexts;
   };
 
@@ -89,7 +92,7 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     return this._manualFontSize;
   };
 
-  windowClass.isManualVisible = function () {
+  windowClass.isManualVisible = windowClass.isManualVisible || function (this: Window_Base) {
     return this._isManualVisible;
   };
 

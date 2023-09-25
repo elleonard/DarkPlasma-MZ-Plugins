@@ -3,6 +3,10 @@ DarkPlasma_ManualText:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/09/25
+      version: 1.7.0
+      description: '一部メソッドが既存に存在すれば上書きしないように修正'
+    - description: 'manualTextsの結果がundefinedにならないよう修正'
     - date: 2022/12/29
       version: 1.6.0
       description: '一部メソッドが既存に存在すれば上書きしないように修正'
