@@ -31,8 +31,8 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     this._manualOffsetY = offset;
   };
 
-  windowClass.manualOffsetY = function () {
-    return this._manualOffsetY || -settings.linePadding;
+  windowClass.manualOffsetY = windowClass.manualOffsetY || function (this: Window_Base) {
+    return this._manualOffsetY ?? -settings.linePadding;
   };
 
   windowClass.manualLineHeight = function () {
@@ -43,11 +43,11 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     this._manualPadding = padding;
   };
 
-  windowClass.manualPadding = function () {
-    return this._manualPadding || settings.linePadding;
+  windowClass.manualPadding = windowClass.manualPadding || function (this: Window_Base) {
+    return this._manualPadding ?? settings.linePadding;
   };
 
-  windowClass.manualCols = function () {
+  windowClass.manualCols = windowClass.manualCols || function (this: Window_Base) {
     return this._manualCols || 1;
   };
 
@@ -55,8 +55,8 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     this._manualCols = cols;
   };
 
-  windowClass.manualWidth = function () {
-    return this._manualWidth || this.innerWidth / this.manualCols();
+  windowClass.manualWidth = windowClass.manualWidth || function (this: Window_Base) {
+    return this._manualWidth ?? this.innerWidth / this.manualCols();
   };
 
   windowClass.setManualWidth = function (width) {
@@ -85,7 +85,7 @@ function Window_ManualTextMixIn(windowClass: Window_Base) {
     this._manualFontSize = fontSize;
   };
 
-  windowClass.manualFontSize = function () {
+  windowClass.manualFontSize = windowClass.manualFontSize || function (this: Window_Base) {
     if (!this._manualFontSize) {
       this._manualFontSize = 21;
     }
