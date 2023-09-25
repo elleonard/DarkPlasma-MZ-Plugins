@@ -1,10 +1,12 @@
-// DarkPlasma_ManualText 1.7.0
+// DarkPlasma_ManualText 1.8.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/09/25 1.7.0 一部メソッドが既存に存在すれば上書きしないように修正
+ * 2023/09/25 1.8.0 一部メソッドが既存に存在すれば上書きしないように修正
+ *                  一部設定値を0にできない不具合を修正
+ *            1.7.0 一部メソッドが既存に存在すれば上書きしないように修正
  *                  manualTextsの結果がundefinedにならないよう修正
  * 2022/12/29 1.6.0 一部メソッドが既存に存在すれば上書きしないように修正
  * 2022/11/13 1.5.4 refreshメソッドを無駄に上書きしないように修正
@@ -36,7 +38,7 @@
  * @default 12
  *
  * @help
- * version: 1.7.0
+ * version: 1.8.0
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -151,27 +153,35 @@
     windowClass.setManualOffsetY = function (offset) {
       this._manualOffsetY = offset;
     };
-    windowClass.manualOffsetY = function () {
-      return this._manualOffsetY || -settings.linePadding;
-    };
+    windowClass.manualOffsetY =
+      windowClass.manualOffsetY ||
+      function () {
+        return this._manualOffsetY ?? -settings.linePadding;
+      };
     windowClass.manualLineHeight = function () {
       return this.manualFontSize() + this.manualPadding();
     };
     windowClass.setManualPadding = function (padding) {
       this._manualPadding = padding;
     };
-    windowClass.manualPadding = function () {
-      return this._manualPadding || settings.linePadding;
-    };
-    windowClass.manualCols = function () {
-      return this._manualCols || 1;
-    };
+    windowClass.manualPadding =
+      windowClass.manualPadding ||
+      function () {
+        return this._manualPadding ?? settings.linePadding;
+      };
+    windowClass.manualCols =
+      windowClass.manualCols ||
+      function () {
+        return this._manualCols || 1;
+      };
     windowClass.setManualCols = function (cols) {
       this._manualCols = cols;
     };
-    windowClass.manualWidth = function () {
-      return this._manualWidth || this.innerWidth / this.manualCols();
-    };
+    windowClass.manualWidth =
+      windowClass.manualWidth ||
+      function () {
+        return this._manualWidth ?? this.innerWidth / this.manualCols();
+      };
     windowClass.setManualWidth = function (width) {
       this._manualWidth = width;
     };
@@ -195,12 +205,14 @@
     windowClass.setManualFontSize = function (fontSize) {
       this._manualFontSize = fontSize;
     };
-    windowClass.manualFontSize = function () {
-      if (!this._manualFontSize) {
-        this._manualFontSize = 21;
-      }
-      return this._manualFontSize;
-    };
+    windowClass.manualFontSize =
+      windowClass.manualFontSize ||
+      function () {
+        if (!this._manualFontSize) {
+          this._manualFontSize = 21;
+        }
+        return this._manualFontSize;
+      };
     windowClass.isManualVisible =
       windowClass.isManualVisible ||
       function () {
