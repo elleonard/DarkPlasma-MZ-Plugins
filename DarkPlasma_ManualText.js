@@ -1,9 +1,11 @@
-// DarkPlasma_ManualText 1.6.0
+// DarkPlasma_ManualText 1.7.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/09/25 1.7.0 一部メソッドが既存に存在すれば上書きしないように修正
+ *                  manualTextsの結果がundefinedにならないよう修正
  * 2022/12/29 1.6.0 一部メソッドが既存に存在すれば上書きしないように修正
  * 2022/11/13 1.5.4 refreshメソッドを無駄に上書きしないように修正
  * 2022/09/11 1.5.3 正しく表示されない不具合を修正
@@ -19,7 +21,7 @@
  * 2021/10/24 1.0.0 初版
  */
 
-/*:ja
+/*:
  * @plugindesc ウィンドウに操作説明を表示する
  * @author DarkPlasma
  * @license MIT
@@ -34,7 +36,7 @@
  * @default 12
  *
  * @help
- * version: 1.6.0
+ * version: 1.7.0
  * ウィンドウ右下に操作説明を表示できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -182,9 +184,14 @@
       }
       this._manualTexts.push(text);
     };
-    windowClass.manualTexts = function () {
-      return this._manualTexts;
-    };
+    windowClass.manualTexts =
+      windowClass.manualTexts ||
+      function () {
+        if (!this._manualTexts) {
+          this.initManualTexts();
+        }
+        return this._manualTexts;
+      };
     windowClass.setManualFontSize = function (fontSize) {
       this._manualFontSize = fontSize;
     };
@@ -194,9 +201,11 @@
       }
       return this._manualFontSize;
     };
-    windowClass.isManualVisible = function () {
-      return this._isManualVisible;
-    };
+    windowClass.isManualVisible =
+      windowClass.isManualVisible ||
+      function () {
+        return this._isManualVisible;
+      };
     windowClass.setIsManualVisible = function (visible) {
       if (this._isManualVisible !== visible) {
         this._isManualVisible = visible;
