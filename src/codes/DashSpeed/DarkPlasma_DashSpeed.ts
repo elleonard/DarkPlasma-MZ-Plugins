@@ -14,11 +14,14 @@ function Game_Player_DashSpeedMixIn(gamePlayer: Game_Player) {
   };
   
   gamePlayer.realMoveSpeed = function () {
-    return this._moveSpeed + (this.isDashing() ? this._dashSpeed : 0);
+    return this._moveSpeed + (this.isDashing() ? this.dashSpeed() : 0);
   };
   
   gamePlayer.dashSpeed = function () {
-    return this._dashSpeed === undefined ? settings.defaultDashSpeed : this._dashSpeed;
+    if (this._dashSpeed === undefined) {
+      this._dashSpeed = settings.defaultDashSpeed;
+    }
+    return this._dashSpeed;
   };
   
   gamePlayer.setDashSpeed = function (dashSpeed) {
