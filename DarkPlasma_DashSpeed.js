@@ -1,10 +1,11 @@
-// DarkPlasma_DashSpeed 1.0.4
+// DarkPlasma_DashSpeed 1.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/09/28 1.0.4 typescript移行
+ * 2023/09/28 1.0.5 導入前のセーブデータをロードするとマップ上のプレイヤーキャラクターが消失する不具合を修正
+ *            1.0.4 typescript移行
  * 2021/07/05 1.0.3 MZ 1.3.2に対応
  * 2021/06/22 1.0.2 サブフォルダからの読み込みに対応
  * 2020/10/10 1.0.1 リファクタ
@@ -35,8 +36,10 @@
  * @default 1
  *
  * @help
- * version: 1.0.4
+ * version: 1.0.5
  * ダッシュ速度を変更します。
+ *
+ * 本プラグインはセーブデータにプレイヤーのダッシュ速度を追加します。
  */
 
 (() => {
@@ -66,10 +69,13 @@
       this._dashSpeed = settings.defaultDashSpeed;
     };
     gamePlayer.realMoveSpeed = function () {
-      return this._moveSpeed + (this.isDashing() ? this._dashSpeed : 0);
+      return this._moveSpeed + (this.isDashing() ? this.dashSpeed() : 0);
     };
     gamePlayer.dashSpeed = function () {
-      return this._dashSpeed === undefined ? settings.defaultDashSpeed : this._dashSpeed;
+      if (this._dashSpeed === undefined) {
+        this._dashSpeed = settings.defaultDashSpeed;
+      }
+      return this._dashSpeed;
     };
     gamePlayer.setDashSpeed = function (dashSpeed) {
       this._dashSpeed = dashSpeed;
