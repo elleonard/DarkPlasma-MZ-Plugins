@@ -233,10 +233,12 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
     quitFromFormation(): void { }
 
     activateWaitingMemberWindow(): void {
-      this.formationBattleMemberWindow().deactivate();
-      this.formationWaitingMemberWindow().activate();
-      this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
-      this._currentWindow = this.formationWaitingMemberWindow();
+      if (this.formationWaitingMemberWindow().maxItems() > 0) {
+        this.formationBattleMemberWindow().deactivate();
+        this.formationWaitingMemberWindow().activate();
+        this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
+        this._currentWindow = this.formationWaitingMemberWindow();
+      }
     }
 
     targetIndexOfActivateWaitingMember() {
