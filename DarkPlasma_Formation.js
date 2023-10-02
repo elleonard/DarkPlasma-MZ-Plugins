@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 2.1.2
+// DarkPlasma_Formation 2.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/02 2.1.3 待機メンバーウィンドウにメンバーがいない際にカーソルが操作不能になる不具合を修正
  * 2023/09/04 2.1.2 キャラクター横配置の総数・間隔をウィンドウサイズに応じて変わるように変更
  * 2023/08/06 2.1.1 キャンセルキーの挙動が意図通りでない不具合を修正
  * 2023/07/29 2.1.0 ウィンドウ遷移時のindex計算インターフェース公開
@@ -89,7 +90,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 2.1.2
+ * version: 2.1.3
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -322,10 +323,12 @@
       }
       quitFromFormation() {}
       activateWaitingMemberWindow() {
-        this.formationBattleMemberWindow().deactivate();
-        this.formationWaitingMemberWindow().activate();
-        this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
-        this._currentWindow = this.formationWaitingMemberWindow();
+        if (this.formationWaitingMemberWindow().maxItems() > 0) {
+          this.formationBattleMemberWindow().deactivate();
+          this.formationWaitingMemberWindow().activate();
+          this.formationWaitingMemberWindow().smoothSelect(this.targetIndexOfActivateWaitingMember());
+          this._currentWindow = this.formationWaitingMemberWindow();
+        }
       }
       targetIndexOfActivateWaitingMember() {
         let rowOffset = this.formationBattleMemberWindow().row() - this.formationBattleMemberWindow().topRow();
