@@ -561,15 +561,18 @@ function Window_Message_TextLogMixIn(windowClass: Window_Message) {
 
 Window_Message_TextLogMixIn(Window_Message.prototype);
 
+type _EvacuatedMessageAndSubWindows = typeof EvacuatedMessageAndSubWindows;
 type _Game_EventTextLog = typeof Game_EventTextLog;
 type _Game_LogMessage = typeof Game_LogMessage;
 type _Scene_TextLog = typeof Scene_TextLog;
 declare global {
+  var EvacuatedMessageAndSubWindows: _EvacuatedMessageAndSubWindows;
   var Game_EventTextLog: _Game_EventTextLog;
   var Game_LogMessage: _Game_LogMessage;
   var Scene_TextLog: _Scene_TextLog;
 }
 
+globalThis.EvacuatedMessageAndSubWindows = EvacuatedMessageAndSubWindows;
 globalThis.Game_EventTextLog = Game_EventTextLog;
 globalThis.Game_LogMessage = Game_LogMessage;
 globalThis.Scene_TextLog = Scene_TextLog;
