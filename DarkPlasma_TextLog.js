@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 1.2.1
+// DarkPlasma_TextLog 1.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/06 1.3.0 ウィンドウ退避のインターフェースを公開
  * 2023/09/21 1.2.1 リファクタ
  * 2023/07/22 1.2.0 タッチUIが有効な場合にキャンセルボタンを表示
  *            1.1.2 名前の制御文字をログ記録時点で展開するように修正
@@ -140,7 +141,7 @@
  * @type string
  *
  * @help
- * version: 1.2.1
+ * version: 1.3.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -676,6 +677,7 @@
     };
   }
   Window_Message_TextLogMixIn(Window_Message.prototype);
+  globalThis.EvacuatedMessageAndSubWindows = EvacuatedMessageAndSubWindows;
   globalThis.Game_EventTextLog = Game_EventTextLog;
   globalThis.Game_LogMessage = Game_LogMessage;
   globalThis.Scene_TextLog = Scene_TextLog;
