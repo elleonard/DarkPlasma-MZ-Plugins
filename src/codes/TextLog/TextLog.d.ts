@@ -33,16 +33,13 @@ declare interface Game_EventTextLog {
 declare interface Game_Temp {
   _evacuatedMessageAndSubWindows: EvacuatedMessageAndSubWindows|null;
 
-  _currentEventLog: Game_EventTextLog;
-  _pastEventLogs: Game_EventTextLog[]
+  _eventTextLog: Game_EventTextLog;
 
   setEvacuatedMessageAndSubWindows(windows: EvacuatedMessageAndSubWindows): void;
   evacuatedMessageAndSubWindows(): EvacuatedMessageAndSubWindows|null;
   clearEvacuatedMessageAndSubWindows(): void;
 
-  currentEventLog(): Game_EventTextLog;
-  pastEventLogs(): Game_EventTextLog[];
-  moveCurrentLogToPastLogs(): void;
+  eventTextLog(): Game_EventTextLog;
 }
 
 declare interface Game_Message {

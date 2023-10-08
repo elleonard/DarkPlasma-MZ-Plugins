@@ -11,11 +11,11 @@ PluginManager.registerCommand(pluginName, command_showTextLog, function(args) {
 
 PluginManager.registerCommand(pluginName, command_insertTextLog, function(args) {
   const parsedArgs = parseArgs_insertTextLog(args);
-  $gameTemp.currentEventLog().pushLog("", parsedArgs.text);
+  $gameTemp.eventTextLog().pushLog("", parsedArgs.text);
 });
 
 PluginManager.registerCommand(pluginName, command_insertLogSplitter, function(args) {
-  $gameTemp.currentEventLog().pushSplitter();
+  $gameTemp.eventTextLog().pushSplitter();
 });
 
 class EvacuatedMessageAndSubWindows {
@@ -65,8 +65,7 @@ function Game_Temp_TextLogMixIn(gameTemp: Game_Temp) {
   gameTemp.initialize = function () {
     _initialize.call(this);
     this._evacuatedMessageAndSubWindows = null;
-    this._currentEventLog = new Game_EventTextLog();
-    this._pastEventLogs = [];
+    this._eventTextLog = new Game_EventTextLog();
   };
 
   gameTemp.evacuatedMessageAndSubWindows = function() {
@@ -81,17 +80,8 @@ function Game_Temp_TextLogMixIn(gameTemp: Game_Temp) {
     this._evacuatedMessageAndSubWindows = null;
   };
 
-  gameTemp.currentEventLog = function () {
-    return this._currentEventLog;
-  };
-
-  gameTemp.pastEventLogs = function () {
-    return this._pastEventLogs;
-  };
-
-  gameTemp.moveCurrentLogToPastLogs = function() {
-    this._pastEventLogs.push(this.currentEventLog());
-    this._currentEventLog = new Game_EventTextLog();
+  gameTemp.eventTextLog = function () {
+    return this._eventTextLog;
   };
 }
 
@@ -110,6 +100,9 @@ class Game_EventTextLog {
 
   pushLog(speakerName: string, text: string) {
     this._messages.push(new Game_LogMessage(speakerName, text));
+    if (settings.maxLogMessages < this._messages.length) {
+      this._messages.splice(0, this._messages.length - settings.maxLogMessages);
+    }
   }
 
   pushSplitter() {
@@ -174,9 +167,8 @@ function Game_Interpreter_TextLogMixIn(gameInterpreter: Game_Interpreter) {
   gameInterpreter.terminate = function () {
     if (this.mustSplitLogOnTeminate()) {
       if (settings.autoSplit) {
-        $gameTemp.currentEventLog().pushSplitter();
+        $gameTemp.eventTextLog().pushSplitter();
       }
-      $gameTemp.moveCurrentLogToPastLogs();
     }
     _terminate.call(this);
   };
@@ -189,7 +181,7 @@ function Game_Interpreter_TextLogMixIn(gameInterpreter: Game_Interpreter) {
    * - 終了するイベントのテキストログが1件以上存在する
    */
   gameInterpreter.mustSplitLogOnTeminate = function () {
-    return this._depth === 0 && this._eventId > 0 && !this.isOnParallelEvent() && $gameTemp.currentEventLog().messages.length > 0;
+    return this._depth === 0 && this._eventId > 0 && !this.isOnParallelEvent() && $gameTemp.eventTextLog().messages.length > 0;
   };
 
   /**
@@ -443,18 +435,8 @@ class Window_TextLog extends Window_Selectable {
   }
 
   setupLogMessages() {
-    let messages: Game_LogMessage[] = [];
-    if ($gameTemp.pastEventLogs().length > 0) {
-      messages = $gameTemp.pastEventLogs()
-        .map(pastLog => pastLog.messages)
-        .reduce((result, log) => result.concat(log), []);
-    }
-    if ($gameTemp.currentEventLog().messages.length > 0) {
-      messages.push(...$gameTemp.currentEventLog().messages);
-    }
-
     let fromBottom = 0;
-    this._messages = Array.from(messages).reverse().map(message => {
+    this._messages = Array.from($gameTemp.eventTextLog().messages).reverse().map(message => {
       const height = this.calcMessageHeight(message);
       fromBottom += height;
       return new LogMessageForView(message, height, fromBottom);
@@ -546,13 +528,13 @@ function Window_Message_TextLogMixIn(windowClass: Window_Message) {
   windowClass.terminateMessage = function () {
     if (!settings.disableLoggingSwitch || !$gameSwitches.value(settings.disableLoggingSwitch)) {
       if ($gameMessage.allText()) {
-        $gameTemp.currentEventLog().pushLog(
+        $gameTemp.eventTextLog().pushLog(
           this.convertEscapeCharacters($gameMessage.speakerName()),
           this.convertEscapeCharacters($gameMessage.allText())
         );
       }
       if ($gameMessage.isChoice()) {
-        $gameTemp.currentEventLog().pushLog("", settings.choiceFormat.replace(/{choice}/gi, `\x1bC[${settings.choiceColor}]${$gameMessage.chosenText()}\x1bC[0]`));
+        $gameTemp.eventTextLog().pushLog("", settings.choiceFormat.replace(/{choice}/gi, `\x1bC[${settings.choiceColor}]${$gameMessage.chosenText()}\x1bC[0]`));
       }
     }
     _terminateMessage.call(this);

@@ -3,6 +3,10 @@ DarkPlasma_TextLog:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/10/08
+      version: 2.0.0
+      description: '保持ログメッセージに関するプログラム上のインターフェース変更 (Breaking Change)'
+    - description: '保持ログメッセージ件数設定を追加'
     - date: 2023/10/06
       version: 1.3.0
       description: 'ウィンドウ退避のインターフェースを公開'
@@ -154,6 +158,13 @@ DarkPlasma_TextLog:
       type: number
       default: 10
       min: 1
+    - param: maxLogMessages
+      text:
+        ja: ログメッセージ保持数
+      desc:
+        ja: ログメッセージを保持する件数を設定します。増やしすぎるとゲームの挙動に影響し得ることに注意してください。
+      type: number
+      default: 200
   commands:
     - command: showTextLog
       text:
