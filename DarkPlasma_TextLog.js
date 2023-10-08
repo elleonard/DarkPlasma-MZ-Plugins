@@ -1,9 +1,11 @@
-// DarkPlasma_TextLog 1.3.0
+// DarkPlasma_TextLog 2.0.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/08 2.0.0 保持ログメッセージに関するプログラム上のインターフェース変更 (Breaking Change)
+ *                  保持ログメッセージ件数設定を追加
  * 2023/10/06 1.3.0 ウィンドウ退避のインターフェースを公開
  * 2023/09/21 1.2.1 リファクタ
  * 2023/07/22 1.2.0 タッチUIが有効な場合にキャンセルボタンを表示
@@ -128,6 +130,12 @@
  * @default 10
  * @min 1
  *
+ * @param maxLogMessages
+ * @desc ログメッセージを保持する件数を設定します。増やしすぎるとゲームの挙動に影響し得ることに注意してください。
+ * @text ログメッセージ保持数
+ * @type number
+ * @default 200
+ *
  * @command showTextLog
  * @text ログウィンドウを開く
  *
@@ -141,7 +149,7 @@
  * @type string
  *
  * @help
- * version: 1.3.0
+ * version: 2.0.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -193,6 +201,7 @@
     }),
     scrollSpeed: Number(pluginParameters.scrollSpeed || 1),
     scrollSpeedHigh: Number(pluginParameters.scrollSpeedHigh || 10),
+    maxLogMessages: Number(pluginParameters.maxLogMessages || 200),
   };
 
   function Window_ObtainEscapeParamTextMixIn(windowClass) {
@@ -215,10 +224,10 @@
   });
   PluginManager.registerCommand(pluginName, command_insertTextLog, function (args) {
     const parsedArgs = parseArgs_insertTextLog(args);
-    $gameTemp.currentEventLog().pushLog('', parsedArgs.text);
+    $gameTemp.eventTextLog().pushLog('', parsedArgs.text);
   });
   PluginManager.registerCommand(pluginName, command_insertLogSplitter, function (args) {
-    $gameTemp.currentEventLog().pushSplitter();
+    $gameTemp.eventTextLog().pushSplitter();
   });
   class EvacuatedMessageAndSubWindows {
     constructor(messageWindow, goldWindow, nameBoxWindow, choiceListWindow, numberInputWindow) {
@@ -249,8 +258,7 @@
     gameTemp.initialize = function () {
       _initialize.call(this);
       this._evacuatedMessageAndSubWindows = null;
-      this._currentEventLog = new Game_EventTextLog();
-      this._pastEventLogs = [];
+      this._eventTextLog = new Game_EventTextLog();
     };
     gameTemp.evacuatedMessageAndSubWindows = function () {
       return this._evacuatedMessageAndSubWindows;
@@ -261,15 +269,8 @@
     gameTemp.clearEvacuatedMessageAndSubWindows = function () {
       this._evacuatedMessageAndSubWindows = null;
     };
-    gameTemp.currentEventLog = function () {
-      return this._currentEventLog;
-    };
-    gameTemp.pastEventLogs = function () {
-      return this._pastEventLogs;
-    };
-    gameTemp.moveCurrentLogToPastLogs = function () {
-      this._pastEventLogs.push(this.currentEventLog());
-      this._currentEventLog = new Game_EventTextLog();
+    gameTemp.eventTextLog = function () {
+      return this._eventTextLog;
     };
   }
   Game_Temp_TextLogMixIn(Game_Temp.prototype);
@@ -282,6 +283,9 @@
     }
     pushLog(speakerName, text) {
       this._messages.push(new Game_LogMessage(speakerName, text));
+      if (settings.maxLogMessages < this._messages.length) {
+        this._messages.splice(0, this._messages.length - settings.maxLogMessages);
+      }
     }
     pushSplitter() {
       this.pushLog('', settings.logSplitter);
@@ -332,9 +336,8 @@
     gameInterpreter.terminate = function () {
       if (this.mustSplitLogOnTeminate()) {
         if (settings.autoSplit) {
-          $gameTemp.currentEventLog().pushSplitter();
+          $gameTemp.eventTextLog().pushSplitter();
         }
-        $gameTemp.moveCurrentLogToPastLogs();
       }
       _terminate.call(this);
     };
@@ -350,7 +353,7 @@
         this._depth === 0 &&
         this._eventId > 0 &&
         !this.isOnParallelEvent() &&
-        $gameTemp.currentEventLog().messages.length > 0
+        $gameTemp.eventTextLog().messages.length > 0
       );
     };
     /**
@@ -562,18 +565,8 @@
       return super.lineHeight() + settings.lineSpacing;
     }
     setupLogMessages() {
-      let messages = [];
-      if ($gameTemp.pastEventLogs().length > 0) {
-        messages = $gameTemp
-          .pastEventLogs()
-          .map((pastLog) => pastLog.messages)
-          .reduce((result, log) => result.concat(log), []);
-      }
-      if ($gameTemp.currentEventLog().messages.length > 0) {
-        messages.push(...$gameTemp.currentEventLog().messages);
-      }
       let fromBottom = 0;
-      this._messages = Array.from(messages)
+      this._messages = Array.from($gameTemp.eventTextLog().messages)
         .reverse()
         .map((message) => {
           const height = this.calcMessageHeight(message);
@@ -655,7 +648,7 @@
       if (!settings.disableLoggingSwitch || !$gameSwitches.value(settings.disableLoggingSwitch)) {
         if ($gameMessage.allText()) {
           $gameTemp
-            .currentEventLog()
+            .eventTextLog()
             .pushLog(
               this.convertEscapeCharacters($gameMessage.speakerName()),
               this.convertEscapeCharacters($gameMessage.allText())
@@ -663,7 +656,7 @@
         }
         if ($gameMessage.isChoice()) {
           $gameTemp
-            .currentEventLog()
+            .eventTextLog()
             .pushLog(
               '',
               settings.choiceFormat.replace(
