@@ -103,7 +103,6 @@ function arrayParser(config, parameter, symbolType) {
   }
   const default_ = parameter.default
     ? parameterObject.defaultText('ja', true)
-        .replace(/\\/g, '')
         .replace(/\n/g, '\\n')
     : '[]';
   return `JSON.parse(${parameterSymbol(parameter, symbolType)} || '${default_}').map(${subParameter.symbol} => {
@@ -117,7 +116,6 @@ function structParser(config, parameter, symbolType) {
   const parameterObject = new PluginParameter(parameter);
   const default_ = parameter.default
     ? parameterObject.defaultText('ja', true)
-        .replace(/\\/g, '')
         .replace(/\n/g, '\\n')
     : '{}';
   return `((parameter) => {

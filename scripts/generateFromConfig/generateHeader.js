@@ -92,10 +92,10 @@ class TypedParameter {
    * prettierでエスケープが最適化されてしまうので、 singleQuote オプションを切るのが良いだろう
    *
    * @param {string} language 言語
-   * @param {boolean} withoutExtraQuotes トップコメント用のクオートを外す（パラメータパースコード用）
+   * @param {boolean} forParameterParse トップコメント用のクオートを外す（パラメータパースコード用）
    * @return {string}
    */
-     defaultText(language, withoutExtraQuotes) {
+     defaultText(language, forParameterParse) {
       const defaultValue = this.defaultValue(language);
       if (defaultValue || typeof defaultValue === 'boolean' || Number.isFinite(defaultValue)) {
         if (Array.isArray(defaultValue)) {
@@ -111,11 +111,11 @@ class TypedParameter {
                 const objectKeyValue = this.escapeDoubleQuote(
                   Object.entries(defaultValue)
                     .map(([key, value]) => {
-                      return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+                      return this.defaultObjectKeyValueToText(key, value, forParameterParse);
                     })
                     .join(',')
                 );
-                return withoutExtraQuotes
+                return forParameterParse
                   ? `{${objectKeyValue}}`
                   : `"{${objectKeyValue}}"`;
               })
@@ -127,7 +127,7 @@ class TypedParameter {
         if (typeof defaultValue === 'object') {
           return `{${Object.entries(defaultValue)
             .map(([key, value]) => {
-              return this.defaultObjectKeyValueToText(key, value, withoutExtraQuotes);
+              return this.defaultObjectKeyValueToText(key, value, forParameterParse);
             })
             .join(', ')}}`;
         }
@@ -136,10 +136,10 @@ class TypedParameter {
       return '';
     }
   
-    defaultObjectKeyValueToText(key, value, withoutExtraQuotes) {
+    defaultObjectKeyValueToText(key, value, forParameterParse) {
       if (Array.isArray(value)) {
         if (value.length === 0) {
-          return `"${key}":${withoutExtraQuotes ? '[]' : '"[]"'}`;
+          return `"${key}":${forParameterParse ? '[]' : '"[]"'}`;
         }
         if (typeof value[0] === 'object') {
           const objectKeyValue = Object.entries(value)
@@ -147,13 +147,15 @@ class TypedParameter {
               return this.defaultObjectKeyValueToText(k, v);
             })
             .join(', ');
-          return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
+          return `"${key}":${forParameterParse ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
         }
         /**
          * オブジェクト内配列は、更にダブルクオートを1回エスケープする必要がある
          */
         return `"${key}":${
-          withoutExtraQuotes ? `[${value.map((v) => `"${v}"`).join(',')}]` : `"[${this.escapeDoubleQuote(value.map((v) => `"${v}"`).join(','))}]"`
+          forParameterParse
+            ? `[${value.map((v) => `"${v}"`).join(',')}]`
+            : `"[${this.escapeDoubleQuote(value.map((v) => `"${v}"`).join(','))}]"`
         }`;
       }
       if (value && typeof value === 'object') {
@@ -164,7 +166,10 @@ class TypedParameter {
             })
             .join(', ')
         );
-        return `"${key}":${withoutExtraQuotes ? `{${objectKeyValue}}` : `"{${objectKeyValue}}"`}`;
+        return `"${key}":${forParameterParse
+          ? `"{${this.escapeDoubleQuoteForParser(objectKeyValue)}}"`
+          : `"{${objectKeyValue}}"`
+        }`;
       }
       return `"${key}":"${value}"`;
     }
@@ -176,6 +181,14 @@ class TypedParameter {
      */
     escapeDoubleQuote(string) {
       return string.replace(/"/g, '\\"');
+    }
+
+    /**
+     * パーサがデフォルト値として渡す入れ子オブジェクトについては
+     * バックスラッシュを2つ追加する
+     */
+    escapeDoubleQuoteForParser(string) {
+      return string.replace(/"/g, '\\\\"');
     }
 }
 

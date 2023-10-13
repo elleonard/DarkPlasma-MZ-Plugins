@@ -20,7 +20,7 @@ function generatePluginCommand(config) {
         .map(command => `export const command_${commandNameToSymbol(command.name)} = "${command.name}";`)
       )
       .join('\n\n');
-    return prettier.format(code, options);
+    return escapeBackslashQuote(prettier.format(code, options));
   });
 }
 
@@ -50,6 +50,13 @@ function configToCommands(config) {
  */
 function commandNameToSymbol(commandName) {
   return commandName.replace(/ ([a-z])/g, (m) => m.toUpperCase().trim());
+}
+
+/**
+ * prettierが勝手にバックスラッシュを消してしまうため、苦肉の策として
+ */
+function escapeBackslashQuote(string) {
+  return string.replace(/\\"/g, '\\\\"');
 }
 
 module.exports = {

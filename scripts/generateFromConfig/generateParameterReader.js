@@ -21,7 +21,7 @@ function generateParameterReader(config, destDir) {
     };
     `;
 
-    return prettier.format(code, options);
+    return escapeBackslashQuote(prettier.format(code, options));
   });
 }
 
@@ -40,7 +40,7 @@ function generateParameterReaderFunction(config, destDir) {
     })("${config.name}");
     `;
 
-    return prettier.format(code, options);
+    return escapeBackslashQuote(prettier.format(code, options));
   });
 }
 
@@ -55,6 +55,13 @@ function configToParameters(config, symbolType) {
           };
         })
     : [];
+}
+
+/**
+ * prettierが勝手にバックスラッシュを消してしまうため、苦肉の策として
+ */
+function escapeBackslashQuote(string) {
+  return string.replace(/\\"/g, '\\\\"');
 }
 
 module.exports = {
