@@ -8,22 +8,24 @@ function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) 
   sceneManager.saveScreenshot = function (format) {
     const dataURLFormat = format === "jpg" ? "image/jpeg" : `image/${format}`;
     const now = new Date();
+    const name = `${
+      now.getFullYear()
+    }-${
+      (now.getMonth()+1).toString().padStart(2, '0')
+    }-${
+      now.getDate().toString().padStart(2, '0')
+    }-${
+      now.getHours().toString().padStart(2, '0')
+    }${
+      now.getMinutes().toString().padStart(2, '0')
+    }${
+      now.getSeconds().toString().padStart(2, '0')
+    }${
+      now.getMilliseconds().toString().padStart(4, '0')
+    }`;
+    ImageManager.setLatestScreenshotName(name);
     this.saveImage(
-      `${
-        now.getFullYear()
-      }-${
-        (now.getMonth()+1).toString().padStart(2, '0')
-      }-${
-        now.getDate().toString().padStart(2, '0')
-      }-${
-        now.getHours().toString().padStart(2, '0')
-      }${
-        now.getMinutes().toString().padStart(2, '0')
-      }${
-        now.getSeconds().toString().padStart(2, '0')
-      }${
-        now.getMilliseconds().toString().padStart(4, '0')
-      }`,
+      name,
       format,
       this.snap().canvas.toDataURL(dataURLFormat, 1).replace(/^.*,/, '')
     );
@@ -42,6 +44,14 @@ function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) 
 SceneManager_ScreenshotGalleryMixIn(SceneManager);
 
 function ImageManager_ScreenshotGalleryMixIn(imageManager: typeof ImageManager) {
+  imageManager.setLatestScreenshotName = function (name) {
+    this._latestSceenshotName = name;
+  };
+
+  imageManager.loadLatestScreenshot = function () {
+    return this.loadScreenshot(this._latestSceenshotName);
+  };
+
   imageManager.loadScreenshot = function (filename) {
     return this.loadBitmap(`${settings.directory}/`, filename);
   };
@@ -54,7 +64,8 @@ function ImageManager_ScreenshotGalleryMixIn(imageManager: typeof ImageManager) 
     }
     const filenames: string[] = fs.readdirSync(dirpath, { withFileTypes: true })
       .filter((dirent: any) => dirent.isFile())
-      .map((dirent: any) => (dirent.name as string).replace(/\..+$/, ""));
+      .map((dirent: any) => (dirent.name as string).replace(/\..+$/, ""))
+      .slice(0, settings.maxView);
     return filenames.map(filename => this.loadScreenshot(filename)).reverse();
   };
 
@@ -95,20 +106,134 @@ function Bitmap_ScreenshotGalleryMixIn(bitmap: Bitmap) {
     }
     _startLoading.call(this);
   };
+
+  bitmap.drawFrame = function (x: number, y: number, width: number, height: number, thick: number, color: string) {
+    this._context.strokeStyle = color;
+    this._context.lineWidth = thick;
+    this._context.strokeRect(x, y, width, height);
+    this._context.restore();
+    this._baseTexture.update();
+  };
 }
 
 Bitmap_ScreenshotGalleryMixIn(Bitmap.prototype);
 
 function Scene_ScreenshotGalleryMixIn(sceneClass: Scene_Base) {
+  const _start = sceneClass.start;
+  sceneClass.start = function () {
+    _start.call(this);
+    /**
+     * 最前表示のためここで作る
+     */
+    if (settings.preview.show) {
+      this.createPreviewContainer();
+    }
+  };
+
+  sceneClass.createPreviewContainer = function () {
+    this._previewContainer = new Sprite();
+    this._previewContainer.bitmap = new Bitmap(
+      settings.preview.rect.width + settings.preview.frameWidth * 2,
+      settings.preview.rect.height + settings.preview.frameWidth * 2
+    );
+    this._previewContainer.x = settings.preview.rect.x - settings.preview.frameWidth;
+    this._previewContainer.y = settings.preview.rect.y - settings.preview.frameWidth;
+    this._previewContainer.bitmap.drawFrame(
+      0,
+      0,
+      settings.preview.rect.width + settings.preview.frameWidth * 2,
+      settings.preview.rect.height + settings.preview.frameWidth * 2,
+      settings.preview.frameWidth,
+      ColorManager.textColor(0)
+    );
+    this.addChild(this._previewContainer);
+    this._previewSprite = new Sprite();
+    this._previewSprite.x = settings.preview.frameWidth;
+    this._previewSprite.y = settings.preview.frameWidth;
+    this._previewSprite.scale.x = settings.preview.rect.width/Graphics.width;
+    this._previewSprite.scale.y = settings.preview.rect.height/Graphics.height;
+    this._previewContainer.addChild(this._previewSprite);
+    this._previewContainer.hide();
+  };
+
+  sceneClass.startPreview = function () {
+    this._previewDuration = settings.preview.duration;
+    this._previewSprite.bitmap = ImageManager.loadLatestScreenshot();
+    this._previewContainer.show();
+  };
+
+  sceneClass.hidePreview = function () {
+    if (this._previewContainer.visible) {
+      this._previewContainer.hide();
+    }
+  };
+
+  sceneClass.startFlash = function () {
+    this._flashDuration = settings.flash.duration;
+    this._flashOpacity = settings.flash.power;
+    this.updateFlash();
+  };
+
+  sceneClass.clearFlash = function () {
+    if (this._flashDuration > 0) {
+      this._flashDuration = 0;
+      this.updateColorFilter();
+    }
+  };
+
   const _update = sceneClass.update;
   sceneClass.update = function () {
     _update.call(this);
     if (Input.isTriggered(settings.key)) {
+      /**
+       * 直前の撮影時のフラッシュが写り込まないようにする
+       */
+      this.clearFlash();
+      this.hidePreview();
       SceneManager.saveScreenshot(settings.format);
       if (settings.se.name) {
         AudioManager.playSe(settings.se);
+        this.startFlash();
+      }
+      if (settings.preview.show) {
+        this.startPreview();
       }
     }
+    this.updateFlash();
+    this.updatePreview();
+  };
+
+  sceneClass.updateColorFilter = function () {
+    this._colorFilter.setBlendColor(this.blendColor());
+  };
+
+  sceneClass.updateFlash = function () {
+    if (this._flashDuration > 0) {
+      this._flashOpacity *= (this._flashDuration - 1) / this._flashDuration;
+      this._flashDuration--;
+    }
+  };
+
+  sceneClass.updatePreview = function () {
+    if (this._previewDuration > 0) {
+      this._previewDuration--;
+      if (this._previewDuration <= 0) {
+        this._previewContainer.hide();
+      }
+    }
+  };
+
+  sceneClass.blendColor = function () {
+    if (this._fadeDuration === 0 && this._flashDuration > 0) {
+      return [
+        settings.flash.red,
+        settings.flash.green,
+        settings.flash.blue,
+        this._flashOpacity,
+      ];
+    }
+    const c = this._fadeWhite ? 255 : 0;
+    return [c, c, c, this._fadeOpacity];
   };
 }
 
@@ -180,9 +305,17 @@ class Window_ScreenshotGallery extends Window_Selectable {
     return Math.floor(Graphics.height / (Graphics.width / this.itemWidth()));
   }
 
+  public itemRectWithPadding(index: number): Rectangle {
+    const rect = super.itemRectWithPadding(index);
+    const padding = this.itemPadding();
+    rect.y += padding;
+    rect.height -= padding * 2;
+    return rect;
+  }
+
   public drawItem(index: number): void {
     if (this._images[index]) {
-      const rect = this.itemRect(index);
+      const rect = this.itemRectWithPadding(index);
       const bitmap = this._images[index];
       this.contents.blt(
         bitmap,

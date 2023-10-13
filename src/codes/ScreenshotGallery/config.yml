@@ -3,6 +3,11 @@ DarkPlasma_ScreenshotGallery:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/10/13
+      version: 1.1.0
+      description: '撮影時にフラッシュ・プレビューする機能を追加'
+    - description: '表示最大数設定を追加'
+    - description: '一覧での表示サイズを調整'
     - date: 2023/03/12
       version: 1.0.0
       description: '公開'
@@ -57,11 +62,41 @@ DarkPlasma_ScreenshotGallery:
         volume: 90
         pitch: 100
         pan: 0
+    - param: flash
+      text:
+        ja: フラッシュ
+      type: Flash
+      default:
+        red: 255
+        green: 255
+        blue: 255
+        power: 170
+        frame: 30
     - param: directory
       text:
         ja: 保存先フォルダ名
       type: string
       default: screenshot
+    - param: maxView
+      text:
+        ja: 表示最大数
+      desc:
+        ja: スクショギャラリーでの表示最大数
+      type: number
+      default: 30
+    - param: preview
+      text:
+        ja: プレビュー設定
+      type: Preview
+      default:
+        show: true
+        frameWidth: 4
+        duration: 60
+        rect:
+          x: 16
+          y: 16
+          width: 102
+          height: 78
   commands:
     - command: sceneScreenshot
       text:
@@ -94,6 +129,87 @@ DarkPlasma_ScreenshotGallery:
         default: 0
         max: 100
         min: -100
+    Flash:
+      - param: red
+        text:
+          ja: 赤
+        type: number
+        default: 255
+        max: 255
+        min: 0
+      - param: green
+        text:
+          ja: 緑
+        type: number
+        default: 255
+        max: 255
+        min: 0
+      - param: blue
+        text:
+          ja: 青
+        type: number
+        default: 255
+        max: 255
+        min: 0
+      - param: power
+        text:
+          ja: 強さ
+        type: number
+        default: 170
+        max: 255
+        min: 0
+      - param: duration
+        text:
+          ja: 時間(フレーム)
+        type: number
+        default: 30
+        min: 1
+    Preview:
+      - param: show
+        text:
+          ja: プレビューを表示する
+        type: boolean
+        default: true
+      - param: frameWidth
+        text:
+          ja: フレーム幅
+        type: number
+        default: 4
+      - param: duration
+        text:
+          ja: 表示時間(フレーム)
+        type: number
+        default: 60
+      - param: rect
+        text:
+          ja: 位置とサイズ
+        type: Rectangle
+        default:
+          x: 16
+          y: 16
+          width: 102
+          height: 78
+    Rectangle:
+      - param: x
+        text:
+          ja: X座標
+        type: number
+        default: 16
+      - param: y
+        text:
+          ja: Y座標
+        type: number
+        default: 16
+      - param: width
+        text:
+          ja: 幅
+        type: number
+        default: 102
+      - param: height
+        text:
+          ja: 高さ
+        type: number
+        default: 78
   dependencies:
     base: []
     orderAfter: []
