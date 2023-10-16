@@ -24,17 +24,17 @@ DarkPlasma_SkillWithTraits:
       特徴によって追加されたスキルには効果がありません。
 
       スキルのメモ欄に以下のように記述してください。
-      <trait:actor/1>
+      <traits:actor/1>
       アクターID1と同じ特徴を得ます。
 
-      <trait:class/1>
+      <traits:class/1>
       職業ID1と同じ特徴を得ます。
 
-      <trait:weapon/1>
+      <traits:weapon/1>
       武器ID1と同じ特徴を得ます。
 
-      <trait:armor/1>
+      <traits:armor/1>
       防具ID1と同じ特徴を得ます。
 
-      <trait:state/1>
+      <traits:state/1>
       ステートID1と同じ特徴を得ます。
