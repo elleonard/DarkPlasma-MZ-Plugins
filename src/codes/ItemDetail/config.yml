@@ -1,0 +1,51 @@
+DarkPlasma_ItemDetail:
+  name: DarkPlasma_ItemDetail
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/10/20
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'アイテムの詳細説明文を表示する'
+  parameters:
+    - param: openDetailKey
+      text:
+        ja: 詳細説明ボタン
+      desc:
+        ja: 詳細説明を開くためのボタン
+      type: select
+      options:
+        - name: pageup
+        - name: pagedown
+        - name: shift
+        - name: control
+        - name: tab
+      default: shift
+    - param: heightAdjustment
+      text:
+        ja: 詳細高さ補正
+      desc:
+        ja: 詳細ウィンドウコンテンツの高さ補正。
+      type: number
+      default: 32
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_CustomKeyHandler
+        version: 1.3.0
+    orderAfter:
+      - name: DarkPlasma_CustomKeyHandler
+    orderBefore: []
+  help:
+    ja: |
+      アイテム画面のアイテムにカーソルを合わせて特定のボタンを押すと
+      アイテム詳細説明画面を開きます。
+
+      アイテムのメモ欄に下記のような記述で詳細説明を記述できます。
+      <detail:詳細説明文。
+      ～～～～。>
