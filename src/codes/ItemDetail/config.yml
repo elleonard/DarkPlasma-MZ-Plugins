@@ -4,7 +4,9 @@ DarkPlasma_ItemDetail:
   license: MIT
   histories:
     - date: 2023/10/20
-      version: 1.0.1
+      version: 1.0.2
+      description: '型の指定を修正 (動作に影響なし)'
+    - version: 1.0.1
       description: '詳細ウィンドウの表示位置がズレる不具合を修正'
     - version: 1.0.0
       description: '公開'

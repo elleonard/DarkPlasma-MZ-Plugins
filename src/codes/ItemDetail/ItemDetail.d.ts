@@ -20,5 +20,5 @@ declare interface Window_ItemList {
 declare interface Window_ItemDetail extends Window_Scrollable {
   _text: string;
 
-  setItem(item: MZ.Item|null): void;
+  setItem(item: MZ.Item|MZ.Weapon|MZ.Armor|null): void;
 }

@@ -52,7 +52,7 @@ function Window_ItemList_DetailMixIn(windowClass: Window_ItemList) {
   const _setHelpWindowItem = windowClass.setHelpWindowItem;
   windowClass.setHelpWindowItem = function (item) {
     _setHelpWindowItem.call(this, item);
-    this._detailWindow?.setItem(item as MZ.Item);
+    this._detailWindow?.setItem(item as (MZ.Item|MZ.Weapon|MZ.Armor|null));
   };
 
   const _isCursorMovable = windowClass.isCursorMovable;
@@ -85,7 +85,7 @@ class Window_ItemDetail extends Window_Scrollable {
     this.hide();
   }
 
-  setItem(item: MZ.Item|null) {
+  setItem(item: MZ.Item|MZ.Weapon|MZ.Armor|null) {
     this.setText(String(item?.meta.detail || ''));
   }
 
