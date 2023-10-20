@@ -8,21 +8,14 @@ function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) 
   sceneManager.saveScreenshot = function (format) {
     const dataURLFormat = format === "jpg" ? "image/jpeg" : `image/${format}`;
     const now = new Date();
-    const name = `${
-      now.getFullYear()
-    }-${
-      (now.getMonth()+1).toString().padStart(2, '0')
-    }-${
-      now.getDate().toString().padStart(2, '0')
-    }-${
-      now.getHours().toString().padStart(2, '0')
-    }${
-      now.getMinutes().toString().padStart(2, '0')
-    }${
-      now.getSeconds().toString().padStart(2, '0')
-    }${
-      now.getMilliseconds().toString().padStart(4, '0')
-    }`;
+    const name = `${now.getFullYear()
+      }-${(now.getMonth() + 1).toString().padStart(2, '0')
+      }-${now.getDate().toString().padStart(2, '0')
+      }-${now.getHours().toString().padStart(2, '0')
+      }${now.getMinutes().toString().padStart(2, '0')
+      }${now.getSeconds().toString().padStart(2, '0')
+      }${now.getMilliseconds().toString().padStart(4, '0')
+      }`;
     ImageManager.setLatestScreenshotName(name);
     this.saveImage(
       name,
@@ -53,7 +46,7 @@ function ImageManager_ScreenshotGalleryMixIn(imageManager: typeof ImageManager) 
   };
 
   imageManager.loadScreenshot = function (filename) {
-    return this.loadBitmap(`${settings.directory}/`, filename);
+    return this.loadBitmap(`${StorageManager.screenshotDirPath()}`, filename);
   };
 
   imageManager.loadAllScreenshot = function () {
@@ -85,22 +78,22 @@ function StorageManager_ScreenshotGalleryMixIn(storageManager: typeof StorageMan
 
 StorageManager_ScreenshotGalleryMixIn(StorageManager);
 
-PluginManager.registerCommand(pluginName, command_sceneScreenshot, function() {
+PluginManager.registerCommand(pluginName, command_sceneScreenshot, function () {
   SceneManager.push(Scene_ScreenshotGallery);
 });
 
 function Bitmap_ScreenshotGalleryMixIn(bitmap: Bitmap) {
   const _startLoading = bitmap._startLoading;
   bitmap._startLoading = function () {
-    if (this._url.startsWith(`${settings.directory}/`)) {
+    if (this._url.startsWith(`${StorageManager.screenshotDirPath()}`)) {
       /**
        * スクショディレクトリ内にある場合、復号せずにロードする
        */
       this._startDecrypting = () => {
         this._image!.src = this._url;
         if (this._image!.width > 0) {
-            this._image!.onload = null;
-            this._onLoad();
+          this._image!.onload = null;
+          this._onLoad();
         }
       };
     }
@@ -150,8 +143,8 @@ function Scene_ScreenshotGalleryMixIn(sceneClass: Scene_Base) {
     this._previewSprite = new Sprite();
     this._previewSprite.x = settings.preview.frameWidth;
     this._previewSprite.y = settings.preview.frameWidth;
-    this._previewSprite.scale.x = settings.preview.rect.width/Graphics.width;
-    this._previewSprite.scale.y = settings.preview.rect.height/Graphics.height;
+    this._previewSprite.scale.x = settings.preview.rect.width / Graphics.width;
+    this._previewSprite.scale.y = settings.preview.rect.height / Graphics.height;
     this._previewContainer.addChild(this._previewSprite);
     this._previewContainer.hide();
   };
@@ -251,6 +244,7 @@ class Scene_ScreenshotGallery extends Scene_Base {
     this.createWindowLayer();
     this.createGalleryWindow();
     this.createSprite();
+    this._galleryWindow.select(0);
   }
 
   createGalleryWindow() {
@@ -274,9 +268,13 @@ class Scene_ScreenshotGallery extends Scene_Base {
   }
 
   openLargeImage() {
-    this._sprite.bitmap = this._galleryWindow.currentItem();
-    this._sprite.show();
-    this._galleryWindow.deactivate();
+    if (this._galleryWindow.index() < 0) {
+      this._galleryWindow.activate();
+    } else {
+      this._sprite.bitmap = this._galleryWindow.currentItem();
+      this._sprite.show();
+      this._galleryWindow.deactivate();
+    }
   }
 
   closeLargeImage() {

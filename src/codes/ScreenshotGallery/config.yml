@@ -3,6 +3,10 @@ DarkPlasma_ScreenshotGallery:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/10/20
+      version: 1.1.1
+      description: 'ロード時のディレクトリパスを統一'
+    - description: '何も選択していない状態で決定キーを押すと操作不能になる不具合を修正'
     - date: 2023/10/13
       version: 1.1.0
       description: '撮影時にフラッシュ・プレビューする機能を追加'
