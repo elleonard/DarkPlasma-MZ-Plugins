@@ -1,10 +1,11 @@
-// DarkPlasma_ItemDetail 1.0.1
+// DarkPlasma_ItemDetail 1.0.2
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/10/20 1.0.1 詳細ウィンドウの表示位置がズレる不具合を修正
+ * 2023/10/20 1.0.2 型の指定を修正 (動作に影響なし)
+ *            1.0.1 詳細ウィンドウの表示位置がズレる不具合を修正
  *            1.0.0 公開
  */
 
@@ -37,7 +38,7 @@
  * @default 32
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * アイテム画面のアイテムにカーソルを合わせて特定のボタンを押すと
  * アイテム詳細説明画面を開きます。
  *
