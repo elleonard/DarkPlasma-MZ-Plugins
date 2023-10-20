@@ -1,9 +1,11 @@
-// DarkPlasma_ScreenshotGallery 1.1.0
+// DarkPlasma_ScreenshotGallery 1.1.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/20 1.1.1 ロード時のディレクトリパスを統一
+ *                  何も選択していない状態で決定キーを押すと操作不能になる不具合を修正
  * 2023/10/13 1.1.0 撮影時にフラッシュ・プレビューする機能を追加
  *                  表示最大数設定を追加
  *                  一覧での表示サイズを調整
@@ -79,7 +81,7 @@
  * @text スクショギャラリーを開く
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * スクリーンショットの撮影、保存を可能とし
  * 保存したスクリーンショットをゲーム内で閲覧するシーンを提供します。
  *
@@ -288,7 +290,7 @@
       return this.loadScreenshot(this._latestSceenshotName);
     };
     imageManager.loadScreenshot = function (filename) {
-      return this.loadBitmap(`${settings.directory}/`, filename);
+      return this.loadBitmap(`${StorageManager.screenshotDirPath()}`, filename);
     };
     imageManager.loadAllScreenshot = function () {
       const fs = require('fs');
@@ -321,7 +323,7 @@
   function Bitmap_ScreenshotGalleryMixIn(bitmap) {
     const _startLoading = bitmap._startLoading;
     bitmap._startLoading = function () {
-      if (this._url.startsWith(`${settings.directory}/`)) {
+      if (this._url.startsWith(`${StorageManager.screenshotDirPath()}`)) {
         /**
          * スクショディレクトリ内にある場合、復号せずにロードする
          */
@@ -457,6 +459,7 @@
       this.createWindowLayer();
       this.createGalleryWindow();
       this.createSprite();
+      this._galleryWindow.select(0);
     }
     createGalleryWindow() {
       this._galleryWindow = new Window_ScreenshotGallery(this.galleryWindowRect());
@@ -476,9 +479,13 @@
       this.addChild(this._sprite);
     }
     openLargeImage() {
-      this._sprite.bitmap = this._galleryWindow.currentItem();
-      this._sprite.show();
-      this._galleryWindow.deactivate();
+      if (this._galleryWindow.index() < 0) {
+        this._galleryWindow.activate();
+      } else {
+        this._sprite.bitmap = this._galleryWindow.currentItem();
+        this._sprite.show();
+        this._galleryWindow.deactivate();
+      }
     }
     closeLargeImage() {
       SoundManager.playCancel();
