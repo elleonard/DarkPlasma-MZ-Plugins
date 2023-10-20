@@ -17,8 +17,8 @@ function Scene_Item_DetailMixIn(sceneItem: Scene_Item) {
 
   sceneItem.createDetailWindow = function () {
     this._detailWindowLayer = new WindowLayer();
-    this._detailWindowLayer.x = (Graphics.width - Graphics.boxWidth);
-    this._detailWindowLayer.y = (Graphics.height - Graphics.boxHeight);
+    this._detailWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+    this._detailWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
     this.addChild(this._detailWindowLayer);
     this._detailWindow = new Window_ItemDetail(this.detailWindowRect());
     this._detailWindowLayer.addChild(this._detailWindow);
