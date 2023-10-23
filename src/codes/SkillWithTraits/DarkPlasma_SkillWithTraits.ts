@@ -6,13 +6,15 @@ function Game_Actor_SkillWithTraitsMixin(gameActor: Game_Actor) {
     return _traitObjects.call(this).concat(this.traitObjectsBySkill());
   };
 
-  gameActor.traitObjectsBySkill = function () {
+  gameActor.skillsWithTrait = function () {
     return this._skills
-      .map(skillId => {
-        const skill = $dataSkills[skillId];
-        if (!skill.meta.traits) {
-          return undefined;
-        }
+      .map(skillId => $dataSkills[skillId])
+      .filter(skill => skill.meta.traits);
+  };
+
+  gameActor.traitObjectsBySkill = function () {
+    return this.skillsWithTrait()
+      .map(skill => {
         const t = String(skill.meta.traits).split('/');
         switch (t[0]) {
           case 'actor':

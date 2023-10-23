@@ -3,6 +3,9 @@ DarkPlasma_SkillWithTraits:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/10/23
+      version: 1.1.0
+      description: '特徴付きスキル一覧を取得するインターフェース公開'
     - date: 2023/10/14
       version: 1.0.0
       description: '公開'
