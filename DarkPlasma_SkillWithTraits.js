@@ -1,9 +1,10 @@
-// DarkPlasma_SkillWithTraits 1.0.0
+// DarkPlasma_SkillWithTraits 1.1.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/23 1.1.0 特徴付きスキル一覧を取得するインターフェース公開
  * 2023/10/14 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 習得しているだけで特徴が得られるスキルを実現します。
  * 特徴によって追加されたスキルには効果がありません。
  *
@@ -45,13 +46,12 @@
     gameActor.traitObjects = function () {
       return _traitObjects.call(this).concat(this.traitObjectsBySkill());
     };
+    gameActor.skillsWithTrait = function () {
+      return this._skills.map((skillId) => $dataSkills[skillId]).filter((skill) => skill.meta.traits);
+    };
     gameActor.traitObjectsBySkill = function () {
-      return this._skills
-        .map((skillId) => {
-          const skill = $dataSkills[skillId];
-          if (!skill.meta.traits) {
-            return undefined;
-          }
+      return this.skillsWithTrait()
+        .map((skill) => {
           const t = String(skill.meta.traits).split('/');
           switch (t[0]) {
             case 'actor':
