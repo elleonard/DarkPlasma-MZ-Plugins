@@ -28,6 +28,7 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
   const _setup = gameTroop.setup;
   gameTroop.setup = function (troopId) {
     this._troopId = troopId;
+    this._isRandomTroop = undefined;
     if (this.isRandomTroop()) {
       const _makeUniqueNames = this.makeUniqueNames;
       this.makeUniqueNames = () => {};
