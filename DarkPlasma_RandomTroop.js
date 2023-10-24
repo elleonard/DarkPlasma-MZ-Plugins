@@ -1,10 +1,11 @@
-// DarkPlasma_RandomTroop 1.0.1
+// DarkPlasma_RandomTroop 1.0.2
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/10/24 1.0.1 DarkPlasma_EnemyBookとの依存関係を明記
+ * 2023/10/24 1.0.2 ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正
+ *            1.0.1 DarkPlasma_EnemyBookとの依存関係を明記
  * 2023/08/21 1.0.0 公開
  */
 
@@ -39,7 +40,7 @@
  * @type struct<RandomTroopEnemy>[]
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -145,6 +146,7 @@
     const _setup = gameTroop.setup;
     gameTroop.setup = function (troopId) {
       this._troopId = troopId;
+      this._isRandomTroop = undefined;
       if (this.isRandomTroop()) {
         const _makeUniqueNames = this.makeUniqueNames;
         this.makeUniqueNames = () => {};
