@@ -1,9 +1,10 @@
-// DarkPlasma_RandomTroop 1.0.0
+// DarkPlasma_RandomTroop 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/24 1.0.1 DarkPlasma_EnemyBookとの依存関係を明記
  * 2023/08/21 1.0.0 公開
  */
 
@@ -14,6 +15,8 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @orderBefore DarkPlasma_EnemyBook
  *
  * @param autoPositionWidth
  * @desc 自動配置の際、前後に動かす際の横幅の閾値を設定します。敵キャラ画像の横幅合計がこれより大きい場合、敵配置を前後にバラけさせます。
@@ -36,7 +39,7 @@
  * @type struct<RandomTroopEnemy>[]
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -55,6 +58,9 @@
  *
  * 種別はカンマ区切りで複数指定することも可能です。
  * <enemyType:スライム族LV1,スライム族LV2>
+ *
+ * 下記プラグインと共に利用する場合、それよりも上に追加してください。
+ * DarkPlasma_EnemyBook
  */
 /*~struct~RandomTroopEnemy:
  * @param name
