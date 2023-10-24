@@ -3,6 +3,9 @@ DarkPlasma_RandomTroop:
   year: 2023
   license: MIT
   histories:
+    - date: 2023/10/24
+      version: 1.0.1
+      description: 'DarkPlasma_EnemyBookとの依存関係を明記'
     - date: 2023/08/21
       version: 1.0.0
       description: '公開'
@@ -76,7 +79,8 @@ DarkPlasma_RandomTroop:
   dependencies:
     base: []
     orderAfter: []
-    orderBefore: []
+    orderBefore:
+      - name: DarkPlasma_EnemyBook
   help:
     ja: |
       敵グループのバトルイベント設定
