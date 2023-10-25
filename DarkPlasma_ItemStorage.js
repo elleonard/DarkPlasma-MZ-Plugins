@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.5.0
+// DarkPlasma_ItemStorage 1.6.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/25 1.6.0 倉庫に預けるまたは引き出す数ウィンドウのインターフェースを公開
  * 2023/07/25 1.5.0 Window_StorageItemsのインターフェースを公開
  *                  倉庫に預ける際の処理順変更
  * 2023/06/24 1.4.0 所持している数、倉庫に入っている数のテキスト設定を追加
@@ -66,7 +67,7 @@
  * @default false
  *
  * @help
- * version: 1.5.0
+ * version: 1.6.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -554,7 +555,6 @@
     initialize(rect) {
       super.initialize(rect);
       this._item = null;
-      this._max = 1;
       this._number = 1;
       this.createButtons();
       this.select(0);
@@ -616,7 +616,7 @@
     }
     changeNumber(amount) {
       const lastNumber = this._number;
-      this._number = (this._number + amount).clamp(1, this._max);
+      this._number = (this._number + amount).clamp(1, this.max());
       if (this._number !== lastNumber) {
         this.playCursorSound();
         this.refresh();
@@ -641,6 +641,9 @@
     itemNameY() {
       return 0;
     }
+    max() {
+      return 1;
+    }
   }
   Window_MenuNumberButtonMixIn(Window_MenuNumber.prototype);
   class Window_StorageNumber extends Window_MenuNumber {
@@ -648,21 +651,29 @@
       this._item = item;
       this._number = 1;
       this._toStorage = toStorage;
-      if (toStorage) {
-        this._max = Math.min(
-          $gameParty.numItems(item),
-          $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(item)
-        );
-        this.x = 0;
-      } else {
-        this._max = Math.min(
-          $gameParty.storageItems().numItems(item),
-          $gameParty.maxItems(item) - $gameParty.numItems(item)
-        );
-        this.x = Graphics.boxWidth / 2;
-      }
+      this.x = toStorage ? 0 : Graphics.boxWidth / 2;
       this.placeButtons();
       this.refresh();
+    }
+    /**
+     * 指定可能な最大数
+     * 倉庫に預ける場合は、現在の所持数と倉庫の空き数のうち小さい方
+     * 倉庫から引き出す場合は、倉庫に預けている数と所持枠の空き数のうち小さい方
+     */
+    max() {
+      if (!this._item) {
+        return 1;
+      }
+      if (this._toStorage) {
+        return Math.min(
+          $gameParty.numItems(this._item),
+          $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(this._item)
+        );
+      }
+      return Math.min(
+        $gameParty.storageItems().numItems(this._item),
+        $gameParty.maxItems(this._item) - $gameParty.numItems(this._item)
+      );
     }
     refresh() {
       super.refresh();
@@ -726,4 +737,5 @@
   globalThis.Game_StorageItems = Game_StorageItems;
   globalThis.Scene_ItemStorage = Scene_ItemStorage;
   globalThis.Window_StorageItems = Window_StorageItems;
+  globalThis.Window_StorageNumber = Window_StorageNumber;
 })();
