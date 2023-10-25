@@ -554,13 +554,11 @@ function Window_MenuNumberButtonMixIn(windowClass: Window_MenuNumber) {
 
 class Window_MenuNumber extends Window_Selectable {
   _item: MZ.Item|MZ.Weapon|MZ.Armor|null;
-  _max: number;
   _number: number;
 
   initialize(rect: Rectangle) {
     super.initialize(rect);
     this._item = null;
-    this._max = 1;
     this._number = 1;
     this.createButtons();
     this.select(0);
@@ -634,7 +632,7 @@ class Window_MenuNumber extends Window_Selectable {
 
   changeNumber(amount: number) {
     const lastNumber = this._number;
-    this._number = (this._number + amount).clamp(1, this._max);
+    this._number = (this._number + amount).clamp(1, this.max());
     if (this._number !== lastNumber) {
       this.playCursorSound();
       this.refresh();
@@ -652,6 +650,7 @@ class Window_MenuNumber extends Window_Selectable {
   onButtonDown2(): void {};
   onButtonOk(): void {};
   itemNameY(): number { return 0; };
+  max(): number { return 1; };
 }
 Window_MenuNumberButtonMixIn(Window_MenuNumber.prototype);
 
@@ -661,21 +660,30 @@ class Window_StorageNumber extends Window_MenuNumber {
     this._item = item;
     this._number = 1;
     this._toStorage = toStorage;
-    if (toStorage) {
-      this._max = Math.min(
-        $gameParty.numItems(item),
-        $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(item)
-      );
-      this.x = 0;
-    } else {
-      this._max = Math.min(
-        $gameParty.storageItems().numItems(item),
-        $gameParty.maxItems(item) - $gameParty.numItems(item)
-      );
-      this.x = Graphics.boxWidth / 2;
-    }
+    this.x = toStorage ? 0 : Graphics.boxWidth / 2;
     this.placeButtons();
     this.refresh();
+  }
+
+  /**
+   * 指定可能な最大数
+   * 倉庫に預ける場合は、現在の所持数と倉庫の空き数のうち小さい方
+   * 倉庫から引き出す場合は、倉庫に預けている数と所持枠の空き数のうち小さい方
+   */
+  max(): number {
+    if (!this._item) {
+      return 1;
+    }
+    if (this._toStorage) {
+      return Math.min(
+        $gameParty.numItems(this._item),
+        $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(this._item)
+      );
+    }
+    return Math.min(
+      $gameParty.storageItems().numItems(this._item),
+      $gameParty.maxItems(this._item) - $gameParty.numItems(this._item)
+    );
   }
 
   refresh() {
@@ -748,12 +756,15 @@ class Window_StorageNumber extends Window_MenuNumber {
 type _Game_StorageItems = typeof Game_StorageItems;
 type _Scene_ItemStorage = typeof Scene_ItemStorage;
 type _Window_StorageItems = typeof Window_StorageItems;
+type _Window_StorageNumber = typeof Window_StorageNumber;
 declare global {
   var Game_StorageItems: _Game_StorageItems;
   var Scene_ItemStorage: _Scene_ItemStorage;
   var Window_StorageItems: _Window_StorageItems;
+  var Window_StorageNumber: _Window_StorageNumber;
 }
 
 globalThis.Game_StorageItems = Game_StorageItems;
 globalThis.Scene_ItemStorage = Scene_ItemStorage;
 globalThis.Window_StorageItems = Window_StorageItems;
+globalThis.Window_StorageNumber = Window_StorageNumber;
