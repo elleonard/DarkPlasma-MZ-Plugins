@@ -1,13 +1,14 @@
-// DarkPlasma_StepImageAndSound 1.0.0
+// DarkPlasma_StepImageAndSound 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/10/30 1.0.1 1フレームだけ意図しない位置に足跡がちらつく不具合を修正
  * 2022/09/23 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 足跡画像を表示し、足音SEを再生する
  * @author DarkPlasma
  * @license MIT
@@ -204,7 +205,7 @@
  * @noteData tilesets
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * タイルセットの設定に応じて、足跡画像を表示したり、足音SEを再生します。
  *
  * タイルセットに対して、メモ欄に地形タグごとに足跡画像と足音SEの設定を行います。
@@ -235,7 +236,7 @@
     stepOffset: Number(pluginParameters.stepOffset || 8),
     audioDistance: Number(pluginParameters.audioDistance || 10),
     excludeEventTag: JSON.parse(pluginParameters.excludeEventTag || '[]').map((e) => {
-      return String(e || '');
+      return String(e || ``);
     }),
   };
 
@@ -529,6 +530,11 @@
       this._offsetX = request.setting.offsetX;
       this._offsetY = request.setting.offsetY;
       this._fitStep = request.setting.fitStep;
+      /**
+       * 最初の1フレーム
+       */
+      this.updateFrame();
+      this.updatePosition();
     }
     isPlaying() {
       return this._animationFrame < this.maxAnimationFrame();
@@ -541,10 +547,16 @@
       if (!this.isPlaying() || !this.bitmap || !this.bitmap.isReady()) {
         return;
       }
+      this.updateFrame();
+      this.updatePosition();
+    }
+    updateFrame() {
+      if (!this.isPlaying() || !this.bitmap || !this.bitmap.isReady()) {
+        return;
+      }
       const frame = Math.floor(this._animationFrame / this._animationSpeed);
       this.setFrame(settings.cellWidth * frame, 0, settings.cellWidth, this.bitmap.height);
       this._animationFrame++;
-      this.updatePosition();
     }
     fitStepOffsetX() {
       if (!this._fitStep) {
