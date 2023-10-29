@@ -367,6 +367,12 @@ class Sprite_StepAnimation extends Sprite {
     this._offsetY = request.setting.offsetY;
 
     this._fitStep = request.setting.fitStep;
+
+    /**
+     * 最初の1フレーム
+     */
+    this.updateFrame();
+    this.updatePosition();
   }
 
   isPlaying() {
@@ -382,10 +388,17 @@ class Sprite_StepAnimation extends Sprite {
     if (!this.isPlaying() || !this.bitmap || !this.bitmap.isReady()) {
       return;
     }
+    this.updateFrame();
+    this.updatePosition();
+  }
+
+  updateFrame() {
+    if (!this.isPlaying() || !this.bitmap || !this.bitmap.isReady()) {
+      return;
+    }
     const frame = Math.floor(this._animationFrame / this._animationSpeed);
     this.setFrame(settings.cellWidth * frame, 0, settings.cellWidth, this.bitmap.height);
     this._animationFrame++;
-    this.updatePosition();
   }
 
   fitStepOffsetX() {

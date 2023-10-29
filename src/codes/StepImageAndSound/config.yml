@@ -3,6 +3,9 @@ DarkPlasma_StepImageAndSound:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/10/30
+      version: 1.0.1
+      description: '1フレームだけ意図しない位置に足跡がちらつく不具合を修正'
     - date: 2022/09/23
       version: 1.0.0
       description: '公開'
