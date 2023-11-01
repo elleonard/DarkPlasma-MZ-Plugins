@@ -1,0 +1,61 @@
+DarkPlasma_CharacterText:
+  name: DarkPlasma_CharacterText
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/11/01
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'マップ上のキャラクター近傍にテキストを表示する'
+  parameters:
+    - param: fontSize
+      text:
+        ja: フォントサイズ
+      type: number
+      default: 21
+  commands:
+    - command: register
+      text:
+        ja: テキストを登録する
+      desc:
+        ja: 本コマンドを記述したページが有効になっている間、対象イベントにテキストを表示します。本コマンド自体は何もしません。
+      args:
+        - arg: text
+          text:
+            ja: テキスト
+          type: string
+        - arg: offsetX
+          text:
+            ja: Xオフセット
+          type: number
+          default: 0
+          min: -1000
+        - arg: offsetY
+          text:
+            ja: Yオフセット
+          type: number
+          default: -72
+          min: -1000
+    - command: hideAll
+      text:
+        ja: テキストを非表示にする
+      desc:
+        ja: マップ上に表示しているテキストをすべて一時的に非表示にします。
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      マップ上のキャラクターの近傍にテキストを表示します。
+
+      表示したいイベントのメモ欄に <characterText> と記述し、
+      表示したいページにテキストを登録するプラグインコマンドを記述してください。
+
+      一時的に非表示にするプラグインコマンド一度非表示になったテキストは
+      マップ移動を行うと再度表示されます。
