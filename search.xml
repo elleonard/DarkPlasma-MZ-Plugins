@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>文字に影をつける</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/11/04/text-shadow/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/11/04/text-shadow/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>テキストに影をつける制御文字を提供します。</p><p>ぼかしや色の設定も可能なので、ぼんやり光っているような文字といった演出も可能です。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="text-shadow.png" alt="使用例" title="使用例"></p><p><img src="setting1.png" alt="設定例" title="設定例"></p><p>プラグインパラメータに、影の色やぼかし、大きさの設定を任意の数追加します。<br>ここで設定したIDを控えておいて、影をつけたい箇所で利用します。</p><p><img src="setting2.png" alt="設定例" title="設定例"></p><p>メッセージの表示で、文字列に先程設定した設定ID1の影をつけます。</p><h2 id="紹介動画"><a href="#紹介動画" class="headerlink" title="紹介動画"></a>紹介動画</h2><iframe width="447" height="795" src="https://www.youtube.com/embed/QRbfqFPOSC0" title="【MZ】 文字に影をつける装飾の制御文字を追加できるプラグイン 「DarkPlasma_TextShadow.js」 | プラグイン紹介 #Shorts #rpgツクールmz" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_TextShadow.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> テキスト </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>アイテムの詳細説明文を表示する</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/10/20/item-detail/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/10/20/item-detail/</url>
