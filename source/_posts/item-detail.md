@@ -18,6 +18,8 @@ tags:
 ![使用例](item-detail.png "使用例")
 ![設定例](item-detail-setting.png "設定例")
 
+長い文字列を自動で改行するには {% post_link auto-line-break %} をご利用ください。
+
 # ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ItemDetail.js)
