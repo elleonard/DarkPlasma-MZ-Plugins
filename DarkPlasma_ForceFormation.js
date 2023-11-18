@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.3.5
+// DarkPlasma_ForceFormation 2.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/11/18 2.4.0 入れ替え処理のインターフェース公開
  * 2023/06/17 2.3.5 TypeScript移行
  * 2022/03/31 2.3.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/07/05 2.3.3 MZ 1.3.2に対応
@@ -54,7 +55,7 @@
  * @default 0
  *
  * @help
- * version: 2.3.5
+ * version: 2.4.0
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  *
  * マップのメモ欄に<disableForceFormation>と書くことで、
@@ -98,18 +99,21 @@
       if (this._phase) {
         // 前衛が全滅していたら後衛と交代して戦闘続行
         if ($gameParty.forwardMembersAreAllDead() && $gameParty.isForceFormationEnabled()) {
-          $gameParty.forceFormation();
-          this._logWindow?.displayForceChangedFormation();
-          if (settings.forceFormationCommonEvent > 0) {
-            $gameTemp.reserveCommonEvent(settings.forceFormationCommonEvent);
-          }
-          if (settings.forceTurnChange) {
-            this._phase = 'turnEnd';
-          }
+          this.forceFormation();
           return false;
         }
       }
       return false;
+    };
+    battleManager.forceFormation = function () {
+      $gameParty.forceFormation();
+      this._logWindow?.displayForceChangedFormation();
+      if (settings.forceFormationCommonEvent > 0) {
+        $gameTemp.reserveCommonEvent(settings.forceFormationCommonEvent);
+      }
+      if (settings.forceTurnChange) {
+        this._phase = 'turnEnd';
+      }
     };
   }
   BattleManager_ForceFormationMixIn(BattleManager);
