@@ -6,6 +6,10 @@ declare namespace BattleManager {
   }
 }
 
+declare interface BattleManager {
+  forceFormation(): void;
+}
+
 declare interface Game_Party {
   _forceFormationChanged: boolean;
 

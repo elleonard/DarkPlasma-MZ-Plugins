@@ -12,19 +12,23 @@ function BattleManager_ForceFormationMixIn(battleManager: typeof BattleManager) 
     if (this._phase) {
       // 前衛が全滅していたら後衛と交代して戦闘続行
       if ($gameParty.forwardMembersAreAllDead() && $gameParty.isForceFormationEnabled()) {
-        $gameParty.forceFormation();
-        this._logWindow?.displayForceChangedFormation();
-        if (settings.forceFormationCommonEvent > 0) {
-          $gameTemp.reserveCommonEvent(settings.forceFormationCommonEvent);
-        }
-        if (settings.forceTurnChange) {
-          this._phase = 'turnEnd';
-        }
+        this.forceFormation();
         return false;
       }
     }
     return false;
   };
+
+  battleManager.forceFormation = function () {
+    $gameParty.forceFormation();
+    this._logWindow?.displayForceChangedFormation();
+    if (settings.forceFormationCommonEvent > 0) {
+      $gameTemp.reserveCommonEvent(settings.forceFormationCommonEvent);
+    }
+    if (settings.forceTurnChange) {
+      this._phase = 'turnEnd';
+    }
+  }
 }
 
 BattleManager_ForceFormationMixIn(BattleManager);
