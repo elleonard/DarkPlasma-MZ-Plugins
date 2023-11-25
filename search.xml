@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>指定したスキルのうちどれかひとつを発動する使用効果</title>
+      <link href="/DarkPlasma-MZ-Plugins/2023/11/25/random-skill/"/>
+      <url>/DarkPlasma-MZ-Plugins/2023/11/25/random-skill/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>指定したスキルのうちどれかひとつを発動する使用効果を実現します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="random-skill.png" alt="設定例" title="設定例"></p><p>スキルID21,35,36,52のうちどれかひとつを発動する設定です。<br>重みの設定値が大きいスキルほど発動しやすくなります。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RandomSkill.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> スキル </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>文字に影をつける</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/11/04/text-shadow/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/11/04/text-shadow/</url>
