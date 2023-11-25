@@ -1,0 +1,38 @@
+DarkPlasma_RandomSkill:
+  name: DarkPlasma_RandomSkill
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/11/25
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '指定したスキルのうちどれかひとつを発動する使用効果'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base:
+      - name: DarkPlasma_AllocateUniqueEffectCode
+        version: 1.0.1
+    orderAfter:
+      - name: DarkPlasma_AllocateUniqueEffectCode
+    orderBefore: []
+  help:
+    ja: |
+      使用するとランダムで指定したスキルのうち
+      どれか一つを発動する使用効果を実現します。
+
+      スキルまたはアイテムのメモ欄に以下のように記述すると
+      2/3でスキルID5、1/3でスキルID6が発動します。
+
+      <randomSkill:
+        skillId:5, weight:2
+        skillId:6, weight:1
+      >
+
+      この使用効果を持つスキル・アイテムの対象は
+      使用者に設定してください。
