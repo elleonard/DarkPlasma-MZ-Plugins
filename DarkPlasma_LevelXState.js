@@ -1,9 +1,10 @@
-// DarkPlasma_LevelXState 1.0.0
+// DarkPlasma_LevelXState 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/11/26 1.0.1 レベルが特定数値の倍数でない対象にも有効になる不具合を修正
  * 2023/09/16 1.0.0 公開
  */
 
@@ -19,7 +20,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueEffectCode
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * スキル・アイテムの使用効果に、
  * レベルが特定の数値の倍数の対象にのみ有効なステート付加を追加します。
  *
@@ -87,7 +88,12 @@
     const _applyItemEffect = gameAction.applyItemEffect;
     gameAction.applyItemEffect = function (target, effect) {
       if (effect.code === levelXStateEffect.code) {
-        if (!target.isStateResist(effect.dataId) && target.stateRate(effect.dataId) > 0) {
+        if (
+          !target.isStateResist(effect.dataId) &&
+          target.stateRate(effect.dataId) > 0 &&
+          target.level &&
+          target.level % effect.value1 === 0
+        ) {
           target.addState(effect.dataId);
           this.makeSuccess(target);
         }
