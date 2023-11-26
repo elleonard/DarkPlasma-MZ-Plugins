@@ -43,7 +43,7 @@ function Game_Action_LevelXStateMixIn(gameAction: Game_Action) {
   gameAction.applyItemEffect = function (target, effect) {
     if (effect.code === levelXStateEffect.code) {
       if (
-        !target.isStateResist(effect.dataId)
+        target.isStateAddable(effect.dataId)
         && target.stateRate(effect.dataId) > 0
         && target.level
         && target.level%effect.value1 === 0
