@@ -1,0 +1,39 @@
+DarkPlasma_ItemWithPartyTraits:
+  name: DarkPlasma_ItemWithPartyTraits
+  year: 2023
+  license: MIT
+  histories:
+    - date: 2023/12/01
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: '持っているだけでパーティ全員に特徴を持たせるアイテム'
+  parameters: []
+  commands: []
+  structures:
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      所持しているだけでパーティメンバー全員が特徴を得るアイテムを実現します。
+
+      アイテムのメモ欄に以下のように記述してください。
+      <partyTraits:actor/1>
+      アクターID1と同じ特徴を得ます。
+
+      <partyTraits:class/1>
+      職業ID1と同じ特徴を得ます。
+
+      <partyTraits:weapon/1>
+      武器ID1と同じ特徴を得ます。
+
+      <partyTraits:armor/1>
+      防具ID1と同じ特徴を得ます。
+
+      <partyTraits:state/1>
+      ステートID1と同じ特徴を得ます。
