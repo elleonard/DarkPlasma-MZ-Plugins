@@ -21,6 +21,7 @@ DarkPlasma_ItemWithPartyTraits:
   help:
     ja: |
       所持しているだけでパーティメンバー全員が特徴を得るアイテムを実現します。
+      複数個所持していても特徴は重複しません。
 
       アイテムのメモ欄に以下のように記述してください。
       <partyTraits:actor/1>
