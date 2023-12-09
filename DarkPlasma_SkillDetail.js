@@ -1,9 +1,10 @@
-// DarkPlasma_SkillDetail 1.0.1
+// DarkPlasma_SkillDetail 1.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/12/09 1.1.0 戦闘中に表示する機能を追加
  * 2023/09/04 1.0.1 typescript移行
  * 2022/01/07 1.0.0 公開
  */
@@ -31,8 +32,8 @@
  * @default shift
  *
  * @help
- * version: 1.0.1
- * スキル画面のスキルにカーソルを合わせて特定のボタンを押すと
+ * version: 1.1.0
+ * スキルウィンドウのスキルにカーソルを合わせて特定のボタンを押すと
  * スキル詳細説明画面を開きます。
  *
  * スキルのメモ欄に下記のような記述で詳細説明を記述できます。
@@ -104,6 +105,41 @@
     };
   }
   Scene_Skill_SkillDetailMixIn(Scene_Skill.prototype);
+  function Scene_Battle_SkillDetailMixIn(sceneBattle) {
+    const _create = sceneBattle.create;
+    sceneBattle.create = function () {
+      _create.call(this);
+      this.createSkillDetailWindow();
+    };
+    const _createSkillWindow = sceneBattle.createSkillWindow;
+    sceneBattle.createSkillWindow = function () {
+      _createSkillWindow.call(this);
+      this._skillWindow.setHandler('detail', this.toggleSkillDetailWindow.bind(this));
+    };
+    sceneBattle.toggleSkillDetailWindow = function () {
+      this._skillWindow.activate();
+      if (!this._skillDetailWindow.visible) {
+        this._skillDetailWindow.show();
+        this._skillDetailWindow.resetCursor();
+      } else {
+        this._skillDetailWindow.hide();
+        this._skillDetailWindow.resetCursor();
+      }
+    };
+    sceneBattle.createSkillDetailWindow = function () {
+      this._skillDetailWindowLayer = new WindowLayer();
+      this._skillDetailWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+      this._skillDetailWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+      this.addChild(this._skillDetailWindowLayer);
+      this._skillDetailWindow = new Window_SkillDetail(this.skillDetailWindowRect());
+      this._skillDetailWindowLayer.addChild(this._skillDetailWindow);
+      this._skillWindow.setDescriptionWindow(this._skillDetailWindow);
+    };
+    sceneBattle.skillDetailWindowRect = function () {
+      return this.skillWindowRect();
+    };
+  }
+  Scene_Battle_SkillDetailMixIn(Scene_Battle.prototype);
   Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_SkillList.prototype, 'detail');
   function Window_SkillDetailMixIn(windowClass) {
     windowClass.setDescriptionWindow = function (detailWindow) {
