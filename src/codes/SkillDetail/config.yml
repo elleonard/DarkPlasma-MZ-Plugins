@@ -3,6 +3,9 @@ DarkPlasma_SkillDetail:
   year: 2022
   license: MIT
   histories:
+    - date: 2023/12/09
+      version: 1.1.0
+      description: '戦闘中に表示する機能を追加'
     - date: 2023/09/04
       version: 1.0.1
       description: 'typescript移行'
@@ -39,7 +42,7 @@ DarkPlasma_SkillDetail:
     orderBefore: []
   help:
     ja: |
-      スキル画面のスキルにカーソルを合わせて特定のボタンを押すと
+      スキルウィンドウのスキルにカーソルを合わせて特定のボタンを押すと
       スキル詳細説明画面を開きます。
 
       スキルのメモ欄に下記のような記述で詳細説明を記述できます。

@@ -18,6 +18,15 @@ declare interface Scene_Skill {
   toggleDetailWindow(): void;
 }
 
+declare interface Scene_Battle {
+  _skillDetailWindow: Window_SkillDetail;
+  _skillDetailWindowLayer: WindowLayer;
+
+  createSkillDetailWindow(): void;
+  skillDetailWindowRect(): Rectangle;
+  toggleSkillDetailWindow(): void;
+}
+
 declare interface Window_SkillList {
   _detailWindow: Window_SkillDetail
 
@@ -26,5 +35,6 @@ declare interface Window_SkillList {
 
 declare interface Window_SkillDetail extends Window_Base {
   setItem(item: DataManager.DrawableItem|null): void;
+  setText(text: string): void;
   resetCursor(): void;
 }

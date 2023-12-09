@@ -51,6 +51,47 @@ function Scene_Skill_SkillDetailMixIn(sceneSkill: Scene_Skill) {
 
 Scene_Skill_SkillDetailMixIn(Scene_Skill.prototype);
 
+function Scene_Battle_SkillDetailMixIn(sceneBattle: Scene_Battle) {
+  const _create = sceneBattle.create;
+  sceneBattle.create = function () {
+    _create.call(this);
+    this.createSkillDetailWindow();
+  };
+
+  const _createSkillWindow = sceneBattle.createSkillWindow;
+  sceneBattle.createSkillWindow = function () {
+    _createSkillWindow.call(this);
+    this._skillWindow.setHandler('detail', this.toggleSkillDetailWindow.bind(this));
+  };
+
+  sceneBattle.toggleSkillDetailWindow = function () {
+    this._skillWindow.activate();
+    if (!this._skillDetailWindow.visible) {
+      this._skillDetailWindow.show();
+      this._skillDetailWindow.resetCursor();
+    } else {
+      this._skillDetailWindow.hide();
+      this._skillDetailWindow.resetCursor();
+    }
+  };
+
+  sceneBattle.createSkillDetailWindow = function () {
+    this._skillDetailWindowLayer = new WindowLayer();
+    this._skillDetailWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
+    this._skillDetailWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
+    this.addChild(this._skillDetailWindowLayer);
+    this._skillDetailWindow = new Window_SkillDetail(this.skillDetailWindowRect());
+    this._skillDetailWindowLayer.addChild(this._skillDetailWindow);
+    this._skillWindow.setDescriptionWindow(this._skillDetailWindow);
+  };
+
+  sceneBattle.skillDetailWindowRect = function () {
+    return this.skillWindowRect();
+  };
+}
+
+Scene_Battle_SkillDetailMixIn(Scene_Battle.prototype);
+
 Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_SkillList.prototype, 'detail');
 
 function Window_SkillDetailMixIn(windowClass: Window_SkillList) {
