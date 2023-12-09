@@ -538,12 +538,19 @@ class Window_FormationMember extends Window_StatusBase {
     return 12;
   }
 
-  offsetX() {
+  /**
+   * カーソル矩形のXオフセット
+   * MZデフォサイズ(48)の場合は待機メンバーウィンドウのみ、いい感じに左右パディングが必要
+   */
+  rectangleOffsetX() {
     return 0;
   }
 
-  offsetY() {
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 4;
+  /**
+   * 歩行グラフィック表示Yオフセット
+   */
+  characterOffsetY() {
+    return 4;
   }
 
   itemHeight() {
@@ -562,8 +569,8 @@ class Window_FormationMember extends Window_StatusBase {
   }
 
   itemRect(index: number) {
-    const x = this.offsetX() + (index % this.maxColsForRect()) * this.itemWidth() - this.scrollBaseX();
-    const y = -4 + this.offsetY() + Math.floor(index / this.maxColsForRect()) * this.itemHeight() - this.scrollBaseY();
+    const x = this.rectangleOffsetX() + (index % this.maxColsForRect()) * this.itemWidth() - this.scrollBaseX();
+    const y = Math.floor(index / this.maxColsForRect()) * this.itemHeight() - this.scrollBaseY();
     return new Rectangle(x, y, settings.characterWidth, this.itemHeight());
   }
 
@@ -616,14 +623,9 @@ class Window_FormationMember extends Window_StatusBase {
   public drawAllItems(): void {
     this.drawPendingItemBackGround();
     this.members().forEach((actor, i) => {
-      const x =
-        this.offsetX() +
-        settings.characterWidth / 2 +
-        (i % this.maxColsForRect()) * this.itemWidth();
-      const y =
-        this.offsetY() +
-        settings.characterHeight +
-        Math.floor(i / this.maxColsForRect() - this.topRow()) * this.itemHeight();
+      const rect = this.itemRect(i);
+      const x = rect.x + settings.characterWidth / 2;
+      const y = rect.y + settings.characterHeight + this.characterOffsetY();
       if (settings.characterDirectionToLeft) {
         this.drawActorCharacterLeft(actor, x, y);
       } else {
@@ -701,12 +703,12 @@ class Window_FormationBattleMember extends Window_FormationMember {
       : $gameParty.maxBattleMembers() / 2;
   }
 
-  offsetX() {
+  /**
+   * カーソル矩形のXオフセット
+   * MZデフォサイズ(48)の場合は待機メンバーウィンドウのみ、いい感じに左右パディングが必要
+   */
+  rectangleOffsetX() {
     return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 0 : 12;
-  }
-
-  spacing() {
-    return settings.characterHeight > DEFAULT_CHARACTER_SIZE ? 24 : 12;
   }
 
   isAtRightEnd() {
