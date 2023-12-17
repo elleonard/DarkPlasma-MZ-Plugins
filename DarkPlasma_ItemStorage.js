@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.6.0
+// DarkPlasma_ItemStorage 1.6.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/12/17 1.6.1 倉庫に預けられる判定を整理
  * 2023/10/25 1.6.0 倉庫に預けるまたは引き出す数ウィンドウのインターフェースを公開
  * 2023/07/25 1.5.0 Window_StorageItemsのインターフェースを公開
  *                  倉庫に預ける際の処理順変更
@@ -67,7 +68,7 @@
  * @default false
  *
  * @help
- * version: 1.6.0
+ * version: 1.6.1
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -227,6 +228,9 @@
     fetchItem(item, amount) {
       this.storeItem(item, -amount);
     }
+    canStoreItem(item) {
+      return this.numItems(item) < settings.maxItems;
+    }
   }
   /**
    * @param {Game_Party.prototype} gameParty
@@ -263,6 +267,9 @@
     gameParty.fetchItemFromStorage = function (item, amount) {
       this.gainItem(item, amount, false);
       this.storageItems().fetchItem(item, amount);
+    };
+    gameParty.canStoreItemInStorage = function (item) {
+      return this.storageItems().canStoreItem(item);
     };
   }
   Game_Party_ItemStorageMixIn(Game_Party.prototype);
@@ -452,7 +459,7 @@
       return (
         !!item &&
         (this.isPartyItem()
-          ? $gameParty.storageItems().numItems(item) < settings.maxItems
+          ? $gameParty.canStoreItemInStorage(item)
           : $gameParty.numItems(item) < $gameParty.maxItems(item))
       );
     }
