@@ -14,6 +14,7 @@ declare interface Game_StorageItems {
   numItems(item: MZ.Item|MZ.Weapon|MZ.Armor): number;
   allItems(): (MZ.Item|MZ.Weapon|MZ.Armor)[];
   maxItems(): number;
+  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
 }
 
 declare interface Game_Temp {
@@ -28,6 +29,7 @@ declare interface Game_Party {
   storageItems(): Game_StorageItems;
   storeItemToStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   fetchItemFromStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
+  canStoreItemInStorage(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
 }
 
 declare interface Scene_ItemStorage extends Scene_MenuBase {

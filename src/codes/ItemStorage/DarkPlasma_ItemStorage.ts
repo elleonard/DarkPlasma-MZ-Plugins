@@ -158,6 +158,10 @@ class Game_StorageItems {
   fetchItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void {
     this.storeItem(item, -amount);
   }
+
+  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean {
+    return this.numItems(item) < settings.maxItems;
+  }
 }
 
 /**
@@ -199,6 +203,10 @@ function Game_Party_ItemStorageMixIn(gameParty: Game_Party) {
   gameParty.fetchItemFromStorage = function (item, amount) {
     this.gainItem(item, amount, false);
     this.storageItems().fetchItem(item, amount);
+  };
+
+  gameParty.canStoreItemInStorage = function (item) {
+    return this.storageItems().canStoreItem(item);
   };
 }
 
@@ -432,7 +440,7 @@ class Window_StorageItems extends Window_ItemList {
     return (
       !!item &&
       (this.isPartyItem()
-        ? $gameParty.storageItems().numItems(item) < settings.maxItems
+        ? $gameParty.canStoreItemInStorage(item)
         : $gameParty.numItems(item) < $gameParty.maxItems(item))
     );
   }
