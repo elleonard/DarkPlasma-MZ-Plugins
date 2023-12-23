@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 2.0.0
+// DarkPlasma_TextLog 2.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/12/23 2.1.0 自動区切り線の挿入を区切り線の直後に行わないように変更
  * 2023/10/08 2.0.0 保持ログメッセージに関するプログラム上のインターフェース変更 (Breaking Change)
  *                  保持ログメッセージ件数設定を追加
  * 2023/10/06 1.3.0 ウィンドウ退避のインターフェースを公開
@@ -149,7 +150,7 @@
  * @type string
  *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -290,6 +291,9 @@
     pushSplitter() {
       this.pushLog('', settings.logSplitter);
     }
+    latestMessageIsLogSplitter() {
+      return this.messages.length <= 0 ? false : this.messages[this.messages.length - 1].isLogSplitter();
+    }
   }
   class Game_LogMessage {
     constructor(speakerName, message) {
@@ -304,6 +308,9 @@
     }
     text() {
       return [this.speakerName, this.message].filter((text) => text).join('\n');
+    }
+    isLogSplitter() {
+      return this.message === settings.logSplitter;
     }
   }
   function Game_Message_TextLogMixIn(gameMessage) {
@@ -335,25 +342,25 @@
     const _terminate = gameInterpreter.terminate;
     gameInterpreter.terminate = function () {
       if (this.mustSplitLogOnTeminate()) {
-        if (settings.autoSplit) {
-          $gameTemp.eventTextLog().pushSplitter();
-        }
+        $gameTemp.eventTextLog().pushSplitter();
       }
       _terminate.call(this);
     };
     /**
-     * 終了時にイベントログを区切って過去ログ送りにする条件
+     * 終了時にイベントログを区切る(自動区切り線を挿入する)条件
+     * - 自動区切り線設定がON
      * - 深さ0（イベントから呼び出されたコモンイベントでない）
      * - 正のイベントIDを持つ（自動実行コモンイベント、並列実行コモンイベント、バトルイベントでない）
      * - 並列実行イベントでない
-     * - 終了するイベントのテキストログが1件以上存在する
+     * - 最後のログが区切り線でない
      */
     gameInterpreter.mustSplitLogOnTeminate = function () {
       return (
+        settings.autoSplit &&
         this._depth === 0 &&
         this._eventId > 0 &&
         !this.isOnParallelEvent() &&
-        $gameTemp.eventTextLog().messages.length > 0
+        !$gameTemp.eventTextLog().latestMessageIsLogSplitter()
       );
     };
     /**
