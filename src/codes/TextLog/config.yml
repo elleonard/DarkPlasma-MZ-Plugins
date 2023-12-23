@@ -4,7 +4,9 @@ DarkPlasma_TextLog:
   license: MIT
   histories:
     - date: 2023/12/23
-      version: 2.1.0
+      version: 2.1.1
+      description: 'ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正'
+    - version: 2.1.0
       description: '自動区切り線の挿入を区切り線の直後に行わないように変更'
     - date: 2023/10/08
       version: 2.0.0

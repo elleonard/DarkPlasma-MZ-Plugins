@@ -185,6 +185,7 @@ function Game_Interpreter_TextLogMixIn(gameInterpreter: Game_Interpreter) {
    * - 深さ0（イベントから呼び出されたコモンイベントでない）
    * - 正のイベントIDを持つ（自動実行コモンイベント、並列実行コモンイベント、バトルイベントでない）
    * - 並列実行イベントでない
+   * - ログが1件以上存在する
    * - 最後のログが区切り線でない
    */
   gameInterpreter.mustSplitLogOnTeminate = function () {
@@ -192,6 +193,7 @@ function Game_Interpreter_TextLogMixIn(gameInterpreter: Game_Interpreter) {
       && this._depth === 0
       && this._eventId > 0
       && !this.isOnParallelEvent()
+      && $gameTemp.eventTextLog().messages.length > 0
       && !$gameTemp.eventTextLog().latestMessageIsLogSplitter();
   };
 
