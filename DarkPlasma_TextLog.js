@@ -1,10 +1,11 @@
-// DarkPlasma_TextLog 2.1.0
+// DarkPlasma_TextLog 2.1.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/12/23 2.1.0 自動区切り線の挿入を区切り線の直後に行わないように変更
+ * 2023/12/23 2.1.1 ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正
+ *            2.1.0 自動区切り線の挿入を区切り線の直後に行わないように変更
  * 2023/10/08 2.0.0 保持ログメッセージに関するプログラム上のインターフェース変更 (Breaking Change)
  *                  保持ログメッセージ件数設定を追加
  * 2023/10/06 1.3.0 ウィンドウ退避のインターフェースを公開
@@ -150,7 +151,7 @@
  * @type string
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -352,6 +353,7 @@
      * - 深さ0（イベントから呼び出されたコモンイベントでない）
      * - 正のイベントIDを持つ（自動実行コモンイベント、並列実行コモンイベント、バトルイベントでない）
      * - 並列実行イベントでない
+     * - ログが1件以上存在する
      * - 最後のログが区切り線でない
      */
     gameInterpreter.mustSplitLogOnTeminate = function () {
@@ -360,6 +362,7 @@
         this._depth === 0 &&
         this._eventId > 0 &&
         !this.isOnParallelEvent() &&
+        $gameTemp.eventTextLog().messages.length > 0 &&
         !$gameTemp.eventTextLog().latestMessageIsLogSplitter()
       );
     };
