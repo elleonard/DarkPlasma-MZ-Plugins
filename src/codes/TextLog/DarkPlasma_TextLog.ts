@@ -108,6 +108,10 @@ class Game_EventTextLog {
   pushSplitter() {
     this.pushLog("", settings.logSplitter);
   }
+
+  latestMessageIsLogSplitter() {
+    return this.messages.length <= 0 ? false : this.messages[this.messages.length-1].isLogSplitter()
+  }
 }
 
 class Game_LogMessage {
@@ -129,6 +133,10 @@ class Game_LogMessage {
 
   text() {
     return [this.speakerName, this.message].filter(text => text).join('\n');
+  }
+
+  isLogSplitter() {
+    return this.message === settings.logSplitter;
   }
 }
 
@@ -166,22 +174,25 @@ function Game_Interpreter_TextLogMixIn(gameInterpreter: Game_Interpreter) {
   const _terminate = gameInterpreter.terminate;
   gameInterpreter.terminate = function () {
     if (this.mustSplitLogOnTeminate()) {
-      if (settings.autoSplit) {
-        $gameTemp.eventTextLog().pushSplitter();
-      }
+      $gameTemp.eventTextLog().pushSplitter();
     }
     _terminate.call(this);
   };
 
   /**
-   * 終了時にイベントログを区切って過去ログ送りにする条件
+   * 終了時にイベントログを区切る(自動区切り線を挿入する)条件
+   * - 自動区切り線設定がON
    * - 深さ0（イベントから呼び出されたコモンイベントでない）
    * - 正のイベントIDを持つ（自動実行コモンイベント、並列実行コモンイベント、バトルイベントでない）
    * - 並列実行イベントでない
-   * - 終了するイベントのテキストログが1件以上存在する
+   * - 最後のログが区切り線でない
    */
   gameInterpreter.mustSplitLogOnTeminate = function () {
-    return this._depth === 0 && this._eventId > 0 && !this.isOnParallelEvent() && $gameTemp.eventTextLog().messages.length > 0;
+    return settings.autoSplit
+      && this._depth === 0
+      && this._eventId > 0
+      && !this.isOnParallelEvent()
+      && !$gameTemp.eventTextLog().latestMessageIsLogSplitter();
   };
 
   /**

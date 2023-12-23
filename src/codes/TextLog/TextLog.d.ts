@@ -20,6 +20,7 @@ declare interface Game_LogMessage {
   readonly speakerName: string;
   readonly message: string;
   text(): string;
+  isLogSplitter(): boolean;
 }
 
 declare interface Game_EventTextLog {
@@ -28,6 +29,7 @@ declare interface Game_EventTextLog {
 
   pushLog(speakerName: string, text: string): void;
   pushSplitter(): void;
+  latestMessageIsLogSplitter(): boolean;
 }
 
 declare interface Game_Temp {
