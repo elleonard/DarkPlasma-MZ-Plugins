@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 1.3.0
+// DarkPlasma_FusionItem 1.3.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2023/12/27 1.3.1 品揃え情報のインターフェース化
  * 2023/05/13 1.3.0 価格描画を関数に切り出す
  *                  商品ウィンドウクラス定義をグローバルに公開
  * 2022/12/11 1.2.3 リファクタ
@@ -47,7 +48,7 @@
  * @type number[]
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -695,9 +696,6 @@
         this.drawMaterials(x, this.lineHeight());
       }
     }
-    /**
-     * @param {FusionItemMaterial[]} materials
-     */
     setMaterials(materials) {
       this._materials = materials;
       this.refresh();
@@ -738,16 +736,9 @@
       this.refresh();
       this.select(0);
     }
-    /**
-     * @return {FusionItemMaterial[]}
-     */
     materials() {
       return this.materialsAt(this.index());
     }
-    /**
-     * @param {number} index
-     * @return {FusionItemMaterial[]}
-     */
     materialsAt(index) {
       return this._materials && index >= 0 ? this._materials[index] : [];
     }
