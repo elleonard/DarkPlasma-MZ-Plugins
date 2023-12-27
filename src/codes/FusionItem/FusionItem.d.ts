@@ -39,18 +39,31 @@ declare class FusionItemMaterial {
   readonly count: number;
 }
 
+declare interface FusionItemMaterialInterface {
+  readonly data: MZ.Item|MZ.Weapon|MZ.Armor;
+  readonly count: number;
+}
+
+declare interface FusionItemGoodsInterface {
+  readonly result: MZ.Item|MZ.Weapon|MZ.Armor;
+  readonly materials: FusionItemMaterialInterface[];
+  readonly gold: number;
+
+  isValid(): boolean;
+}
+
 declare interface Game_Party {
   numUsableItemsForFusion(item: MZ.Item | MZ.Weapon | MZ.Armor): number;
   numItemsWithEquip(item: MZ.Item|MZ.Weapon|MZ.Armor): number;
   numEquippedItem(item: MZ.Item|MZ.Weapon|MZ.Armor): number;
 }
 
-declare interface Scene_FusionItem extends Scene_ShopLike<FusionItemGoods, Window_FusionShopBuy> {
+declare interface Scene_FusionItem extends Scene_ShopLike<Window_FusionShopBuy> {
 
 }
 
-declare class Scene_ShopLike<TGoods, TBuyWindow> extends Scene_MenuBase {
-  _goods: TGoods[];
+declare class Scene_ShopLike<TBuyWindow> extends Scene_MenuBase {
+  _goods: FusionItemGoodsInterface[];
   public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
   public _helpWindow: Window_Help;
   public _goldWindow: Window_Gold;
@@ -107,15 +120,15 @@ declare class Scene_ShopLike<TGoods, TBuyWindow> extends Scene_MenuBase {
 }
 
 type Constructor<T = Scene_MenuBase> = new (...args: any[]) => T;
-function Scene_ShopLikeMixIn<TScene extends Constructor, TGoods, TBuyWindow>(sceneClass: TScene): Scene_ShopLike<TGoods, TBuyWindow>;
+function Scene_ShopLikeMixIn<TScene extends Constructor, TBuyWindow>(sceneClass: TScene): Scene_ShopLike<TBuyWindow>;
 
 declare interface Window_FusionShopStatus extends Window_ShopStatus {
-  _materials: FusionItemMaterial[];
+  _materials: FusionItemMaterialInterface[];
 
   materialLineHeight(): number;
 }
 
 declare interface Window_FusionShopBuy extends Window_ShopBuy {
-  setupFusionGoods(fusionGoods: FusionItemGoods[]): void;
+  setupFusionGoods(fusionGoods: FusionItemGoodsInterface[]): void;
   drawPrice(price: number, x: number, y: number, width: number): void;
 }

@@ -44,7 +44,7 @@ PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
   SceneManager.prepareNextScene(goods);
 });
 
-class FusionItemMaterial {
+class FusionItemMaterial implements FusionItemMaterialInterface {
   _data: MZ.Item | MZ.Weapon | MZ.Armor;
   _count: number;
   /**
@@ -68,7 +68,7 @@ class FusionItemMaterial {
   }
 }
 
-class FusionItemGoods {
+class FusionItemGoods implements FusionItemGoodsInterface {
   _result: MZ.Item | MZ.Weapon | MZ.Armor;
   _materials: FusionItemMaterial[];
   _gold: number;
@@ -157,9 +157,9 @@ function Game_Party_FusionItemMixIn(gameParty: Game_Party) {
 Game_Party_FusionItemMixIn(Game_Party.prototype);
 
 type Constructor<T = Scene_MenuBase> = new (...args: any[]) => T;
-function Scene_ShopLikeMixIn<TScene extends Constructor, TGoods, TBuyWindow>(sceneClass: TScene) {
+function Scene_ShopLikeMixIn<TScene extends Constructor, TBuyWindow>(sceneClass: TScene) {
   return class extends sceneClass {
-    _goods: TGoods[];
+    _goods: FusionItemGoodsInterface[];
     public _item: MZ.Item | MZ.Weapon | MZ.Armor | null;
     public _helpWindow: Window_Help;
     public _goldWindow: Window_Gold;
@@ -171,7 +171,7 @@ function Scene_ShopLikeMixIn<TScene extends Constructor, TGoods, TBuyWindow>(sce
     public _categoryWindow: Window_ItemCategory;
     public _sellWindow: Window_ShopSell;
 
-    prepare(goods: TGoods[]) {
+    prepare(goods: FusionItemGoodsInterface[]) {
       this._goods = goods;
       this._item = null;
     }
@@ -315,8 +315,8 @@ function Scene_ShopLikeMixIn<TScene extends Constructor, TGoods, TBuyWindow>(sce
   }
 }
 
-class Scene_FusionItem extends Scene_ShopLikeMixIn<typeof Scene_MenuBase, FusionItemGoods, Window_FusionShopBuy>(Scene_MenuBase) {
-  _materials: FusionItemMaterial[] = [];
+class Scene_FusionItem extends Scene_ShopLikeMixIn<typeof Scene_MenuBase, Window_FusionShopBuy>(Scene_MenuBase) {
+  _materials: FusionItemMaterialInterface[] = [];
 
   /**
    * 融合する やめるの2択しかないので、ゲームパッド・キーボード操作の場合は不要
@@ -399,7 +399,7 @@ class Window_FusionShopCommand extends Window_ShopCommand {
 }
 
 class Window_FusionShopStatus extends Window_ShopStatus {
-  _materials: FusionItemMaterial[] = [];
+  _materials: FusionItemMaterialInterface[] = [];
   refresh() {
     this.contents.clear();
     if (this._item) {
@@ -409,10 +409,7 @@ class Window_FusionShopStatus extends Window_ShopStatus {
     }
   }
 
-  /**
-   * @param {FusionItemMaterial[]} materials
-   */
-  setMaterials(materials: FusionItemMaterial[]) {
+  setMaterials(materials: FusionItemMaterialInterface[]) {
     this._materials = materials;
     this.refresh();
   }
@@ -444,28 +441,21 @@ class Window_FusionShopStatus extends Window_ShopStatus {
 }
 
 class Window_FusionShopBuy extends Window_ShopBuy {
-  _fusionGoods: FusionItemGoods[] = [];
-  _materials: FusionItemMaterial[][] = [];
+  _fusionGoods: FusionItemGoodsInterface[] = [];
+  _materials: FusionItemMaterialInterface[][] = [];
   _statusWindow: Window_FusionShopStatus|null = null;
 
-  setupFusionGoods(fusionGoods: FusionItemGoods[]) {
+  setupFusionGoods(fusionGoods: FusionItemGoodsInterface[]) {
     this._fusionGoods = fusionGoods;
     this.refresh();
     this.select(0);
   }
 
-  /**
-   * @return {FusionItemMaterial[]}
-   */
-  materials(): FusionItemMaterial[] {
+  materials(): FusionItemMaterialInterface[] {
     return this.materialsAt(this.index());
   }
 
-  /**
-   * @param {number} index
-   * @return {FusionItemMaterial[]}
-   */
-  materialsAt(index: number): FusionItemMaterial[] {
+  materialsAt(index: number): FusionItemMaterialInterface[] {
     return this._materials && index >= 0 ? this._materials[index] : [];
   }
 
