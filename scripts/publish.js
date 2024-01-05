@@ -20,7 +20,7 @@ glob.sync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) =
 /**
  * ちょっと雑な対応だが、消したいファイルをここに書いてコミットすると消せる
  */
-const removeFiles = ["PartitionTileLayer"];
+const removeFiles = ["DarkPlasma_PartitionTileLayer.js"];
 removeFiles.forEach(file => {
   fs.unlink(path.join(targetDir, file), err => {
     if (err) {
