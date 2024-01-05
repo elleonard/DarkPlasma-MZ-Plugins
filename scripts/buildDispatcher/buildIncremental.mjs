@@ -16,7 +16,7 @@ const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().sp
 const codePath = path.resolve(__dirname, '..', '..', 'src', 'codes').replaceAll('\\', '/');
 
 const buildTargets = [...new Set(diffFiles.stdout.split('\n')
-  .filter(path => path.startsWith("src/codes"))
+  .filter(path => path.startsWith("src/codes") && fs.existsSync(path))
   .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
 
 const configPaths = await Promise.all(buildTargets
