@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>リージョンによる通行可能判定</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/01/05/passage-by-region/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/01/05/passage-by-region/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>リージョンによって通行可能判定を上書きします。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="setting.png" alt="設定例" title="設定例"></p><p>リージョン1のマスを完全に通行不可にする設定です。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><ul><li><a href="https://triacontane.blogspot.com/2020/08/rpgmz.html">RegionBase.js</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_PassageByRegion.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> マップ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>持っているだけでパーティ全員に特徴を持たせるアイテム</title>
       <link href="/DarkPlasma-MZ-Plugins/2023/12/01/item-with-party-traits/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/12/01/item-with-party-traits/</url>
