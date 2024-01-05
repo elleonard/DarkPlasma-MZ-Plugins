@@ -1,0 +1,69 @@
+DarkPlasma_PassageByRegion:
+  name: DarkPlasma_PassageByRegion
+  year: 2024
+  license: MIT
+  histories:
+    - date: 2024/01/05
+      version: 1.0.0
+      description: '公開'
+
+  locates:
+    - ja
+  plugindesc:
+    ja: 'リージョンによる通行可能判定'
+  parameters:
+    - param: regions
+      text:
+        ja: リージョン設定
+      type: Region[]
+      default: []
+  commands: []
+  structures:
+    Region:
+      - param: id
+        text:
+          ja: リージョンID
+        type: number
+        default: 0
+      - param: through
+        text:
+          ja: すり抜け
+        desc:
+          ja: この設定がONの場合、タイル設定に関わらず通行可能になります。
+        type: boolean
+        default: false
+      - param: impassableUp
+        text:
+          ja: 上方向通行不可
+        desc:
+          ja: この設定がONの場合、タイル設定に関わらず上方向に通行不可になります。
+        type: boolean
+        default: false
+      - param: impassableDown
+        text:
+          ja: 下方向通行不可
+        desc:
+          ja: この設定がONの場合、タイル設定に関わらず下方向に通行不可になります。
+        type: boolean
+        default: false
+      - param: impassableLeft
+        text:
+          ja: 左方向通行不可
+        desc:
+          ja: この設定がONの場合、タイル設定に関わらず左方向に通行不可になります。
+        type: boolean
+        default: false
+      - param: impassableRight
+        text:
+          ja: 右方向通行不可
+        desc:
+          ja: この設定がONの場合、タイル設定に関わらず右方向に通行不可になります。
+        type: boolean
+        default: false
+  dependencies:
+    base: []
+    orderAfter: []
+    orderBefore: []
+  help:
+    ja: |
+      リージョンによって通行可能・通行不可のマスを指定できます。
