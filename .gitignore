@@ -14,5 +14,3 @@ stage/
 scripts/copyToProject/config.yml
 rmmz/*.js
 yarn-error.log
-
-tsconfig.json

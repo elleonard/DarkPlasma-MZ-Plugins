@@ -1,13 +1,16 @@
-const path = require('path');
-const prettier = require('prettier');
-const { generateParser } = require('./generateParser');
-const { SYMBOL_TYPE } = require('./parameterSymbolType');
+import path from 'path';
+import prettier from 'prettier';
+import { fileURLToPath } from 'url';
+import { generateParser } from './generateParser.js';
+import { SYMBOL_TYPE } from './parameterSymbolType.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 const pluginParametersDir = path.resolve(__dirname, '..', '..', 'src', 'common', 'pluginParameters');
 const pluginParametersOfDir = path.resolve(__dirname, '..', '..', 'src', 'common', 'pluginParametersOf');
 
-function generateParameterReader(config, destDir) {
+export async function generateParameterReader(config, destDir) {
   const parameters = configToParameters(config, SYMBOL_TYPE.PLUGIN_PARAMETERS);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
@@ -21,11 +24,11 @@ function generateParameterReader(config, destDir) {
     };
     `;
 
-    return escapeBackslashQuote(prettier.format(code, options));
+    return prettier.format(code, options).then(r => escapeBackslashQuote(r));
   });
 }
 
-function generateParameterReaderFunction(config, destDir) {
+export async function generateParameterReaderFunction(config, destDir) {
   const parameters = configToParameters(config, SYMBOL_TYPE.PLUGIN_PARAMETERS_OF);
 
   return prettier.resolveConfig(prettierConfig).then((options) => {
@@ -40,7 +43,7 @@ function generateParameterReaderFunction(config, destDir) {
     })("${config.name}");
     `;
 
-    return escapeBackslashQuote(prettier.format(code, options));
+    return prettier.format(code, options).then(r => escapeBackslashQuote(r));
   });
 }
 
@@ -63,8 +66,3 @@ function configToParameters(config, symbolType) {
 function escapeBackslashQuote(string) {
   return string.replace(/\\"/g, '\\\\"');
 }
-
-module.exports = {
-  generateParameterReader,
-  generateParameterReaderFunction
-};

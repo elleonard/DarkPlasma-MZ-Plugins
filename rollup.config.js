@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -10,19 +11,29 @@ const targetJsList = (() => {
     const dir = process.argv.some((n) => n === '-e') ? 'excludes' : 'codes';
     const versionIndex = process.argv.findIndex(n => n === '-V');
     const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex+1]}` : "";
-    return plugin ? glob.sync(path.join(__dirname, 'src', dir, `${plugin}${versionDir}`, 'DarkPlasma*.js')) : null;
+    const configTsPath = path.join(__dirname, 'src', dir, `${plugin}${versionDir}`, 'config', 'config.ts');
+    const pluginDir = fs.existsSync(configTsPath) ? '/plugin' : '';
+    return plugin
+      ? glob.sync(path.join(__dirname, 'src', dir, `${plugin}${versionDir}${pluginDir}`, 'DarkPlasma*.js'))
+      : null;
   })();
   return targetFile
     ? [targetFile].flat()
     : [
         glob.sync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
+        glob.sync(path.join(__dirname, 'src', 'codes', '*', 'config', 'DarkPlasma*.js')),
         glob.sync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
       ].flat();
 })();
 
 const config = targetJsList.map((input) => {
   const name = path.basename(input, '.js');
-  const dir = path.dirname(input).split('/').slice(-2)[0];
+  /**
+   * configのts化をする場合、1段ディレクトリがズレる
+   */
+  const dir = path.dirname(input).split('/').slice(-2)[0] === process.env.TARGET
+    ? path.dirname(input).split('/').slice(-3)[0]
+    : path.dirname(input).split('/').slice(-2)[0];
   const versionIndex = process.argv.findIndex(n => n === '-V');
   const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex+1]}` : "";
   return {

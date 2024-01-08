@@ -1,6 +1,6 @@
-const { PluginParameter } = require('./generateHeader');
+import { PluginParameter } from './generateHeader.js';
 
-const TYPE_CATEGORIES = {
+export const TYPE_CATEGORIES = {
   STRING: "string",
   NUMBER: "number",
   BOOLEAN: "boolean",
@@ -9,7 +9,7 @@ const TYPE_CATEGORIES = {
   COLOR: "color",
 };
 
-function toJsTypeCategory(parameter) {
+export function toJsTypeCategory(parameter) {
   switch (parameter.type) {
     case 'string':
     case 'multiline_string':
@@ -50,7 +50,7 @@ function toJsTypeCategory(parameter) {
   }
 }
 
-function generateParser(config, parameter, symbolType) {
+export function generateParser(config, parameter, symbolType) {
   let parser = 'TODO';
   switch (toJsTypeCategory(parameter)) {
     case TYPE_CATEGORIES.STRING:
@@ -134,9 +134,3 @@ function parameterSymbol(parameter, symbolType) {
   const objectName = symbolType;
   return parameter.symbol ? parameter.symbol : `${objectName}.${parameter.param || parameter.arg}`;
 }
-
-module.exports = {
-  generateParser,
-  toJsTypeCategory,
-  TYPE_CATEGORIES,
-};

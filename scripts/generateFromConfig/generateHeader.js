@@ -192,7 +192,7 @@ class TypedParameter {
     }
 }
 
-class PluginParameter extends TypedParameter {
+export class PluginParameter extends TypedParameter {
   constructor(parameter) {
     super();
     this._parameter = parameter;
@@ -336,7 +336,7 @@ class PluginCommand {
   }
 }
 
-function generateHeader(config) {
+export function generateHeader(config) {
   const version = config.histories[0].version;
   const topCommentLine = generateTopComments(config.name, version, config.year, config.license);
   const historyLine = generateHistories(config.histories);
@@ -592,8 +592,3 @@ function languageSuffixedType(type, language) {
   }
   return type;
 }
-
-module.exports = {
-  generateHeader,
-  PluginParameter,
-};

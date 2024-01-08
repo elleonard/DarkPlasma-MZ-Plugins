@@ -40,7 +40,7 @@ Then, `DarkPlasma_<plugin>.js` is built and you can see it in `./_dist/codes/` d
 |--target &lt;BuildTarget&gt;|yes|ビルド対象を指定します。|
 |--js|no|ビルド対象がjavascriptである場合に指定します。|
 |--exclude|no|excludesディレクトリ以下の対象をビルドします。|
-|--configOnly|no|config.ymlのみビルドします。|
+|--configOnly|no|configのみビルドします。|
 |--noFinalize|no|ビルド後の成果物のフォーマットとコピーを行いません。|
 
 # 動作確認したい How to check plugin?
@@ -89,9 +89,10 @@ RPG ツクール MZ 向けプラグインだけ書きたいのであれば、ほ
 
 ### src/codes
 
-`yarn generate (プラグイン名)` コマンドにより、プラグイン名のディレクトリを作り、その下に `DarkPlasma_(プラグイン名).js` という名前でプラグインのソースコード本体を、 `config.yml` を配置します。
+`yarn generate (プラグイン名)` コマンドにより、プラグイン名のディレクトリを作り、その下に `DarkPlasma_(プラグイン名).js` という名前でプラグインのソースコード本体と、 `config.ts` を配置します。
 
-プラグインを書いたり修正したりする場合、必ずこのソースコード本体と `config.yml` を編集してください。
+プラグインを書いたり修正したりする場合、必ずこのソースコード本体と `config.ts` を編集してください。  
+ただし、configのTypeScript化は現在進行中で、YAMLの設定ファイルを利用している箇所もあります。
 
 ### src/common
 

@@ -8,7 +8,7 @@
 ## Translate workflow
 
 1. Make branch for translation.
-2. Add translation to `config.yml` .
+2. Add translation to `config.ts` or `config.yml` .
 3. Build the plugin and see the translated plugin on RMMZ.
 4. Push the commit and Create PR.
 5. Maintainer (elleonard) review the PR, and approve or reject.
@@ -25,9 +25,11 @@ git switch -c <branch>
 Any `<branch>` name is Ok.
 For example `translate-order-id-alias_en` .
 
-### Add translation to config.yml.
+### Add translation to config.
 
 Please see [Translation Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/53).
+
+For `config.ts`, please see [config.ts Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/55).
 
 ### Build the plugin and see the translated plugin on RMMZ.
 

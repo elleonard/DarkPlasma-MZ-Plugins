@@ -9,7 +9,8 @@ export default function applyTemplate(options = {}) {
     async renderChunk(code, chunk) {
       if (chunk.facadeModuleId) {
         const name = path.basename(chunk.facadeModuleId, '.js');
-        const header = fs.readFileSync(path.resolve(chunk.facadeModuleId, '..', '_build', `${name}_header.js`), 'utf-8');
+        const configTsDir = fs.existsSync(path.resolve(chunk.facadeModuleId, '..', '..', 'config', 'config.ts')) ? '/../config' : '';
+        const header = fs.readFileSync(path.resolve(chunk.facadeModuleId, `..${configTsDir}`, '_build', `${name}_header.js`), 'utf-8');
 
         code = removeTripleSlash(wrapperToLambda(code));
 

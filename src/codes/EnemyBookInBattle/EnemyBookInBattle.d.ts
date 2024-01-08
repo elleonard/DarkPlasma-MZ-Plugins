@@ -2,7 +2,7 @@
 /// <reference path="../../common/scene/battleInputtingWindowInterface.d.ts" />
 /// <reference path="../CustomKeyHandler/CustomKeyHandler.d.ts" />
 /// <reference path="../CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
-/// <reference path="../EnemyBook/EnemyBook.d.ts" />
+/// <reference path="../EnemyBook/plugin/EnemyBook.d.ts" />
 
 declare class EnemyBookWindows {
   constructor(
