@@ -21,7 +21,7 @@ const codePath = path.resolve(__dirname, '..', '..', 'src', 'codes').replaceAll(
  */
 const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   .filter(path => path.startsWith("src/codes") && fs.existsSync(path))
-  .map(path => /^src\/codes\/(.+)\/.*/.exec(path)[1]))];
+  .map(path => /^src\/codes\/([^\/]+)\/.*/.exec(path)[1]))];
 
 /**
  * _parametersOf.js の型定義を作る
@@ -33,16 +33,14 @@ const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   const configPaths = await Promise.all(buildTargets
     .filter(target => fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`))
     .map(target => {
-      return [
-        glob(`${codePath}/${target}/_build/*_parametersOf.js`),
-      ];
+      return glob(`${codePath}/${target}/_build/*_parametersOf.js`);
     }).concat(
-      buildTargets.filter(target => fs.existsSync(`${codePath}/${target}/config/config.ts`))
-    ).map(target => {
-      return [
-        glob(`${codePath}/${target}/config/_build/*_parametersOf.js`),
-      ];
-    }).flat());
+      buildTargets
+        .filter(target => fs.existsSync(`${codePath}/${target}/config/config.ts`))
+        .map(target => {
+          return glob(`${codePath}/${target}/config/_build/*_parametersOf.js`);
+        })
+    ).flat());
 
   /**
    * 負荷対策でチャンクに分割して実行する
