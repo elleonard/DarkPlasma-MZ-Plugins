@@ -52,13 +52,14 @@ const buildTargets = [...new Set(diffFiles.stdout.split('\n')
   while (chunk.length > 0) {
     await Promise
       .all(chunk.map(globPath => {
+        console.log(`target config:${globPath}`);
         return $([`yarn tsc --declaration --allowJs --emitDeclarationOnly`, ` ${globPath}`], '');
       }));
     sliceOffset += chunkSize;
     chunk = configPaths.slice(sliceOffset, chunkSize + sliceOffset);
   };
 }
-
+/*
 for (let target of buildTargets) {
   const targetPath = (() => {
     if (fs.existsSync(`${codePath}/${target}/DarkPlasma_${target}.ts`)) {
@@ -76,4 +77,4 @@ for (let target of buildTargets) {
   await $`yarn rollup -c  --environment TARGET:${target} ${argv.exclude ? "-e" : ""}`;
   await $`yarn build:format`;
   await $`yarn build:copy`;
-};
+};*/
