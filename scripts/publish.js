@@ -1,7 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import glob from 'glob';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const targetDir = process.argv[process.argv.length - 1];
 if (!targetDir) process.exit(1);
 if (!fs.statSync(targetDir).isDirectory()) {
