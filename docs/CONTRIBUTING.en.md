@@ -28,7 +28,7 @@ Private symbol name must have `_` prefix.
 
 ## Versioning Rule (Semantic Versioning)
 
-You MUST add changelog to `config.yml` for all the plugins you changed.
+You MUST add changelog to `config.yml` or `config.ts` for all the plugins you changed.
 Version number format is semntic versioning. ( `X.Y.Z` )
 
 ### Major version (X)
@@ -47,7 +47,7 @@ If you add a feature to an plugin with no breaking changes, you MUST increment m
 ### Patch Version (Z)
 
 If you fix bug or refactor plugin without adding a feature and breaking changes, you MUST increment patch version.
-If you translate the plugin `config.yml` to new language too.
+If you translate the plugin `config.yml` or `config.ts` to new language too.
 
 ### Changes with no version increment
 
@@ -68,7 +68,7 @@ Commit message format is following.
 x.y.z Fix bug that stop the game by TypeError on shop scene started
 ( `x.y.z` is version.)
 
-And you must add `histries` in `config.yml` .
+And you must add `histries` in `config.yml` or `config.ts` .
 
 ### Single responsibility principle
 

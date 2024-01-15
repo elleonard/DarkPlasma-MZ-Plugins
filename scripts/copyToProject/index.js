@@ -1,7 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const cpx = require('cpx');
-const YAML = require('yaml');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as cpx from 'cpx';
+import * as YAML from 'yaml';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const srcPluginDirsRelative = fs.readdirSync(path.join(__dirname, '..', '..', '_dist'));
 console.log(srcPluginDirsRelative);

@@ -1,12 +1,3 @@
 {
-  "compilerOptions": {
-    "target": "es2021",
-    "lib": ["ES2021"],
-    "module": "ESNext",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "skipLibCheck": true
-  }
+  "extends": "../../../../tsconfig-for-plugin"
 }

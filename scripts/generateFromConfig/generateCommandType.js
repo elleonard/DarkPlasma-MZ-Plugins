@@ -1,10 +1,14 @@
-const path = require('path');
-const prettier = require('prettier');
-const { paramToType, structTypeName } = require('./generateParameterType');
-const { commandNameToSymbol } = require('./generatePluginCommand');
+import path from 'path';
+import prettier from 'prettier';
+import { fileURLToPath } from 'url';
+import { paramToType, structTypeName } from './generateParameterType.js';
+import { commandNameToSymbol } from './generatePluginCommand.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-function generateCommandType(config, pluginId) {
+export async function generateCommandType(config, pluginId) {
   let result = "";
   if (config.commands?.length > 0) {
     config.commands.forEach(command => {
@@ -36,7 +40,3 @@ function generateCommandType(config, pluginId) {
     return prettier.format(result, options);
   });
 }
-
-module.exports = {
-  generateCommandType
-};

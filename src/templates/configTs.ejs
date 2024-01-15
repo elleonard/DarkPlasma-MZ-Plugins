@@ -1,0 +1,21 @@
+import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import {} from '../../../../modules/config/createParameter.js';
+import { dedent } from '@qnighy/dedent';
+
+const histories = [
+  {
+    date: "<%- year %>/",
+    version: "1.0.0",
+    description: "",
+  }
+];
+
+export const config = new ConfigDefinitionBuilder(
+  "<%- pluginName %>",
+  <%- year %>,
+  ""
+)
+  .withHistories(histories)
+  .withLicense("<%- license %>")
+  .withHelp(dedent``)
+  .build();

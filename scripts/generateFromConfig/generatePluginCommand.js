@@ -1,10 +1,13 @@
-const path = require('path');
-const prettier = require('prettier');
-const { generateParser } = require('./generateParser');
-const { SYMBOL_TYPE } = require('./parameterSymbolType');
+import path from 'path';
+import prettier from 'prettier';
+import { fileURLToPath } from 'url';
+import { generateParser } from './generateParser.js';
+import { SYMBOL_TYPE } from './parameterSymbolType.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
-function generatePluginCommand(config) {
+
+export async function generatePluginCommand(config) {
   return prettier.resolveConfig(prettierConfig).then((options) => {
     options.parser = 'babel';
     const commands = configToCommands(config);
@@ -20,7 +23,7 @@ function generatePluginCommand(config) {
         .map(command => `export const command_${commandNameToSymbol(command.name)} = "${command.name}";`)
       )
       .join('\n\n');
-    return escapeBackslashQuote(prettier.format(code, options));
+    return prettier.format(code, options).then(r => escapeBackslashQuote(r));
   });
 }
 
@@ -48,7 +51,7 @@ function configToCommands(config) {
  * @param {string} commandName コマンド名
  * @return {string}
  */
-function commandNameToSymbol(commandName) {
+export function commandNameToSymbol(commandName) {
   return commandName.replace(/ ([a-z])/g, (m) => m.toUpperCase().trim());
 }
 
@@ -58,8 +61,3 @@ function commandNameToSymbol(commandName) {
 function escapeBackslashQuote(string) {
   return string.replace(/\\"/g, '\\\\"');
 }
-
-module.exports = {
-  generatePluginCommand,
-  commandNameToSymbol,
-};
