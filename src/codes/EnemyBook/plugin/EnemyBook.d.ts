@@ -1,5 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../SystemTypeIcon/SystemTypeIcon.d.ts" />
+/// <reference path="../../SystemTypeIcon/plugin/SystemTypeIcon.d.ts" />
 
 declare namespace MZ {
   declare interface Enemy {

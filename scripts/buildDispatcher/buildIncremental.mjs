@@ -70,11 +70,12 @@ for (let target of buildTargets) {
     return undefined;
   })();
   if (targetPath) {
-    fs.copyFileSync('./tsconfig_template.json', `${targetPath}/tsconfig.json`);
+    fs.copyFileSync('./tsconfig-for-plugin.json', `${targetPath}/tsconfig.json`);
     await $([`yarn tsc -b`, ` ${targetPath}`], '');
     await $([`yarn prettier`, ` ${targetPath}/DarkPlasma_${target}.js`], '');
   }
   await $`yarn rollup -c  --environment TARGET:${target} ${argv.exclude ? "-e" : ""}`;
-  await $`yarn build:format`;
-  await $`yarn build:copy`;
 };
+
+await $`yarn build:format`;
+await $`yarn build:copy`;
