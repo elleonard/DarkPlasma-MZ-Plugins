@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.2.2
+// DarkPlasma_BattleGuide 1.2.3
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/15 1.2.3 ビルド方式を変更 (configをTypeScript化)
  * 2022/11/13 1.2.2 typescript移行
  * 2022/07/02 1.2.1 ページ番号表示設定が正常に扱えない不具合の修正
  * 2022/06/21 1.2.0 ショートカットキーなし設定を追加
@@ -15,7 +16,7 @@
  * 2022/04/24 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 戦闘の手引書表示
  * @author DarkPlasma
  * @license MIT
@@ -31,6 +32,7 @@
  * @param guides
  * @text 手引書
  * @type struct<Guide>[]
+ * @default []
  *
  * @param listWidth
  * @desc 手引書の目次ウィンドウの横幅を設定します。
@@ -77,7 +79,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.2.2
+ * version: 1.2.3
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
@@ -99,17 +101,19 @@
  * @desc 手引書の具体的な内容を設定します。
  * @text 内容
  * @type multiline_string[]
+ * @default []
  *
  * @param glossaryItem
  * @desc SceneGlossaryで設定した説明文を参照します。指定した場合、内容設定を無視します。
  * @text 用語集参照アイテム
  * @type item
+ * @default 0
  *
  * @param condition
  * @desc この条件を満たした場合にのみ手引書に表示します。
  * @text 表示条件
  * @type struct<Condition>
- * @default {"switchId":"0", "variableId":"0", "threshold":"0"}
+ * @default {"switchId":"0","variableId":"0","threshold":"0"}
  */
 /*~struct~Condition:
  * @param switchId
@@ -190,32 +194,40 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    guides: JSON.parse(pluginParameters.guides || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          title: String(parsed.title || ''),
-          texts: JSON.parse(parsed.texts || '[]').map((e) => {
-            return String(e || '');
-          }),
-          glossaryItem: Number(parsed.glossaryItem || 0),
-          condition: ((parameter) => {
-            const parsed = JSON.parse(parameter);
-            return {
-              switchId: Number(parsed.switchId || 0),
-              variableId: Number(parsed.variableId || 0),
-              threshold: Number(parsed.threshold || 0),
-            };
-          })(parsed.condition || '{"switchId":"0", "variableId":"0", "threshold":"0"}'),
-        };
-      })(e || '{}');
-    }),
+    guides: pluginParameters.guides
+      ? JSON.parse(pluginParameters.guides).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  title: String(parsed.title || ``),
+                  texts: parsed.texts
+                    ? JSON.parse(parsed.texts).map((e) => {
+                        return String(e || ``);
+                      })
+                    : [],
+                  glossaryItem: Number(parsed.glossaryItem || 0),
+                  condition: parsed.condition
+                    ? ((parameter) => {
+                        const parsed = JSON.parse(parameter);
+                        return {
+                          switchId: Number(parsed.switchId || 0),
+                          variableId: Number(parsed.variableId || 0),
+                          threshold: Number(parsed.threshold || 0),
+                        };
+                      })(parsed.condition)
+                    : { switchId: 0, variableId: 0, threshold: 0 },
+                };
+              })(e)
+            : { title: '', texts: [], glossaryItem: 0, condition: { switchId: 0, variableId: 0, threshold: 0 } };
+        })
+      : [],
     listWidth: Number(pluginParameters.listWidth || 240),
     fontSize: Number(pluginParameters.fontSize || 22),
     showPageNumber: Number(pluginParameters.showPageNumber || 0),
-    key: String(pluginParameters.key || ''),
+    key: String(pluginParameters.key || ``),
     addPartyCommand: String(pluginParameters.addPartyCommand || true) === 'true',
-    partyCommandName: String(pluginParameters.partyCommandName || '手引書'),
+    partyCommandName: String(pluginParameters.partyCommandName || `手引書`),
   };
 
   class Data_BattleGuide {
@@ -305,7 +317,11 @@
         return new Data_BattleGuide(
           guide.title,
           getGlossaryDescription($dataItems[guide.glossaryItem]) || guide.texts,
-          new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
+          new Data_BattleGuideCondition(
+            guide.condition.switchId,
+            guide.condition.variableId,
+            guide.condition.threshold,
+          ),
         );
       });
     };

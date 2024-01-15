@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 2.0.0
+// DarkPlasma_AutoHighlight 2.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/15 2.0.1 ビルド方式を変更 (configをTypeScript化)
  * 2023/06/02 2.0.0 色設定をMZ1.6.0形式に変更
  *                  ベースプラグインを追加
  *                  TypeScript移行
@@ -34,7 +35,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * 指定した語句を指定した色でハイライトします。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -50,6 +51,7 @@
  * @desc 色を指定します。#から始まるカラーコードも指定可能です。
  * @text 色
  * @type color
+ * @default 0
  *
  * @param texts
  * @desc ハイライトしたい語句を指定します。
@@ -81,27 +83,39 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    highlightGroups: JSON.parse(pluginParameters.highlightGroups || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          title: String(parsed.title || ``),
-          color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 0),
-          texts: JSON.parse(parsed.texts || '[]').map((e) => {
-            return String(e || ``);
-          }),
-          skills: JSON.parse(parsed.skills || '[]').map((e) => {
-            return Number(e || 0);
-          }),
-          items: JSON.parse(parsed.items || '[]').map((e) => {
-            return Number(e || 0);
-          }),
-        };
-      })(e || '{}');
-    }),
-    targetWindows: JSON.parse(pluginParameters.targetWindows || '["Window_Message"]').map((e) => {
-      return String(e || ``);
-    }),
+    highlightGroups: pluginParameters.highlightGroups
+      ? JSON.parse(pluginParameters.highlightGroups).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  title: String(parsed.title || ``),
+                  color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 0),
+                  texts: parsed.texts
+                    ? JSON.parse(parsed.texts).map((e) => {
+                        return String(e || ``);
+                      })
+                    : [],
+                  skills: parsed.skills
+                    ? JSON.parse(parsed.skills).map((e) => {
+                        return Number(e || 0);
+                      })
+                    : [],
+                  items: parsed.items
+                    ? JSON.parse(parsed.items).map((e) => {
+                        return Number(e || 0);
+                      })
+                    : [],
+                };
+              })(e)
+            : { title: '', color: 0, texts: [], skills: [], items: [] };
+        })
+      : [],
+    targetWindows: pluginParameters.targetWindows
+      ? JSON.parse(pluginParameters.targetWindows).map((e) => {
+          return String(e || ``);
+        })
+      : ['Window_Message'],
   };
 
   function ColorManagerMixIn(colorManager) {

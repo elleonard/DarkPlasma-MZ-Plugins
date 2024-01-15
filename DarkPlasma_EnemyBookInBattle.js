@@ -183,7 +183,7 @@
         Scene_EnemyBook.prototype.percentWindowRect.call(this),
         Scene_EnemyBook.prototype.indexWindowRect.call(this),
         Scene_EnemyBook.prototype.mainWindowRect.call(this),
-        true
+        true,
       );
       this.closeEnemyBook();
     };
@@ -225,8 +225,8 @@
             $gameTroop
               .members()
               .map((gameEnemy) => this._list.indexOf(gameEnemy.enemy()))
-              .filter((index) => index >= 0)
-          )
+              .filter((index) => index >= 0),
+          ),
         ).sort((a, b) => a - b);
         const firstIndex = this._battlerEnemyIndexes.length > 0 ? this._battlerEnemyIndexes[0] : -1;
         if (firstIndex >= 0) {

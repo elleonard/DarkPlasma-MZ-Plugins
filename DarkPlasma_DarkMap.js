@@ -1,15 +1,16 @@
-// DarkPlasma_DarkMap 1.0.2
+// DarkPlasma_DarkMap 1.0.3
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/15 1.0.3 ビルド方式を変更 (configをTypeScript化)
  * 2022/08/19 1.0.2 typescript移行
  * 2022/03/31 1.0.1 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
  * 2021/11/19 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 暗いマップと明かり
  * @author DarkPlasma
  * @license MIT
@@ -21,13 +22,13 @@
  * @desc 0～255の数値でマップの暗さを指定します。数字が大きくなるほど暗くなります。
  * @text マップの暗さ
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param lightColor
  * @text 明かりの色
  * @type struct<Color>
- * @default {"red":"255", "green":"255", "blue":"255"}
+ * @default {"red":"255","green":"255","blue":"255"}
  *
  * @param lightRadius
  * @text 明かりの広さ
@@ -35,7 +36,7 @@
  * @default 200
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -45,25 +46,26 @@
  * <light> イベントの周囲を照らします。
  * <lightColor:#ffbb73> 明かりの色を設定します。
  * <lightRadius:155> 明かりの範囲を設定します。
+ *
  */
 /*~struct~Color:
  * @param red
  * @text 赤
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param green
  * @text 緑
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param blue
  * @text 青
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  */
 (() => {
   'use strict';
@@ -86,14 +88,16 @@
 
   const settings = {
     darkness: Number(pluginParameters.darkness || 255),
-    lightColor: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        red: Number(parsed.red || 255),
-        green: Number(parsed.green || 255),
-        blue: Number(parsed.blue || 255),
-      };
-    })(pluginParameters.lightColor || '{"red":"255", "green":"255", "blue":"255"}'),
+    lightColor: pluginParameters.lightColor
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            red: Number(parsed.red || 255),
+            green: Number(parsed.green || 255),
+            blue: Number(parsed.blue || 255),
+          };
+        })(pluginParameters.lightColor)
+      : { red: 255, green: 255, blue: 255 },
     lightRadius: Number(pluginParameters.lightRadius || 200),
   };
 
@@ -202,7 +206,7 @@
           $gamePlayer.screenX(),
           $gamePlayer.screenY(),
           settings.lightRadius,
-          lightColor()
+          lightColor(),
         );
         $gameMap.lightEvents().forEach((event) => {
           this._bitmap.fillGradientCircle(event.screenX(), event.screenY(), event.lightRadius(), event.lightColor());

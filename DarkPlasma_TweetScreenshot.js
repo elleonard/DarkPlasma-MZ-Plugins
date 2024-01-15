@@ -1,9 +1,10 @@
-// DarkPlasma_TweetScreenshot 2.0.0
+// DarkPlasma_TweetScreenshot 2.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/15 2.0.1 ビルド方式を変更 (configをTypeScript化)
  * 2023/03/12 2.0.0 ツイート用インターフェース変更
  * 2023/03/05 1.0.0 公開
  */
@@ -24,15 +25,13 @@
  * @param tweetText
  * @text ツイート
  * @type multiline_string
- * @default 今日はこのRPGをやってるよ！
-#RPGツクールMZ
-
+ * @default 今日はこのRPGをやってるよ！\n#RPGツクールMZ
  *
  * @command tweetScreenshot
  * @text スクリーンショットをツイートする
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * ゲーム画面のキャプチャをimgurに匿名でアップロードし、
  * そのURLを付与したツイート画面を開きます。
  *
@@ -54,12 +53,7 @@
 
   const settings = {
     clientId: String(pluginParameters.clientId || ``),
-    tweetText: String(
-      pluginParameters.tweetText ||
-        `今日はこのRPGをやってるよ！
-#RPGツクールMZ
-`
-    ),
+    tweetText: String(pluginParameters.tweetText || `今日はこのRPGをやってるよ！\n#RPGツクールMZ`),
   };
 
   const IMAGE_UPLOAD_API_URL = 'https://api.imgur.com/3/image';
@@ -84,9 +78,7 @@
             .json()
             .then((json) => {
               if (json.status === 200) {
-                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(
-                  json.data.link.replace('.jpg', '')
-                )}`;
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(json.data.link.replace('.jpg', ''))}`;
                 const exec = require('child_process').exec;
                 if (process.platform === 'win32') {
                   exec(`rundll32.exe url.dll,FileProtocolHandler "${tweetUrl}"`);

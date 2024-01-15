@@ -1,16 +1,17 @@
-// DarkPlasma_ImportExportSaveFile 1.2.0
+// DarkPlasma_ImportExportSaveFile 1.2.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/15 1.2.1 ビルド方式を変更 (configをTypeScript化)
  * 2022/12/24 1.2.0 ゲームアツマール上からスマホでエクスポートできるように修正
  * 2022/12/23 1.1.0 インポート時の説明文をplaceholderに変更
  * 2022/12/22 1.0.0 リファクタ
  *            0.0.1 公開
  */
 
-/*:ja
+/*:
  * @plugindesc セーブデータのインポート・エクスポート機能
  * @author DarkPlasma
  * @license MIT
@@ -22,17 +23,17 @@
  * @desc PC版向けのセーブデータ表示エリアを設定します。
  * @text セーブデータ表示エリア
  * @type struct<Rectangle>
- * @default {"x":"208", "y":"100", "width":"400", "height":"400"}
+ * @default {"x":"208","y":"100","width":"400","height":"400"}
  *
  * @param okButtonPos
  * @text OKボタン座標
  * @type struct<Point>
- * @default {"x":"308", "y":"520"}
+ * @default {"x":"308","y":"520"}
  *
  * @param cancelButtonPos
  * @text キャンセルボタン座標
  * @type struct<Point>
- * @default {"x":"508", "y":"520"}
+ * @default {"x":"508","y":"520"}
  *
  * @param menuButtonType
  * @text イン/エクスポートボタン位置
@@ -47,13 +48,13 @@
  * @desc イン/エクスポートボタン位置設定が指定した座標である場合に有効です。
  * @text インポートボタン座標
  * @type struct<Point>
- * @default {"x":"680", "y":"16"}
+ * @default {"x":"680","y":"16"}
  *
  * @param exportButtonPos
  * @desc イン/エクスポートボタン位置設定が指定した座標である場合に有効です。
  * @text エクスポートボタン座標
  * @type struct<Point>
- * @default {"x":"750", "y":"16"}
+ * @default {"x":"750","y":"16"}
  *
  * @param exportHelpText
  * @text エクスポート説明文
@@ -68,10 +69,10 @@
  * @param buttonImages
  * @text ボタン画像
  * @type struct<ButtonImage>
- * @default {"ok":"buttonOk", "cancel":"buttonCancel", "import":"buttonImport", "export":"buttonExport"}
+ * @default {"ok":"buttonOk","cancel":"buttonCancel","import":"buttonImport","export":"buttonExport"}
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 本プラグインはkienさんの「セーブデータのインポート・エクスポート」を
  * MZ移植したものです。
  *
@@ -96,52 +97,58 @@
  * @param x
  * @text X座標
  * @type number
+ * @default 0
  *
  * @param y
  * @text Y座標
  * @type number
+ * @default 0
  *
  * @param width
  * @text 横幅
  * @type number
+ * @default 0
  *
  * @param height
  * @text 高さ
  * @type number
+ * @default 0
  */
 /*~struct~Point:
  * @param x
  * @text X座標
  * @type number
+ * @default 0
  *
  * @param y
  * @text Y座標
  * @type number
+ * @default 0
  */
 /*~struct~ButtonImage:
  * @param ok
  * @text OKボタン
  * @type file
- * @default buttonOk
  * @dir img/system
+ * @default buttonOk
  *
  * @param cancel
  * @text キャンセルボタン
  * @type file
- * @default buttonCancel
  * @dir img/system
+ * @default buttonCancel
  *
  * @param import
  * @text インポートボタン
  * @type file
- * @default buttonImport
  * @dir img/system
+ * @default buttonImport
  *
  * @param export
  * @text エクスポートボタン
  * @type file
- * @default buttonExport
  * @dir img/system
+ * @default buttonExport
  */
 (() => {
   'use strict';
@@ -155,58 +162,67 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    textAreaRect: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        x: Number(parsed.x || 0),
-        y: Number(parsed.y || 0),
-        width: Number(parsed.width || 0),
-        height: Number(parsed.height || 0),
-      };
-    })(pluginParameters.textAreaRect || '{"x":"208", "y":"100", "width":"400", "height":"400"}'),
-    okButtonPos: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        x: Number(parsed.x || 0),
-        y: Number(parsed.y || 0),
-      };
-    })(pluginParameters.okButtonPos || '{"x":"308", "y":"520"}'),
-    cancelButtonPos: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        x: Number(parsed.x || 0),
-        y: Number(parsed.y || 0),
-      };
-    })(pluginParameters.cancelButtonPos || '{"x":"508", "y":"520"}'),
+    textAreaRect: pluginParameters.textAreaRect
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            x: Number(parsed.x || 0),
+            y: Number(parsed.y || 0),
+            width: Number(parsed.width || 0),
+            height: Number(parsed.height || 0),
+          };
+        })(pluginParameters.textAreaRect)
+      : { x: 208, y: 100, width: 400, height: 400 },
+    okButtonPos: pluginParameters.okButtonPos
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            x: Number(parsed.x || 0),
+            y: Number(parsed.y || 0),
+          };
+        })(pluginParameters.okButtonPos)
+      : { x: 308, y: 520 },
+    cancelButtonPos: pluginParameters.cancelButtonPos
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            x: Number(parsed.x || 0),
+            y: Number(parsed.y || 0),
+          };
+        })(pluginParameters.cancelButtonPos)
+      : { x: 508, y: 520 },
     menuButtonType: Number(pluginParameters.menuButtonType || 1),
-    importButtonPos: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        x: Number(parsed.x || 0),
-        y: Number(parsed.y || 0),
-      };
-    })(pluginParameters.importButtonPos || '{"x":"680", "y":"16"}'),
-    exportButtonPos: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        x: Number(parsed.x || 0),
-        y: Number(parsed.y || 0),
-      };
-    })(pluginParameters.exportButtonPos || '{"x":"750", "y":"16"}'),
-    exportHelpText: String(pluginParameters.exportHelpText || '表示されているテキストを保存してください。'),
-    importHelpText: String(pluginParameters.importHelpText || 'セーブデータのテキストを貼り付けてください。'),
-    buttonImages: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        ok: String(parsed.ok || 'buttonOk'),
-        cancel: String(parsed.cancel || 'buttonCancel'),
-        import: String(parsed.import || 'buttonImport'),
-        export: String(parsed.export || 'buttonExport'),
-      };
-    })(
-      pluginParameters.buttonImages ||
-        '{"ok":"buttonOk", "cancel":"buttonCancel", "import":"buttonImport", "export":"buttonExport"}'
-    ),
+    importButtonPos: pluginParameters.importButtonPos
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            x: Number(parsed.x || 0),
+            y: Number(parsed.y || 0),
+          };
+        })(pluginParameters.importButtonPos)
+      : { x: 680, y: 16 },
+    exportButtonPos: pluginParameters.exportButtonPos
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            x: Number(parsed.x || 0),
+            y: Number(parsed.y || 0),
+          };
+        })(pluginParameters.exportButtonPos)
+      : { x: 750, y: 16 },
+    exportHelpText: String(pluginParameters.exportHelpText || `表示されているテキストを保存してください。`),
+    importHelpText: String(pluginParameters.importHelpText || `セーブデータのテキストを貼り付けてください。`),
+    buttonImages: pluginParameters.buttonImages
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            ok: String(parsed.ok || `buttonOk`),
+            cancel: String(parsed.cancel || `buttonCancel`),
+            import: String(parsed.import || `buttonImport`),
+            export: String(parsed.export || `buttonExport`),
+          };
+        })(pluginParameters.buttonImages)
+      : { ok: 'buttonOk', cancel: 'buttonCancel', import: 'buttonImport', export: 'buttonExport' },
   };
 
   const MOBILE_IMPORT_EXPORT_AREA_PADDING = 5;
@@ -222,13 +238,13 @@
             this._stretchWidth() / 2 + MOBILE_IMPORT_EXPORT_AREA_PADDING,
             MOBILE_IMPORT_EXPORT_AREA_PADDING,
             this._stretchWidth() / 2 - MOBILE_IMPORT_EXPORT_AREA_PADDING * 2,
-            this._stretchHeight() - MOBILE_IMPORT_EXPORT_AREA_PADDING * 2
+            this._stretchHeight() - MOBILE_IMPORT_EXPORT_AREA_PADDING * 2,
           )
         : new Rectangle(
             settings.textAreaRect.x,
             settings.textAreaRect.y,
             settings.textAreaRect.width,
-            settings.textAreaRect.height
+            settings.textAreaRect.height,
           );
     };
     graphics._createImportExportArea = function () {
