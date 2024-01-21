@@ -1,9 +1,10 @@
-// DarkPlasma_IndividualItemCommand 1.0.0
+// DarkPlasma_IndividualItemCommand 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/21 1.1.0 個別コマンドウィンドウのインターフェース公開
  * 2024/01/21 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * アイテムシーンでアイテムにカーソルを合わせて決定を押した際、
  * 個別でコマンドを表示します。
  */
@@ -53,6 +54,7 @@
       this._itemWindow.updateHelp();
       this.adjustItemCommandWindowPosition();
       this._itemCommandWindow.activate();
+      this._itemCommandWindow.select(0);
       this._itemCommandWindow.show();
     };
     sceneItem.onActorCancel = function () {
@@ -118,6 +120,12 @@
     windowClass.setItemCommandWindow = function (itemCommandWindow) {
       this._itemCommandWindow = itemCommandWindow;
     };
+    /**
+     * 有効なコマンドがひとつでもあれば選択可能とする
+     */
+    windowClass.isEnabled = function (item) {
+      return this._itemCommandWindow.commandsForItem(item).some((command) => command.enabled);
+    };
     const _updateHelp = windowClass.updateHelp;
     windowClass.updateHelp = function () {
       _updateHelp.call(this);
@@ -129,10 +137,22 @@
       this._item = item;
       this.refresh();
     }
-    makeCommandList() {
-      if (DataManager.isItem(this._item)) {
-        this.addCommand('つかう', 'use', $gameParty.canUse(this._item));
+    commandsForItem(item) {
+      const result = [];
+      if (DataManager.isItem(item)) {
+        result.push({
+          name: 'つかう',
+          symbol: 'use',
+          enabled: $gameParty.canUse(item),
+          ext: null,
+        });
       }
+      return result;
+    }
+    makeCommandList() {
+      this.commandsForItem(this._item).forEach((command) => {
+        this.addCommand(command.name, command.symbol, command.enabled, command.ext);
+      });
     }
     maxWidth() {
       return (
@@ -149,4 +169,5 @@
       return this.fittingHeight(this._list.length);
     }
   }
+  globalThis.Window_ItemCommand = Window_ItemCommand;
 })();
