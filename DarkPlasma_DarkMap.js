@@ -1,9 +1,11 @@
-// DarkPlasma_DarkMap 1.0.3
+// DarkPlasma_DarkMap 2.0.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/21 2.0.0 暗闇の色をRGBすべてについて設定可能に
+ *                  デフォルトの明かりの広さを変数で設定可能に
  * 2024/01/15 1.0.3 ビルド方式を変更 (configをTypeScript化)
  * 2022/08/19 1.0.2 typescript移行
  * 2022/03/31 1.0.1 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
@@ -18,12 +20,10 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
- * @param darkness
- * @desc 0～255の数値でマップの暗さを指定します。数字が大きくなるほど暗くなります。
- * @text マップの暗さ
- * @type number
- * @max 255
- * @default 255
+ * @param darknessColor
+ * @text 暗闇の色
+ * @type struct<Color>
+ * @default {"red":"0","green":"0","blue":"0"}
  *
  * @param lightColor
  * @text 明かりの色
@@ -31,12 +31,19 @@
  * @default {"red":"255","green":"255","blue":"255"}
  *
  * @param lightRadius
+ * @desc デフォルトの明かりの広さを設定します。
  * @text 明かりの広さ
  * @type number
  * @default 200
  *
+ * @param lightRadiusVariable
+ * @desc デフォルトの明かりの広さを変数で設定します。
+ * @text 明かりの広さ(変数)
+ * @type variable
+ * @default 0
+ *
  * @help
- * version: 1.0.3
+ * version: 2.0.0
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -87,7 +94,16 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    darkness: Number(pluginParameters.darkness || 255),
+    darknessColor: pluginParameters.darknessColor
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            red: Number(parsed.red || 255),
+            green: Number(parsed.green || 255),
+            blue: Number(parsed.blue || 255),
+          };
+        })(pluginParameters.darknessColor)
+      : { red: 0, green: 0, blue: 0 },
     lightColor: pluginParameters.lightColor
       ? ((parameter) => {
           const parsed = JSON.parse(parameter);
@@ -99,8 +115,49 @@
         })(pluginParameters.lightColor)
       : { red: 255, green: 255, blue: 255 },
     lightRadius: Number(pluginParameters.lightRadius || 200),
+    lightRadiusVariable: Number(pluginParameters.lightRadiusVariable || 0),
   };
 
+  function darkColor() {
+    return `#${(
+      (1 << 24) +
+      (settings.darknessColor.red << 16) +
+      (settings.darknessColor.green << 8) +
+      settings.darknessColor.blue
+    )
+      .toString(16)
+      .slice(1)}`;
+  }
+  function lightColor() {
+    return `#${(
+      (1 << 24) +
+      (settings.lightColor.red << 16) +
+      (settings.lightColor.green << 8) +
+      settings.lightColor.blue
+    )
+      .toString(16)
+      .slice(1)}`;
+  }
+  function defaultLightRadius() {
+    if (settings.lightRadiusVariable) {
+      return $gameVariables.value(settings.lightRadiusVariable);
+    }
+    return settings.lightRadius;
+  }
+  Bitmap.prototype.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
+    const context = this._context;
+    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+    gradient.addColorStop(0, lightColor);
+    gradient.addColorStop(1, darkColor());
+    context.save();
+    context.globalCompositeOperation = 'lighter';
+    context.fillStyle = gradient;
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    context.fill();
+    context.restore();
+    this._baseTexture.update();
+  };
   /**
    * @param {Game_Map.prototype} gameMap
    */
@@ -124,7 +181,7 @@
       if (!this.hasLight()) {
         return 0;
       }
-      return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : settings.lightRadius;
+      return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : defaultLightRadius();
     };
     gameEvent.lightColor = function () {
       if (!this.hasLight()) {
@@ -134,39 +191,12 @@
     };
   }
   Game_Event_DarKMapMixIn(Game_Event.prototype);
-  function darkColor() {
-    return `#${(
-      (1 << 24) +
-      ((255 - settings.darkness) << 16) +
-      ((255 - settings.darkness) << 8) +
-      255 -
-      settings.darkness
-    )
-      .toString(16)
-      .slice(1)}`;
+  function Game_Player_DarkMapMixIn(gamePlayer) {
+    gamePlayer.lightRadius = function () {
+      return defaultLightRadius();
+    };
   }
-  function lightColor() {
-    return `#${(
-      (1 << 24) +
-      (settings.lightColor.red << 16) +
-      (settings.lightColor.green << 8) +
-      settings.lightColor.blue
-    )
-      .toString(16)
-      .slice(1)}`;
-  }
-  Bitmap.prototype.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
-    const context = this._context;
-    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-    gradient.addColorStop(0, lightColor);
-    gradient.addColorStop(1, darkColor());
-    context.save();
-    context.globalCompositeOperation = 'lighter';
-    context.fillStyle = gradient;
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
-    context.restore();
-  };
+  Game_Player_DarkMapMixIn(Game_Player.prototype);
   /**
    * @param {Spriteset_Map.prototype} spritesetMap
    */
@@ -205,7 +235,7 @@
         this._bitmap.fillGradientCircle(
           $gamePlayer.screenX(),
           $gamePlayer.screenY(),
-          settings.lightRadius,
+          $gamePlayer.lightRadius(),
           lightColor(),
         );
         $gameMap.lightEvents().forEach((event) => {
