@@ -4,7 +4,7 @@
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2024/ 1.0.0 公開
+ * 2024/01/21 1.0.0 公開
  */
 
 /*:
