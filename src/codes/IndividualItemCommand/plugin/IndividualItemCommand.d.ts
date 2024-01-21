@@ -23,5 +23,9 @@ declare interface Window_ItemList {
 }
 
 declare interface Window_ItemCommand extends Window_Command {
-
+  _item: MZ.Item|MZ.Weapon|MZ.Armor|null;
+  setItem(item: MZ.Item|MZ.Weapon|MZ.Armor|null): void;
+  commandsForItem(item: MZ.Item|MZ.Weapon|MZ.Armor|null): Window_Command.Command[];
+  maxWidth(): number;
+  commandsHeight(): number;
 }

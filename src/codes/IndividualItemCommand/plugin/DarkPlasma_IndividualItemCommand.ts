@@ -33,6 +33,7 @@ function Scene_Item_IndividualItemCommandMixIn(sceneItem: Scene_Item) {
     this._itemWindow.updateHelp();
     this.adjustItemCommandWindowPosition();
     this._itemCommandWindow.activate();
+    this._itemCommandWindow.select(0);
     this._itemCommandWindow.show();
   };
 
@@ -109,6 +110,13 @@ function Window_ItemList_IndividualItemCommandMixIn(windowClass: Window_ItemList
     this._itemCommandWindow = itemCommandWindow;
   };
 
+  /**
+   * 有効なコマンドがひとつでもあれば選択可能とする
+   */
+  windowClass.isEnabled = function (item) {
+    return this._itemCommandWindow.commandsForItem(item).some(command => command.enabled);
+  };
+
   const _updateHelp = windowClass.updateHelp;
   windowClass.updateHelp = function () {
     _updateHelp.call(this);
@@ -124,10 +132,23 @@ class Window_ItemCommand extends Window_Command {
     this.refresh();
   }
 
-  public makeCommandList(): void {
-    if (DataManager.isItem(this._item)) {
-      this.addCommand("つかう", 'use', $gameParty.canUse(this._item));
+  commandsForItem(item: MZ.Item|MZ.Weapon|MZ.Armor|null): Window_Command.Command[] {
+    const result: Window_Command.Command[] = [];
+    if (DataManager.isItem(item)) {
+      result.push({
+        name: "つかう",
+        symbol: "use",
+        enabled: $gameParty.canUse(item),
+        ext: null,
+      });
     }
+    return result;
+  }
+
+  public makeCommandList(): void {
+    this.commandsForItem(this._item).forEach(command => {
+      this.addCommand(command.name, command.symbol, command.enabled, command.ext);
+    });
   }
 
   maxWidth() {
@@ -143,3 +164,12 @@ class Window_ItemCommand extends Window_Command {
     return this.fittingHeight(this._list.length);
   }
 }
+
+export {};
+
+type _Window_ItemCommand = typeof Window_ItemCommand;
+declare global {
+  var Window_ItemCommand: _Window_ItemCommand;
+}
+
+globalThis.Window_ItemCommand = Window_ItemCommand;
