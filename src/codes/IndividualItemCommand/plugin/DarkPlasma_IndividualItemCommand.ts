@@ -90,7 +90,7 @@ function Scene_Item_IndividualItemCommandMixIn(sceneItem: Scene_Item) {
     if (!this._itemCommandWindow) {
       return 100;
     }
-    return this._itemCommandWindow.commandsHeight() + this._itemCommandWindow.padding * 2;
+    return this._itemCommandWindow.commandsHeight();
   };
 
   sceneItem.itemCommandWindowRect = function () {
@@ -157,7 +157,7 @@ class Window_ItemCommand extends Window_Command {
         return this.textSizeEx(command.name).width + this.itemPadding() * 2 > result
           ? this.textSizeEx(command.name).width + this.itemPadding() * 2
           : result
-      }, 0) + this.colSpacing() + this.padding * 2;
+      }, 96) + this.colSpacing() + this.padding * 2;
   }
 
   commandsHeight() {

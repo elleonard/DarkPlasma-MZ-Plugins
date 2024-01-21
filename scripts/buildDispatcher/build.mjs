@@ -30,7 +30,7 @@ if (fs.existsSync(`${path}/config/config.ts`)) {
 if (!argv.js) {
   await $`yarn tsc --declaration --allowJs --emitDeclarationOnly ${configPath}/_build/DarkPlasma_${pluginTitle}_parametersOf.js`;
   if (!argv.configOnly) {
-    fs.copyFileSync('./tsconfig-for-plugin.json', `${path}/tsconfig.json`);
+    fs.copyFileSync('./tsconfig-for-plugin.json', `${tsPath}/tsconfig.json`);
     await $`yarn tsc -b ${tsPath}`;
     await $`yarn prettier ${tsPath}/DarkPlasma_${pluginTitle}.js`
   }

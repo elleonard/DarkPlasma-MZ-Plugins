@@ -5,11 +5,14 @@ import { dedent } from '@qnighy/dedent';
 const histories = [
   {
     date: "2024/01/21",
+    version: "1.1.1",
+    description: "個別コマンドウィンドウの高さ調整",
+  },
+  {
     version: "1.1.0",
     description: "個別コマンドウィンドウのインターフェース公開",
   },
   {
-    date: "2024/01/21",
     version: "1.0.0",
     description: "公開",
   }
