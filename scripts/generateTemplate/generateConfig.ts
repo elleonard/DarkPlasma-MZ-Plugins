@@ -41,10 +41,11 @@ export async function generateConfig(destDir: string) {
         }
       }
     );
+    const pluginDir = path.resolve(destDir, 'plugin');
     const declarationFile = path.resolve(destDir, 'plugin', `${path.basename(destDir)}.d.ts`);
     fse.ensureFile(declarationFile, (err) => {
       if (err) console.error(`generate declaration failed.`);
-      fse.appendFile(declarationFile, `/// <reference path="${pathToTypings(declarationFile)}/rmmz.d.ts" />`);
+      fse.appendFile(declarationFile, `/// <reference path="${pathToTypings(pluginDir)}/rmmz.d.ts" />`);
     });
     const tsFile = path.resolve(destDir, 'plugin', `DarkPlasma_${path.basename(destDir)}.ts`);
     fse.ensureFile(tsFile, (err) => {
@@ -55,10 +56,8 @@ export async function generateConfig(destDir: string) {
   });
 }
 
-const typingsPath = path.resolve(__dirname, '..', '..', 'src', 'typings')
+const typingsPath = path.resolve(__dirname, '..', '..', 'src', 'typings');
 
 function pathToTypings(destDir: string) {
-  let result = path.relative(destDir, typingsPath)
-  console.log(result);
-  return `${result}`.replaceAll('\\', '/');
+  return `${path.relative(destDir, typingsPath)}`.replaceAll('\\', '/');
 }
