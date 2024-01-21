@@ -2,6 +2,45 @@
 import { isMapMetaDataAvailable } from '../../../common/mapMetaData';
 import { settings } from '../config/_build/DarkPlasma_DarkMap_parameters';
 
+function darkColor() {
+  return `#${(
+    (1 << 24) +
+    (settings.darknessColor.red << 16) +
+    (settings.darknessColor.green << 8) +
+    settings.darknessColor.blue
+  )
+    .toString(16)
+    .slice(1)}`;
+}
+
+function lightColor() {
+  return `#${((1 << 24) + (settings.lightColor.red << 16) + (settings.lightColor.green << 8) + settings.lightColor.blue)
+    .toString(16)
+    .slice(1)}`;
+}
+
+function defaultLightRadius() {
+  if (settings.lightRadiusVariable) {
+    return $gameVariables.value(settings.lightRadiusVariable);
+  }
+  return settings.lightRadius;
+}
+
+Bitmap.prototype.fillGradientCircle = function (this: Bitmap, centerX: number, centerY: number, radius: number, lightColor: string) {
+  const context = this._context;
+  const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+  gradient.addColorStop(0, lightColor);
+  gradient.addColorStop(1, darkColor());
+  context.save();
+  context.globalCompositeOperation = 'lighter';
+  context.fillStyle = gradient;
+  context.beginPath();
+  context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+  context.fill();
+  context.restore();
+  this._baseTexture.update();
+};
+
 /**
  * @param {Game_Map.prototype} gameMap
  */
@@ -29,7 +68,7 @@ function Game_Event_DarKMapMixIn(gameEvent: Game_Event) {
     if (!this.hasLight()) {
       return 0;
     }
-    return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : settings.lightRadius;
+    return this.event().meta.lightRadius ? Number(this.event().meta.lightRadius) : defaultLightRadius();
   };
 
   gameEvent.lightColor = function (this: Game_Event) {
@@ -42,36 +81,13 @@ function Game_Event_DarKMapMixIn(gameEvent: Game_Event) {
 
 Game_Event_DarKMapMixIn(Game_Event.prototype);
 
-function darkColor() {
-  return `#${(
-    (1 << 24) +
-    ((255 - settings.darkness) << 16) +
-    ((255 - settings.darkness) << 8) +
-    255 -
-    settings.darkness
-  )
-    .toString(16)
-    .slice(1)}`;
+function Game_Player_DarkMapMixIn(gamePlayer: Game_Player) {
+  gamePlayer.lightRadius = function () {
+    return defaultLightRadius();
+  };
 }
 
-function lightColor() {
-  return `#${((1 << 24) + (settings.lightColor.red << 16) + (settings.lightColor.green << 8) + settings.lightColor.blue)
-    .toString(16)
-    .slice(1)}`;
-}
-
-Bitmap.prototype.fillGradientCircle = function (this: Bitmap, centerX: number, centerY: number, radius: number, lightColor: string) {
-  const context = this._context;
-  const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-  gradient.addColorStop(0, lightColor);
-  gradient.addColorStop(1, darkColor());
-  context.save();
-  context.globalCompositeOperation = 'lighter';
-  context.fillStyle = gradient;
-  context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-  context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
-  context.restore();
-};
+Game_Player_DarkMapMixIn(Game_Player.prototype);
 
 /**
  * @param {Spriteset_Map.prototype} spritesetMap
@@ -117,7 +133,7 @@ class DarknessLayer extends PIXI.Container {
   update() {
     if ($gameMap.isDark()) {
       this._bitmap.fillRect(0, 0, this._width, this._height, darkColor());
-      this._bitmap.fillGradientCircle($gamePlayer.screenX(), $gamePlayer.screenY(), settings.lightRadius, lightColor());
+      this._bitmap.fillGradientCircle($gamePlayer.screenX(), $gamePlayer.screenY(), $gamePlayer.lightRadius(), lightColor());
       $gameMap.lightEvents().forEach((event) => {
         this._bitmap.fillGradientCircle(event.screenX(), event.screenY(), event.lightRadius(), event.lightColor()!);
       });

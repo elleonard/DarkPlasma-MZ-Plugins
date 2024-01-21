@@ -20,6 +20,10 @@ declare interface Game_Event {
   lightColor(): string|null;
 }
 
+declare interface Game_Player {
+  lightRadius(): number;
+}
+
 declare interface Bitmap {
   fillGradientCircle(centerX: number, centerY: number, radius: number, lightColor: string): void;
 }

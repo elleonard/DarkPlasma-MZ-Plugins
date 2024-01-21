@@ -1,5 +1,5 @@
 import { PluginConfigSchema } from '../../../../modules/config/configSchema.js';
-import { createNumberParam, createStruct, createStructParam } from '../../../../modules/config/createParameter.js';
+import { createDatabaseParam, createNumberParam, createStruct, createStructParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const structRGBColor = createStruct(
@@ -32,6 +32,14 @@ export const config: PluginConfigSchema = {
   license: "MIT",
   histories: [
     {
+      date: "2024/01/21",
+      version: "2.0.0",
+      description: "暗闇の色をRGBすべてについて設定可能に",
+    },
+    {
+      description: "デフォルトの明かりの広さを変数で設定可能に",
+    },
+    {
       date: "2024/01/15",
       version: "1.0.3",
       description: "ビルド方式を変更 (configをTypeScript化)",
@@ -55,15 +63,15 @@ export const config: PluginConfigSchema = {
   locates: ['ja'],
   plugindesc: "暗いマップと明かり",
   parameters: [
-    {
-      param: "darkness",
-      text: "マップの暗さ",
-      description: "0～255の数値でマップの暗さを指定します。数字が大きくなるほど暗くなります。",
-      type: "number",
-      default: 255,
-      max: 255,
-      min: 0,
-    },
+    createStructParam('darknessColor', {
+      struct: structRGBColor,
+      text: "暗闇の色",
+      default: {
+        red: 0,
+        green: 0,
+        blue: 0,
+      },
+    }),
     createStructParam('lightColor', {
       struct: structRGBColor,
       text: '明かりの色',
@@ -73,12 +81,17 @@ export const config: PluginConfigSchema = {
         blue: 255,
       },
     }),
-    {
-      param: "lightRadius",
+    createNumberParam('lightRadius', {
       text: "明かりの広さ",
-      type: "number",
-      default: 200
-    },
+      description: "デフォルトの明かりの広さを設定します。",
+      default: 200,
+    }),
+    createDatabaseParam('lightRadiusVariable', {
+      type: "variable",
+      text: "明かりの広さ(変数)",
+      description: "デフォルトの明かりの広さを変数で設定します。",
+      default: 0,
+    }),
   ],
   commands: [],
   structures: [
