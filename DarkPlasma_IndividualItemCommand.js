@@ -1,11 +1,12 @@
-// DarkPlasma_IndividualItemCommand 1.1.0
+// DarkPlasma_IndividualItemCommand 1.1.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2024/01/21 1.1.0 個別コマンドウィンドウのインターフェース公開
- * 2024/01/21 1.0.0 公開
+ * 2024/01/21 1.1.1 個別コマンドウィンドウの高さ調整
+ *            1.1.0 個別コマンドウィンドウのインターフェース公開
+ *            1.0.0 公開
  */
 
 /*:
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * アイテムシーンでアイテムにカーソルを合わせて決定を押した際、
  * 個別でコマンドを表示します。
  */
@@ -104,7 +105,7 @@
       if (!this._itemCommandWindow) {
         return 100;
       }
-      return this._itemCommandWindow.commandsHeight() + this._itemCommandWindow.padding * 2;
+      return this._itemCommandWindow.commandsHeight();
     };
     sceneItem.itemCommandWindowRect = function () {
       return new Rectangle(
@@ -160,7 +161,7 @@
           return this.textSizeEx(command.name).width + this.itemPadding() * 2 > result
             ? this.textSizeEx(command.name).width + this.itemPadding() * 2
             : result;
-        }, 0) +
+        }, 96) +
         this.colSpacing() +
         this.padding * 2
       );
