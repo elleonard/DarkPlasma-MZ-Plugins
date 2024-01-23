@@ -4,6 +4,83 @@
   
     
     <entry>
+      <title>アイテムシーン アイテムを捨てるコマンド</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/01/23/discard-item-command/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/01/23/discard-item-command/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムシーンでアイテムにカーソルを合わせて決定キーを押した際、「捨てる」コマンドを表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="discard-item-command.png" alt="使用例" title="使用例"></p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><ul><li><a href="/DarkPlasma-MZ-Plugins/2024/01/23/individual-item-command/" title="アイテムシーン アイテムに個別でコマンドを表示する">アイテムシーン アイテムに個別でコマンドを表示する</a></li></ul><h1 id="派生プラグイン"><a href="#派生プラグイン" class="headerlink" title="派生プラグイン"></a>派生プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CommonEventByDiscardItem.js">アイテムを捨てたときにコモンイベントを実行する</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DiscardItemCommand.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>アイテムシーン アイテム一覧から装備するコマンド</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/01/23/equip-item-in-menu-item/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/01/23/equip-item-in-menu-item/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムシーンで武器・防具にカーソルを合わせて決定を押した際、「装備」コマンドを表示します。</p><p>装備シーンを開かずに装備変更を行うことができます。<br>ただし、同種の装備をつけられるスロットが複数ある場合、その先頭のスロットのみ装備変更が可能です。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="equip-command.png" alt="使用例" title="使用例"></p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><ul><li><a href="/DarkPlasma-MZ-Plugins/2024/01/23/individual-item-command/" title="アイテムシーン アイテムに個別でコマンドを表示する">アイテムシーン アイテムに個別でコマンドを表示する</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_EquipItemInMenuItem.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> アイテム </tag>
+            
+            <tag> 装備 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>アイテムシーン アイテムに個別でコマンドを表示する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/01/23/individual-item-command/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/01/23/individual-item-command/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムシーンでアイテムを選択して決定キーを押した際、個別で「つかう」コマンドを表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="item-command.png" alt="使用例" title="使用例"></p><h1 id="派生プラグイン"><a href="#派生プラグイン" class="headerlink" title="派生プラグイン"></a>派生プラグイン</h1><ul><li><a href="/DarkPlasma-MZ-Plugins/2024/01/23/equip-item-in-menu-item/" title="アイテムシーン アイテム一覧から装備するコマンド">アイテムシーン アイテム一覧から装備するコマンド</a></li><li><a href="/DarkPlasma-MZ-Plugins/2024/01/23/discard-item-command/" title="アイテムシーン アイテムを捨てるコマンド">アイテムシーン アイテムを捨てるコマンド</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_IndividualItemCommand.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>リージョンによる通行可能判定</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/01/05/passage-by-region/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/01/05/passage-by-region/</url>
