@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 2.0.0
+// DarkPlasma_DarkMap 2.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/23 2.1.0 プレイヤーの明かりの広さを設定可能に
  * 2024/01/21 2.0.0 暗闇の色をRGBすべてについて設定可能に
  *                  デフォルトの明かりの広さを変数で設定可能に
  * 2024/01/15 1.0.3 ビルド方式を変更 (configをTypeScript化)
@@ -42,8 +43,15 @@
  * @type variable
  * @default 0
  *
+ * @param lightRadiusPlayer
+ * @desc プレイヤーの明かりの広さを設定します。負の値を設定するとデフォルトの広さを使用します。
+ * @text 明かりの広さ(プレイヤー)
+ * @type number
+ * @min -1
+ * @default -1
+ *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -116,6 +124,7 @@
       : { red: 255, green: 255, blue: 255 },
     lightRadius: Number(pluginParameters.lightRadius || 200),
     lightRadiusVariable: Number(pluginParameters.lightRadiusVariable || 0),
+    lightRadiusPlayer: Number(pluginParameters.lightRadiusPlayer || -1),
   };
 
   function darkColor() {
@@ -193,7 +202,7 @@
   Game_Event_DarKMapMixIn(Game_Event.prototype);
   function Game_Player_DarkMapMixIn(gamePlayer) {
     gamePlayer.lightRadius = function () {
-      return defaultLightRadius();
+      return settings.lightRadiusPlayer < 0 ? defaultLightRadius() : settings.lightRadiusPlayer;
     };
   }
   Game_Player_DarkMapMixIn(Game_Player.prototype);
