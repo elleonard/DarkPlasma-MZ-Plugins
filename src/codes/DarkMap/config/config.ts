@@ -32,6 +32,11 @@ export const config: PluginConfigSchema = {
   license: "MIT",
   histories: [
     {
+      date: "2024/01/23",
+      version: '2.1.0',
+      description: 'プレイヤーの明かりの広さを設定可能に',
+    },
+    {
       date: "2024/01/21",
       version: "2.0.0",
       description: "暗闇の色をRGBすべてについて設定可能に",
@@ -91,6 +96,12 @@ export const config: PluginConfigSchema = {
       text: "明かりの広さ(変数)",
       description: "デフォルトの明かりの広さを変数で設定します。",
       default: 0,
+    }),
+    createNumberParam('lightRadiusPlayer', {
+      text: "明かりの広さ(プレイヤー)",
+      description: 'プレイヤーの明かりの広さを設定します。負の値を設定するとデフォルトの広さを使用します。',
+      default: -1,
+      min: -1,
     }),
   ],
   commands: [],

@@ -83,7 +83,7 @@ Game_Event_DarKMapMixIn(Game_Event.prototype);
 
 function Game_Player_DarkMapMixIn(gamePlayer: Game_Player) {
   gamePlayer.lightRadius = function () {
-    return defaultLightRadius();
+    return settings.lightRadiusPlayer < 0 ? defaultLightRadius() : settings.lightRadiusPlayer;
   };
 }
 

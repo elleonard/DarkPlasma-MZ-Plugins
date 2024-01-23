@@ -31,7 +31,7 @@ const config = targetJsList.map((input) => {
   /**
    * configのts化をする場合、1段ディレクトリがズレる
    */
-  const dir = path.dirname(input).split('/').slice(-2)[0] === process.env.TARGET
+  const dir = path.dirname(input).split('/').slice(-2)[0] === process.env.TARGET.split('/').slice(-1)[0]
     ? path.dirname(input).split('/').slice(-3)[0]
     : path.dirname(input).split('/').slice(-2)[0];
   const versionIndex = process.argv.findIndex(n => n === '-V');

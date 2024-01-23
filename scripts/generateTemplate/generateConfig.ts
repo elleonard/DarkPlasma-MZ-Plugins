@@ -11,6 +11,7 @@ const tsconfigTemplatePath = path.resolve(__dirname, '..', '..', 'tsconfig_templ
 
 export async function generateConfig(destDir: string) {
   console.log(destDir);
+  const configPath = path.resolve(destDir, 'config');
   fs.open(path.resolve(destDir, 'config', 'config.ts'), 'wx', (err, fd) => {
     if (err) {
       if (err.code === 'EEXIST') {
@@ -25,6 +26,8 @@ export async function generateConfig(destDir: string) {
         pluginName: `${path.basename(destDir)}`,
         license: /excludes/.test(destDir) ? 'No License' : 'MIT',
         year: new Date().getFullYear(),
+        pathToConfigBuilder: pathToConfigBuilder(configPath),
+        pathToCreateParameter: pathToCreateParameter(configPath),
       },
       {},
       (err, str) => {
@@ -52,12 +55,37 @@ export async function generateConfig(destDir: string) {
       if (err) console.error(`generate ts failed.`);
       fse.appendFile(tsFile, `/// <reference path="./${path.basename(destDir)}.d.ts" />`);
     });
-    fs.copyFileSync(tsconfigTemplatePath, `${destDir}/plugin/tsconfig.json`);
+
+    const tsConfigFile = path.resolve(destDir, 'plugin', 'tsconfig.json');
+    fse.ensureFile(tsConfigFile, (err) => {
+      if (err) console.error(`generate tsconfig failed.`);
+      fse.appendFile(tsConfigFile, `{
+  "extends": "${pathToTsConfig(pluginDir)}"
+}`);
+    })
   });
 }
 
 const typingsPath = path.resolve(__dirname, '..', '..', 'src', 'typings');
 
 function pathToTypings(destDir: string) {
-  return `${path.relative(destDir, typingsPath)}`.replaceAll('\\', '/');
+  return path.relative(destDir, typingsPath).replaceAll('\\', '/');
+}
+
+const configBuilderPath = path.resolve(__dirname, '..', '..', 'modules', 'config', 'configDefinitionBuilder.js');
+
+function pathToConfigBuilder(destDir: string) {
+  return path.relative(destDir, configBuilderPath).replaceAll('\\', '/');
+}
+
+const createParameterPath = path.resolve(__dirname, '..', '..', 'modules', 'config', 'createParameter.js');
+
+function pathToCreateParameter(destDir: string) {
+  return path.relative(destDir, createParameterPath).replaceAll('\\', '/');
+}
+
+const configTsPath = path.resolve(__dirname, '..', '..', 'tsconfig-for-plugin');
+
+function pathToTsConfig(destDir: string) {
+  return path.relative(destDir, configTsPath).replaceAll('\\', '/');
 }
