@@ -276,9 +276,9 @@ PluginManager.registerCommand(pluginName, command_plusCooldownTurns, function (a
   const parsedArgs = parseArgs_plusCooldownTurns(args);
   const targetBattlers = parsedArgs.actors.length === 0
     ? $gameParty.allMembers()
-    : parsedArgs.actors.map((actorId: number) => $gameActors.actor(actorId));
+    : parsedArgs.actors.map((actorId: number) => $gameActors.actor(actorId)!);
   const targetSkills = parsedArgs.skills.length === 0
-    ? null
+    ? undefined
     : parsedArgs.skills.map((skillId: number) => $dataSkills[skillId]);
   skillCooldownManager.plusCooldownTurns(targetBattlers, parsedArgs.turn, targetSkills);
 });
@@ -287,9 +287,9 @@ PluginManager.registerCommand(pluginName, command_finishCooldowns, function (arg
   const parsedArgs = parseArgs_finishCooldowns(args);
   const targetBattlers = parsedArgs.actors.length === 0
     ? $gameParty.allMembers()
-    : parsedArgs.actors.map((actorId: number) => $gameActors.actor(actorId));
+    : parsedArgs.actors.map((actorId: number) => $gameActors.actor(actorId)!);
   const targetSkills = parsedArgs.skills.length === 0
-    ? null
+    ? undefined
     : parsedArgs.skills.map((skillId: number) => $dataSkills[skillId]);
   skillCooldownManager.finishCooldowns(targetBattlers, targetSkills);
 });

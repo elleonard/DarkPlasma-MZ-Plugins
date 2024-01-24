@@ -3,6 +3,9 @@ DarkPlasma_SkillCooldown:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/01/24
+      version: 2.4.1
+      description: 'リファクタ'
     - date: 2023/03/09
       version: 2.4.0
       description: '柔軟なクールタイム開始のインターフェース追加'
