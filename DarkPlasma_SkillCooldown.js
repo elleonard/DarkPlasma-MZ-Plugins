@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCooldown 2.4.0
+// DarkPlasma_SkillCooldown 2.4.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/24 2.4.1 リファクタ
  * 2023/03/09 2.4.0 柔軟なクールタイム開始のインターフェース追加
  *            2.3.3 クールタイム初期化タイミングの変更
  *                  リファクタ
@@ -96,7 +97,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.4.0
+ * version: 2.4.1
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -210,7 +211,7 @@
      */
     static setup(triggerSkillId) {
       const cooldownSetting = settings.skillCooldownSettings.find(
-        (cooldown) => cooldown.triggerSkillId === triggerSkillId
+        (cooldown) => cooldown.triggerSkillId === triggerSkillId,
       );
       /**
        * NOTE: 付与タイミングは基本的にスキル使用時であり、その後スキルリスト確認までにターン経過を1回挟む。
@@ -229,9 +230,9 @@
       return result.concat(
         cooldownSetting
           ? cooldownSetting.targetSkills.map(
-              (target) => new Game_SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1)
+              (target) => new Game_SkillCooldown(target.targetSkillId, target.cooldownTurnCount + 1),
             )
-          : []
+          : [],
       );
     }
     /**
@@ -438,7 +439,7 @@
         ? $gameParty.allMembers()
         : parsedArgs.actors.map((actorId) => $gameActors.actor(actorId));
     const targetSkills =
-      parsedArgs.skills.length === 0 ? null : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
+      parsedArgs.skills.length === 0 ? undefined : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
     skillCooldownManager.plusCooldownTurns(targetBattlers, parsedArgs.turn, targetSkills);
   });
   PluginManager.registerCommand(pluginName, command_finishCooldowns, function (args) {
@@ -448,7 +449,7 @@
         ? $gameParty.allMembers()
         : parsedArgs.actors.map((actorId) => $gameActors.actor(actorId));
     const targetSkills =
-      parsedArgs.skills.length === 0 ? null : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
+      parsedArgs.skills.length === 0 ? undefined : parsedArgs.skills.map((skillId) => $dataSkills[skillId]);
     skillCooldownManager.finishCooldowns(targetBattlers, targetSkills);
   });
   function BattleManager_SkillCooldownMixIn(battleManager) {

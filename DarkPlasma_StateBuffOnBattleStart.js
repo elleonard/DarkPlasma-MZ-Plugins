@@ -1,9 +1,11 @@
-// DarkPlasma_StateBuffOnBattleStart 3.2.1
+// DarkPlasma_StateBuffOnBattleStart 3.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/25 3.3.0 新形式の設定をサポート
+ *                  旧形式の設定を非推奨化
  * 2022/10/18 3.2.1 強化・弱体が設定より1ターン長く持続する不具合を修正
  * 2022/10/10 3.2.0 FilterEquipに対応
  *            3.1.0 特徴化
@@ -40,9 +42,43 @@
  * @default []
  *
  * @help
- * version: 3.2.1
+ * version: 3.3.0
  * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
  * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかる特徴を追加します。
+ *
+ * <stateOnBattleStart:
+ *   oneOf:カンマ区切りのステートIDリスト turn:ターン数 rate:確率(％)
+ * >
+ * oneOfで設定したステートID一覧の中から、ひとつ選択して付加します。
+ * 複数行記述することもできます。
+ * turnは省略すると元のステートの持続ターンが使用されます。
+ * rateは省略すると100が指定されます。
+ *
+ * 記述例:
+ * <stateOnBattleStart:
+ *   oneOf:2,3 turn:3 rate:100
+ *   oneOf:4
+ * >
+ * 戦闘開始時にステートID2,3からどちらかひとつを100％付加し、3ターン持続します。
+ * 戦闘開始時にステートID4を100％付加します。
+ *
+ * <buffOnBattleStart:
+ *   oneOf:カンマ区切りの能力値名と強化段階リスト turn:ターン数 rate:確率(％)
+ * >
+ * oneOfで設定した能力値名と強化段階一覧の中から、
+ * ひとつ選択して強化・弱体を付加します。
+ * 複数行記述することもできます。
+ * turnは省略すると3が指定されます。
+ * rateは省略すると100が指定されます。
+ *
+ * 記述例:
+ * <buffOnBattleStart:
+ *   oneOf:atk+1,def+2,mat+1,mdf+2,agi-1
+ * >
+ * 攻撃力一段階強化、防御力二段階強化、魔法力一段階強化、魔法防御一段階強化
+ * 敏捷一段階弱体のうちどれかひとつを100％付加し、3ターン持続します。
+ *
+ * 以下の設定方法は非推奨です。次のバージョンアップで削除されます。
  *
  * <StateOnBattleStartId: 1>
  * 戦闘開始時にステートにかかります。
@@ -173,21 +209,27 @@
   }
 
   const localTraitId = 1;
-  const stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, '戦闘開始時ステート');
-  const buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 1, '戦闘開始時強化・弱体');
+  const old_stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, '戦闘開始時ステート');
+  const old_buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(
+    pluginName,
+    localTraitId + 1,
+    '戦闘開始時強化・弱体',
+  );
   /**
    * 名前が口語的になるが、文字サイズを考えると仕方ない
    */
-  const stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
+  const old_stateOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
     pluginName,
     localTraitId + 2,
-    '開幕ランダムステート'
+    '開幕ランダムステート',
   );
-  const buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
+  const old_buffOnBattleStartRandomTraitId = uniqueTraitIdCache.allocate(
     pluginName,
     localTraitId + 3,
-    '開幕ランダム強化・弱体'
+    '開幕ランダム強化・弱体',
   );
+  const stateOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 4, '戦闘開始時ステート');
+  const buffOnBattleStartTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId + 5, '戦闘開始時強化・弱体');
   class StateOnBattleStart {
     constructor(id, stateId, turn) {
       this._id = id;
@@ -259,6 +301,9 @@
       return this._turn;
     }
   }
+  const paramNames = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
+  const $oneOfStatesOnBattleStarts = [];
+  const $oneOfBuffsOnBattleStarts = [];
   class StateBuffOnBattleStartManager {
     constructor() {
       this._states = settings.stateOnBattleStart.map((object) => StateOnBattleStart.fromObject(object));
@@ -297,11 +342,11 @@
             .forEach((id) =>
               data.traits.push({
                 code: data.meta.StateOnBattleStartRandom
-                  ? stateOnBattleStartRandomTraitId.id
-                  : stateOnBattleStartTraitId.id,
+                  ? old_stateOnBattleStartRandomTraitId.id
+                  : old_stateOnBattleStartTraitId.id,
                 dataId: id,
                 value: 0,
-              })
+              }),
             );
         }
         if (data.meta.BuffOnBattleStartId) {
@@ -311,12 +356,75 @@
             .forEach((id) =>
               data.traits.push({
                 code: data.meta.BuffOnBattleStartRandom
-                  ? buffOnBattleStartRandomTraitId.id
-                  : buffOnBattleStartTraitId.id,
+                  ? old_buffOnBattleStartRandomTraitId.id
+                  : old_buffOnBattleStartTraitId.id,
                 dataId: id,
                 value: 0,
-              })
+              }),
             );
+        }
+        if (data.meta.stateOnBattleStart) {
+          String(data.meta.stateOnBattleStart)
+            .split('\n')
+            .filter((line) => line.contains('oneOf:'))
+            .forEach((line) => {
+              const tokens = /oneOf: ?(([0-9]+,?)+)/.exec(line);
+              if (tokens) {
+                const stateIds = tokens[1].split(',').map((id) => Number(id));
+                const turnTokens = /turn: ?([0-9]+)/.exec(line);
+                const turn = turnTokens ? Number(turnTokens[1]) : undefined;
+                const rateTokens = /rate: ?([0-9]+)/.exec(line);
+                const rate = rateTokens ? Number(rateTokens[1]) : 100;
+                const oneOfStatesOnBattleStart = {
+                  id: $oneOfStatesOnBattleStarts.length,
+                  stateIds: stateIds,
+                  turn: turn,
+                  rate: rate,
+                };
+                $oneOfStatesOnBattleStarts.push(oneOfStatesOnBattleStart);
+                data.traits.push({
+                  code: stateOnBattleStartTraitId.id,
+                  dataId: oneOfStatesOnBattleStart.id,
+                  value: 0,
+                });
+              }
+            });
+        }
+        if (data.meta.buffOnBattleStart) {
+          String(data.meta.buffOnBattleStart)
+            .split('\n')
+            .filter((line) => line.contains('oneOf:'))
+            .forEach((line) => {
+              const tokens = /oneOf: ?(((mhp|mmp|atk|def|mat|mdf|agi|luk)[\+\-][1-9]+,?)+)/.exec(line);
+              if (tokens) {
+                const paramAndSteps = tokens[1]
+                  .split(',')
+                  .map((paramAndStep) => {
+                    const step = /[\+\-][1-9]+/.exec(paramAndStep);
+                    return {
+                      paramName: paramNames.find((n) => paramAndStep.startsWith(n)),
+                      buffStep: Number(step ? step[0] : 1),
+                    };
+                  })
+                  .filter((paramAndStep) => !!paramAndStep.paramName);
+                const turnTokens = /turn: ?([0-9]+)/.exec(line);
+                const turn = turnTokens ? Number(turnTokens[1]) : 3;
+                const rateTokens = /rate: ?([0-9]+)/.exec(line);
+                const rate = rateTokens ? Number(rateTokens[1]) : 100;
+                const oneOfBuffsOnBattleStart = {
+                  id: $oneOfBuffsOnBattleStarts.length,
+                  params: paramAndSteps,
+                  turn: turn,
+                  rate: rate,
+                };
+                $oneOfBuffsOnBattleStarts.push(oneOfBuffsOnBattleStart);
+                data.traits.push({
+                  code: buffOnBattleStartTraitId.id,
+                  dataId: oneOfBuffsOnBattleStart.id,
+                  value: 0,
+                });
+              }
+            });
         }
       }
     };
@@ -327,8 +435,8 @@
    */
   function Game_Battler_StateBuffOnBattleStartMixIn(gameBattler) {
     const _onBattleStart = gameBattler.onBattleStart;
-    gameBattler.onBattleStart = function () {
-      _onBattleStart.call(this);
+    gameBattler.onBattleStart = function (advantageous) {
+      _onBattleStart.call(this, advantageous);
       /**
        * 戦闘開始時ステート
        */
@@ -361,34 +469,65 @@
     };
     /**
      * 戦闘開始時ステート一覧
-     * @return {StateOnBattleStart[]}
      */
     gameBattler.statesOnBattleStart = function () {
-      /**
-       * 特徴の付与されたオブジェクト内でランダムに選択する
-       */
-      const randomIds = this.traitObjects()
-        .filter((object) => object.traits.some((trait) => trait.code === stateOnBattleStartRandomTraitId.id))
-        .map((object) => {
-          const traits = object.traits.filter((trait) => trait.code === stateOnBattleStartRandomTraitId.id);
-          return traits[Math.randomInt(traits.length - 1)].dataId;
+      const states = this.traits(stateOnBattleStartTraitId.id)
+        .filter((trait) => $oneOfStatesOnBattleStarts[trait.dataId].rate > Math.randomInt(100))
+        .map((trait) => {
+          const stateIds = $oneOfStatesOnBattleStarts[trait.dataId].stateIds;
+          const stateId = stateIds[Math.randomInt(stateIds.length - 1)];
+          const state = $dataStates[stateId];
+          const turn =
+            $oneOfStatesOnBattleStarts[trait.dataId].turn ||
+            state.minTurns + Math.randomInt(1 + Math.max(state.maxTurns - state.minTurns, 0));
+          return {
+            stateId: stateId,
+            turn: turn,
+          };
         });
-      return stateBuffOnBattleStartManager.statesFromIds(
-        this.traitsSet(stateOnBattleStartTraitId.id).concat(randomIds)
+      /**
+       * 特徴の付与されたオブジェクト内でランダムに選択する (旧形式)
+       */
+      const old_randomIds = this.traitObjects()
+        .filter((object) => object.traits.some((trait) => trait.code === old_stateOnBattleStartRandomTraitId.id))
+        .map((object) => {
+          const traits = object.traits.filter((trait) => trait.code === old_stateOnBattleStartRandomTraitId.id);
+          return traits[Math.randomInt(traits.length)].dataId;
+        });
+      return states.concat(
+        stateBuffOnBattleStartManager.statesFromIds(
+          this.traitsSet(old_stateOnBattleStartTraitId.id).concat(old_randomIds),
+        ),
       );
     };
     /**
      * 戦闘開始時強化・弱体一覧
-     * @return {StateOnBattleStart[]}
      */
     gameBattler.buffsOnBattleStart = function () {
-      const randomIds = this.traitObjects()
-        .filter((object) => object.traits.some((trait) => trait.code === buffOnBattleStartRandomTraitId.id))
+      const buffs = this.traits(buffOnBattleStartTraitId.id)
+        .filter((trait) => $oneOfBuffsOnBattleStarts[trait.dataId].rate > Math.randomInt(100))
+        .map((trait) => {
+          const paramIds = $oneOfBuffsOnBattleStarts[trait.dataId].params.map((param) =>
+            paramNames.indexOf(param.paramName),
+          );
+          const index = Math.randomInt(paramIds.length);
+          return {
+            paramId: paramIds[index],
+            buffStep: $oneOfBuffsOnBattleStarts[trait.dataId].params[index].buffStep,
+            turn: $oneOfBuffsOnBattleStarts[trait.dataId].turn,
+          };
+        });
+      const old_randomIds = this.traitObjects()
+        .filter((object) => object.traits.some((trait) => trait.code === old_buffOnBattleStartRandomTraitId.id))
         .map((object) => {
-          const traits = object.traits.filter((trait) => trait.code === buffOnBattleStartRandomTraitId.id);
+          const traits = object.traits.filter((trait) => trait.code === old_buffOnBattleStartRandomTraitId.id);
           return traits[Math.randomInt(traits.length - 1)].dataId;
         });
-      return stateBuffOnBattleStartManager.buffsFromIds(this.traitsSet(buffOnBattleStartTraitId.id).concat(randomIds));
+      return buffs.concat(
+        stateBuffOnBattleStartManager.buffsFromIds(
+          this.traitsSet(old_buffOnBattleStartTraitId.id).concat(old_randomIds),
+        ),
+      );
     };
   }
   Game_Battler_StateBuffOnBattleStartMixIn(Game_Battler.prototype);
@@ -397,10 +536,10 @@
     sceneEquip.equipFilterBuilder = function (equips) {
       return _EquipFilterBuilder
         .call(this, equips)
-        .withTrait(stateOnBattleStartTraitId.id)
-        .withTrait(buffOnBattleStartTraitId.id)
-        .withTrait(stateOnBattleStartRandomTraitId.id)
-        .withTrait(buffOnBattleStartRandomTraitId.id);
+        .withTrait(old_stateOnBattleStartTraitId.id)
+        .withTrait(old_buffOnBattleStartTraitId.id)
+        .withTrait(old_stateOnBattleStartRandomTraitId.id)
+        .withTrait(old_buffOnBattleStartRandomTraitId.id);
     };
   }
   Scene_Equip_StateBuffOnBattleStartMixIn(Scene_Equip.prototype);
