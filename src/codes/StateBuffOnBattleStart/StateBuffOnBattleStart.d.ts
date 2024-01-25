@@ -35,7 +35,18 @@ declare interface BuffOnBattleStart {
   readonly turn: number;
 }
 
+type T_StateOnBattleStart = {
+  stateId: number;
+  turn: number;
+};
+
+type T_BuffOnBattleStart = {
+  paramId: number;
+  buffStep: number;
+  turn: number;
+};
+
 declare interface Game_Battler {
-  statesOnBattleStart(): StateOnBattleStart[];
-  buffsOnBattleStart(): BuffOnBattleStart[];
+  statesOnBattleStart(): T_StateOnBattleStart[];
+  buffsOnBattleStart(): T_BuffOnBattleStart[];
 }

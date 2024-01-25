@@ -3,6 +3,10 @@ DarkPlasma_StateBuffOnBattleStart:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/01/25
+      version: 3.3.0
+      description: '新形式の設定をサポート'
+    - description: '旧形式の設定を非推奨化'
     - date: 2022/10/18
       version: 3.2.1
       description: '強化・弱体が設定より1ターン長く持続する不具合を修正'
@@ -132,6 +136,40 @@ DarkPlasma_StateBuffOnBattleStart:
     ja: |
       任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
       指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかる特徴を追加します。
+
+      <stateOnBattleStart:
+        oneOf:カンマ区切りのステートIDリスト turn:ターン数 rate:確率(％)
+      >
+      oneOfで設定したステートID一覧の中から、ひとつ選択して付加します。
+      複数行記述することもできます。
+      turnは省略すると元のステートの持続ターンが使用されます。
+      rateは省略すると100が指定されます。
+
+      記述例:
+      <stateOnBattleStart:
+        oneOf:2,3 turn:3 rate:100
+        oneOf:4
+      >
+      戦闘開始時にステートID2,3からどちらかひとつを100％付加し、3ターン持続します。
+      戦闘開始時にステートID4を100％付加します。
+
+      <buffOnBattleStart:
+        oneOf:カンマ区切りの能力値名と強化段階リスト turn:ターン数 rate:確率(％)
+      >
+      oneOfで設定した能力値名と強化段階一覧の中から、
+      ひとつ選択して強化・弱体を付加します。
+      複数行記述することもできます。
+      turnは省略すると3が指定されます。
+      rateは省略すると100が指定されます。
+
+      記述例:
+      <buffOnBattleStart:
+        oneOf:atk+1,def+2,mat+1,mdf+2,agi-1
+      >
+      攻撃力一段階強化、防御力二段階強化、魔法力一段階強化、魔法防御一段階強化
+      敏捷一段階弱体のうちどれかひとつを100％付加し、3ターン持続します。
+
+      以下の設定方法は非推奨です。次のバージョンアップで削除されます。
 
       <StateOnBattleStartId: 1>
       戦闘開始時にステートにかかります。
