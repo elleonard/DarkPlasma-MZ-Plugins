@@ -3,6 +3,9 @@ DarkPlasma_StateBuffOnBattleStart:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/01/29
+      version: 3.3.1
+      description: 'oneOfの末尾に指定したステートIDが選ばれない不具合を修正'
     - date: 2024/01/25
       version: 3.3.0
       description: '新形式の設定をサポート'

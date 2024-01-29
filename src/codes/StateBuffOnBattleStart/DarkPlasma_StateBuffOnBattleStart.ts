@@ -301,7 +301,7 @@ function Game_Battler_StateBuffOnBattleStartMixIn(gameBattler: Game_Battler) {
       .filter(trait => $oneOfStatesOnBattleStarts[trait.dataId].rate > Math.randomInt(100))
       .map(trait => {
         const stateIds = $oneOfStatesOnBattleStarts[trait.dataId].stateIds;
-        const stateId = stateIds[Math.randomInt(stateIds.length-1)];
+        const stateId = stateIds[Math.randomInt(stateIds.length)];
         const state = $dataStates[stateId];
         const turn = $oneOfStatesOnBattleStarts[trait.dataId].turn
           || state.minTurns + Math.randomInt(1 + Math.max(state.maxTurns - state.minTurns, 0))
