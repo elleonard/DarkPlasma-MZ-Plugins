@@ -1,9 +1,10 @@
-// DarkPlasma_StateBuffOnBattleStart 3.3.0
+// DarkPlasma_StateBuffOnBattleStart 3.3.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/01/29 3.3.1 oneOfの末尾に指定したステートIDが選ばれない不具合を修正
  * 2024/01/25 3.3.0 新形式の設定をサポート
  *                  旧形式の設定を非推奨化
  * 2022/10/18 3.2.1 強化・弱体が設定より1ターン長く持続する不具合を修正
@@ -42,7 +43,7 @@
  * @default []
  *
  * @help
- * version: 3.3.0
+ * version: 3.3.1
  * 任意のアクター、職業、装備、ステート、敵キャラのメモ欄に
  * 指定のタグを記述することで戦闘開始時にステート、強化、弱体がかかる特徴を追加します。
  *
@@ -475,7 +476,7 @@
         .filter((trait) => $oneOfStatesOnBattleStarts[trait.dataId].rate > Math.randomInt(100))
         .map((trait) => {
           const stateIds = $oneOfStatesOnBattleStarts[trait.dataId].stateIds;
-          const stateId = stateIds[Math.randomInt(stateIds.length - 1)];
+          const stateId = stateIds[Math.randomInt(stateIds.length)];
           const state = $dataStates[stateId];
           const turn =
             $oneOfStatesOnBattleStarts[trait.dataId].turn ||
