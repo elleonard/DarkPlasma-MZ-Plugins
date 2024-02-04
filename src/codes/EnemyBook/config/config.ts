@@ -5,6 +5,10 @@ import { dedent } from '@qnighy/dedent';
 const histories = [
   {
     date: "2024/02/04",
+    version: "5.3.1",
+    description: "目次生成をリフレッシュごとに行うよう修正",
+  },
+  {
     version: "5.3.0",
     description: "未登録の敵キャラもハイライトできるように変更",
   },

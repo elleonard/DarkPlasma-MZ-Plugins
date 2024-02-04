@@ -433,9 +433,6 @@ class Window_EnemyBookIndex extends Window_Selectable {
   }
 
   makeItemList(): void {
-    if (this._list) {
-      return;
-    }
     this._list = registerableEnemies();
   }
 
