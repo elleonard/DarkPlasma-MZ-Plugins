@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.2.3
+// DarkPlasma_EnemyBook 5.3.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/02/04 5.3.0 未登録の敵キャラもハイライトできるように変更
  * 2024/01/15 5.2.3 ビルド方式を変更 (configをTypeScript化)
  * 2023/09/08 5.2.2 ゲーム開始時点で Game_System インスタンスに図鑑オブジェクトを持たせるよう修正
  *            5.2.1 ハイライトする際にエラーが発生する不具合を修正
@@ -198,7 +199,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.2.3
+ * version: 5.3.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -399,7 +400,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.2.3
+ * version: 5.3.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1040,10 +1041,10 @@
       const enemy = this._list[index];
       const rect = this.itemRect(index);
       let name;
+      if (this.mustHighlight(enemy)) {
+        this.changeTextColor(this.highlightColorString(enemy));
+      }
       if ($gameSystem.isInEnemyBook(enemy)) {
-        if (this.mustHighlight(enemy)) {
-          this.changeTextColor(this.highlightColorString(enemy));
-        }
         name = enemy.name;
       } else {
         this.changePaintOpacity(!settings.grayOutUnknown);
