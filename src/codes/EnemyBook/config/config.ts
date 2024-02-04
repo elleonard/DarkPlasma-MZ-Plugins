@@ -4,6 +4,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories = [
   {
+    date: "2024/02/04",
+    version: "5.3.0",
+    description: "未登録の敵キャラもハイライトできるように変更",
+  },
+  {
     date: "2024/01/15",
     version: "5.2.3",
     description: "ビルド方式を変更 (configをTypeScript化)",

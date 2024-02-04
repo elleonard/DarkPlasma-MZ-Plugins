@@ -468,10 +468,10 @@ class Window_EnemyBookIndex extends Window_Selectable {
     const enemy = this._list[index];
     const rect = this.itemRect(index);
     let name: string;
+    if (this.mustHighlight(enemy)) {
+      this.changeTextColor(this.highlightColorString(enemy));
+    }
     if ($gameSystem.isInEnemyBook(enemy)) {
-      if (this.mustHighlight(enemy)) {
-        this.changeTextColor(this.highlightColorString(enemy));
-      }
       name = enemy.name;
     } else {
       this.changePaintOpacity(!settings.grayOutUnknown);
