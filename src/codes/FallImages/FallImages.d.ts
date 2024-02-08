@@ -13,10 +13,14 @@ declare interface Game_System {
 }
 
 declare interface Spriteset_Map {
-  _fallImageSprites: SPrite_FallImage[];
+  _fallImageSprites: Sprite_Falling[];
 
   createFallImage(): void;
   needCreateFallImage(): boolean;
   updateFallImage(): void;
   destroyFallImages(): void;
+}
+
+declare interface Sprite_Falling extends Sprite {
+  setup(): void;
 }
