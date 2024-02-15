@@ -3,6 +3,9 @@ DarkPlasma_CharacterText:
   year: 2023
   license: MIT
   histories:
+    - date: 2024/02/15
+      version: 1.0.1
+      description: '有効なページがないイベントにメタタグを設定するとエラーになる不具合を修正'
     - date: 2023/11/01
       version: 1.0.0
       description: '公開'

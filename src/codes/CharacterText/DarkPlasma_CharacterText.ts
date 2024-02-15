@@ -64,9 +64,9 @@ function Game_Character_CharacterTextMixIn(gameCharacter: Game_Character) {
 Game_Character_CharacterTextMixIn(Game_Character.prototype);
 
 function Game_Event_CharacterTextMixIn(gameEvent: Game_Event) {
-  const _setupPage = gameEvent.setupPage;
-  gameEvent.setupPage = function () {
-    _setupPage.call(this);
+  const _setupPageSettings = gameEvent.setupPageSettings;
+  gameEvent.setupPageSettings = function () {
+    _setupPageSettings.call(this);
     if (this.event().meta.characterText) {
       const registerCommand = this.list()
         .find(command => command.code === 357
