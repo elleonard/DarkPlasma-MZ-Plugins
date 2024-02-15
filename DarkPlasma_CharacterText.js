@@ -1,9 +1,10 @@
-// DarkPlasma_CharacterText 1.0.0
+// DarkPlasma_CharacterText 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/02/15 1.0.1 有効なページがないイベントにメタタグを設定するとエラーになる不具合を修正
  * 2023/11/01 1.0.0 公開
  */
 
@@ -42,7 +43,7 @@
  * @desc マップ上に表示しているテキストをすべて一時的に非表示にします。
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * マップ上のキャラクターの近傍にテキストを表示します。
  *
  * 表示したいイベントのメモ欄に <characterText> と記述し、
@@ -124,15 +125,15 @@
   }
   Game_Character_CharacterTextMixIn(Game_Character.prototype);
   function Game_Event_CharacterTextMixIn(gameEvent) {
-    const _setupPage = gameEvent.setupPage;
-    gameEvent.setupPage = function () {
-      _setupPage.call(this);
+    const _setupPageSettings = gameEvent.setupPageSettings;
+    gameEvent.setupPageSettings = function () {
+      _setupPageSettings.call(this);
       if (this.event().meta.characterText) {
         const registerCommand = this.list().find(
           (command) =>
             command.code === 357 &&
             Utils.extractFileName(command.parameters[0]) === pluginName &&
-            command.parameters[1] === command_register
+            command.parameters[1] === command_register,
         );
         if (registerCommand) {
           const parsedArgs = parseArgs_register(registerCommand.parameters[3]);
@@ -200,7 +201,7 @@
     createBitmap() {
       this.bitmap = new Bitmap(
         Math.floor(this._text.length * settings.fontSize * 1.5),
-        Math.floor(settings.fontSize * 1.5)
+        Math.floor(settings.fontSize * 1.5),
       );
       this.bitmap.fontSize = settings.fontSize;
     }
