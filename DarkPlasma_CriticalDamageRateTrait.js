@@ -15,6 +15,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
+ *
  * @param defaultCriticalDamageRate
  * @desc 会心ダメージ率の初期値を設定します。
  * @text デフォルト会心ダメージ率
@@ -29,6 +32,11 @@
  * 以下のように記述すると、対象に会心ダメージ率を+n％する特徴を追加します。
  *
  * <criticalDamageRate:n>
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.1
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_AllocateUniqueTraitId
  */
 
 (() => {
