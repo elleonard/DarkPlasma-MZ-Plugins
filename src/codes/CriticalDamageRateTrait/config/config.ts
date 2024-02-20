@@ -27,6 +27,13 @@ export const config = new ConfigDefinitionBuilder(
   .withHistories(histories)
   .withLicense("MIT")
   .withParameters(parameters)
+  .withBaseDependency({
+    name: "DarkPlasma_AllocateUniqueTraitId",
+    version: "1.0.1",
+  })
+  .withOrderAfterDependency({
+    name: "DarkPlasma_AllocateUniqueTraitId",
+  })
   .withHelp(dedent`会心ダメージ率の特徴を設定できます。
   
   アクター、職業、スキル、武器、防具、敵キャラ、ステートのメモ欄に
