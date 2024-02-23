@@ -76,7 +76,7 @@ function generateHeaderMain(config: PluginConfigSchema) {
         : '';
       const structureTypes = config.structures.map(structure => structure.name);
       const parametersText: string = config.parameters
-        .map((parameter) => generateParameterText(parameter, language))
+        .map((parameter) => generateParameterText(parameter, language, "param"))
         .join('\n *\n');
       const noteText = config.notes
         ? config.notes.map((note) => {
@@ -173,8 +173,10 @@ function pluginVersion(config: PluginConfigSchema) {
   return config.histories[0].version || "1.0.0";
 }
 
-function generateParameterText(parameter: PluginParameterSchema, language: PluginLocateSchema) {
-  const result = [` * @param ${parameter.param}`];
+function generateParameterText(
+  parameter: PluginParameterSchema, language: PluginLocateSchema, paramOrArg: "param"|"arg"
+) {
+  const result = [` * @${paramOrArg} ${parameter.param}`];
   if (parameter.description) {
     if (typeof parameter.description === "string") {
       result.push(` * @desc ${parameter.description}`);
@@ -239,7 +241,7 @@ function generateCommandText(command: PluginCommandSchema, language: PluginLocat
   }
   if (command.args) {
     command.args.forEach((arg) => {
-      result.push(generateParameterText(arg, language));
+      result.push(generateParameterText(arg, language, "arg"));
     });
   }
   return result.join('\n');
@@ -365,7 +367,7 @@ function generateStructureText(config: PluginConfigSchema, type: string, languag
   if (!structure) throw `unknown structure: ${type}`;
   return `/*~struct~${languageSuffixedType(type, language)}:
 ${structure.params
-  .map((parameter) => generateParameterText(parameter, language))
+  .map((parameter) => generateParameterText(parameter, language, "param"))
   .join('\n *\n')}
  */`;
 }
