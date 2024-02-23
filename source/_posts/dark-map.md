@@ -21,6 +21,10 @@ tags:
 ![設定例-マップ](dark-map-setting1.png "マップの設定例")
 ![設定例-イベント](dark-map-setting-event.png "イベントの設定例")
 
+# 派生プラグイン
+
+- {% post_link is-in-lights %}
+
 # ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DarkMap.js)
