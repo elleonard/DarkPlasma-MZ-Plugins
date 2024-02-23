@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 2.1.0
+// DarkPlasma_DarkMap 2.2.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/02/23 2.2.0 プレイヤー、イベント以外にも対応できるようにインターフェースを追加
  * 2024/01/23 2.1.0 プレイヤーの明かりの広さを設定可能に
  * 2024/01/21 2.0.0 暗闇の色をRGBすべてについて設定可能に
  *                  デフォルトの明かりの広さを変数で設定可能に
@@ -51,7 +52,7 @@
  * @default -1
  *
  * @help
- * version: 2.1.0
+ * version: 2.2.0
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -153,20 +154,23 @@
     }
     return settings.lightRadius;
   }
-  Bitmap.prototype.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
-    const context = this._context;
-    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-    gradient.addColorStop(0, lightColor);
-    gradient.addColorStop(1, darkColor());
-    context.save();
-    context.globalCompositeOperation = 'lighter';
-    context.fillStyle = gradient;
-    context.beginPath();
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    context.fill();
-    context.restore();
-    this._baseTexture.update();
-  };
+  function Bitmap_DarkMapMixIn(bitmap) {
+    bitmap.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
+      const context = this._context;
+      const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+      gradient.addColorStop(0, lightColor);
+      gradient.addColorStop(1, darkColor());
+      context.save();
+      context.globalCompositeOperation = 'lighter';
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      context.fill();
+      context.restore();
+      this._baseTexture.update();
+    };
+  }
+  Bitmap_DarkMapMixIn(Bitmap.prototype);
   /**
    * @param {Game_Map.prototype} gameMap
    */
@@ -179,10 +183,22 @@
     };
   }
   Game_Map_DarkMapMixIn(Game_Map.prototype);
+  function Game_CharacterBase_DarkMapMixIn(gameCharacterBase) {
+    gameCharacterBase.hasLight = function () {
+      return false;
+    };
+    gameCharacterBase.lightRadius = function () {
+      return this.hasLight() ? defaultLightRadius() : 0;
+    };
+    gameCharacterBase.lightColor = function () {
+      return this.hasLight() ? lightColor() : null;
+    };
+  }
+  Game_CharacterBase_DarkMapMixIn(Game_CharacterBase.prototype);
   /**
    * @param {Game_Event.prototype} gameEvent
    */
-  function Game_Event_DarKMapMixIn(gameEvent) {
+  function Game_Event_DarkMapMixIn(gameEvent) {
     gameEvent.hasLight = function () {
       return this.event() && !!this.event().meta.light;
     };
@@ -199,7 +215,7 @@
       return String(this.event().meta.lightColor || lightColor());
     };
   }
-  Game_Event_DarKMapMixIn(Game_Event.prototype);
+  Game_Event_DarkMapMixIn(Game_Event.prototype);
   function Game_Player_DarkMapMixIn(gamePlayer) {
     gamePlayer.lightRadius = function () {
       return settings.lightRadiusPlayer < 0 ? defaultLightRadius() : settings.lightRadiusPlayer;
