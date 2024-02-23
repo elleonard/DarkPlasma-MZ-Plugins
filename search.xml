@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title>明かりの中にいるかどうか判定するプラグインコマンド</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/02/23/is-in-lights/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/02/23/is-in-lights/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>暗いマップにいる際、対象が明かりの中にいるかどうか判定するプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="is-in-lights.png" alt="使用例" title="使用例"></p><p>明かりの中にいないとパーティメンバーが毎秒1ずつダメージを受ける並列実行イベントです。</p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><ul><li><a href="/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/" title="暗いマップと明かり">暗いマップと明かり</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_IsInLights.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> マップ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>会心ダメージ率を増減する特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/02/23/critical-damage-rate-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/02/23/critical-damage-rate-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>デフォルトの会心ダメージ率を設定します。(RPGツクールのデフォルト会心ダメージ率は300％)<br>また、会心ダメージ率を増減させる特徴を設定できます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="critical-damage-rate-trait.png" alt="設定例" title="設定例"></p><p>ミシェルの会心ダメージ率を+150％します。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CriticalDamageRateTrait.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自の特徴を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 敵キャラ </tag>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 職業 </tag>
+            
+            <tag> アクター </tag>
+            
+            <tag> ステート </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>アイテムシーン アイテムを捨てるコマンド</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/01/23/discard-item-command/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/01/23/discard-item-command/</url>
@@ -1322,7 +1380,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/"/>
       <url>/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>暗いマップを作ることができます。<br>プレイヤーやイベントの周囲を明るくすることができます。</p><p>本プラグインは簡単化のため、機能と設定項目を絞っています。<br>複雑な機能・設定をお求めの場合、類似の異なるプラグインをお試しください。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="dark-map.png" alt="使用例" title="使用例"><br><img src="dark-map-setting1.png" alt="設定例-マップ" title="マップの設定例"><br><img src="dark-map-setting-event.png" alt="設定例-イベント" title="イベントの設定例"></p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DarkMap.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>暗いマップを作ることができます。<br>プレイヤーやイベントの周囲を明るくすることができます。</p><p>本プラグインは簡単化のため、機能と設定項目を絞っています。<br>複雑な機能・設定をお求めの場合、類似の異なるプラグインをお試しください。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="dark-map.png" alt="使用例" title="使用例"><br><img src="dark-map-setting1.png" alt="設定例-マップ" title="マップの設定例"><br><img src="dark-map-setting-event.png" alt="設定例-イベント" title="イベントの設定例"></p><h1 id="派生プラグイン"><a href="#派生プラグイン" class="headerlink" title="派生プラグイン"></a>派生プラグイン</h1><ul><li><a href="/DarkPlasma-MZ-Plugins/2024/02/23/is-in-lights/" title="明かりの中にいるかどうか判定するプラグインコマンド">明かりの中にいるかどうか判定するプラグインコマンド</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DarkMap.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
       
       
       <categories>
