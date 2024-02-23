@@ -14,14 +14,10 @@ declare interface Game_Map {
   lightEvents(): Game_Event[];
 }
 
-declare interface Game_Event {
+declare interface Game_CharacterBase {
   hasLight(): boolean;
   lightRadius(): number;
   lightColor(): string|null;
-}
-
-declare interface Game_Player {
-  lightRadius(): number;
 }
 
 declare interface Bitmap {

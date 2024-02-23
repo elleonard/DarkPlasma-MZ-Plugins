@@ -26,20 +26,24 @@ function defaultLightRadius() {
   return settings.lightRadius;
 }
 
-Bitmap.prototype.fillGradientCircle = function (this: Bitmap, centerX: number, centerY: number, radius: number, lightColor: string) {
-  const context = this._context;
-  const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-  gradient.addColorStop(0, lightColor);
-  gradient.addColorStop(1, darkColor());
-  context.save();
-  context.globalCompositeOperation = 'lighter';
-  context.fillStyle = gradient;
-  context.beginPath();
-  context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-  context.fill();
-  context.restore();
-  this._baseTexture.update();
-};
+function Bitmap_DarkMapMixIn(bitmap: Bitmap) {
+  bitmap.fillGradientCircle = function (this: Bitmap, centerX: number, centerY: number, radius: number, lightColor: string) {
+    const context = this._context;
+    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+    gradient.addColorStop(0, lightColor);
+    gradient.addColorStop(1, darkColor());
+    context.save();
+    context.globalCompositeOperation = 'lighter';
+    context.fillStyle = gradient;
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    context.fill();
+    context.restore();
+    this._baseTexture.update();
+  };
+}
+
+Bitmap_DarkMapMixIn(Bitmap.prototype);
 
 /**
  * @param {Game_Map.prototype} gameMap
@@ -56,10 +60,26 @@ function Game_Map_DarkMapMixIn(gameMap: Game_Map) {
 
 Game_Map_DarkMapMixIn(Game_Map.prototype);
 
+function Game_CharacterBase_DarkMapMixIn(gameCharacterBase: Game_CharacterBase) {
+  gameCharacterBase.hasLight = function () {
+    return false;
+  };
+
+  gameCharacterBase.lightRadius = function () {
+    return this.hasLight() ? defaultLightRadius() : 0;
+  };
+
+  gameCharacterBase.lightColor = function () {
+    return this.hasLight() ? lightColor() : null;
+  };
+}
+
+Game_CharacterBase_DarkMapMixIn(Game_CharacterBase.prototype);
+
 /**
  * @param {Game_Event.prototype} gameEvent
  */
-function Game_Event_DarKMapMixIn(gameEvent: Game_Event) {
+function Game_Event_DarkMapMixIn(gameEvent: Game_Event) {
   gameEvent.hasLight = function (this: Game_Event) {
     return this.event() && !!this.event().meta.light;
   };
@@ -79,7 +99,7 @@ function Game_Event_DarKMapMixIn(gameEvent: Game_Event) {
   };
 }
 
-Game_Event_DarKMapMixIn(Game_Event.prototype);
+Game_Event_DarkMapMixIn(Game_Event.prototype);
 
 function Game_Player_DarkMapMixIn(gamePlayer: Game_Player) {
   gamePlayer.lightRadius = function () {

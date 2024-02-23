@@ -32,6 +32,11 @@ export const config: PluginConfigSchema = {
   license: "MIT",
   histories: [
     {
+      date: "2024/02/23",
+      version: "2.2.0",
+      description: "プレイヤー、イベント以外にも対応できるようにインターフェースを追加",
+    },
+    {
       date: "2024/01/23",
       version: '2.1.0',
       description: 'プレイヤーの明かりの広さを設定可能に',
