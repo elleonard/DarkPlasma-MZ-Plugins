@@ -2023,6 +2023,10 @@ fieldset[disabled] .button {
   text-align: center;
 }
 
+.content figure table {
+  text-align: left;
+}
+
 .content figure:not(:first-child) {
   margin-top: 2em;
 }

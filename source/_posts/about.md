@@ -4,13 +4,13 @@ date: 2021-12-30 12:25:00
 tags:
 ---
 
-DarkPlasmaが作成したRPGツクールMZ向けプラグイン{% footnote 以下、DarkPlasmaシリーズと呼びます。 %}の使い方を説明するブログです。
+DarkPlasmaが作成したRPGツクールMZ向けプラグイン(以下、DarkPlasmaシリーズ)の使い方を説明するブログです。
 本ブログで紹介しているプラグインは、[GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release)にて配布しています。
 [MV向け](https://github.com/elleonard/DarkPlasma-MV-Plugins/tree/release)にも同様の機能を持つプラグインがあればリンクを貼っています。
 
 # プラグインや当サイトに関するお問い合わせ
 
-DarkPlasmaシリーズがや当サイトについては、[マシュマロ](https://marshmallow-qa.com/elleonard_f?utm_medium=url_text&utm_source=promotion)、[Discordサーバー](https://discord.gg/E3STkJuAnZ)、[GitHubのIssues](https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues)などにてお問い合わせください。
+DarkPlasmaシリーズや当サイトについては、[マシュマロ](https://marshmallow-qa.com/elleonard_f?utm_medium=url_text&utm_source=promotion)、[Discordサーバー](https://discord.gg/E3STkJuAnZ)、[GitHubのIssues](https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues)などにてお問い合わせください。
 GitHubにサインインしていれば、本ブログの記事にコメントを書くこともできます。
 
 # プラグインのダウンロード方法
