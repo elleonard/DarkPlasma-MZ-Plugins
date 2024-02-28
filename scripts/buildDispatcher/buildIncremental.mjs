@@ -6,7 +6,7 @@ await $`git fetch origin release`;
 const commitId = await (async () => {
   let result = '';
   let head = 'origin/release';
-  while(!/[0-9a-z]+/.test(result)) {
+  while(!/^[0-9a-z]+$/.test(result)) {
     const commit = await $`git log --first-parent ${head} --pretty=oneline -n 1`;
     result = commit.stdout.trim().split(" ")[1];
     head+='~';
