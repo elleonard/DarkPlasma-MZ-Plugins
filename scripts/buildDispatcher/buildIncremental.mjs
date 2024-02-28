@@ -11,6 +11,7 @@ const commitId = await (async () => {
     result = commit.stdout.trim().split(" ")[1];
     head+='~';
   }
+  return result;
 })();
 
 /**
