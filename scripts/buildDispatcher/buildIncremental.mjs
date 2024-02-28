@@ -3,13 +3,21 @@ await $`git fetch origin release`;
 /**
  * releaseブランチの最新コミットのコメントから、最後にビルドされたmasterのコミットIDを取得する
  */
-const lastBuildCommit = await $`git log --first-parent origin/release --pretty=oneline -n 1`;
+const commitId = await (async () => {
+  let result = '';
+  let head = 'origin/release';
+  while(!/[0-9a-z]+/.test(result)) {
+    const commit = await $`git log --first-parent ${head} --pretty=oneline -n 1`;
+    result = commit.stdout.trim().split(" ")[1];
+    head+='~';
+  }
+})();
 
 /**
  * 差分検出
  * @type string[]
  */
-const diffFiles = await $`git --no-pager diff ${lastBuildCommit.stdout.trim().split(" ")[1]} HEAD --name-only`;
+const diffFiles = await $`git --no-pager diff ${commitId} HEAD --name-only`;
 
 /**
  * ひとまず、インクリメンタルビルドはcodesのみ対象とする
