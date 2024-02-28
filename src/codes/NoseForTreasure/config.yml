@@ -3,14 +3,17 @@ DarkPlasma_NoseForTreasure:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/10/23'
-      version: '1.1.0'
+    - date: 2024/02/28
+      version: 1.1.1
+      description: 'TypeScript移行'
+    - date: 2021/10/23
+      version: 1.1.0
       description: '特定イベントの上にバルーンを表示する機能を追加'
-    - date: '2021/10/22'
-      version: '1.0.1'
+    - date: 2021/10/22
+      version: 1.0.1
       description: 'プラグインコマンドの日本語名を追加'
-    - date: '2021/10/21'
-      version: '1.0.0'
+    - date: 2021/10/21
+      version: 1.0.0
       description: '公開'
 
   locates:
