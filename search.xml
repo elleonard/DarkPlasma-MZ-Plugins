@@ -8,7 +8,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2024/03/01/character-afterimage/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/03/01/character-afterimage/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップ上のキャラクターに残像を表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="afterimage.png" alt="使用例" title="使用例"></p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CharacterAfterimage.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップ上のキャラクターに残像を表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="afterimage.png" alt="使用例" title="使用例"></p><p>残像表示のON/OFFはプレイヤーやイベントについて、プラグインコマンドで行うことができます。</p><p><img src="plugincommand.png" alt="プラグインコマンド" title="プラグインコマンド"></p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CharacterAfterimage.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
       
       
       <categories>
