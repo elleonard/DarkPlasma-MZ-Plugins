@@ -161,5 +161,9 @@ export const config = new ConfigDefinitionBuilder(
   .withParameters(parameters)
   .withCommands(commands)
   .withStructure(structRGBAColor)
-  .withHelp(dedent`マップ上のキャラクターに残像を表示します。`)
+  .withHelp(dedent`マップ上のキャラクターに残像を表示します。
+  
+  本プラグインはセーブデータを拡張します。
+  マップ上の残像を表示している各キャラクターについて、
+  その表示状態をセーブデータに追加します。`)
   .build();
