@@ -16,6 +16,10 @@ tags:
 
 ![使用例](afterimage.png "使用例")
 
+残像表示のON/OFFはプレイヤーやイベントについて、プラグインコマンドで行うことができます。
+
+![プラグインコマンド](plugincommand.png "プラグインコマンド")
+
 # ダウンロードページへのリンク
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CharacterAfterimage.js)
