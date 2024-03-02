@@ -10,7 +10,18 @@ declare namespace ColorManager {
 
 declare interface EquipFilterBuilder {
   build(): EquipFilter;
+  withEquipToTraitsRule(ruleFunction: (equip: MZ.Weapon|MZ.Armor) => MZ.Trait[]): EquipFilterBuilder;
+  withTraitToEffectNameRule(ruleFunction: (traitId: number, dataId: number) => string|null): EquipFilterBuilder;
   withTrait(traitId: number): EquipFilterBuilder;
+  withoutTrait(traitId: number): EquipFilterBuilder;
+
+  traitList(): number[];
+  defaultTraitList(): number[];
+  equipToTraits(equip: MZ.Weapon|MZ.Armor): MZ.Trait[];
+  equipToTraitsDefaultRule(equip: MZ.Weapon|MZ.Armor): MZ.Trait[];
+  effectToFilterTrait(effects: MZ.Trait[], traitId: number): EquipFIlter_Trait|null;
+  traitToEffectName(traitId: number, dataId: number): string|null;
+  traitToEffectNameDefaultRule(traitId: number, dataId: number): string|null;
 }
 
 declare interface EquipFilter {

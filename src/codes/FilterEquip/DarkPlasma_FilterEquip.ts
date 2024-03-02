@@ -452,6 +452,19 @@ class EquipFilterBuilder {
           case 5:
             return 'アイテム入手率2倍';
         }
+        break;
+      case Game_BattlerBase.TRAIT_SPECIAL_FLAG:
+        switch (dataId) {
+          case 0:
+            return '自動戦闘';
+          case 1:
+            return '防御';
+          case 2:
+            return '身代わり';
+          case 3:
+            return 'TP持ち越し';
+        }
+        break;
       case Game_BattlerBase.TRAIT_ATTACK_SPEED:
       case Game_BattlerBase.TRAIT_ATTACK_TIMES:
       case Game_BattlerBase.TRAIT_ATTACK_SKILL:
@@ -464,7 +477,6 @@ class EquipFilterBuilder {
       case Game_BattlerBase.TRAIT_EQUIP_LOCK:
       case Game_BattlerBase.TRAIT_EQUIP_SEAL:
       case Game_BattlerBase.TRAIT_ACTION_PLUS:
-      case Game_BattlerBase.TRAIT_SPECIAL_FLAG:
         return null;
     }
     return null;
