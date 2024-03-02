@@ -35,6 +35,7 @@ DarkPlasma_AllocateUniqueTraitId:
       本プラグインは単体では機能しません。
       本プラグインを必要とする別のプラグインと一緒に利用してください。
 
+      以下、プラグインの開発者向けの情報です。
       uniqueTraitIdCache オブジェクトに対してリクエストを投げてください。
 
       uniqueTraitIdCache.allocate

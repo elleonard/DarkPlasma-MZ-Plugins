@@ -12,10 +12,10 @@ declare class UniqueTraitId {
 
 declare class UniqueTraitIdCache {
   _cache: {
-    [key: string]: UniqueTraitId
+    [key: string]: UniqueTraitId;
   };
   _cacheById: {
-    [id: number]: UniqueTraitId
+    [id: number]: UniqueTraitId;
   };
 
   allocate(pluginName: string, localId: number, name: string): UniqueTraitId;

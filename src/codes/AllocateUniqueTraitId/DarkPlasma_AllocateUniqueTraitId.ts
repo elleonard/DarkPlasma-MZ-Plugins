@@ -5,10 +5,10 @@ let uniqueTraitId = settings.startIdOfUniqueTraitId;
 
 class UniqueTraitIdCache {
   _cache: {
-    [key: string]: UniqueTraitId
+    [key: string]: UniqueTraitId;
   };
   _cacheById: {
-    [id: number]: UniqueTraitId
+    [id: number]: UniqueTraitId;
   };
 
   constructor() {
