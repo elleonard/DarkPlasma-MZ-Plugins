@@ -8,7 +8,7 @@
  * 2022/05/28 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 独自の特徴IDを確保する
  * @author DarkPlasma
  * @license MIT
@@ -29,6 +29,7 @@
  * 本プラグインは単体では機能しません。
  * 本プラグインを必要とする別のプラグインと一緒に利用してください。
  *
+ * 以下、プラグインの開発者向けの情報です。
  * uniqueTraitIdCache オブジェクトに対してリクエストを投げてください。
  *
  * uniqueTraitIdCache.allocate

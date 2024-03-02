@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.2.0
+// DarkPlasma_FilterEquip 1.3.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/02 1.3.0 特殊フラグのフラグ名を表示
  * 2023/05/21 1.2.0 絞り込み操作のキーを追加
  *                  色設定のパラメータの型を変更
  * 2022/09/10 1.1.1 typescript移行
@@ -55,7 +56,7 @@
  * @default shift
  *
  * @help
- * version: 1.2.0
+ * version: 1.3.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -344,7 +345,7 @@
         this._filterTraitWindow.width,
         this._filterTraitWindow.y,
         this._filterTraitWindow.width,
-        this._filterTraitWindow.height
+        this._filterTraitWindow.height,
       );
     };
     /**
@@ -553,7 +554,7 @@
           this._equips
             .reduce((result, equip) => result.concat(this.equipToTraits(equip)), [])
             .filter((trait) => !hasNoEffectTrait(trait))
-            .map((trait) => [`${trait.code}:${trait.dataId}`, trait])
+            .map((trait) => [`${trait.code}:${trait.dataId}`, trait]),
         ).values(),
       ];
       const instance = new EquipFilter(this.equipToTraits.bind(this));
@@ -642,7 +643,7 @@
           effects_
             .sort((a, b) => a.dataId - b.dataId)
             .filter((effect) => this.traitToEffectName(traitId, effect.dataId))
-            .map((effect) => new EquipFilter_Effect(effect.dataId, this.traitToEffectName(traitId, effect.dataId)))
+            .map((effect) => new EquipFilter_Effect(effect.dataId, this.traitToEffectName(traitId, effect.dataId))),
         );
       }
       return null;
@@ -698,6 +699,19 @@
             case 5:
               return 'アイテム入手率2倍';
           }
+          break;
+        case Game_BattlerBase.TRAIT_SPECIAL_FLAG:
+          switch (dataId) {
+            case 0:
+              return '自動戦闘';
+            case 1:
+              return '防御';
+            case 2:
+              return '身代わり';
+            case 3:
+              return 'TP持ち越し';
+          }
+          break;
         case Game_BattlerBase.TRAIT_ATTACK_SPEED:
         case Game_BattlerBase.TRAIT_ATTACK_TIMES:
         case Game_BattlerBase.TRAIT_ATTACK_SKILL:
@@ -710,7 +724,6 @@
         case Game_BattlerBase.TRAIT_EQUIP_LOCK:
         case Game_BattlerBase.TRAIT_EQUIP_SEAL:
         case Game_BattlerBase.TRAIT_ACTION_PLUS:
-        case Game_BattlerBase.TRAIT_SPECIAL_FLAG:
           return null;
       }
       return null;
@@ -841,7 +854,7 @@
         (trait) =>
           trait.isIncluded() &&
           trait.hasTraitItem(itemTraits) &&
-          (trait.effects.every((effect) => !effect.isIncluded()) || trait.hasIncludedEffectItem(itemTraits))
+          (trait.effects.every((effect) => !effect.isIncluded()) || trait.hasIncludedEffectItem(itemTraits)),
       );
     }
     /**
