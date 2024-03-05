@@ -27,6 +27,7 @@ export async function generateConfig(destDir: string) {
         license: /excludes/.test(destDir) ? 'No License' : 'MIT',
         year: new Date().getFullYear(),
         pathToConfigBuilder: pathToConfigBuilder(configPath),
+        pathToConfigSchema: pathToCOnfigSchema(configPath),
         pathToCreateParameter: pathToCreateParameter(configPath),
       },
       {},
@@ -76,6 +77,12 @@ const configBuilderPath = path.resolve(__dirname, '..', '..', 'modules', 'config
 
 function pathToConfigBuilder(destDir: string) {
   return path.relative(destDir, configBuilderPath).replaceAll('\\', '/');
+}
+
+const configSchemaPath = path.resolve(__dirname, '..', '..', 'modules', 'config', 'configSchema.js');
+
+function pathToCOnfigSchema(destDir: string) {
+  return path.relative(destDir, configSchemaPath).replaceAll('\\', '/');
 }
 
 const createParameterPath = path.resolve(__dirname, '..', '..', 'modules', 'config', 'createParameter.js');

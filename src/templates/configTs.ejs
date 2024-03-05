@@ -1,8 +1,9 @@
 import { ConfigDefinitionBuilder } from '<%- pathToConfigBuilder %>';
+import { PluginHistorySchema } from '<%- pathToConfigSchema %>';
 import {} from '<%- pathToCreateParameter %>';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
   {
     date: "<%- year %>/",
     version: "1.0.0",
