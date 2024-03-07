@@ -1,8 +1,12 @@
 /// <reference path="./DiscardItemCommand.d.ts" />
 
+import { settings } from '../config/_build/DarkPlasma_DiscardItemCommand_parameters';
+
 function Game_Party_DiscardItemCommandMixIn(gameParty: Game_Party) {
   gameParty.canDiscard = function (item) {
-    return !!item && (!DataManager.isItem(item) || item.itypeId !== 2);
+    return !!item 
+      && (!DataManager.isItem(item) || item.itypeId !== 2)
+      && (item.price > 0 || settings.canDiscardZeroPrice);
   };
 }
 
@@ -44,3 +48,12 @@ function Window_ItemCommand_DiscardItemCommandMixIn(windowClass: Window_ItemComm
 }
 
 Window_ItemCommand_DiscardItemCommandMixIn(Window_ItemCommand.prototype);
+
+function Window_ItemList_DiscardItemCommandMixIn(windowClass: Window_ItemList) {
+  const _isEnabled = windowClass.isEnabled;
+  windowClass.isEnabled = function (item) {
+    return _isEnabled.call(this, item) || $gameParty.canDiscard(item);
+  };
+}
+
+Window_ItemList_DiscardItemCommandMixIn(Window_ItemList.prototype);
