@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
 import { createCommand, createNumberParam, createSelectParam, createStruct, createStructParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2024/03/07",
+    version: "1.0.1",
+    description: "特定のプラグインと併用するとエラーが発生する不具合を修正",
+  },
   {
     date: "2024/03/01",
     version: "1.0.0",

@@ -136,6 +136,7 @@ function Sprite_Character_AfterimageMixIn(spriteCharacter: Sprite_Character) {
   spriteCharacter.initialize = function (character) {
     _initialize.call(this, character);
     this._afterimageSprites = [];
+    this._clearReservedAfterimageSprites = [];
   };
 
   spriteCharacter.createAfterimage = function() {
