@@ -1,9 +1,11 @@
-// DarkPlasma_DiscardItemCommand 1.0.0
+// DarkPlasma_DiscardItemCommand 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/07 1.1.0 売値0のアイテムの破棄可否設定を追加
+ *                  使用不可のアイテムも捨てられるように変更
  * 2024/01/21 1.0.0 公開
  */
 
@@ -18,8 +20,14 @@
  * @base DarkPlasma_IndividualItemCommand
  * @orderAfter DarkPlasma_IndividualItemCommand
  *
+ * @param canDiscardZeroPrice
+ * @desc ONの場合、売値0のアイテムを捨てられるようになります。
+ * @text 売値0破棄可否
+ * @type boolean
+ * @default false
+ *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * アイテムシーンでアイテムにカーソルを合わせて決定を押した際、
  * 捨てるコマンドを表示します。
  *
@@ -32,9 +40,23 @@
 (() => {
   'use strict';
 
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
+
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
+
+  const settings = {
+    canDiscardZeroPrice: String(pluginParameters.canDiscardZeroPrice || false) === 'true',
+  };
+
   function Game_Party_DiscardItemCommandMixIn(gameParty) {
     gameParty.canDiscard = function (item) {
-      return !!item && (!DataManager.isItem(item) || item.itypeId !== 2);
+      return (
+        !!item && (!DataManager.isItem(item) || item.itypeId !== 2) && (item.price > 0 || settings.canDiscardZeroPrice)
+      );
     };
   }
   Game_Party_DiscardItemCommandMixIn(Game_Party.prototype);
@@ -70,4 +92,11 @@
     };
   }
   Window_ItemCommand_DiscardItemCommandMixIn(Window_ItemCommand.prototype);
+  function Window_ItemList_DiscardItemCommandMixIn(windowClass) {
+    const _isEnabled = windowClass.isEnabled;
+    windowClass.isEnabled = function (item) {
+      return _isEnabled.call(this, item) || $gameParty.canDiscard(item);
+    };
+  }
+  Window_ItemList_DiscardItemCommandMixIn(Window_ItemList.prototype);
 })();
