@@ -1,9 +1,10 @@
-// DarkPlasma_CharacterAfterimage 1.0.0
+// DarkPlasma_CharacterAfterimage 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/07 1.0.1 特定のプラグインと併用するとエラーが発生する不具合を修正
  * 2024/03/01 1.0.0 公開
  */
 
@@ -90,7 +91,7 @@
  * @default 0
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * マップ上のキャラクターに残像を表示します。
  *
  * 本プラグインはセーブデータを拡張します。
@@ -268,6 +269,7 @@
     spriteCharacter.initialize = function (character) {
       _initialize.call(this, character);
       this._afterimageSprites = [];
+      this._clearReservedAfterimageSprites = [];
     };
     spriteCharacter.createAfterimage = function () {
       const afterimage = new Sprite_CharacterAfterimage(this._character)
