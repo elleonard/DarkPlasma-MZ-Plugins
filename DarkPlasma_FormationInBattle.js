@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 2.1.1
+// DarkPlasma_FormationInBattle 2.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/07 2.1.2 DarkPlasma_Formationとの順序関係を明記
  * 2023/08/06 2.1.1 特定条件下でカーソルの合っていないアクターが選択されてしまう不具合を修正
  * 2023/07/29 2.1.0 DarkPlasma_Formation 2.1.0対応
  * 2023/06/17 2.0.0 DarkPlasma_Formation 2.0.0対応
@@ -34,6 +35,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_Formation
+ * @orderAfter DarkPlasma_Formation
  *
  * @param cooldownTurnCount
  * @desc 並び替え後、このターン数が経過するまで再度並び替えできない（0で即時変更可能）
@@ -60,7 +62,7 @@
  * @default true
  *
  * @help
- * version: 2.1.1
+ * version: 2.1.2
  * 戦闘シーンで並び替えできるようになります。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
@@ -68,6 +70,8 @@
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_Formation version:2.0.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_Formation
  */
 
 (() => {
