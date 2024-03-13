@@ -3,6 +3,9 @@ DarkPlasma_TextLog:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/03/14
+      version: 2.2.0
+      description: 'パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更'
     - date: 2023/12/23
       version: 2.1.1
       description: 'ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正'
@@ -142,9 +145,9 @@ DarkPlasma_TextLog:
       default: true
     - param: escapeCharacterCodes
       text:
-        ja: パラメータを除外したい制御文字
+        ja: 無視する制御文字
       desc:
-        ja: \XXX[YYY]の形式でYYYをログから消したい場合、ここにXXXを追加します。
+        ja: 逐次処理される制御文字\XXXをログウィンドウにおいて無視したい場合、ここにXXXを追加します。
       type: string[]
       default: []
     - param: scrollSpeed
@@ -197,3 +200,8 @@ DarkPlasma_TextLog:
 
       マップ上、イベント中にログ開閉キーを押すことでログウィンドウを開きます。
       ログ開閉キー、決定キー、キャンセルキーのいずれかでログウィンドウを閉じます。
+
+      無視する制御文字設定について
+      メッセージ表示時に逐次処理される制御文字のみ無視することができます。
+      \V \Sなど、メッセージ表示処理開始時に
+      変換処理が施される制御文字を無視することはできません。

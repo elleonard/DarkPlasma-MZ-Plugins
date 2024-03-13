@@ -527,10 +527,11 @@ class Window_TextLog extends Window_Selectable {
   }
 
   public processEscapeCharacter(code: string, textState: Window_Base.TextState): void {
-    super.processEscapeCharacter(code, textState);
     if (settings.escapeCharacterCodes.includes(code)) {
       this.obtainEscapeParamText(textState);
+      return;
     }
+    super.processEscapeCharacter(code, textState);
   }
 }
 
