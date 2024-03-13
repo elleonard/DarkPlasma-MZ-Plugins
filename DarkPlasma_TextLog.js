@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 2.1.1
+// DarkPlasma_TextLog 2.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/14 2.2.0 パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更
  * 2023/12/23 2.1.1 ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正
  *            2.1.0 自動区切り線の挿入を区切り線の直後に行わないように変更
  * 2023/10/08 2.0.0 保持ログメッセージに関するプログラム上のインターフェース変更 (Breaking Change)
@@ -113,8 +114,8 @@
  * @default true
  *
  * @param escapeCharacterCodes
- * @desc \XXX[YYY]の形式でYYYをログから消したい場合、ここにXXXを追加します。
- * @text パラメータを除外したい制御文字
+ * @desc 逐次処理される制御文字\XXXをログウィンドウにおいて無視したい場合、ここにXXXを追加します。
+ * @text 無視する制御文字
  * @type string[]
  * @default []
  *
@@ -151,12 +152,17 @@
  * @type string
  *
  * @help
- * version: 2.1.1
+ * version: 2.2.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
  * マップ上、イベント中にログ開閉キーを押すことでログウィンドウを開きます。
  * ログ開閉キー、決定キー、キャンセルキーのいずれかでログウィンドウを閉じます。
+ *
+ * 無視する制御文字設定について
+ * メッセージ表示時に逐次処理される制御文字のみ無視することができます。
+ * \V \Sなど、メッセージ表示処理開始時に
+ * 変換処理が施される制御文字を無視することはできません。
  */
 
 (() => {
@@ -525,8 +531,8 @@
             this._goldWindow,
             this._nameBoxWindow,
             this._choiceListWindow,
-            this._numberInputWindow
-          )
+            this._numberInputWindow,
+          ),
         );
       }
       SoundManager.playCursor();
@@ -645,10 +651,11 @@
       this.updateArrows();
     }
     processEscapeCharacter(code, textState) {
-      super.processEscapeCharacter(code, textState);
       if (settings.escapeCharacterCodes.includes(code)) {
         this.obtainEscapeParamText(textState);
+        return;
       }
+      super.processEscapeCharacter(code, textState);
     }
   }
   Window_ObtainEscapeParamTextMixIn(Window_TextLog.prototype);
@@ -661,7 +668,7 @@
             .eventTextLog()
             .pushLog(
               this.convertEscapeCharacters($gameMessage.speakerName()),
-              this.convertEscapeCharacters($gameMessage.allText())
+              this.convertEscapeCharacters($gameMessage.allText()),
             );
         }
         if ($gameMessage.isChoice()) {
@@ -671,8 +678,8 @@
               '',
               settings.choiceFormat.replace(
                 /{choice}/gi,
-                `\x1bC[${settings.choiceColor}]${$gameMessage.chosenText()}\x1bC[0]`
-              )
+                `\x1bC[${settings.choiceColor}]${$gameMessage.chosenText()}\x1bC[0]`,
+              ),
             );
         }
       }
