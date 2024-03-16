@@ -3,6 +3,9 @@ DarkPlasma_SharedSwitchVariable:
   year: 2021
   license: MIT
   histories:
+    - date: 2024/03/16
+      version: 1.0.4
+      description: 'イベントテストが起動できない不具合を修正'
     - date: 2024/03/12
       version: 1.0.3
       description: 'TypeScript移行'

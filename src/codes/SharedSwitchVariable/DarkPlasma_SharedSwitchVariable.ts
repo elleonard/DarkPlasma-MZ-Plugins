@@ -8,6 +8,12 @@ PluginManager.registerCommand(pluginName, 'saveSharedInfo', function () {
 });
 
 function DataManager_SharedSwitchVariableMixIn(dataManager: typeof DataManager) {
+  const _setupEventTest = dataManager.setupEventTest;
+  dataManager.setupEventTest = function () {
+    _setupEventTest.call(this);
+    this.loadSharedInfo();
+  };
+
   const _extractSaveContents = dataManager.extractSaveContents;
   dataManager.extractSaveContents = function (contents) {
     _extractSaveContents.call(this, contents);
