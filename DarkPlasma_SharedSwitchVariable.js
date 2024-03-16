@@ -1,9 +1,10 @@
-// DarkPlasma_SharedSwitchVariable 1.0.3
+// DarkPlasma_SharedSwitchVariable 1.0.4
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/16 1.0.4 イベントテストが起動できない不具合を修正
  * 2024/03/12 1.0.3 TypeScript移行
  *                  TemplateEvent.jsがあるとゲームが起動しない不具合を修正
  * 2021/07/05 1.0.2 MZ 1.3.2に対応
@@ -36,7 +37,7 @@
  * @desc 共有セーブデータにスイッチ・変数を保存します。
  *
  * @help
- * version: 1.0.3
+ * version: 1.0.4
  * 全てのセーブデータで共有するスイッチ・変数を指定します。
  * 指定したスイッチ・変数の値は共有セーブデータ(save/shared.rmmzsave)に保存します。
  *
@@ -104,6 +105,11 @@
     DataManager.saveSharedInfo();
   });
   function DataManager_SharedSwitchVariableMixIn(dataManager) {
+    const _setupEventTest = dataManager.setupEventTest;
+    dataManager.setupEventTest = function () {
+      _setupEventTest.call(this);
+      this.loadSharedInfo();
+    };
     const _extractSaveContents = dataManager.extractSaveContents;
     dataManager.extractSaveContents = function (contents) {
       _extractSaveContents.call(this, contents);
