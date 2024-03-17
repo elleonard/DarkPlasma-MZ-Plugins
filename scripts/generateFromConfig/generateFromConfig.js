@@ -7,6 +7,7 @@ import { generateParameterReader, generateParameterReaderFunction } from './gene
 import { generatePluginCommand } from './generatePluginCommand.js';
 import { generateParameterType } from './generateParameterType.js';
 import { generateCommandType } from './generateCommandType.js';
+import { generateVersion, generateVersionType } from './generateVersion.js';
 
 export async function generateFromConfig(file) {
   const config = loadConfig(file);
@@ -26,6 +27,8 @@ export async function generateFromConfig(file) {
     fs.writeFileSync(path.resolve(distDir, `${key}_parameters.d.ts`), parameterType);
     const commandType = await generateCommandType(currentConfig, key.replace(`DarkPlasma_`, ''));
     fs.writeFileSync(path.resolve(distDir, `${key}_commands.d.ts`), commandType);
+    fs.writeFileSync(path.resolve(distDir, `${key}_version.js`), generateVersion(currentConfig));
+    fs.writeFileSync(path.resolve(distDir, `${key}_version.d.ts`), generateVersionType(currentConfig));
   }
 
   console.log(`build config: ${file}`);

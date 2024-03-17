@@ -1,9 +1,9 @@
 /**
  * @param {Game_Action.prototype} gameAction
  */
-function Game_Action_DebuffSuccessRateMixIn(gameAction) {
+function Game_Action_DebuffSuccessRateMixIn(gameAction: Game_Action) {
   gameAction.baseDebuffSuccessRate = function () {
-    return Number(this.item().meta.debuffSuccessRate || 100) / 100;
+    return Number(this.item()?.meta.debuffSuccessRate || 100) / 100;
   };
 
   /**

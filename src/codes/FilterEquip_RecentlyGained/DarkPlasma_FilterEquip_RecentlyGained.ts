@@ -1,7 +1,7 @@
 import { pluginName } from '../../common/pluginName';
 import { settings } from './_build/DarkPlasma_FilterEquip_RecentlyGained_parameters';
 
-function Game_Party_FilterEquipRecentlyGainedMixIn(gameParty) {
+function Game_Party_FilterEquipRecentlyGainedMixIn(gameParty: Game_Party) {
   const _gainItem = gameParty.gainItem;
   gameParty.gainItem = function (item, amount, includeEquip) {
     _gainItem.call(this, item, amount, includeEquip);
@@ -61,7 +61,7 @@ function Game_Party_FilterEquipRecentlyGainedMixIn(gameParty) {
    * @param {MZ.Item|MZ.Weapon|MZ.Armor} item アイテムデータ
    * @return {boolean}
    */
-  gameParty.isRecentlyGainded = function (item) {
+  gameParty.isRecentlyGained = function (item) {
     if (DataManager.isWeapon(item)) {
       return this.gainWeaponHistory().includes(item.id);
     } else if (DataManager.isArmor(item)) {
@@ -73,19 +73,15 @@ function Game_Party_FilterEquipRecentlyGainedMixIn(gameParty) {
 
 Game_Party_FilterEquipRecentlyGainedMixIn(Game_Party.prototype);
 
-const traitIds = [];
+const traitIds: number[] = [];
 
 const _Scene_Equip_equipFilterBuilder = Scene_Equip.prototype.equipFilterBuilder;
 Scene_Equip.prototype.equipFilterBuilder = function (equips) {
   const ALLOCATION_TRAIT_ID_RECENTLY_GAINED = 0;
-  traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED] = EquipFilterBuilder.allocateUniqueTraitId(
-    pluginName,
-    settings.traitName,
-    ALLOCATION_TRAIT_ID_RECENTLY_GAINED
-  );
+  traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED] = uniqueTraitIdCache.allocate(pluginName, ALLOCATION_TRAIT_ID_RECENTLY_GAINED, settings.traitName).id
   const builder = _Scene_Equip_equipFilterBuilder(equips);
   return builder.withTrait(traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED]).withEquipToTraitsRule((equip) => {
-    return $gameParty.isRecentlyGainded(equip)
+    return $gameParty.isRecentlyGained(equip)
       ? [
           {
             code: traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED],

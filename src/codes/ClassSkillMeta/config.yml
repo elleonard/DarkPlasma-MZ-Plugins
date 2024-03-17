@@ -3,8 +3,11 @@ DarkPlasma_ClassSkillMeta:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/10/10'
-      version: '1.0.0'
+    - date: 2024/03/17
+      version: 1.0.1
+      description: 'TypeScript移行'
+    - date: 2021/10/10
+      version: 1.0.0
       description: '公開'
 
   locates:

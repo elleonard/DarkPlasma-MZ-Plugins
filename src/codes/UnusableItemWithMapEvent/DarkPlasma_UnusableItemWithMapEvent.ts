@@ -1,7 +1,7 @@
 /**
  * @param {Game_BattlerBase.prototype} gameBattlerBase
  */
-function Game_BattlerBase_UnusableItemWithMapEvntMixIn(gameBattlerBase) {
+function Game_BattlerBase_UnusableItemWithMapEvntMixIn(gameBattlerBase: Game_BattlerBase) {
   const _isOccasionOk = gameBattlerBase.isOccasionOk;
   gameBattlerBase.isOccasionOk = function (item) {
     return _isOccasionOk.call(this, item) && (!item.meta.unusableWithMapEvent || !$gameMap.isEventRunning());

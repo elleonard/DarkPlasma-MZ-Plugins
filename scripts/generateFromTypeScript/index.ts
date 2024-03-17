@@ -1,5 +1,5 @@
 import path from 'path';
-import glob from 'glob';
+import { glob } from 'glob';
 import chokidar from 'chokidar';
 import { fileURLToPath } from 'url';
 

@@ -3,8 +3,8 @@ import { settings } from './_build/DarkPlasma_DisplayHpMpDamage_parameters';
 const _Sprite_Battler_createDamageSprite = Sprite_Battler.prototype.createDamageSprite;
 Sprite_Battler.prototype.createDamageSprite = function () {
   _Sprite_Battler_createDamageSprite.call(this);
-  const result = this._battler.result();
-  if (this._battler.isAlive() && result.hpAffected && result.mpDamage !== 0) {
+  const result = this._battler?.result();
+  if (this._battler?.isAlive() && result?.hpAffected && result.mpDamage !== 0) {
     const last = this._damages[this._damages.length - 1];
     const sprite = new Sprite_Damage();
     /**

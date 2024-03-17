@@ -73,7 +73,7 @@ Window_EquipStatus.prototype.setTempActor = function (tempActor) {
     const party = new Game_Party();
     $gameParty.allMembers().forEach((actor) => party.addActor(actor.actorId()));
     party.allMembers = function () {
-      return this._actors.map((id) => (id === tempActor.actorId() ? tempActor : $gameActors.actor(id)));
+      return this._actors.map((id) => (id === tempActor.actorId() ? tempActor : $gameActors.actor(id))).filter((actor): actor is Game_Actor => !!actor);
     };
     tempActor.setTempParty(party);
   }
@@ -86,8 +86,8 @@ Window_EquipStatus.prototype.setTempActor = function (tempActor) {
  * @param {string} key キー
  * @return {number}
  */
-function partyAbilityTraitAdd(object, key) {
-  const match = new RegExp(`${key}:([0-9]+)`).exec(object.meta.partyAbility);
+function partyAbilityTraitAdd(object: DataManager.TraitObject, key: string) {
+  const match = new RegExp(`${key}:([0-9]+)`).exec(String(object.meta.partyAbility));
   return match && match.length > 1 ? Number(match[1]) : 0;
 }
 
@@ -97,8 +97,8 @@ function partyAbilityTraitAdd(object, key) {
  * @param {string} key キー
  * @return {number}
  */
-function partyAbilityTraitMulti(object, key) {
-  const match = new RegExp(`${key}:([0-9]+)`).exec(object.meta.partyAbility);
+function partyAbilityTraitMulti(object: DataManager.TraitObject, key: string) {
+  const match = new RegExp(`${key}:([0-9]+)`).exec(String(object.meta.partyAbility));
   return match && match.length > 1 ? Number(match[1]) / 100 : 1;
 }
 
@@ -110,7 +110,7 @@ const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fd
  * @param {number} paramId パラメータID
  * @return {string}
  */
-function paramKey(paramId) {
+function paramKey(paramId: number): string {
   return PARAM_KEYS[paramId];
 }
 
@@ -118,7 +118,7 @@ function paramKey(paramId) {
  * @param {number} paramId パラメータID
  * @return {string}
  */
-function sparamKey(paramId) {
+function sparamKey(paramId: number): string {
   return SPARAM_KEYS[paramId];
 }
 
@@ -126,7 +126,7 @@ function sparamKey(paramId) {
  * 装備絞り込みプラグイン用
  */
 if (Scene_Equip.prototype.equipFilterBuilder) {
-  const partyAbilitySParamDataIds = {};
+  const partyAbilitySParamDataIds: {[dataId: number]: number} = {};
 
   const _Scene_Equip_equipFilterBuilder = Scene_Equip.prototype.equipFilterBuilder;
   Scene_Equip.prototype.equipFilterBuilder = function (equips) {

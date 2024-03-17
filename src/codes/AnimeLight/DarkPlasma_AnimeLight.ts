@@ -6,6 +6,15 @@ const DEFAULT_OPACITY = 255;
 const DEFAULT_OFFSET = 0;
 
 class Data_AnimeLight {
+  _filename: string;
+  _opacity: number;
+  _scale: number;
+  _z: number;
+  _offsetX: number;
+  _offsetY: number;
+  _frameLength: number;
+  _sinTable: number[];
+
   /**
    * @param {string} filename
    * @param {number} opacity
@@ -15,7 +24,7 @@ class Data_AnimeLight {
    * @param {number} scale
    * @param {number} frameLength
    */
-  constructor(filename, opacity, offsetX, offsetY, z, scale, frameLength) {
+  constructor(filename: string, opacity: number, offsetX: number, offsetY: number, z: number, scale: number, frameLength: number) {
     this._filename = filename;
     this._opacity = opacity;
     this._scale = scale || settings.defaultScale;
@@ -32,7 +41,7 @@ class Data_AnimeLight {
    * @param {string} meta
    * @return {Data_AnimeLight}
    */
-  static fromEventMeta(meta) {
+  static fromEventMeta(meta: string): Data_AnimeLight {
     const data = meta.split(' ');
     return new Data_AnimeLight(
       `system/${data[0]}`,
@@ -86,7 +95,7 @@ PluginManager.registerCommand(pluginName, command_markAsLight, function () {});
 /**
  * @param {Game_Temp.prototype} gameTemp
  */
-function Game_Temp_AnimeLightMixIn(gameTemp) {
+function Game_Temp_AnimeLightMixIn(gameTemp: Game_Temp) {
   const _initialize = gameTemp.initialize;
   gameTemp.initialize = function () {
     _initialize.call(this);
@@ -107,7 +116,7 @@ Game_Temp_AnimeLightMixIn(Game_Temp.prototype);
 /**
  * @param {Game_CharacterBase.prototype} gameCharacterBase
  */
-function Game_CharacterBase_AnimeLightMixIn(gameCharacterBase) {
+function Game_CharacterBase_AnimeLightMixIn(gameCharacterBase: Game_CharacterBase) {
   gameCharacterBase.animeLightSetting = function () {
     return null;
   };
@@ -118,7 +127,7 @@ Game_CharacterBase_AnimeLightMixIn(Game_CharacterBase.prototype);
 /**
  * @param {Game_Event.prototype} gameEvent
  */
-function Game_Event_AnimeLightMixIn(gameEvent) {
+function Game_Event_AnimeLightMixIn(gameEvent: Game_Event) {
   gameEvent.hasAnimeLight = function () {
     return !!this.event() && !!this.event().meta.animeLight;
   };
@@ -149,7 +158,7 @@ function Game_Event_AnimeLightMixIn(gameEvent) {
           );
         }
       } else {
-        return Data_AnimeLight.fromEventMeta(this.event().meta.animeLight);
+        return Data_AnimeLight.fromEventMeta(String(this.event().meta.animeLight));
       }
     }
     return null;
@@ -161,7 +170,7 @@ Game_Event_AnimeLightMixIn(Game_Event.prototype);
 /**
  * @param {Spriteset_Map.prototype} spritesetMap
  */
-function Spriteset_Map_AnimeLightMixIn(spritesetMap) {
+function Spriteset_Map_AnimeLightMixIn(spritesetMap: Spriteset_Map) {
   const _initialize = spritesetMap.initialize;
   spritesetMap.initialize = function () {
     _initialize.call(this);
@@ -195,10 +204,15 @@ function Spriteset_Map_AnimeLightMixIn(spritesetMap) {
 Spriteset_Map_AnimeLightMixIn(Spriteset_Map.prototype);
 
 class Sprite_AnimeLight extends Sprite {
+  _animationFrame: number;
+  _character: Game_CharacterBase;
+  _setting: Data_AnimeLight;
+  _stopped: boolean;
+
   /**
    * @param {Game_CharacterBase} character
    */
-  initialize(character) {
+  initialize(character: Game_CharacterBase) {
     super.initialize();
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;

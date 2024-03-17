@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import applyTemplate from './extensions/rollup/rollup-apply-template';
@@ -14,26 +14,35 @@ const targetJsList = (() => {
     const configTsPath = path.join(__dirname, 'src', dir, `${plugin}${versionDir}`, 'config', 'config.ts');
     const pluginDir = fs.existsSync(configTsPath) ? '/plugin' : '';
     return plugin
-      ? glob.sync(path.join(__dirname, 'src', dir, `${plugin}${versionDir}${pluginDir}`, 'DarkPlasma*.js'))
+      ? globSync(path.join(__dirname, 'src', dir, `${plugin}${versionDir}${pluginDir}`, 'DarkPlasma*.js').replace(/\\/g, "/"))
       : null;
   })();
   return targetFile
     ? [targetFile].flat()
     : [
-        glob.sync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
-        glob.sync(path.join(__dirname, 'src', 'codes', '*', 'config', 'DarkPlasma*.js')),
-        glob.sync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
+        globSync(path.join(__dirname, 'src', 'codes', '*', 'DarkPlasma*.js')),
+        globSync(path.join(__dirname, 'src', 'codes', '*', 'config', 'DarkPlasma*.js')),
+        globSync(path.join(__dirname, 'src', 'excludes', '*', 'DarkPlasma*.js')),
       ].flat();
 })();
 
 const config = targetJsList.map((input) => {
   const name = path.basename(input, '.js');
   /**
-   * configのts化をする場合、1段ディレクトリがズレる
+   * src/codes/プラグイン名 -> _dist/codes
+   * src/excludes/プラグイン名/(DarkPlasma_*.js|plugin/DarkPlasma_*.js) -> _dist/excludes
+   * src/excludes/(グループ名)/プラグイン名/(DarkPlasma_*.js|plugin/DarkPlasma_*.js) -> _dist/(グループ名)
    */
-  const dir = path.dirname(input).split('/').slice(-2)[0] === process.env.TARGET.split('/').slice(-1)[0]
-    ? path.dirname(input).split('/').slice(-3)[0]
-    : path.dirname(input).split('/').slice(-2)[0];
+  const dir = (() => {
+    if (/\\src\\codes/.test(path.dirname(input))) {
+      return "codes";
+    }
+    const match = /\\src\\excludes\\(.+?)\\(.+)(\\plugin)?/.exec(path.dirname(input));
+    if (match) {
+      return match[1];
+    }
+    return "excludes";
+  })();
   const versionIndex = process.argv.findIndex(n => n === '-V');
   const versionDir = versionIndex >= 0 ? `/v${process.argv[versionIndex+1]}` : "";
   return {

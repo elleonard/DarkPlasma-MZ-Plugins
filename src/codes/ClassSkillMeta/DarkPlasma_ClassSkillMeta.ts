@@ -3,8 +3,8 @@ DataManager.onLoad = function (object) {
   _DataManager_onLoad.call(this, object);
   if (object === $dataClasses) {
     object
-      .filter((clazz) => clazz)
-      .forEach((clazz) => {
+      .filter((clazz: MZ.Class) => clazz)
+      .forEach((clazz: MZ.Class) => {
         this.extractArrayMetadata(clazz.learnings);
       });
   }

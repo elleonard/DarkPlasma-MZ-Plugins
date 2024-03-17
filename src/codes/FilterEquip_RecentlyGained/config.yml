@@ -3,11 +3,14 @@ DarkPlasma_FilterEquip_RecentlyGained:
   year: 2021
   license: MIT
   histories:
-    - date: '2021/09/11'
-      version: '1.0.1'
+    - date: 2024/03/17
+      version: 1.0.2
+      description: 'TypeScript移行'
+    - date: 2021/09/11
+      version: 1.0.1
       description: 'クラスを上書きしないように変更'
-    - date: '2021/09/05'
-      version: '1.0.0'
+    - date: 2021/09/05
+      version: 1.0.0
       description: '公開'
 
   locates:

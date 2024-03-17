@@ -31,7 +31,7 @@ const _Scene_Battle_selectNextCommand = Scene_Battle.prototype.selectNextCommand
 Scene_Battle.prototype.selectNextCommand = function () {
   const action = BattleManager.inputtingAction();
   if (action && action.isItem()) {
-    const item = action.item();
+    const item = action.item() as MZ.Item;
     BattleManager.reserveItem(item);
   }
   _Scene_Battle_selectNextCommand.call(this);
@@ -53,7 +53,7 @@ Scene_Battle.prototype.selectPreviousCommand = function () {
  * @return {number}
  */
 Game_Party.prototype.numItemsForDisplay = function (item) {
-  return this.inBattle() && BattleManager.isInputting()
+  return this.inBattle() && BattleManager.isInputting() && DataManager.isItem(item)
     ? this.numItems(item) - BattleManager.reservedItemCount(item)
     : this.numItems(item);
 };
@@ -67,7 +67,7 @@ Game_Party.prototype.numItemsForDisplay = function (item) {
 Window_BattleItem.prototype.drawItemNumber = function (item, x, y, width) {
   if (this.needsNumber()) {
     this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-    this.drawText($gameParty.numItemsForDisplay(item), x, y, width, 'right');
+    this.drawText(`${$gameParty.numItemsForDisplay(item)}`, x, y, width, 'right');
   }
 };
 

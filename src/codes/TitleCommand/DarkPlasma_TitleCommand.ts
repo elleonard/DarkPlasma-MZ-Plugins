@@ -1,8 +1,8 @@
 import { settings } from './_build/DarkPlasma_TitleCommand_parameters';
 
-function selectedScene(symbol) {
+function selectedScene(symbol: string|null) {
   const command = settings.additionalCommands.find((command) => command.symbol === symbol);
-  return window[command.scene] || null;
+  return command ? window[command.scene as keyof _Window] || null : null;
 }
 
 const _Scene_Title_createCommandWindow = Scene_Title.prototype.createCommandWindow;
@@ -33,7 +33,7 @@ Scene_Title.prototype.commandShutdown = function () {
   if (StorageManager.isLocalMode()) {
     window.close();
   } else {
-    window.open('about:blank', '_self').close();
+    window.open('about:blank', '_self')?.close();
   }
 };
 

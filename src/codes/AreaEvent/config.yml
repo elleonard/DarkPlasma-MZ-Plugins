@@ -3,6 +3,9 @@ DarkPlasma_AreaEvent:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/03/17
+      version: 1.0.4
+      description: 'TypeScript移行'
     - date: 2022/07/23
       version: 1.0.3
       description: 'エリアイベントがあるマップでセーブしたデータをロードできない不具合を修正'

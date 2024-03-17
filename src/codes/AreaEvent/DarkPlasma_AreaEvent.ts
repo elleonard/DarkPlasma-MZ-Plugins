@@ -20,12 +20,16 @@ const COMMAND_CODE = {
 };
 
 class Game_EventArea {
+  _width: number;
+  _height: number;
+  _originType: number;
+
   /**
    * @param {number} width
    * @param {number} height
    * @param {number} originType
    */
-  constructor(width, height, originType) {
+  constructor(width: number, height: number, originType: number) {
     this._width = width;
     this._height = height;
     this._originType = originType;
@@ -40,7 +44,7 @@ class Game_EventArea {
    * @param {number} eventY
    * @return {Rectangle}
    */
-  rectangle(eventX, eventY) {
+  rectangle(eventX: number, eventY: number): Rectangle {
     const x = (() => {
       if (this._originType % 3 === 1) {
         return eventX;
@@ -61,12 +65,16 @@ class Game_EventArea {
   }
 }
 
+type _Game_EventArea = typeof Game_EventArea;
+declare global {
+  var Game_EventArea: _Game_EventArea;
+}
 globalThis.Game_EventArea = Game_EventArea;
 
 /**
  * @param {Game_Event.prototype} gameEvent
  */
-function Game_Event_AreaEventMixIn(gameEvent) {
+function Game_Event_AreaEventMixIn(gameEvent: Game_Event) {
   const _clearPageSettings = gameEvent.clearPageSettings;
   gameEvent.clearPageSettings = function () {
     _clearPageSettings.call(this);
@@ -80,7 +88,7 @@ function Game_Event_AreaEventMixIn(gameEvent) {
   };
 
   gameEvent.isAreaEvent = function () {
-    return this.event() && this.event().meta && this.event().meta.areaEvent;
+    return !!this.event()?.meta.areaEvent;
   };
 
   gameEvent.setupArea = function () {
