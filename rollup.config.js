@@ -38,7 +38,7 @@ const config = targetJsList.map((input) => {
     if (/\/src\/codes/.test(inputDirName)) {
       return "codes";
     }
-    const match = /\/src\/excludes\/(.+?)\/(.+)(\/plugin)?/.exec(path.dirname(input));
+    const match = /\/src\/excludes\/(.+?)\/(.+)(\/plugin)?/.exec(inputDirName);
     if (match) {
       return match[1];
     }
