@@ -1,14 +1,15 @@
-// DarkPlasma_FilterEquip_RecentlyGained 1.0.1
+// DarkPlasma_FilterEquip_RecentlyGained 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 1.0.2 TypeScript移行
  * 2021/09/11 1.0.1 クラスを上書きしないように変更
  * 2021/09/05 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 最近入手した装備を絞り込む
  * @author DarkPlasma
  * @license MIT
@@ -32,7 +33,7 @@
  * @default 最近入手した装備
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * DarkPlasma_FilterEquipによる装備絞り込みに「最近入手した装備」を追加します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -52,7 +53,7 @@
 
   const settings = {
     threshold: Number(pluginParameters.threshold || 5),
-    traitName: String(pluginParameters.traitName || '最近入手した装備'),
+    traitName: String(pluginParameters.traitName || `最近入手した装備`),
   };
 
   function Game_Party_FilterEquipRecentlyGainedMixIn(gameParty) {
@@ -67,7 +68,6 @@
         }
       }
     };
-
     /**
      * @param {MZ.Weapon} weapon 武器データ
      */
@@ -80,7 +80,6 @@
         this._gainWeaponHistory.shift();
       }
     };
-
     /**
      * @param {MZ.Armor} armor 防具データ
      */
@@ -93,7 +92,6 @@
         this._gainArmorHistory.shift();
       }
     };
-
     /**
      * 最近入手した武器ID一覧
      * @return {number[]}
@@ -101,7 +99,6 @@
     gameParty.gainWeaponHistory = function () {
       return this._gainWeaponHistory || [];
     };
-
     /**
      * 最近入手した防具ID一覧
      * @return {number[]}
@@ -109,13 +106,12 @@
     gameParty.gainArmorHistory = function () {
       return this._gainArmorHistory || [];
     };
-
     /**
      * 最近入手したアイテムかどうか
      * @param {MZ.Item|MZ.Weapon|MZ.Armor} item アイテムデータ
      * @return {boolean}
      */
-    gameParty.isRecentlyGainded = function (item) {
+    gameParty.isRecentlyGained = function (item) {
       if (DataManager.isWeapon(item)) {
         return this.gainWeaponHistory().includes(item.id);
       } else if (DataManager.isArmor(item)) {
@@ -124,22 +120,19 @@
       return false;
     };
   }
-
   Game_Party_FilterEquipRecentlyGainedMixIn(Game_Party.prototype);
-
   const traitIds = [];
-
   const _Scene_Equip_equipFilterBuilder = Scene_Equip.prototype.equipFilterBuilder;
   Scene_Equip.prototype.equipFilterBuilder = function (equips) {
     const ALLOCATION_TRAIT_ID_RECENTLY_GAINED = 0;
-    traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED] = EquipFilterBuilder.allocateUniqueTraitId(
+    traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED] = uniqueTraitIdCache.allocate(
       pluginName,
+      ALLOCATION_TRAIT_ID_RECENTLY_GAINED,
       settings.traitName,
-      ALLOCATION_TRAIT_ID_RECENTLY_GAINED
-    );
+    ).id;
     const builder = _Scene_Equip_equipFilterBuilder(equips);
     return builder.withTrait(traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED]).withEquipToTraitsRule((equip) => {
-      return $gameParty.isRecentlyGainded(equip)
+      return $gameParty.isRecentlyGained(equip)
         ? [
             {
               code: traitIds[ALLOCATION_TRAIT_ID_RECENTLY_GAINED],

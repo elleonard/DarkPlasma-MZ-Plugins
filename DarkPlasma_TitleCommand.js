@@ -1,14 +1,15 @@
-// DarkPlasma_TitleCommand 1.0.1
+// DarkPlasma_TitleCommand 1.0.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 1.0.2 TypeScript移行
  * 2021/07/05 1.0.1 MZ 1.3.2に対応
  * 2021/06/27 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc タイトルコマンドを設定する
  * @author DarkPlasma
  * @license MIT
@@ -23,7 +24,7 @@
  * @default []
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * タイトルコマンドを設定します。
  */
 /*~struct~TitleCommand:
@@ -75,9 +76,9 @@
         return {
           commandType: Number(parsed.commandType || 0),
           position: Number(parsed.position || 3),
-          text: String(parsed.text || ''),
-          symbol: String(parsed.symbol || ''),
-          scene: String(parsed.scene || ''),
+          text: String(parsed.text || ``),
+          symbol: String(parsed.symbol || ``),
+          scene: String(parsed.scene || ``),
         };
       })(e || '{}');
     }),
@@ -85,9 +86,8 @@
 
   function selectedScene(symbol) {
     const command = settings.additionalCommands.find((command) => command.symbol === symbol);
-    return window[command.scene] || null;
+    return command ? window[command.scene] || null : null;
   }
-
   const _Scene_Title_createCommandWindow = Scene_Title.prototype.createCommandWindow;
   Scene_Title.prototype.createCommandWindow = function () {
     _Scene_Title_createCommandWindow.call(this);
@@ -96,7 +96,6 @@
       this._commandWindow.setHandler(command.symbol, handler);
     });
   };
-
   const _Scene_Title_commandWindowRect = Scene_Title.prototype.commandWindowRect;
   Scene_Title.prototype.commandWindowRect = function () {
     const rect = _Scene_Title_commandWindowRect.call(this);
@@ -104,10 +103,9 @@
       rect.x,
       rect.y,
       rect.width,
-      this.calcWindowHeight(3 + settings.additionalCommands.length, true)
+      this.calcWindowHeight(3 + settings.additionalCommands.length, true),
     );
   };
-
   Scene_Title.prototype.commandSceneChange = function () {
     this._commandWindow.close();
     const scene = selectedScene(this._commandWindow.currentSymbol());
@@ -116,15 +114,13 @@
     }
     SceneManager.push(scene);
   };
-
   Scene_Title.prototype.commandShutdown = function () {
     if (StorageManager.isLocalMode()) {
       window.close();
     } else {
-      window.open('about:blank', '_self').close();
+      window.open('about:blank', '_self')?.close();
     }
   };
-
   const _Window_TitleCommand_makeCommandList = Window_TitleCommand.prototype.makeCommandList;
   Window_TitleCommand.prototype.makeCommandList = function () {
     _Window_TitleCommand_makeCommandList.call(this);
@@ -132,7 +128,6 @@
       this.addCommandAt(command.position, command.text, command.symbol);
     });
   };
-
   Window_TitleCommand.prototype.addCommandAt = function (index, name, symbol, enabled = true, ext = null) {
     this._list.splice(index, 0, {
       name: name,

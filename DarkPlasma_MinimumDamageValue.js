@@ -1,16 +1,17 @@
-// DarkPlasma_MinimumDamageValue 2.0.2
+// DarkPlasma_MinimumDamageValue 2.0.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 2.0.3 TypeScript移行
  * 2021/07/05 2.0.2 MZ 1.3.2に対応
  * 2021/06/22 2.0.1 サブフォルダからの読み込みに対応
  * 2020/09/08 2.0.0 パラメータ名を変更
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc 攻撃命中時のダメージの最低値を設定する
  * @author DarkPlasma
  * @license MIT
@@ -41,7 +42,7 @@
  * @default false
  *
  * @help
- * version: 2.0.2
+ * version: 2.0.3
  * 攻撃が命中したときのダメージの最低値を設定します。
  *
  * 最低ダメージ保証と呼んでいますが、実際はダメージに設定値を加算するシステムです。
@@ -75,7 +76,6 @@
   Game_Action.prototype.makeDamageValue = function (target, critical) {
     return _GameAction_makeDamageValue.call(this, target, critical) + this.minimumDamageValue(target);
   };
-
   Game_Action.prototype.minimumDamageValue = function (target) {
     let value = 0;
     if (settings.ignoreIfRateLEZero && this.calcElementRate(target) <= 0) {

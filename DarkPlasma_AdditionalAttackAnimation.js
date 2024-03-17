@@ -1,9 +1,10 @@
-// DarkPlasma_AdditionalAttackAnimation 2.0.3
+// DarkPlasma_AdditionalAttackAnimation 2.0.4
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 2.0.4 TypeScript移行
  * 2021/07/05 2.0.3 MZ 1.3.2に対応
  * 2021/06/22 2.0.2 サブフォルダからの読み込みに対応
  * 2020/11/10 2.0.1 全体化プラグインとの順序を明記
@@ -11,7 +12,7 @@
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc 攻撃アニメーションを特定条件で追加する
  * @author DarkPlasma
  * @license MIT
@@ -28,7 +29,7 @@
  * @default []
  *
  * @help
- * version: 2.0.3
+ * version: 2.0.4
  * 攻撃アニメーションを特定条件で追加します。
  *
  * 以下の条件でアニメーションを追加できます。
@@ -105,18 +106,16 @@
     this.push('waitForEffect');
     this.push('showAdditionalAnimation', subject, targets.clone());
   };
-
   Window_BattleLog.prototype.showAdditionalAnimation = function (subject, targets) {
     if (subject.isActor()) {
       settings.additionalAnimations.forEach((additionalAnimation) => {
         const additionalAnimationTargets = targets.filter((target) =>
-          target.isAdditionalAnimationTarget(additionalAnimation)
+          target.isAdditionalAnimationTarget(additionalAnimation),
         );
         this.showNormalAnimation(additionalAnimationTargets, additionalAnimation.animation, false);
       });
     }
   };
-
   Game_Actor.prototype.isAdditionalAnimationTarget = function (additionalAnimation) {
     if (additionalAnimation.onlyForSomeEnemies) {
       return false;
@@ -128,7 +127,6 @@
     }
     return true;
   };
-
   Game_Enemy.prototype.isAdditionalAnimationTarget = function (additionalAnimation) {
     if (additionalAnimation.onlyForSomeEnemies) {
       if (!this.isEnemy()) {

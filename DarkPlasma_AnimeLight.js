@@ -9,7 +9,7 @@
  *            1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 拡縮アニメーションする明かりイベント
  * @author DarkPlasma
  * @license MIT
@@ -116,7 +116,7 @@
 
   function parseArgs_markAsLight(args) {
     return {
-      image: String(args.image || ''),
+      image: String(args.image || ``),
       opacity: Number(args.opacity || 255),
       offsetX: Number(args.offsetX || 0),
       offsetY: Number(args.offsetY || 0),
@@ -140,7 +140,6 @@
 
   const DEFAULT_OPACITY = 255;
   const DEFAULT_OFFSET = 0;
-
   class Data_AnimeLight {
     /**
      * @param {string} filename
@@ -163,7 +162,6 @@
         return (Math.sin((Math.PI * i) / (this._frameLength / 2)) * this._scale) / 100 + 1;
       });
     }
-
     /**
      * @param {string} meta
      * @return {Data_AnimeLight}
@@ -177,38 +175,30 @@
         Number(data[3] || DEFAULT_OFFSET),
         Number(data[4] || settings.defaultZ),
         settings.defaultScale,
-        settings.defaultFrameLength
+        settings.defaultFrameLength,
       );
     }
-
     get opacity() {
       return this._opacity;
     }
-
     get offsetX() {
       return this._offsetX;
     }
-
     get offsetY() {
       return this._offsetY;
     }
-
     get z() {
       return this._z;
     }
-
     get scale() {
       return this._scale;
     }
-
     get frameLength() {
       return this._frameLength;
     }
-
     get sinTable() {
       return this._sinTable;
     }
-
     /**
      * @return {Bitmap}
      */
@@ -216,9 +206,7 @@
       return ImageManager.loadBitmap('img/', this._filename);
     }
   }
-
   PluginManager.registerCommand(pluginName, command_markAsLight, function () {});
-
   /**
    * @param {Game_Temp.prototype} gameTemp
    */
@@ -228,18 +216,14 @@
       _initialize.call(this);
       this._requestedAnimeLightCharacters = [];
     };
-
     gameTemp.requestedAnimeLightCharacter = function () {
       return this._requestedAnimeLightCharacters.shift();
     };
-
     gameTemp.requestAnimeLight = function (character) {
       this._requestedAnimeLightCharacters.push(character);
     };
   }
-
   Game_Temp_AnimeLightMixIn(Game_Temp.prototype);
-
   /**
    * @param {Game_CharacterBase.prototype} gameCharacterBase
    */
@@ -248,9 +232,7 @@
       return null;
     };
   }
-
   Game_CharacterBase_AnimeLightMixIn(Game_CharacterBase.prototype);
-
   /**
    * @param {Game_Event.prototype} gameEvent
    */
@@ -258,11 +240,9 @@
     gameEvent.hasAnimeLight = function () {
       return !!this.event() && !!this.event().meta.animeLight;
     };
-
     gameEvent.isMarkedAsAnimeLight = function () {
       return !!this.event() && this.event().meta.animeLight === true;
     };
-
     gameEvent.animeLightSetting = function () {
       if (this.hasAnimeLight()) {
         if (this.isMarkedAsAnimeLight()) {
@@ -270,7 +250,7 @@
             (command) =>
               command.code === 357 &&
               command.parameters.includes(pluginName) &&
-              command.parameters.includes(command_markAsLight)
+              command.parameters.includes(command_markAsLight),
           );
           if (command) {
             const parsedArgs = parseArgs_markAsLight(command.parameters[3]);
@@ -281,19 +261,17 @@
               parsedArgs.offsetY,
               parsedArgs.z,
               parsedArgs.scale,
-              parsedArgs.frameLength
+              parsedArgs.frameLength,
             );
           }
         } else {
-          return Data_AnimeLight.fromEventMeta(this.event().meta.animeLight);
+          return Data_AnimeLight.fromEventMeta(String(this.event().meta.animeLight));
         }
       }
       return null;
     };
   }
-
   Game_Event_AnimeLightMixIn(Game_Event.prototype);
-
   /**
    * @param {Spriteset_Map.prototype} spritesetMap
    */
@@ -304,20 +282,17 @@
       this._animeLightSprites = [];
       this.initAnimeLights();
     };
-
     spritesetMap.initAnimeLights = function () {
       $gameMap
         .events()
         .filter((event) => event.hasAnimeLight())
         .forEach((event) => $gameTemp.requestAnimeLight(event));
     };
-
     const _update = spritesetMap.update;
     spritesetMap.update = function () {
       _update.call(this);
       this.updateAnimeLight();
     };
-
     spritesetMap.updateAnimeLight = function () {
       let character;
       while ((character = $gameTemp.requestedAnimeLightCharacter())) {
@@ -327,9 +302,7 @@
       }
     };
   }
-
   Spriteset_Map_AnimeLightMixIn(Spriteset_Map.prototype);
-
   class Sprite_AnimeLight extends Sprite {
     /**
      * @param {Game_CharacterBase} character
@@ -343,7 +316,6 @@
       this._character = character;
       this.setup();
     }
-
     setup() {
       const animeLightSetting = this._character.animeLightSetting();
       this._setting = animeLightSetting;
@@ -351,15 +323,12 @@
       this.opacity = animeLightSetting.opacity;
       this.z = animeLightSetting.z;
     }
-
     stopAnimation() {
       this._stopped = true;
     }
-
     startAnimation() {
       this._stopped = false;
     }
-
     update() {
       super.update();
       if (!this._stopped) {

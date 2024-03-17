@@ -1,9 +1,10 @@
-// DarkPlasma_ClearEquip 2.1.2
+// DarkPlasma_ClearEquip 2.1.3
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 2.1.3 TypeScript移行
  * 2021/07/05 2.1.2 MZ 1.3.2に対応
  * 2021/06/22 2.1.1 サブフォルダからの読み込みに対応
  * 2020/10/30 2.1.0 プラグインコマンドを追加
@@ -13,7 +14,7 @@
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc 装備をすべてはずす
  * @author DarkPlasma
  * @license MIT
@@ -58,7 +59,7 @@
  * @desc パーティメンバー全員の装備をすべてはずします。
  *
  * @help
- * version: 2.1.2
+ * version: 2.1.3
  * プラグインパラメータの設定をONにしておくと、
  * パーティからメンバーが脱退したとき、
  * そのメンバーの装備を固定装備を除いてすべてはずします。
@@ -74,6 +75,37 @@
     return arguments[1];
   });
 
+  function parseArgs_clearEquip(args) {
+    return {
+      actorId: Number(args.actorId || 0),
+      equipTypes: JSON.parse(args.equipTypes || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+    };
+  }
+
+  function parseArgs_clearAllMemberEquip(args) {
+    return {
+      equipTypes: JSON.parse(args.equipTypes || '[]').map((e) => {
+        return Number(e || 0);
+      }),
+    };
+  }
+
+  function parseArgs_clearAllEquip(args) {
+    return {
+      actorId: Number(args.actorId || 0),
+    };
+  }
+
+  const command_clearEquip = 'clearEquip';
+
+  const command_clearAllMemberEquip = 'clearAllMemberEquip';
+
+  const command_clearAllEquip = 'clearAllEquip';
+
+  const command_clearAllMemberAllEquip = 'clearAllMemberAllEquip';
+
   const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
 
   const pluginParameters = pluginParametersOf(pluginName);
@@ -82,22 +114,14 @@
     clearEquipWhenMemberIsOut: String(pluginParameters.clearEquipWhenMemberIsOut || false) === 'true',
   };
 
-  const PLUGIN_COMMAND_NAME = {
-    CLEAR_EQUIP: 'clearEquip',
-    CLEAR_ALL_MEMBER_EQUIP: 'clearAllMemberEquip',
-    CLEAR_ALL_EQUIP: 'clearAllEquip',
-    CLEAR_ALL_MEMBER_ALL_EQUIP: 'clearAllMemberAllEquip',
-  };
-
   const _Game_Party_removeActor = Game_Party.prototype.removeActor;
   Game_Party.prototype.removeActor = function (actorId) {
     // パーティメンバーがはずれたときに装備をすべてはずす
     if (settings.clearEquipWhenMemberIsOut && this._actors.includes(actorId)) {
-      $gameActors.actor(actorId).clearEquipments();
+      $gameActors.actor(actorId)?.clearEquipments();
     }
     _Game_Party_removeActor.call(this, actorId);
   };
-
   /**
    * 指定した装備タイプIDの装備を可能であればはずす
    * @param {number[]} equipTypes 装備タイプIDリスト
@@ -109,28 +133,25 @@
       })
       .forEach((slotId) => this.changeEquip(slotId, null));
   };
-
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR_EQUIP, function (args) {
-    const actor = $gameParty.members().find((actor) => actor.actorId() === Number(args.actorId));
+  PluginManager.registerCommand(pluginName, command_clearEquip, function (args) {
+    const parsedArgs = parseArgs_clearEquip(args);
+    const actor = $gameParty.members().find((actor) => actor.actorId() === parsedArgs.actorId);
     if (actor) {
-      const equipTypes = JSON.parse(args.equipTypes).map((equipType) => Number(equipType));
-      actor.clearEquipByEquipTypes(equipTypes);
+      actor.clearEquipByEquipTypes(parsedArgs.equipTypes);
     }
   });
-
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR_ALL_EQUIP, function (args) {
-    const actor = $gameParty.members().find((actor) => actor.actorId() === Number(args.actorId));
+  PluginManager.registerCommand(pluginName, command_clearAllEquip, function (args) {
+    const parsedArgs = parseArgs_clearAllEquip(args);
+    const actor = $gameParty.members().find((actor) => actor.actorId() === parsedArgs.actorId);
     if (actor) {
       actor.clearEquipments();
     }
   });
-
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR_ALL_MEMBER_EQUIP, function (args) {
-    const equipTypes = JSON.parse(args.equipTypes).map((equipType) => Number(equipType));
-    $gameParty.members().forEach((actor) => actor.clearEquipByEquipTypes(equipTypes));
+  PluginManager.registerCommand(pluginName, command_clearAllMemberEquip, function (args) {
+    const parsedArgs = parseArgs_clearAllMemberEquip(args);
+    $gameParty.members().forEach((actor) => actor.clearEquipByEquipTypes(parsedArgs.equipTypes));
   });
-
-  PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR_ALL_MEMBER_ALL_EQUIP, function () {
+  PluginManager.registerCommand(pluginName, command_clearAllMemberAllEquip, function () {
     $gameParty.members().forEach((actor) => actor.clearEquipments());
   });
 })();

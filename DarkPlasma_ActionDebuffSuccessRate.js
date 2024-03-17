@@ -1,13 +1,14 @@
-// DarkPlasma_ActionDebuffSuccessRate 1.0.0
+// DarkPlasma_ActionDebuffSuccessRate 1.0.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 1.0.1 TypeScript移行
  * 2022/06/12 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc スキル・アイテムに弱体成功率を設定する
  * @author DarkPlasma
  * @license MIT
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * スキル・アイテムのメモ欄に以下のように記述すると
  * その行動による弱体付与の基本成功率がx％になります。（未設定の場合100）
  * <debuffSuccessRate:x>
@@ -33,9 +34,8 @@
    */
   function Game_Action_DebuffSuccessRateMixIn(gameAction) {
     gameAction.baseDebuffSuccessRate = function () {
-      return Number(this.item().meta.debuffSuccessRate || 100) / 100;
+      return Number(this.item()?.meta.debuffSuccessRate || 100) / 100;
     };
-
     /**
      * 弱体の付与。成功率計算を変更するため上書き
      * @param {Game_BattlerBase} target
@@ -49,6 +49,5 @@
       }
     };
   }
-
   Game_Action_DebuffSuccessRateMixIn(Game_Action.prototype);
 })();

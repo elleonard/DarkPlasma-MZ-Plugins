@@ -1,16 +1,17 @@
-// DarkPlasma_AreaEvent 1.0.3
+// DarkPlasma_AreaEvent 1.0.4
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 1.0.4 TypeScript移行
  * 2022/07/23 1.0.3 エリアイベントがあるマップでセーブしたデータをロードできない不具合を修正
  * 2022/07/14 1.0.2 エリアイベントメモタグをつけたイベントの有効なページにエリア登録がない場合にエラーにしない
  * 2022/07/11 1.0.1 原点設定が正しくない不具合を修正
  * 2022/07/10 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc イベントの当たり判定 起動判定マスを拡張する
  * @author DarkPlasma
  * @license MIT
@@ -56,7 +57,7 @@
  * @default 7
  *
  * @help
- * version: 1.0.3
+ * version: 1.0.4
  * <areaEvent>メタタグのついたイベントの当たり判定 起動判定マスを拡張します。
  * 範囲はページの先頭でプラグインコマンドによって設定します。
  */
@@ -82,20 +83,16 @@
     TOP_LEFT: 7,
     TOP_CENTER: 8,
     TOP_RIGHT: 9,
-
     MIDDLE_LEFT: 4,
     MIDDLE_CENTER: 5,
     MIDDLE_RIGHT: 6,
-
     BOTTOM_LEFT: 1,
     BOTTOM_CENTER: 2,
     BOTTOM_RIGHT: 3,
   };
-
   const COMMAND_CODE = {
     PLUGIN_COMMAND: 357,
   };
-
   class Game_EventArea {
     /**
      * @param {number} width
@@ -107,11 +104,9 @@
       this._height = height;
       this._originType = originType;
     }
-
     static default() {
       return new Game_EventArea(1, 1, ORIGIN.TOP_LEFT);
     }
-
     /**
      * @param {number} eventX
      * @param {number} eventY
@@ -137,9 +132,7 @@
       return new Rectangle(x, y, this._width, this._height);
     }
   }
-
   globalThis.Game_EventArea = Game_EventArea;
-
   /**
    * @param {Game_Event.prototype} gameEvent
    */
@@ -149,24 +142,21 @@
       _clearPageSettings.call(this);
       this._area = Game_EventArea.default();
     };
-
     const _setupPageSettings = gameEvent.setupPageSettings;
     gameEvent.setupPageSettings = function () {
       _setupPageSettings.call(this);
       this.setupArea();
     };
-
     gameEvent.isAreaEvent = function () {
-      return this.event() && this.event().meta && this.event().meta.areaEvent;
+      return !!this.event()?.meta.areaEvent;
     };
-
     gameEvent.setupArea = function () {
       if (this.isAreaEvent() && this.page()) {
         const command = this.page().list.find(
           (command) =>
             command.code === COMMAND_CODE.PLUGIN_COMMAND &&
             command.parameters.includes(pluginName) &&
-            command.parameters.includes(command_registerArea)
+            command.parameters.includes(command_registerArea),
         );
         if (command) {
           const args = parseArgs_registerArea(command.parameters[3]);
@@ -178,7 +168,6 @@
         this._area = Game_EventArea.default();
       }
     };
-
     /**
      * 範囲判定にするため上書き
      * @param {number} x
@@ -190,6 +179,5 @@
       return x >= rect.x && x < rect.x + rect.width && y >= rect.y && y < rect.y + rect.height;
     };
   }
-
   Game_Event_AreaEventMixIn(Game_Event.prototype);
 })();

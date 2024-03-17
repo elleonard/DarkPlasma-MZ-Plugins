@@ -1,13 +1,14 @@
-// DarkPlasma_ClassSkillMeta 1.0.0
+// DarkPlasma_ClassSkillMeta 1.0.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/03/17 1.0.1 TypeScript移行
  * 2021/10/10 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 職業の習得スキルのメモ欄にメタデータを登録する
  * @author DarkPlasma
  * @license MIT
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 職業の習得するスキル一覧のメモ欄に、
  * 他の各種データ同様にメタデータを登録できるようにします。
  *
