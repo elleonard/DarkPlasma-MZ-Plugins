@@ -33,11 +33,12 @@ const config = targetJsList.map((input) => {
    * src/excludes/プラグイン名/(DarkPlasma_*.js|plugin/DarkPlasma_*.js) -> _dist/excludes
    * src/excludes/(グループ名)/プラグイン名/(DarkPlasma_*.js|plugin/DarkPlasma_*.js) -> _dist/(グループ名)
    */
+  const inputDirName = path.dirname(input).replace(/\//g, "/");
   const dir = (() => {
-    if (/\\src\\codes/.test(path.dirname(input))) {
+    if (/\/src\/codes/.test(inputDirName)) {
       return "codes";
     }
-    const match = /\\src\\excludes\\(.+?)\\(.+)(\\plugin)?/.exec(path.dirname(input));
+    const match = /\/src\/excludes\/(.+?)\/(.+)(\/plugin)?/.exec(path.dirname(input));
     if (match) {
       return match[1];
     }
