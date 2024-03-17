@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,7 +11,7 @@ if (!fs.statSync(targetDir).isDirectory()) {
   process.exit(1);
 }
 
-glob.sync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) => {
+globSync(path.join(__dirname, '..', '_dist', 'codes', '*.js')).forEach((file) => {
   const name = path.basename(file);
 
   console.log(`${file} to ${targetDir}`);
