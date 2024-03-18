@@ -7,6 +7,8 @@ DarkPlasma_CGGallery:
       version: 2.0.2
       description: 'typescript移行'
     - description: 'MoviePicture.jsとの競合対策'
+    # 本来1.0.1とすべきところを採番ミスで2.0.1になっているだけで、破壊的変更なし
+    # 今更バージョン番号だけ変えるのも微妙なので、ひとまずこのまま
     - date: 2021/07/05
       version: 2.0.1
       description: 'MZ 1.3.2に対応'
