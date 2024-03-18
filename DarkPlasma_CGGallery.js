@@ -10,7 +10,7 @@
  * 2021/06/27 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc CGギャラリーシーンを提供する
  * @author DarkPlasma
  * @license MIT
@@ -89,16 +89,16 @@
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
-          file: String(parsed.file || ''),
+          file: String(parsed.file || ``),
           switchId: Number(parsed.switchId || 0),
-          title: String(parsed.title || ''),
+          title: String(parsed.title || ``),
         };
       })(e || '{}');
     }),
     selectWindowWidth: Number(pluginParameters.selectWindowWidth || 300),
     selectWindowHeight: Number(pluginParameters.selectWindowHeight || 300),
-    secretTitle: String(pluginParameters.secretTitle || '？？？？'),
-    backgroundImage: String(pluginParameters.backgroundImage || ''),
+    secretTitle: String(pluginParameters.secretTitle || `？？？？`),
+    backgroundImage: String(pluginParameters.backgroundImage || ``),
   };
 
   class Scene_CGGallery extends Scene_Base {
@@ -135,7 +135,7 @@
         Graphics.boxWidth / 2 - settings.selectWindowWidth / 2,
         Graphics.boxHeight / 2 - settings.selectWindowHeight / 2,
         settings.selectWindowWidth,
-        settings.selectWindowHeight
+        settings.selectWindowHeight,
       );
     }
     createSprite() {
