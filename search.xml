@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>足跡画像を表示し、足音SEを再生する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/03/28/step-image-and-sound/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/03/28/step-image-and-sound/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>タイルセットの設定に応じて、キャラクターが歩行した際に足跡画像を表示したり、足音SEを再生します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="step-image-and-sound.png" alt="使用例" title="使用例"></p><p>タイルセットのメモ欄に、地形タグごとの設定を記述します。<br>メモ欄の設定はMV向けプラグイン<a href="https://plugin.fungamemake.com/archives/2059">StepEffect.js</a>と互換性があります。</p><h2 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;ステップエフェクト1:Footprint&gt;</span><br><span class="line">&lt;ステップエフェクト設定1:0,12,fitAngle,fitStep,wet5,animeSpeed16&gt;</span><br><span class="line">&lt;ステップサウンド1:sand&gt;</span><br><span class="line">&lt;ステップサウンド設定1:30-50,130&gt;</span><br></pre></td></tr></table></figure><p>地形タグ1に関する足跡及び足音の設定です。<br>img/system/Footprint.png を足跡画像として使用します。</p><p>足跡の表示位置をX座標0, Y座標12だけ補正します。<br>キャラクターの向きに応じて足跡画像を回転します。(fitAngle)<br>一歩歩くごとに足跡画像の表示位置をキャラクターの左右にブレさせます。(fitStep)<br>5番として湿っています。(wet5)<br>アニメーションの速度が16です。(animeSpeed16)<br>fitAngle, fiteStep, wetN, dry, animeSpeedN は任意設定項目です。</p><p>audio/se/sand.ogg を足音SEとして使用します。<br>ボリュームを30～50として再生します。<br>ピッチを130として再生します。</p><h1 id="湿った地形について"><a href="#湿った地形について" class="headerlink" title="湿った地形について"></a>湿った地形について</h1><p>5番として湿った地形にキャラクターが踏み入れると、そのキャラクターの足の裏に5番の湿りが付着します。<br>その状態で、dry設定のある地形に踏み入れると、地形タグ5の地形に踏み入れたものとして足跡画像の表示と足音SEの再生を行います。</p><p>付着した湿りは違う番号の湿りで上書きされるか、湿っていない地形を一定歩数歩くことで除去されます。</p><h1 id="セーブデータの拡張について"><a href="#セーブデータの拡張について" class="headerlink" title="セーブデータの拡張について"></a>セーブデータの拡張について</h1><p>本プラグインはセーブデータに以下の情報を追加します。</p><ul><li>キャラクターの足の裏に付着した湿り番号 (数値型)</li><li>キャラクターの足の裏が湿った状態での足跡描画用歩数カウント (数値型)</li><li>キャラクターの足跡描画用歩数カウント (数値型)</li><li>キャラクターの足跡描画用移動カウント (数値型)</li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StepImageAndSound.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> マップ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>マップ上のキャラクターに残像を表示する</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/03/01/character-afterimage/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/03/01/character-afterimage/</url>
@@ -72,8 +97,6 @@
       
         <tags>
             
-            <tag> 敵キャラ </tag>
-            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -81,6 +104,8 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
+            
+            <tag> 敵キャラ </tag>
             
         </tags>
       
@@ -130,9 +155,9 @@
       
         <tags>
             
-            <tag> アイテム </tag>
-            
             <tag> 装備 </tag>
+            
+            <tag> アイテム </tag>
             
         </tags>
       
@@ -311,11 +336,11 @@
       
         <tags>
             
-            <tag> スキル </tag>
+            <tag> ステート </tag>
             
             <tag> アイテム </tag>
             
-            <tag> ステート </tag>
+            <tag> スキル </tag>
             
         </tags>
       
@@ -396,8 +421,6 @@
       
         <tags>
             
-            <tag> 敵キャラ </tag>
-            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -405,6 +428,8 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
+            
+            <tag> 敵キャラ </tag>
             
         </tags>
       
@@ -483,11 +508,11 @@
       
         <tags>
             
+            <tag> MV版あり </tag>
+            
             <tag> 戦闘 </tag>
             
             <tag> ダメージ計算 </tag>
-            
-            <tag> MV版あり </tag>
             
         </tags>
       
@@ -564,9 +589,9 @@
             
             <tag> システム </tag>
             
-            <tag> セーブデータ </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> セーブデータ </tag>
             
         </tags>
       
@@ -618,9 +643,9 @@
       
         <tags>
             
-            <tag> マップ </tag>
-            
             <tag> イベント </tag>
+            
+            <tag> マップ </tag>
             
             <tag> キャラクター </tag>
             
@@ -647,9 +672,9 @@
       
         <tags>
             
-            <tag> テキスト </tag>
-            
             <tag> イベント </tag>
+            
+            <tag> テキスト </tag>
             
             <tag> MV版あり </tag>
             
@@ -728,9 +753,9 @@
             
             <tag> システム </tag>
             
-            <tag> セーブデータ </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> セーブデータ </tag>
             
         </tags>
       
@@ -755,9 +780,9 @@
       
         <tags>
             
-            <tag> 戦闘 </tag>
-            
             <tag> イベント </tag>
+            
+            <tag> 戦闘 </tag>
             
         </tags>
       
@@ -790,9 +815,9 @@
             
             <tag> ステート </tag>
             
-            <tag> 能力値 </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> 能力値 </tag>
             
         </tags>
       
@@ -817,11 +842,11 @@
       
         <tags>
             
+            <tag> MV版あり </tag>
+            
             <tag> 戦闘 </tag>
             
             <tag> 強化・弱体 </tag>
-            
-            <tag> MV版あり </tag>
             
         </tags>
       
@@ -846,13 +871,13 @@
       
         <tags>
             
-            <tag> 戦闘 </tag>
-            
             <tag> ステート </tag>
             
-            <tag> 強化・弱体 </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> 戦闘 </tag>
+            
+            <tag> 強化・弱体 </tag>
             
         </tags>
       
@@ -977,9 +1002,9 @@
       
         <tags>
             
-            <tag> スキル </tag>
-            
             <tag> アイテム </tag>
+            
+            <tag> スキル </tag>
             
         </tags>
       
@@ -1106,8 +1131,6 @@
       
         <tags>
             
-            <tag> パーティ </tag>
-            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -1115,6 +1138,8 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
+            
+            <tag> パーティ </tag>
             
         </tags>
       
@@ -1193,9 +1218,9 @@
             
             <tag> テキスト </tag>
             
-            <tag> スキル </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> スキル </tag>
             
         </tags>
       
@@ -1220,11 +1245,11 @@
       
         <tags>
             
+            <tag> MV版あり </tag>
+            
             <tag> 戦闘 </tag>
             
             <tag> スキル </tag>
-            
-            <tag> MV版あり </tag>
             
         </tags>
       
@@ -1251,9 +1276,9 @@
             
             <tag> 戦闘 </tag>
             
-            <tag> スキル </tag>
-            
             <tag> アイテム </tag>
+            
+            <tag> スキル </tag>
             
         </tags>
       
@@ -1305,9 +1330,9 @@
       
         <tags>
             
-            <tag> アイテム </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> アイテム </tag>
             
         </tags>
       
@@ -1359,11 +1384,11 @@
       
         <tags>
             
-            <tag> データベース </tag>
+            <tag> MV版あり </tag>
             
             <tag> 敵キャラ </tag>
             
-            <tag> MV版あり </tag>
+            <tag> データベース </tag>
             
         </tags>
       
@@ -1388,13 +1413,13 @@
       
         <tags>
             
-            <tag> データベース </tag>
-            
-            <tag> スキル </tag>
+            <tag> MV版あり </tag>
             
             <tag> アイテム </tag>
             
-            <tag> MV版あり </tag>
+            <tag> データベース </tag>
+            
+            <tag> スキル </tag>
             
         </tags>
       
@@ -1457,7 +1482,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2021/12/30/about/"/>
       <url>/DarkPlasma-MZ-Plugins/2021/12/30/about/</url>
       
-        <content type="html"><![CDATA[<p>DarkPlasmaが作成したRPGツクールMZ向けプラグイン(以下、DarkPlasmaシリーズ)の使い方を説明するブログです。<br>本ブログで紹介しているプラグインは、<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release">GitHub</a>にて配布しています。<br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/tree/release">MV向け</a>にも同様の機能を持つプラグインがあればリンクを貼っています。</p><h1 id="プラグインや当サイトに関するお問い合わせ"><a href="#プラグインや当サイトに関するお問い合わせ" class="headerlink" title="プラグインや当サイトに関するお問い合わせ"></a>プラグインや当サイトに関するお問い合わせ</h1><p>DarkPlasmaシリーズや当サイトについては、<a href="https://marshmallow-qa.com/elleonard_f?utm_medium=url_text&utm_source=promotion">マシュマロ</a>、<a href="https://discord.gg/E3STkJuAnZ">Discordサーバー</a>、<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues">GitHubのIssues</a>などにてお問い合わせください。<br>GitHubにサインインしていれば、本ブログの記事にコメントを書くこともできます。</p><h1 id="プラグインのダウンロード方法"><a href="#プラグインのダウンロード方法" class="headerlink" title="プラグインのダウンロード方法"></a>プラグインのダウンロード方法</h1><p>GitHubの各ファイルのページにあるボタンからダウンロードできます。</p><p>GitHubにログイン済みの場合: Download raw file ボタンをクリックします。<br><img src="download.png" alt="ダウンロードボタン" title="ダウンロードボタン"></p><p>GitHubにログインしていない場合: Raw ボタンを右クリックして対象をファイルに保存します。<br><img src="download-not-login.png" alt="Rawボタン" title="Rawボタン"></p><h2 id="Windows-Defenderに脅威として検出される"><a href="#Windows-Defenderに脅威として検出される" class="headerlink" title="Windows Defenderに脅威として検出される"></a>Windows Defenderに脅威として検出される</h2><p>2024/03/18現在、いくつかのプラグインについて、Windows Defenderに脅威として検出されダウンロードできないという報告を受けています。<br>DarkPlasmaシリーズはRPGツクールMZ(あるいはMV)用のプラグインとして開発したものであり、マルウェアとして動作することを意図していません。<br>安全性については利用者各位でご判断の上、ダウンロードしていただけるようお願いいたします。</p><h1 id="プラグインのライセンス-利用規約"><a href="#プラグインのライセンス-利用規約" class="headerlink" title="プラグインのライセンス (利用規約)"></a>プラグインのライセンス (利用規約)</h1><p>DarkPlasmaシリーズはMITライセンスで公開しています。<br>MITライセンスの利用条件に従っていただければ、他は特に制限なくご利用いただけます。</p><p>MITライセンスの利用条件は簡単に言えば以下の通りです。</p><ul><li>著作権表示を行う</li><li>MITライセンスの全文または全文へのリンクを、それとわかる位置に記載する</li></ul><p>著作権表示及びMITライセンス全文へのリンクはプラグインの冒頭に記載済みであるため、対象ファイルを難読化したり、ゲーム自体をEnigma Virtual Boxなどでパッキングして配布するなどしてプレイヤーに見えない状態で配布する場合を除いて、特別な手順なしに利用できます。</p><p>もし、使用するプラグインに書かれた著作権表示やライセンス全文へのリンクをプレイヤーが見えないようにして配布する場合は、下記のライセンス表記をプレイヤーが容易に閲覧できる箇所 (例えば、README.txt) に記載してください。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DarkPlasmaプラグインシリーズ</span><br><span class="line">Copyright (c) 2020 DarkPlasma</span><br><span class="line">This software is released under the MIT license.</span><br><span class="line">http://opensource.org/licenses/mit-license.php</span><br></pre></td></tr></table></figure><h2 id="クレジット表記"><a href="#クレジット表記" class="headerlink" title="クレジット表記"></a>クレジット表記</h2><p>上記のライセンス表示以外は必須ではありませんが、もし記載していただけるのであれば歓迎します。</p><p>下記は記載例です。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DarkPlasma</span><br><span class="line">https://elleonard.github.io/DarkPlasma-MZ-Plugins/</span><br></pre></td></tr></table></figure><h1 id="ci-en"><a href="#ci-en" class="headerlink" title="ci-en"></a>ci-en</h1><p><a href="https://ci-en.net/creator/15997">ci-en</a>ではプラグイン作成・更新の最新情報を毎月お届けしています。<br>RPGツクールMZ（MV）向けの技術的なご相談もお受けしています。</p><p>DarkPlasma（Plasma）が実践しているプラグインの書き方についての詳しい解説をご覧いただけます。</p>]]></content>
+        <content type="html"><![CDATA[<p>DarkPlasmaが作成したRPGツクールMZ向けプラグイン(以下、DarkPlasmaシリーズ)の使い方を説明するブログです。<br>本ブログで紹介しているプラグインは、<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release">GitHub</a>にて配布しています。<br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/tree/release">MV向け</a>にも同様の機能を持つプラグインがあればリンクを貼っています。</p><h1 id="プラグインや当サイトに関するお問い合わせ"><a href="#プラグインや当サイトに関するお問い合わせ" class="headerlink" title="プラグインや当サイトに関するお問い合わせ"></a>プラグインや当サイトに関するお問い合わせ</h1><p>DarkPlasmaシリーズや当サイトについては、<a href="https://marshmallow-qa.com/elleonard_f?utm_medium=url_text&utm_source=promotion">マシュマロ</a>、<a href="https://discord.gg/E3STkJuAnZ">Discordサーバー</a>、<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/issues">GitHubのIssues</a>などにてお問い合わせください。<br>GitHubにサインインしていれば、本ブログの記事にコメントを書くこともできます。</p><h1 id="プラグインのダウンロード方法"><a href="#プラグインのダウンロード方法" class="headerlink" title="プラグインのダウンロード方法"></a>プラグインのダウンロード方法</h1><p>GitHubの各ファイルのページにあるボタンからダウンロードできます。</p><p>GitHubにログイン済みの場合: Download raw file ボタンをクリックします。<br><img src="download.png" alt="ダウンロードボタン" title="ダウンロードボタン"></p><p>GitHubにログインしていない場合: Raw ボタンを右クリックして対象をファイルに保存します。<br><img src="download-not-login.png" alt="Rawボタン" title="Rawボタン"></p><h2 id="Windows-Defenderに脅威として検出される"><a href="#Windows-Defenderに脅威として検出される" class="headerlink" title="Windows Defenderに脅威として検出される"></a>Windows Defenderに脅威として検出される</h2><p>2024/03/18現在、いくつかのプラグインについて、Windows Defenderに脅威として検出されダウンロードできないという報告を受けています。<br>DarkPlasmaシリーズはRPGツクールMZ(あるいはMV)用のプラグインとして開発したものであり、マルウェアとして動作することを意図していません。<br>安全性については利用者各位でご判断の上、ダウンロードしていただけるようお願いいたします。</p><h1 id="プラグインのライセンス-利用規約"><a href="#プラグインのライセンス-利用規約" class="headerlink" title="プラグインのライセンス (利用規約)"></a>プラグインのライセンス (利用規約)</h1><p>DarkPlasmaシリーズはMITライセンスで公開しています。<br>MITライセンスの利用条件に従っていただければ、他は特に制限なくご利用いただけます。</p><p>MITライセンスの利用条件は簡単に言えば以下の通りです。</p><ul><li>著作権表示を行う</li><li>MITライセンスの全文または全文へのリンクを、それとわかる位置に記載する</li></ul><p>著作権表示及びMITライセンス全文へのリンクはプラグインの冒頭に記載済みであるため、対象ファイルを難読化したり、ゲーム自体をEnigma Virtual Boxなどでパッキングして配布するなどしてプレイヤーに見えない状態で配布する場合を除いて、特別な手順なしに利用できます。</p><p>もし、使用するプラグインに書かれた著作権表示やライセンス全文へのリンクをプレイヤーが見えないようにして配布する場合は、下記のライセンス表記をプレイヤーが容易に閲覧できる箇所 (例えば、README.txt) に記載してください。</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DarkPlasmaプラグインシリーズ</span><br><span class="line">Copyright (c) 2020 DarkPlasma</span><br><span class="line">This software is released under the MIT license.</span><br><span class="line">http://opensource.org/licenses/mit-license.php</span><br></pre></td></tr></table></figure><h2 id="クレジット表記"><a href="#クレジット表記" class="headerlink" title="クレジット表記"></a>クレジット表記</h2><p>上記のライセンス表示以外は必須ではありませんが、もし記載していただけるのであれば歓迎します。</p><p>下記は記載例です。</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DarkPlasma</span><br><span class="line">https://elleonard.github.io/DarkPlasma-MZ-Plugins/</span><br></pre></td></tr></table></figure><h1 id="ci-en"><a href="#ci-en" class="headerlink" title="ci-en"></a>ci-en</h1><p><a href="https://ci-en.net/creator/15997">ci-en</a>ではプラグイン作成・更新の最新情報を毎月お届けしています。<br>RPGツクールMZ（MV）向けの技術的なご相談もお受けしています。</p><p>DarkPlasma（Plasma）が実践しているプラグインの書き方についての詳しい解説をご覧いただけます。</p>]]></content>
       
       
       
