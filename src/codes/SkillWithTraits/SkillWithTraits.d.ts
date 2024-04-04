@@ -2,5 +2,5 @@
 
 declare interface Game_Actor {
   skillsWithTrait(): MZ.Skill[];
-  traitObjectsBySkill(): {traits: MZ.Trait[]}[];
+  traitObjectsBySkill(): DataManager.TraitObject[];
 }
