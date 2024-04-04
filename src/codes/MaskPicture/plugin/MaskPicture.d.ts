@@ -19,8 +19,6 @@ declare interface Spriteset_Base {
 declare interface Sprite_Picture {
   setMask<T extends PIXI.Container>(sprite: T|null): void;
   isMaskedWith<T extends PIXI.Container>(sprite: T|null): boolean;
-  hasMask(): boolean;
-  unmask(): void;
   mustUpdateMask(): boolean;
   pictureId(): number;
 }
