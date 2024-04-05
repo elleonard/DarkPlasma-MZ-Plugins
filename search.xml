@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>ピクチャを別のピクチャでマスクする</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/04/05/mask-picture/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/04/05/mask-picture/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ピクチャを別のピクチャでマスクするプラグインコマンドを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="event.png" alt="使用例" title="使用例"></p><p>立ち絵画像のシルエットに障子戸の画像でマスクをかけ、あたかも障子戸の向こう側にいるかのように見せるイベントの例です。</p><p><img src="1.png" alt="使用例" title="使用例"></p><p><img src="2.png" alt="使用例" title="使用例"></p><p><img src="3.png" alt="使用例" title="使用例"></p><p><img src="4.png" alt="使用例" title="使用例"></p><p><img src="5.png" alt="使用例" title="使用例"></p><p><img src="6.png" alt="使用例" title="使用例"></p><p>障子戸と重なっている場所にだけ立ち絵シルエットが表示されます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MaskPicture.js">GitHub(MZ版)</a><br><a href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_MaskPicture.js">GitHub(MV版)</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MV版あり </tag>
+            
+            <tag> ピクチャ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>足跡画像を表示し、足音SEを再生する</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/03/28/step-image-and-sound/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/03/28/step-image-and-sound/</url>
