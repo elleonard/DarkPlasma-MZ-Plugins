@@ -13,6 +13,19 @@ PluginManager.registerCommand(pluginName, command_unmaskPicture, function (args)
   $gameScreen.picture(parsedArgs.basePictureId)?.unmask();
 });
 
+function Game_Screen_MaskPictureMixIn(gameScreen: Game_Screen) {
+  const _showPicture = gameScreen.showPicture;
+  gameScreen.showPicture = function (pictureId, name, origin, x, y, scaleX, scaleY, opacity, blendMode) {
+    const maskPictureId = this.picture(pictureId)?.maskPictureId();
+    _showPicture.call(this, pictureId, name, origin, x, y, scaleX, scaleY, opacity, blendMode);
+    if (maskPictureId) {
+      this.picture(pictureId)?.mask(maskPictureId);
+    }
+  };
+}
+
+Game_Screen_MaskPictureMixIn(Game_Screen.prototype);
+
 function Game_Picture_MaskPictureMixIn(gamePicture: Game_Picture) {
   gamePicture.mask = function (maskPictureId) {
     this._maskPictureId = maskPictureId;
