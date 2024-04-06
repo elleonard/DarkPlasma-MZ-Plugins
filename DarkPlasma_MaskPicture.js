@@ -1,9 +1,10 @@
-// DarkPlasma_MaskPicture 1.0.0
+// DarkPlasma_MaskPicture 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/06 1.0.1 マスクをかけたピクチャIDに対してピクチャの表示を行うとマスクが解除される不具合を修正
  * 2024/04/04 1.0.0 公開
  */
 
@@ -34,7 +35,7 @@
  * @default 0
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * ピクチャでピクチャをマスクします。
  */
 
@@ -70,6 +71,17 @@
     const parsedArgs = parseArgs_unmaskPicture(args);
     $gameScreen.picture(parsedArgs.basePictureId)?.unmask();
   });
+  function Game_Screen_MaskPictureMixIn(gameScreen) {
+    const _showPicture = gameScreen.showPicture;
+    gameScreen.showPicture = function (pictureId, name, origin, x, y, scaleX, scaleY, opacity, blendMode) {
+      const maskPictureId = this.picture(pictureId)?.maskPictureId();
+      _showPicture.call(this, pictureId, name, origin, x, y, scaleX, scaleY, opacity, blendMode);
+      if (maskPictureId) {
+        this.picture(pictureId)?.mask(maskPictureId);
+      }
+    };
+  }
+  Game_Screen_MaskPictureMixIn(Game_Screen.prototype);
   function Game_Picture_MaskPictureMixIn(gamePicture) {
     gamePicture.mask = function (maskPictureId) {
       this._maskPictureId = maskPictureId;
