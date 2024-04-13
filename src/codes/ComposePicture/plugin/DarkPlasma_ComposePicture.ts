@@ -22,6 +22,17 @@ PluginManager.registerCommand(pluginName, command_composePicture, function (args
   );
 });
 
+function Game_Temp_ComposePictureMixIn(gameTemp: Game_Temp) {
+  gameTemp.dummyWindow = function () {
+    if (!this._dummyWindow) {
+      this._dummyWindow = new Window_Base(new Rectangle(0, 0, 0, 0));
+    }
+    return this._dummyWindow;
+  };
+}
+
+Game_Temp_ComposePictureMixIn(Game_Temp.prototype);
+
 function Game_Screen_ComposePictureMixIn(gameScreen: Game_Screen) {
   gameScreen.allocateAdditionalPicture = function (name, origin, offsetX, offsetY, scaleX, scaleY, opacity, blendMode) {
     const key = `${name}:${origin}:${offsetX}:${offsetY}:${scaleX}:${scaleY}:${opacity}:${blendMode}`;
@@ -101,6 +112,10 @@ Game_Picture_ComposePictureMixIn(Game_Picture.prototype);
 class Game_AdditionalPicture extends Game_Picture {
   _pictureId: number;
 
+  name() {
+    return $gameTemp.dummyWindow().convertEscapeCharacters(super.name());
+  }
+
   setPictureId(id: number) {
     this._pictureId = id;
   }
@@ -117,9 +132,9 @@ function Sprite_Picture_ComposePictureMixIn(spritePicture: Sprite_Picture) {
     this.updateCompose();
   };
 
-  spritePicture.additionalPictureIds = function () {
+  spritePicture.additionalPictureNames = function () {
     return this.children.filter((child): child is Sprite_Picture => child instanceof Sprite_Picture && child.picture() instanceof Game_AdditionalPicture)
-      .map(sprite => (sprite.picture() as Game_AdditionalPicture).pictureId());
+      .map(sprite => (sprite.picture() as Game_AdditionalPicture).name());
   };
 
   spritePicture.mustBeComposed = function () {
@@ -131,10 +146,10 @@ function Sprite_Picture_ComposePictureMixIn(spritePicture: Sprite_Picture) {
       return true;
     }
     /**
-     * 設定されている被合成ピクチャID一覧と、実際の被合成ピクチャID一覧が順序含めて等しい場合は更新不要
+     * 設定されている被合成ピクチャ名一覧と、実際の被合成ピクチャ名一覧が順序含めて等しい場合は更新不要
      */
     return JSON.stringify(picture.additionalPictures()
-      .map(additionalPicture => additionalPicture.pictureId())) !== JSON.stringify(this.additionalPictureIds());
+      .map(additionalPicture => additionalPicture.name())) !== JSON.stringify(this.additionalPictureNames());
   };
 
   spritePicture.updateCompose = function () {

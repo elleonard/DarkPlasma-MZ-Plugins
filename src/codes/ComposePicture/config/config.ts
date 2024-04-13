@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/04/13",
+    version: "1.1.0",
+    description: '画像ファイル名に制御文字を使用可能にする',
+  },
+  {
+    date: "2024/04/13",
     version: "1.0.0",
     description: "公開",
   }

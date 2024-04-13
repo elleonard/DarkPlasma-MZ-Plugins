@@ -1,5 +1,11 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
 
+declare interface Game_Temp {
+  _dummyWindow: Window_Base;
+
+  dummyWindow(): Window_Base;
+}
+
 declare interface Game_Screen {
   /**
    * 同じ情報の合成ピクチャ情報を何度も生成しない
@@ -37,7 +43,7 @@ declare interface Sprite_Picture {
   _additionalSprites: Sprite_Picture[];
   _forceUpdateCompose: boolean;
 
-  additionalPictureIds(): number[];
+  additionalPictureNames(): string[];
   updateCompose(): void;
   mustBeComposed(): boolean;
   composePicture(additionalSprites: Sprite_Picture[]): void;
