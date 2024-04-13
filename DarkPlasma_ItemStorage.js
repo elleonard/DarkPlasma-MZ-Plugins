@@ -1,9 +1,10 @@
-// DarkPlasma_ItemStorage 1.6.1
+// DarkPlasma_ItemStorage 1.7.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/13 1.7.0 可能な限り預ける, 可能な限り引き出すプラグインコマンドの追加
  * 2023/12/17 1.6.1 倉庫に預けられる判定を整理
  * 2023/10/25 1.6.0 倉庫に預けるまたは引き出す数ウィンドウのインターフェースを公開
  * 2023/07/25 1.5.0 Window_StorageItemsのインターフェースを公開
@@ -67,8 +68,40 @@
  * @type boolean
  * @default false
  *
+ * @command storeAll
+ * @text 可能な限り預ける
+ * @desc 所持しているアイテムを可能な限り倉庫に預けます。
+ * @arg item
+ * @text アイテムを預ける
+ * @type boolean
+ * @arg weapon
+ * @text 武器を預ける
+ * @type boolean
+ * @arg armor
+ * @text 防具を預ける
+ * @type boolean
+ * @arg keyItem
+ * @text 大事なものを預ける
+ * @type boolean
+ *
+ * @command fetchAll
+ * @text 可能な限り引き出す
+ * @desc 倉庫に入っているアイテムを可能な限り引き出します。
+ * @arg item
+ * @text アイテムを引き出す
+ * @type boolean
+ * @arg weapon
+ * @text 武器を引き出す
+ * @type boolean
+ * @arg armor
+ * @text 防具を引き出す
+ * @type boolean
+ * @arg keyItem
+ * @text 大事なものを引き出す
+ * @type boolean
+ *
  * @help
- * version: 1.6.1
+ * version: 1.7.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -101,7 +134,29 @@
     };
   }
 
+  function parseArgs_storeAll(args) {
+    return {
+      item: String(args.item || undefined) === 'true',
+      weapon: String(args.weapon || undefined) === 'true',
+      armor: String(args.armor || undefined) === 'true',
+      keyItem: String(args.keyItem || undefined) === 'true',
+    };
+  }
+
+  function parseArgs_fetchAll(args) {
+    return {
+      item: String(args.item || undefined) === 'true',
+      weapon: String(args.weapon || undefined) === 'true',
+      armor: String(args.armor || undefined) === 'true',
+      keyItem: String(args.keyItem || undefined) === 'true',
+    };
+  }
+
   const command_openStorage = 'openStorage';
+
+  const command_storeAll = 'storeAll';
+
+  const command_fetchAll = 'fetchAll';
 
   const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
 
@@ -117,6 +172,45 @@
     const parsedArgs = parseArgs_openStorage(args);
     $gameTemp.createStorageCategories(parsedArgs.item, parsedArgs.weapon, parsedArgs.armor, parsedArgs.keyItem);
     SceneManager.push(Scene_ItemStorage);
+  });
+  PluginManager.registerCommand(pluginName, command_storeAll, function (args) {
+    const parsedArgs = parseArgs_storeAll(args);
+    const targets = [];
+    if (parsedArgs.item) {
+      targets.push(...$gameParty.items().filter((item) => item.itypeId === 1));
+    }
+    if (parsedArgs.weapon) {
+      targets.push(...$gameParty.weapons());
+    }
+    if (parsedArgs.armor) {
+      targets.push(...$gameParty.armors());
+    }
+    if (parsedArgs.keyItem) {
+      targets.push(...$gameParty.items().filter((item) => item.itypeId === 2));
+    }
+    $gameParty.storeAllOfItemsToStorage(targets);
+  });
+  PluginManager.registerCommand(pluginName, command_fetchAll, function (args) {
+    const parsedArgs = parseArgs_fetchAll(args);
+    const targets = [];
+    if (parsedArgs.item) {
+      targets.push(
+        ...$gameParty
+          .storageItems()
+          .items()
+          .filter((item) => item.itypeId === 1),
+      );
+    }
+    if (parsedArgs.weapon) {
+      targets.push(...$gameParty.storageItems().weapons());
+    }
+    if (parsedArgs.armor) {
+      targets.push(...$gameParty.storageItems().armors());
+    }
+    if (parsedArgs.keyItem) {
+      targets.push(...$gameParty.items().filter((item) => item.itypeId === 2));
+    }
+    $gameParty.fetchAllOfItemsFromStorage(targets);
   });
   class StorageCategories {
     constructor(item, weapon, armor, keyItem) {
@@ -259,6 +353,14 @@
       this.storageItems().storeItem(item, amount);
       this.loseItem(item, amount, false);
     };
+    gameParty.storeAllOfItemsToStorage = function (items) {
+      items.forEach((item) =>
+        this.storeItemToStorage(
+          item,
+          Math.min(this.numItems(item), this.storageItems().maxItems() - this.storageItems().numItems(item)),
+        ),
+      );
+    };
     /**
      * 倉庫からアイテムを引き出す
      * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -267,6 +369,14 @@
     gameParty.fetchItemFromStorage = function (item, amount) {
       this.gainItem(item, amount, false);
       this.storageItems().fetchItem(item, amount);
+    };
+    gameParty.fetchAllOfItemsFromStorage = function (items) {
+      items.forEach((item) =>
+        this.fetchItemFromStorage(
+          item,
+          Math.min(this.storageItems().numItems(item), this.maxItems(item) - this.numItems(item)),
+        ),
+      );
     };
     gameParty.canStoreItemInStorage = function (item) {
       return this.storageItems().canStoreItem(item);
@@ -328,7 +438,7 @@
         Graphics.boxWidth / 2,
         this._inventoryWindow.y,
         Graphics.boxWidth / 2,
-        this._inventoryWindow.height
+        this._inventoryWindow.height,
       );
     }
     createNumberWindow() {
@@ -674,12 +784,12 @@
       if (this._toStorage) {
         return Math.min(
           $gameParty.numItems(this._item),
-          $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(this._item)
+          $gameParty.storageItems().maxItems() - $gameParty.storageItems().numItems(this._item),
         );
       }
       return Math.min(
         $gameParty.storageItems().numItems(this._item),
-        $gameParty.maxItems(this._item) - $gameParty.numItems(this._item)
+        $gameParty.maxItems(this._item) - $gameParty.numItems(this._item),
       );
     }
     refresh() {
@@ -723,7 +833,7 @@
         0,
         this.lineHeight(),
         this.innerWidth,
-        'right'
+        'right',
       );
       this.resetTextColor();
     }
