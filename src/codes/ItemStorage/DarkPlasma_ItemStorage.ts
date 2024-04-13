@@ -1,6 +1,6 @@
 import { orderIdSort } from '../../common/orderIdSort';
 import { pluginName } from '../../common/pluginName';
-import { command_openStorage, parseArgs_openStorage } from './_build/DarkPlasma_ItemStorage_commands';
+import { command_fetchAll, command_openStorage, command_storeAll, parseArgs_fetchAll, parseArgs_openStorage, parseArgs_storeAll } from './_build/DarkPlasma_ItemStorage_commands';
 import { settings } from './_build/DarkPlasma_ItemStorage_parameters';
 
 PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
@@ -12,6 +12,42 @@ PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
     parsedArgs.keyItem
   );
   SceneManager.push(Scene_ItemStorage);
+});
+
+PluginManager.registerCommand(pluginName, command_storeAll, function (args) {
+  const parsedArgs = parseArgs_storeAll(args);
+  const targets: (MZ.Item|MZ.Weapon|MZ.Armor)[] = [];
+  if (parsedArgs.item) {
+    targets.push(...$gameParty.items().filter(item => item.itypeId === 1));
+  }
+  if (parsedArgs.weapon) {
+    targets.push(...$gameParty.weapons());
+  }
+  if (parsedArgs.armor) {
+    targets.push(...$gameParty.armors());
+  }
+  if (parsedArgs.keyItem) {
+    targets.push(...$gameParty.items().filter(item => item.itypeId === 2));
+  }
+  $gameParty.storeAllOfItemsToStorage(targets);
+});
+
+PluginManager.registerCommand(pluginName, command_fetchAll, function (args) {
+  const parsedArgs = parseArgs_fetchAll(args);
+  const targets: (MZ.Item|MZ.Weapon|MZ.Armor)[] = [];
+  if (parsedArgs.item) {
+    targets.push(...$gameParty.storageItems().items().filter(item => item.itypeId === 1));
+  }
+  if (parsedArgs.weapon) {
+    targets.push(...$gameParty.storageItems().weapons());
+  }
+  if (parsedArgs.armor) {
+    targets.push(...$gameParty.storageItems().armors());
+  }
+  if (parsedArgs.keyItem) {
+    targets.push(...$gameParty.items().filter(item => item.itypeId === 2));
+  }
+  $gameParty.fetchAllOfItemsFromStorage(targets);
 });
 
 class StorageCategories {
@@ -195,6 +231,13 @@ function Game_Party_ItemStorageMixIn(gameParty: Game_Party) {
     this.loseItem(item, amount, false);
   };
 
+  gameParty.storeAllOfItemsToStorage = function (items) {
+    items.forEach(item => this.storeItemToStorage(
+      item, 
+      Math.min(this.numItems(item), this.storageItems().maxItems() - this.storageItems().numItems(item)))
+    );
+  };
+
   /**
    * 倉庫からアイテムを引き出す
    * @param {MZ.Item | MZ.Weapon | MZ.Armor} item
@@ -203,6 +246,13 @@ function Game_Party_ItemStorageMixIn(gameParty: Game_Party) {
   gameParty.fetchItemFromStorage = function (item, amount) {
     this.gainItem(item, amount, false);
     this.storageItems().fetchItem(item, amount);
+  };
+
+  gameParty.fetchAllOfItemsFromStorage = function (items) {
+    items.forEach(item => this.fetchItemFromStorage(
+      item,
+      Math.min(this.storageItems().numItems(item), this.maxItems(item) - this.numItems(item))
+    ));
   };
 
   gameParty.canStoreItemInStorage = function (item) {

@@ -8,6 +8,8 @@ declare interface StorageCategories {
 
 declare interface Game_StorageItems {
   items(): MZ.Item[];
+  weapons(): MZ.Weapon[];
+  armors(): MZ.Armor[];
 
   storeItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   fetchItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
@@ -28,7 +30,9 @@ declare interface Game_Party {
   initStorageItems(): void;
   storageItems(): Game_StorageItems;
   storeItemToStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
+  storeAllOfItemsToStorage(items: (MZ.Item|MZ.Weapon|MZ.Armor)[]): void;
   fetchItemFromStorage(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
+  fetchAllOfItemsFromStorage(items: (MZ.Item|MZ.Weapon|MZ.Armor)[]): void;
   canStoreItemInStorage(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
 }
 

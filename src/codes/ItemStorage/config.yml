@@ -3,6 +3,9 @@ DarkPlasma_ItemStorage:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/04/13
+      version: 1.7.0
+      description: '可能な限り預ける, 可能な限り引き出すプラグインコマンドの追加'
     - date: 2023/12/17
       version: 1.6.1
       description: '倉庫に預けられる判定を整理'
@@ -93,6 +96,50 @@ DarkPlasma_ItemStorage:
             ja: カテゴリに大事なものを表示するか
           type: boolean
           default: false
+    - command: storeAll
+      text:
+        ja: 可能な限り預ける
+      desc:
+        ja: 所持しているアイテムを可能な限り倉庫に預けます。
+      args:
+        - arg: item
+          text:
+            ja: アイテムを預ける
+          type: boolean
+        - arg: weapon
+          text:
+            ja: 武器を預ける
+          type: boolean
+        - arg: armor
+          text:
+            ja: 防具を預ける
+          type: boolean
+        - arg: keyItem
+          text:
+            ja: 大事なものを預ける
+          type: boolean
+    - command: fetchAll
+      text:
+        ja: 可能な限り引き出す
+      desc:
+        ja: 倉庫に入っているアイテムを可能な限り引き出します。
+      args:
+        - arg: item
+          text:
+            ja: アイテムを引き出す
+          type: boolean
+        - arg: weapon
+          text:
+            ja: 武器を引き出す
+          type: boolean
+        - arg: armor
+          text:
+            ja: 防具を引き出す
+          type: boolean
+        - arg: keyItem
+          text:
+            ja: 大事なものを引き出す
+          type: boolean
   structures:
   dependencies:
     base: []
