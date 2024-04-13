@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>画像を合成してピクチャとして扱う</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/04/13/compose-picture/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/04/13/compose-picture/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>複数の画像ファイルを合成して1枚のピクチャとして扱います。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="event.png" alt="使用例" title="使用例"></p><p>ベースピクチャを予め表示しておき、その後にプラグインコマンドで合成する画像を指定します。<br>ピクチャの表示イベントでベース画像を指定する際、不透明度は0でも問題なく合成可能です。</p><p><img src="compose-picture1.png" alt="使用例" title="使用例"></p><p>ピクチャの表示を行った時点ではのっぺらぼうです。</p><p><img src="compose-picture2.png" alt="使用例" title="使用例"></p><p>表情1を選択すると、表情1の差分画像が合成されます。</p><p><img src="compose-picture3.png" alt="使用例" title="使用例"></p><p>表情2も同様。</p><p><img src="compose-picture4.png" alt="使用例" title="使用例"></p><p>差分画像のファイル名には制御文字を使用することも可能です。</p><p><img src="compose-picture5.png" alt="使用例" title="使用例"></p><p>変数を操作すると、自動的に制御文字を評価して対象のファイルを表示します。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ComposePicture.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ピクチャ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ピクチャを別のピクチャでマスクする</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/04/05/mask-picture/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/04/05/mask-picture/</url>
