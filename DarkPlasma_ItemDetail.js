@@ -1,9 +1,10 @@
-// DarkPlasma_ItemDetail 1.0.2
+// DarkPlasma_ItemDetail 1.0.3
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/17 1.0.3 詳細説明ウィンドウの実装を共通ファイルに切り出す
  * 2023/10/20 1.0.2 型の指定を修正 (動作に影響なし)
  *            1.0.1 詳細ウィンドウの表示位置がズレる不具合を修正
  *            1.0.0 公開
@@ -38,7 +39,7 @@
  * @default 32
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * アイテム画面のアイテムにカーソルを合わせて特定のボタンを押すと
  * アイテム詳細説明画面を開きます。
  *
@@ -67,6 +68,72 @@
     openDetailKey: String(pluginParameters.openDetailKey || `shift`),
     heightAdjustment: Number(pluginParameters.heightAdjustment || 32),
   };
+
+  class Window_DetailText extends Window_Scrollable {
+    initialize(rect) {
+      super.initialize(rect);
+      this._text = '';
+      this.hide();
+    }
+    setItem(item) {
+      this.setText(String(item?.meta.detail || ''));
+    }
+    setText(text) {
+      if (this._text !== text) {
+        this._text = text;
+        this.refresh();
+      }
+    }
+    drawDetail(detail) {
+      this.drawTextEx(detail, 0, this.baseLineY());
+    }
+    baseLineY() {
+      return -(this.scrollBaseY() / this.scrollBlockHeight()) * this.lineHeight();
+    }
+    scrollBlockHeight() {
+      return this.lineHeight();
+    }
+    overallHeight() {
+      return this.textSizeEx(this._text).height + this.heightAdjustment();
+    }
+    heightAdjustment() {
+      return 32;
+    }
+    paint() {
+      this.contents.clear();
+      this.drawDetail(this._text);
+    }
+    refresh() {
+      this.paint();
+    }
+    update() {
+      super.update();
+      this.processCursorMove();
+    }
+    processCursorMove() {
+      if (this.isCursorMovable()) {
+        if (Input.isRepeated('down')) {
+          this.cursorDown();
+        }
+        if (Input.isRepeated('up')) {
+          this.cursorUp();
+        }
+      }
+    }
+    isCursorMovable() {
+      return this.visible;
+    }
+    cursorDown() {
+      if (this.scrollY() <= this.maxScrollY()) {
+        this.smoothScrollDown(1);
+      }
+    }
+    cursorUp() {
+      if (this.scrollY() > 0) {
+        this.smoothScrollUp(1);
+      }
+    }
+  }
 
   function Scene_Item_DetailMixIn(sceneItem) {
     const _create = sceneItem.create;
@@ -127,66 +194,9 @@
     };
   }
   Window_ItemList_DetailMixIn(Window_ItemList.prototype);
-  class Window_ItemDetail extends Window_Scrollable {
-    initialize(rect) {
-      super.initialize(rect);
-      this._text = '';
-      this.hide();
-    }
-    setItem(item) {
-      this.setText(String(item?.meta.detail || ''));
-    }
-    setText(text) {
-      if (this._text !== text) {
-        this._text = text;
-        this.refresh();
-      }
-    }
-    drawDetail(detail) {
-      this.drawTextEx(detail, 0, this.baseLineY());
-    }
-    baseLineY() {
-      return -(this.scrollBaseY() / this.scrollBlockHeight()) * this.lineHeight();
-    }
-    scrollBlockHeight() {
-      return this.lineHeight();
-    }
-    overallHeight() {
-      return this.textSizeEx(this._text).height + settings.heightAdjustment;
-    }
-    paint() {
-      this.contents.clear();
-      this.drawDetail(this._text);
-    }
-    refresh() {
-      this.paint();
-    }
-    update() {
-      super.update();
-      this.processCursorMove();
-    }
-    processCursorMove() {
-      if (this.isCursorMovable()) {
-        if (Input.isRepeated('down')) {
-          this.cursorDown();
-        }
-        if (Input.isRepeated('up')) {
-          this.cursorUp();
-        }
-      }
-    }
-    isCursorMovable() {
-      return this.visible;
-    }
-    cursorDown() {
-      if (this.scrollY() <= this.maxScrollY()) {
-        this.smoothScrollDown(1);
-      }
-    }
-    cursorUp() {
-      if (this.scrollY() > 0) {
-        this.smoothScrollUp(1);
-      }
+  class Window_ItemDetail extends Window_DetailText {
+    heightAdjustment() {
+      return settings.heightAdjustment;
     }
   }
 })();
