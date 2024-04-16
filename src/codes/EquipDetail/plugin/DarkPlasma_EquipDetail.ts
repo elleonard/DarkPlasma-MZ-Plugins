@@ -2,6 +2,7 @@
 
 import { settings } from '../config/_build/DarkPlasma_EquipDetail_parameters';
 import { Window_DetailText } from '../../../common/window/detailWindow';
+import { Window_WithDetailWindowMixIn } from '../../../common/window/withDetailWindow';
 
 function Scene_Equip_DetailMixIn(sceneEquip: Scene_Equip) {
   const _create = sceneEquip.create;
@@ -50,36 +51,5 @@ function Scene_Equip_DetailMixIn(sceneEquip: Scene_Equip) {
 
 Scene_Equip_DetailMixIn(Scene_Equip.prototype);
 
-Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_EquipSlot.prototype, 'detail');
-Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_EquipItem.prototype, 'detail');
-
-function Window_Equip_DetailMixIn(windowClass: Window_EquipSlot|Window_EquipItem) {
-  windowClass.setDetailWindow = function (detailWindow) {
-    this._detailWindow = detailWindow;
-  };
-
-  const _setHelpWindowItem = windowClass.setHelpWindowItem;
-  windowClass.setHelpWindowItem = function (item) {
-    _setHelpWindowItem.call(this, item);
-    this._detailWindow?.setItem(item as DataManager.NoteHolder);
-  };
-
-  const _isCursorMovable = windowClass.isCursorMovable;
-  windowClass.isCursorMovable = function () {
-    return _isCursorMovable.call(this) && (!this._detailWindow || !this._detailWindow.visible);
-  };
-
-  const _isOkEnabled = windowClass.isOkEnabled;
-  windowClass.isOkEnabled = function () {
-    return _isOkEnabled.call(this) && (!this._detailWindow || !this._detailWindow.visible);
-  };
-
-  const _processCancel = windowClass.processCancel;
-  windowClass.processCancel = function () {
-    this._detailWindow?.hide();
-    _processCancel.call(this);
-  };
-}
-
-Window_Equip_DetailMixIn(Window_EquipSlot.prototype);
-Window_Equip_DetailMixIn(Window_EquipItem.prototype);
+Window_WithDetailWindowMixIn(settings.openDetailKey, Window_EquipSlot.prototype);
+Window_WithDetailWindowMixIn(settings.openDetailKey, Window_EquipItem.prototype);
