@@ -4,7 +4,9 @@ DarkPlasma_ItemDetail:
   license: MIT
   histories:
     - date: 2024/04/17
-      version: 1.0.3
+      version: 1.0.4
+      description: '詳細説明を開けるウィンドウの実装を共通ファイルに切り出す'
+    - version: 1.0.3
       description: '詳細説明ウィンドウの実装を共通ファイルに切り出す'
     - date: 2023/10/20
       version: 1.0.2
