@@ -1,9 +1,10 @@
-// DarkPlasma_EquipDetail 1.0.0
+// DarkPlasma_EquipDetail 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/17 1.0.1 詳細説明を開けるウィンドウのmixinを共通化
  * 2024/04/17 1.0.0 公開
  */
 
@@ -30,7 +31,7 @@
  * @default shift
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 装備シーンの装備にカーソルを合わせて特定のボタンを押すと
  * 装備詳細説明ウィンドウを開きます。
  *
@@ -125,6 +126,31 @@
     }
   }
 
+  function Window_WithDetailWindowMixIn(openDetailKey, windowClass) {
+    Window_CustomKeyHandlerMixIn(openDetailKey, windowClass, 'detail');
+    windowClass.setDetailWindow = function (detailWindow) {
+      this._detailWindow = detailWindow;
+    };
+    const _setHelpWindowItem = windowClass.setHelpWindowItem;
+    windowClass.setHelpWindowItem = function (item) {
+      _setHelpWindowItem.call(this, item);
+      this._detailWindow?.setItem(item);
+    };
+    const _isCursorMovable = windowClass.isCursorMovable;
+    windowClass.isCursorMovable = function () {
+      return _isCursorMovable.call(this) && (!this._detailWindow || !this._detailWindow.visible);
+    };
+    const _isOkEnabled = windowClass.isOkEnabled;
+    windowClass.isOkEnabled = function () {
+      return _isOkEnabled.call(this) && (!this._detailWindow || !this._detailWindow.visible);
+    };
+    const _processCancel = windowClass.processCancel;
+    windowClass.processCancel = function () {
+      this._detailWindow?.hide();
+      _processCancel.call(this);
+    };
+  }
+
   function Scene_Equip_DetailMixIn(sceneEquip) {
     const _create = sceneEquip.create;
     sceneEquip.create = function () {
@@ -165,31 +191,6 @@
     };
   }
   Scene_Equip_DetailMixIn(Scene_Equip.prototype);
-  Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_EquipSlot.prototype, 'detail');
-  Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_EquipItem.prototype, 'detail');
-  function Window_Equip_DetailMixIn(windowClass) {
-    windowClass.setDetailWindow = function (detailWindow) {
-      this._detailWindow = detailWindow;
-    };
-    const _setHelpWindowItem = windowClass.setHelpWindowItem;
-    windowClass.setHelpWindowItem = function (item) {
-      _setHelpWindowItem.call(this, item);
-      this._detailWindow?.setItem(item);
-    };
-    const _isCursorMovable = windowClass.isCursorMovable;
-    windowClass.isCursorMovable = function () {
-      return _isCursorMovable.call(this) && (!this._detailWindow || !this._detailWindow.visible);
-    };
-    const _isOkEnabled = windowClass.isOkEnabled;
-    windowClass.isOkEnabled = function () {
-      return _isOkEnabled.call(this) && (!this._detailWindow || !this._detailWindow.visible);
-    };
-    const _processCancel = windowClass.processCancel;
-    windowClass.processCancel = function () {
-      this._detailWindow?.hide();
-      _processCancel.call(this);
-    };
-  }
-  Window_Equip_DetailMixIn(Window_EquipSlot.prototype);
-  Window_Equip_DetailMixIn(Window_EquipItem.prototype);
+  Window_WithDetailWindowMixIn(settings.openDetailKey, Window_EquipSlot.prototype);
+  Window_WithDetailWindowMixIn(settings.openDetailKey, Window_EquipItem.prototype);
 })();

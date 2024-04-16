@@ -1,9 +1,11 @@
-// DarkPlasma_SkillDetail 1.1.0
+// DarkPlasma_SkillDetail 2.0.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/17 2.0.0 実装をItemDetailに合わせる
+ *                  Window_SkillDetailMixInを削除
  * 2023/12/09 1.1.0 戦闘中に表示する機能を追加
  * 2023/09/04 1.0.1 typescript移行
  * 2022/01/07 1.0.0 公開
@@ -32,7 +34,7 @@
  * @default shift
  *
  * @help
- * version: 1.1.0
+ * version: 2.0.0
  * スキルウィンドウのスキルにカーソルを合わせて特定のボタンを押すと
  * スキル詳細説明画面を開きます。
  *
@@ -41,7 +43,7 @@
  * ～～～～。>
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_CustomKeyHandler version:1.1.0
+ * DarkPlasma_CustomKeyHandler version:1.3.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
  */
@@ -60,6 +62,97 @@
   const settings = {
     openDetailKey: String(pluginParameters.openDetailKey || `shift`),
   };
+
+  class Window_DetailText extends Window_Scrollable {
+    initialize(rect) {
+      super.initialize(rect);
+      this._text = '';
+      this.hide();
+    }
+    setItem(item) {
+      this.setText(String(item?.meta.detail || ''));
+    }
+    setText(text) {
+      if (this._text !== text) {
+        this._text = text;
+        this.refresh();
+      }
+    }
+    drawDetail(detail) {
+      this.drawTextEx(detail, 0, this.baseLineY());
+    }
+    baseLineY() {
+      return -(this.scrollBaseY() / this.scrollBlockHeight()) * this.lineHeight();
+    }
+    scrollBlockHeight() {
+      return this.lineHeight();
+    }
+    overallHeight() {
+      return this.textSizeEx(this._text).height + this.heightAdjustment();
+    }
+    heightAdjustment() {
+      return 32;
+    }
+    paint() {
+      this.contents.clear();
+      this.drawDetail(this._text);
+    }
+    refresh() {
+      this.paint();
+    }
+    update() {
+      super.update();
+      this.processCursorMove();
+    }
+    processCursorMove() {
+      if (this.isCursorMovable()) {
+        if (Input.isRepeated('down')) {
+          this.cursorDown();
+        }
+        if (Input.isRepeated('up')) {
+          this.cursorUp();
+        }
+      }
+    }
+    isCursorMovable() {
+      return this.visible;
+    }
+    cursorDown() {
+      if (this.scrollY() <= this.maxScrollY()) {
+        this.smoothScrollDown(1);
+      }
+    }
+    cursorUp() {
+      if (this.scrollY() > 0) {
+        this.smoothScrollUp(1);
+      }
+    }
+  }
+
+  function Window_WithDetailWindowMixIn(openDetailKey, windowClass) {
+    Window_CustomKeyHandlerMixIn(openDetailKey, windowClass, 'detail');
+    windowClass.setDetailWindow = function (detailWindow) {
+      this._detailWindow = detailWindow;
+    };
+    const _setHelpWindowItem = windowClass.setHelpWindowItem;
+    windowClass.setHelpWindowItem = function (item) {
+      _setHelpWindowItem.call(this, item);
+      this._detailWindow?.setItem(item);
+    };
+    const _isCursorMovable = windowClass.isCursorMovable;
+    windowClass.isCursorMovable = function () {
+      return _isCursorMovable.call(this) && (!this._detailWindow || !this._detailWindow.visible);
+    };
+    const _isOkEnabled = windowClass.isOkEnabled;
+    windowClass.isOkEnabled = function () {
+      return _isOkEnabled.call(this) && (!this._detailWindow || !this._detailWindow.visible);
+    };
+    const _processCancel = windowClass.processCancel;
+    windowClass.processCancel = function () {
+      this._detailWindow?.hide();
+      _processCancel.call(this);
+    };
+  }
 
   const _DataManager_extractMetadata = DataManager.extractMetadata;
   DataManager.extractMetadata = function (data) {
@@ -85,10 +178,8 @@
       this._itemWindow.activate();
       if (!this._detailWindow.visible) {
         this._detailWindow.show();
-        this._detailWindow.resetCursor();
       } else {
         this._detailWindow.hide();
-        this._detailWindow.resetCursor();
       }
     };
     sceneSkill.createDetailWindow = function () {
@@ -98,7 +189,7 @@
       this.addChild(this._detailWindowLayer);
       this._detailWindow = new Window_SkillDetail(this.detailWindowRect());
       this._detailWindowLayer.addChild(this._detailWindow);
-      this._itemWindow.setDescriptionWindow(this._detailWindow);
+      this._itemWindow.setDetailWindow(this._detailWindow);
     };
     sceneSkill.detailWindowRect = function () {
       return this.itemWindowRect();
@@ -120,10 +211,8 @@
       this._skillWindow.activate();
       if (!this._skillDetailWindow.visible) {
         this._skillDetailWindow.show();
-        this._skillDetailWindow.resetCursor();
       } else {
         this._skillDetailWindow.hide();
-        this._skillDetailWindow.resetCursor();
       }
     };
     sceneBattle.createSkillDetailWindow = function () {
@@ -133,138 +222,14 @@
       this.addChild(this._skillDetailWindowLayer);
       this._skillDetailWindow = new Window_SkillDetail(this.skillDetailWindowRect());
       this._skillDetailWindowLayer.addChild(this._skillDetailWindow);
-      this._skillWindow.setDescriptionWindow(this._skillDetailWindow);
+      this._skillWindow.setDetailWindow(this._skillDetailWindow);
     };
     sceneBattle.skillDetailWindowRect = function () {
       return this.skillWindowRect();
     };
   }
   Scene_Battle_SkillDetailMixIn(Scene_Battle.prototype);
-  Window_CustomKeyHandlerMixIn(settings.openDetailKey, Window_SkillList.prototype, 'detail');
-  function Window_SkillDetailMixIn(windowClass) {
-    windowClass.setDescriptionWindow = function (detailWindow) {
-      this._detailWindow = detailWindow;
-      this.callUpdateHelp();
-    };
-    const _setHelpWindowItem = windowClass.setHelpWindowItem;
-    windowClass.setHelpWindowItem = function (item) {
-      _setHelpWindowItem.call(this, item);
-      if (this._detailWindow) {
-        this._detailWindow.setItem(item);
-      }
-    };
-    const _isCursorMovable = windowClass.isCursorMovable;
-    windowClass.isCursorMovable = function () {
-      if (this._detailWindow) {
-        return _isCursorMovable.call(this) && !this._detailWindow.visible;
-      }
-      return _isCursorMovable.call(this);
-    };
-    const _isOkEnabled = windowClass.isOkEnabled;
-    windowClass.isOkEnabled = function () {
-      if (this._detailWindow) {
-        return _isOkEnabled.call(this) && !this._detailWindow.visible;
-      }
-      return _isOkEnabled.call(this);
-    };
-    const _processCancel = windowClass.processCancel;
-    windowClass.processCancel = function () {
-      if (this._detailWindow) {
-        this._detailWindow.hide();
-        this._detailWindow.resetCursor();
-      }
-      _processCancel.call(this);
-    };
-  }
-  Window_SkillDetailMixIn(Window_SkillList.prototype);
-  class Window_SkillDetail extends Window_Base {
-    initialize(rect) {
-      super.initialize(rect);
-      this._text = '';
-      this.opacity = 255;
-      this._cursor = 0;
-      this.hide();
-    }
-    drawDetail(detail) {
-      this.drawTextEx(detail, this.lineWidthMargin ? this.lineWidthMargin() : 0, this.baseLineHeight());
-    }
-    baseLineHeight() {
-      return -this._cursor * this.lineHeight();
-    }
-    refresh() {
-      this.contents.clear();
-      this.drawDetail(this._text);
-    }
-    setItem(item) {
-      this.setText(item && item.detail ? item.detail : '');
-    }
-    setText(text) {
-      if (this._text !== text) {
-        this._text = text;
-        this._textHeight = this.calcHeight();
-        this._lineCount = Math.floor(this._textHeight / this.lineHeight());
-        this.refresh();
-      }
-    }
-    calcHeight() {
-      if (this._text) {
-        return this.textSizeEx(this._text).height;
-      }
-      return 0;
-    }
-    /**
-     * 1画面で表示する最大行数
-     */
-    maxLine() {
-      return Math.floor(this.contentsHeight() / this.lineHeight());
-    }
-    clear() {
-      this.setText('');
-    }
-    update() {
-      super.update();
-      this.updateArrows();
-      this.processCursorMove();
-    }
-    updateArrows() {
-      this.upArrowVisible = this._cursor > 0;
-      this.downArrowVisible = !this.isCursorMax();
-    }
-    processCursorMove() {
-      if (this.isCursorMovable()) {
-        if (Input.isRepeated('down')) {
-          this.cursorDown();
-        }
-        if (Input.isRepeated('up')) {
-          this.cursorUp();
-        }
-      }
-    }
-    isCursorMovable() {
-      return this.visible;
-    }
-    cursorUp() {
-      if (this._cursor > 0) {
-        this._cursor--;
-        this.refresh();
-      }
-    }
-    cursorDown() {
-      if (!this.isCursorMax()) {
-        this._cursor++;
-        this.refresh();
-      }
-    }
-    isCursorMax() {
-      return this.maxLine() + this._cursor >= this._lineCount;
-    }
-    resetCursor() {
-      if (this._cursor > 0) {
-        this._cursor = 0;
-        this.refresh();
-      }
-    }
-  }
-  globalThis.Window_SkillDetailMixIn = Window_SkillDetailMixIn;
+  Window_WithDetailWindowMixIn(settings.openDetailKey, Window_SkillList.prototype);
+  class Window_SkillDetail extends Window_DetailText {}
   globalThis.Window_SkillDetail = Window_SkillDetail;
 })();
