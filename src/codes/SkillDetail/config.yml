@@ -3,6 +3,10 @@ DarkPlasma_SkillDetail:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/04/17
+      version: 2.0.0
+      description: '実装をItemDetailに合わせる'
+    - description: 'Window_SkillDetailMixInを削除'
     - date: 2023/12/09
       version: 1.1.0
       description: '戦闘中に表示する機能を追加'
@@ -36,7 +40,7 @@ DarkPlasma_SkillDetail:
   dependencies:
     base:
       - name: DarkPlasma_CustomKeyHandler
-        version: 1.1.0
+        version: 1.3.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
     orderBefore: []
