@@ -3,6 +3,9 @@ DarkPlasma_ItemDetail:
   year: 2023
   license: MIT
   histories:
+    - date: 2024/04/17
+      version: 1.0.3
+      description: '詳細説明ウィンドウの実装を共通ファイルに切り出す'
     - date: 2023/10/20
       version: 1.0.2
       description: '型の指定を修正 (動作に影響なし)'
