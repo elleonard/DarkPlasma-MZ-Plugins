@@ -30,3 +30,8 @@ tags:
 MZ版の本プラグインを利用するためには、下記プラグインが必要です。
 - [DarkPlasma_CustomKeyHandler.js](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CustomKeyHandler.js)
 - [DarkPlasma_DisplayDatabaseDetailWindow.js](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DisplayDatabaseDetailWindow.js)
+
+# 関連プラグイン
+
+- {% post_link equip-detail %}
+- {% post_link skill-detail %}

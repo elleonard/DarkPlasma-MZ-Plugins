@@ -40,3 +40,5 @@ MZ版の本プラグインを利用するためには、下記プラグインが
 # 関連プラグイン
 
 - [スキルの詳細説明文表示切り替えボタンプラグイン](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SkillDetailButton.js)
+- {% post_link item-detail %}
+- {% post_link skill-detail %}
