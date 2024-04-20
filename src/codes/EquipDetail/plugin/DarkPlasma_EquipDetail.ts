@@ -1,8 +1,6 @@
 /// <reference path="./EquipDetail.d.ts" />
 
 import { settings } from '../config/_build/DarkPlasma_EquipDetail_parameters';
-import { Window_DetailText } from '../../../common/window/detailWindow';
-import { Window_WithDetailWindowMixIn } from '../../../common/window/withDetailWindow';
 
 function Scene_Equip_DetailMixIn(sceneEquip: Scene_Equip) {
   const _create = sceneEquip.create;

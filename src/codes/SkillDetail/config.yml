@@ -3,6 +3,9 @@ DarkPlasma_SkillDetail:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/04/20
+      version: 2.0.1
+      description: '共通化した実装を基底プラグインに分離'
     - date: 2024/04/17
       version: 2.0.0
       description: '実装をItemDetailに合わせる'
@@ -41,8 +44,11 @@ DarkPlasma_SkillDetail:
     base:
       - name: DarkPlasma_CustomKeyHandler
         version: 1.3.0
+      - name: DarkPlasma_DisplayDatabaseDetailWindow
+        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
+      - name: DarkPlasma_DisplayDatabaseDetailWindow
     orderBefore: []
   help:
     ja: |

@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
 /// <reference path="../../CustomKeyHandler/CustomKeyHandler.d.ts" />
 /// <reference path="../../CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
-/// <reference path="../../../common/window/detailWindow.d.ts" />
+/// <reference path="../../DisplayDatabaseDetailWindow/plugin/DisplayDatabaseDetailWindow.d.ts" />
 
 declare interface Scene_Equip {
   _detailWindowLayer: WindowLayer;
@@ -22,4 +22,8 @@ declare interface Window_EquipItem {
   _detailWindow?: Window_DetailText;
 
   setDetailWindow(detailWindow: Window_DetailText): void;
+}
+
+declare class Window_DetailText extends Window_Scrollable {
+
 }

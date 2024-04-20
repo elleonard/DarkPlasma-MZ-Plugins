@@ -145,7 +145,7 @@ function generateHelp(help: string, version: string, dependencies: PluginDepende
     }
     const result = [dependencyText(key)];
     dependencies[key]
-      .map((plugin) => `${plugin.name}${plugin.version ? ` version:${plugin.version}` : ''}`)
+      .map((plugin) => `${plugin.name}${key === "base" && plugin.version ? ` version:${plugin.version}` : ''}`)
       .forEach((line) => result.push(line));
     return result;
   })

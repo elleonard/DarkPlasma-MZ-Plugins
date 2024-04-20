@@ -84,6 +84,18 @@ export class ConfigDefinitionBuilder {
     return this;
   }
 
+  withDependency(dependency: PluginDependencySchema) {
+    if (dependency.base) {
+      this.withBaseDependency(dependency);
+    }
+    if (dependency.order === "after") {
+      this.withOrderAfterDependency(dependency);
+    } else if (dependency.order === "before") {
+      this.withOrderBeforeDependency(dependency);
+    }
+    return this;
+  }
+
   withBaseDependency(dependency: PluginDependencySchema) {
     this._dependencies.base.push(dependency);
     return this;

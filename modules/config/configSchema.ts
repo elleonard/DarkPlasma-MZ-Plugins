@@ -260,6 +260,11 @@ export type I18nText = {
 const pluginDependency = z.object({
   name: z.string(),
   version: z.string().optional(),
+  base: z.boolean().optional(),
+  order: z.union([
+    z.literal('after'),
+    z.literal('before'),
+  ]).optional(),
 });
 
 const pluginDependencies = z.object({

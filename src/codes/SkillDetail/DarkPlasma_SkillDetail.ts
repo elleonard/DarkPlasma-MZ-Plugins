@@ -1,6 +1,4 @@
 import { settings } from './_build/DarkPlasma_SkillDetail_parameters';
-import { Window_DetailText } from '../../common/window/detailWindow';
-import { Window_WithDetailWindowMixIn } from '../../common/window/withDetailWindow';
 
 const _DataManager_extractMetadata = DataManager.extractMetadata;
 DataManager.extractMetadata = function (data) {

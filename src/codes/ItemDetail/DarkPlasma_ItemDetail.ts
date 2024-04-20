@@ -1,8 +1,6 @@
 /// <reference path="./ItemDetail.d.ts" />
 
 import { settings } from "./_build/DarkPlasma_ItemDetail_parameters";
-import { Window_DetailText } from '../../common/window/detailWindow';
-import { Window_WithDetailWindowMixIn } from '../../common/window/withDetailWindow';
 
 function Scene_Item_DetailMixIn(sceneItem: Scene_Item) {
   const _create = sceneItem.create;

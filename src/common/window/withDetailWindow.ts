@@ -1,6 +1,6 @@
 /// <reference path="./withDetailWindow.d.ts" />
 
-export function Window_WithDetailWindowMixIn(openDetailKey: string, windowClass: Window_Selectable) {
+export function Window_WithDetailWindowMixIn(openDetailKey: string, windowClass: Window_Selectable): void {
   Window_CustomKeyHandlerMixIn(openDetailKey, windowClass, 'detail');
 
   windowClass.setDetailWindow = function (detailWindow) {

@@ -1,6 +1,6 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 
-declare class Window_DetailText extends Window_Scrollable {
+declare interface Window_DetailText extends Window_Scrollable {
   _text: string;
 
   initialize(rect: Rectangle): void;

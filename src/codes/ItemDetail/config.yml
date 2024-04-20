@@ -3,6 +3,9 @@ DarkPlasma_ItemDetail:
   year: 2023
   license: MIT
   histories:
+    - date: 2024/04/20
+      version: 1.0.5
+      description: '共通化した実装を基底プラグインに分離'
     - date: 2024/04/17
       version: 1.0.4
       description: '詳細説明を開けるウィンドウの実装を共通ファイルに切り出す'
@@ -47,8 +50,11 @@ DarkPlasma_ItemDetail:
     base:
       - name: DarkPlasma_CustomKeyHandler
         version: 1.3.0
+      - name: DarkPlasma_DisplayDatabaseDetailWindow
+        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
+      - name: DarkPlasma_DisplayDatabaseDetailWindow
     orderBefore: []
   help:
     ja: |

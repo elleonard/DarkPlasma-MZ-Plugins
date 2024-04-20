@@ -5,3 +5,5 @@ declare interface Window_Selectable {
   
   setDetailWindow(detailWindow: Window_DetailText): void;
 }
+
+declare function Window_WithDetailWindowMixIn(openDetailKey: string, windowClass: Window_Selectable): void;

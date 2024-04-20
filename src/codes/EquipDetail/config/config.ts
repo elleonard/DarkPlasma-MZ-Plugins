@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: '2024/04/20',
+    version: '1.0.2',
+    description: '共通化した実装を基底プラグインに分離',
+  },
+  {
     date: '2024/04/17',
     version: '1.0.1',
     description: '詳細説明を開けるウィンドウのmixinを共通化'
@@ -49,12 +54,17 @@ export const config = new ConfigDefinitionBuilder(
   .withHistories(histories)
   .withLicense("MIT")
   .withParameters(parameters)
-  .withBaseDependency({
+  .withDependency({
     name: 'DarkPlasma_CustomKeyHandler',
     version: '1.3.0',
+    base: true,
+    order: "after",
   })
-  .withOrderAfterDependency({
-    name: 'DarkPlasma_CustomKeyHandler',
+  .withDependency({
+    name: 'DarkPlasma_DisplayDatabaseDetailWindow',
+    version: '1.0.0',
+    base: true,
+    order: "after",
   })
   .withHelp(dedent`装備シーンの装備にカーソルを合わせて特定のボタンを押すと
   装備詳細説明ウィンドウを開きます。
