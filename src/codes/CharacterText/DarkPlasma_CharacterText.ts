@@ -59,6 +59,12 @@ function Game_Character_CharacterTextMixIn(gameCharacter: Game_Character) {
   gameCharacter.mustShowText = function () {
     return false;
   };
+
+  gameCharacter.hasText = function () {
+    return false;
+  };
+
+  gameCharacter.requestSetupCharacterText = function () {};
 }
 
 Game_Character_CharacterTextMixIn(Game_Character.prototype);
@@ -67,7 +73,19 @@ function Game_Event_CharacterTextMixIn(gameEvent: Game_Event) {
   const _setupPageSettings = gameEvent.setupPageSettings;
   gameEvent.setupPageSettings = function () {
     _setupPageSettings.call(this);
-    if (this.event().meta.characterText) {
+    this.requestSetupCharacterText();
+  };
+
+  gameEvent.mustShowText = function () {
+    return $gameTemp.mustShowCharacterTextCache(this._mapId, this._eventId) && !this.isTransparent();
+  };
+
+  gameEvent.hasText = function () {
+    return !!this.event().meta.characterText;
+  };
+
+  gameEvent.requestSetupCharacterText = function () {
+    if (this.hasText()) {
       const registerCommand = this.list()
         .find(command => command.code === 357
           && Utils.extractFileName(command.parameters[0]) === pluginName
@@ -88,10 +106,6 @@ function Game_Event_CharacterTextMixIn(gameEvent: Game_Event) {
       }
     }
   };
-
-  gameEvent.mustShowText = function () {
-    return $gameTemp.mustShowCharacterTextCache(this._mapId, this._eventId) && !this.isTransparent();
-  };
 }
 
 Game_Event_CharacterTextMixIn(Game_Event.prototype);
@@ -99,15 +113,27 @@ Game_Event_CharacterTextMixIn(Game_Event.prototype);
 function Spriteset_Map_CharacterTextMixIn(spritesetMap: Spriteset_Map) {
   const _initialize = spritesetMap.initialize;
   spritesetMap.initialize = function() {
-    _initialize.call(this);
     this._characterTexts = [];
+    _initialize.call(this);
   };
 
-  spritesetMap.createCharacterText = function (request) {
-    const sprite = new Sprite_CharacterText();
-    sprite.setup(request.text, request.character, request.offset.x, request.offset.y);
+  const _createCharacters = spritesetMap.createCharacters;
+  spritesetMap.createCharacters = function () {
+    _createCharacters.call(this);
+    $gameMap.events().filter(event => event.hasText()).forEach(event => this.createCharacterText(event));
+  };
+
+  spritesetMap.createCharacterText = function (character) {
+    const sprite = new Sprite_CharacterText(character);
     this._characterTexts.push(sprite);
     this._tilemap.addChild(sprite);
+    character.requestSetupCharacterText();
+  };
+
+  spritesetMap.setupCharacterText = function (request) {
+    this._characterTexts
+      .find(sprite => sprite.isCharacter(request.character))
+      ?.setup(request.text, request.offset.x, request.offset.y);
   };
 
   const _update = spritesetMap.update;
@@ -122,7 +148,7 @@ function Spriteset_Map_CharacterTextMixIn(spritesetMap: Spriteset_Map) {
       $gameTemp.clearHideAllCharacterTextsRequest();
     }
     const setupRequests = $gameTemp.setupCharacterTextRequests();
-    setupRequests.forEach(request => this.createCharacterText(request));
+    setupRequests.forEach(request => this.setupCharacterText(request));
     $gameTemp.clearSetupCharacterTextRequests();
   };
 
@@ -140,10 +166,18 @@ class Sprite_CharacterText extends Sprite {
   _offsetY: number;
   _forceHidden: boolean;
 
-  setup(text: string, character: Game_Character, offsetX: number, offsetY: number) {
+  constructor(character: Game_Character) {
+    super();
+    this._character = character;
+  }
+
+  isCharacter(character: Game_Character) {
+    return this._character === character;
+  }
+
+  setup(text: string, offsetX: number, offsetY: number) {
     this.anchor.x = 0.5;
     this._text = text;
-    this._character = character;
     this._offsetX = offsetX;
     this._offsetY = offsetY;
     this.createBitmap();

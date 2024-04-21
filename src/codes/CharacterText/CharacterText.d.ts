@@ -28,14 +28,19 @@ declare interface Game_Temp {
 
 declare interface Game_Character {
   mustShowText(): boolean;
+  hasText(): boolean;
+  requestSetupCharacterText(): void;
 }
 
 declare interface Spriteset_Map {
   _characterTexts: Sprite_CharacterText[];
-  createCharacterText(request: Game_SetupCharacterTextRequest): void;
+  createCharacterText(character: Game_Character): void;
+  setupCharacterText(request: Game_SetupCharacterTextRequest): void;
   hideAllCharacterTexts(): void;
   updateCharacterTexts(): void;
 }
 
 declare interface Sprite_CharacterText extends Sprite {
+  isCharacter(character: Game_Character): boolean;
+  setup(text: string, offsetX: number, offsetY: number): void;
 }
