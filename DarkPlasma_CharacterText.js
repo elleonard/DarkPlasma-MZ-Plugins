@@ -1,9 +1,11 @@
-// DarkPlasma_CharacterText 1.0.1
+// DarkPlasma_CharacterText 2.0.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/21 2.0.0 シーンが切り替わるとテキストが消える不具合を修正
+ *                  Spriteset_Mapの一部メソッドのインターフェースに関する破壊的な変更
  * 2024/02/15 1.0.1 有効なページがないイベントにメタタグを設定するとエラーになる不具合を修正
  * 2023/11/01 1.0.0 公開
  */
@@ -43,13 +45,13 @@
  * @desc マップ上に表示しているテキストをすべて一時的に非表示にします。
  *
  * @help
- * version: 1.0.1
+ * version: 2.0.0
  * マップ上のキャラクターの近傍にテキストを表示します。
  *
  * 表示したいイベントのメモ欄に <characterText> と記述し、
  * 表示したいページにテキストを登録するプラグインコマンドを記述してください。
  *
- * 一時的に非表示にするプラグインコマンド一度非表示になったテキストは
+ * 一時的に非表示にするプラグインコマンドで一度非表示になったテキストは
  * マップ移動を行うと再度表示されます。
  */
 
@@ -122,13 +124,26 @@
     gameCharacter.mustShowText = function () {
       return false;
     };
+    gameCharacter.hasText = function () {
+      return false;
+    };
+    gameCharacter.requestSetupCharacterText = function () {};
   }
   Game_Character_CharacterTextMixIn(Game_Character.prototype);
   function Game_Event_CharacterTextMixIn(gameEvent) {
     const _setupPageSettings = gameEvent.setupPageSettings;
     gameEvent.setupPageSettings = function () {
       _setupPageSettings.call(this);
-      if (this.event().meta.characterText) {
+      this.requestSetupCharacterText();
+    };
+    gameEvent.mustShowText = function () {
+      return $gameTemp.mustShowCharacterTextCache(this._mapId, this._eventId) && !this.isTransparent();
+    };
+    gameEvent.hasText = function () {
+      return !!this.event().meta.characterText;
+    };
+    gameEvent.requestSetupCharacterText = function () {
+      if (this.hasText()) {
         const registerCommand = this.list().find(
           (command) =>
             command.code === 357 &&
@@ -151,22 +166,32 @@
         }
       }
     };
-    gameEvent.mustShowText = function () {
-      return $gameTemp.mustShowCharacterTextCache(this._mapId, this._eventId) && !this.isTransparent();
-    };
   }
   Game_Event_CharacterTextMixIn(Game_Event.prototype);
   function Spriteset_Map_CharacterTextMixIn(spritesetMap) {
     const _initialize = spritesetMap.initialize;
     spritesetMap.initialize = function () {
-      _initialize.call(this);
       this._characterTexts = [];
+      _initialize.call(this);
     };
-    spritesetMap.createCharacterText = function (request) {
-      const sprite = new Sprite_CharacterText();
-      sprite.setup(request.text, request.character, request.offset.x, request.offset.y);
+    const _createCharacters = spritesetMap.createCharacters;
+    spritesetMap.createCharacters = function () {
+      _createCharacters.call(this);
+      $gameMap
+        .events()
+        .filter((event) => event.hasText())
+        .forEach((event) => this.createCharacterText(event));
+    };
+    spritesetMap.createCharacterText = function (character) {
+      const sprite = new Sprite_CharacterText(character);
       this._characterTexts.push(sprite);
       this._tilemap.addChild(sprite);
+      character.requestSetupCharacterText();
+    };
+    spritesetMap.setupCharacterText = function (request) {
+      this._characterTexts
+        .find((sprite) => sprite.isCharacter(request.character))
+        ?.setup(request.text, request.offset.x, request.offset.y);
     };
     const _update = spritesetMap.update;
     spritesetMap.update = function () {
@@ -179,7 +204,7 @@
         $gameTemp.clearHideAllCharacterTextsRequest();
       }
       const setupRequests = $gameTemp.setupCharacterTextRequests();
-      setupRequests.forEach((request) => this.createCharacterText(request));
+      setupRequests.forEach((request) => this.setupCharacterText(request));
       $gameTemp.clearSetupCharacterTextRequests();
     };
     spritesetMap.hideAllCharacterTexts = function () {
@@ -188,10 +213,16 @@
   }
   Spriteset_Map_CharacterTextMixIn(Spriteset_Map.prototype);
   class Sprite_CharacterText extends Sprite {
-    setup(text, character, offsetX, offsetY) {
+    constructor(character) {
+      super();
+      this._character = character;
+    }
+    isCharacter(character) {
+      return this._character === character;
+    }
+    setup(text, offsetX, offsetY) {
       this.anchor.x = 0.5;
       this._text = text;
-      this._character = character;
       this._offsetX = offsetX;
       this._offsetY = offsetY;
       this.createBitmap();
