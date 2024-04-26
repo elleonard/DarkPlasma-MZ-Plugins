@@ -1,9 +1,10 @@
-// DarkPlasma_DisplayDatabaseDetailWindow 1.0.0
+// DarkPlasma_DisplayDatabaseDetailWindow 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/04/26 1.0.1 詳細説明の前後にある空白を無視する
  * 2024/04/20 1.0.0 公開
  */
 
@@ -16,7 +17,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * ウィンドウにデータベース項目の
  * 詳細説明を表示するための基底を提供します。
  *
@@ -34,13 +35,20 @@
       this.hide();
     }
     setItem(item) {
-      this.setText(String(item?.meta.detail || ''));
+      this.setText(this.detailText(item));
     }
     setText(text) {
       if (this._text !== text) {
         this._text = text;
         this.refresh();
       }
+    }
+    detailText(item) {
+      const detailText = String(item?.meta.detail || '');
+      return this.mustTrimText() ? detailText.trim() : detailText;
+    }
+    mustTrimText() {
+      return true;
     }
     drawDetail(detail) {
       this.drawTextEx(detail, 0, this.baseLineY());
