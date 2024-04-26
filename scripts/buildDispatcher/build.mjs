@@ -8,6 +8,11 @@
 import * as fs from 'fs';
 import { globSync } from 'glob';
 
+/**
+ * 共通ファイルのbuild
+ */
+await $`yarn tsc -b ./src/common`;
+
 const target = argv.target;
 if (!target) {
   const prefix = argv.exclude ? "src/excludes" : "src/codes";

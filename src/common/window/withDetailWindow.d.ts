@@ -1,4 +1,6 @@
 /// <reference path="./detailWindow.d.ts" />
+/// <reference path="../../codes/CustomKeyHandler/CustomKeyHandler.d.ts" />
+/// <reference path="../../codes/CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
 
 declare interface Window_Selectable {
   _detailWindow?: Window_DetailText;

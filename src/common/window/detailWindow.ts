@@ -8,7 +8,7 @@ export class Window_DetailText extends Window_Scrollable {
   }
 
   setItem(item: DataManager.NoteHolder|null) {
-    this.setText(String(item?.meta.detail || ''));
+    this.setText(this.detailText(item));
   }
 
   setText(text: string) {
@@ -16,6 +16,15 @@ export class Window_DetailText extends Window_Scrollable {
       this._text = text;
       this.refresh();
     }
+  }
+
+  detailText(item: DataManager.NoteHolder|null): string {
+    const detailText = String(item?.meta.detail || '')
+    return this.mustTrimText() ? detailText.trim() : detailText;
+  }
+
+  mustTrimText() {
+    return true;
   }
 
   drawDetail(detail: string) {

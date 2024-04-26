@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2024/04/26",
+    version: "1.0.1",
+    description: "詳細説明の前後にある空白を無視する",
+  },
+  {
     date: "2024/04/20",
     version: "1.0.0",
     description: "公開",

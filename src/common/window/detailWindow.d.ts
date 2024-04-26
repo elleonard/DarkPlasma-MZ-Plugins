@@ -6,6 +6,8 @@ declare interface Window_DetailText extends Window_Scrollable {
   initialize(rect: Rectangle): void;
   setItem(item: DataManager.NoteHolder|null): void;
   setText(text: string): void;
+  detailText(item: DataManager.NoteHolder|null): string;
+  mustTrimText(): boolean;
   drawDetail(detail: string): void;
   baseLineY(): number;
   heightAdjustment(): number;
