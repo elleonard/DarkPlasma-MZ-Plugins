@@ -1,9 +1,10 @@
-// DarkPlasma_BattleGuide 1.2.3
+// DarkPlasma_BattleGuide 1.2.4
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/05/23 1.2.4 不要なウィンドウレイヤーを削除
  * 2024/01/15 1.2.3 ビルド方式を変更 (configをTypeScript化)
  * 2022/11/13 1.2.2 typescript移行
  * 2022/07/02 1.2.1 ページ番号表示設定が正常に扱えない不具合の修正
@@ -79,7 +80,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.2.3
+ * version: 1.2.4
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryのSG説明、SGDescriptionのみを参照できます。
@@ -332,14 +333,6 @@
    * @param {Scene_Battle.prototype} sceneBattle
    */
   function Scene_Battle_GuideMixIn(sceneBattle) {
-    const _createWindowLayer = sceneBattle.createWindowLayer;
-    sceneBattle.createWindowLayer = function () {
-      _createWindowLayer.call(this);
-      this._guideWindowLayer = new WindowLayer();
-      this._guideWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-      this._guideWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-      this.addChild(this._guideWindowLayer);
-    };
     const _createAllWindows = sceneBattle.createAllWindows;
     sceneBattle.createAllWindows = function () {
       _createAllWindows.call(this);
