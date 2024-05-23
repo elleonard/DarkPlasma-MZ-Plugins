@@ -122,15 +122,6 @@ Scene_Battle_InputtingWindowMixIn(Scene_Battle.prototype);
  * @param {Scene_Battle.prototype} sceneBattle
  */
 function Scene_Battle_GuideMixIn(sceneBattle: Scene_Battle) {
-  const _createWindowLayer = sceneBattle.createWindowLayer;
-  sceneBattle.createWindowLayer = function () {
-    _createWindowLayer.call(this);
-    this._guideWindowLayer = new WindowLayer();
-    this._guideWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
-    this._guideWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
-    this.addChild(this._guideWindowLayer);
-  };
-
   const _createAllWindows = sceneBattle.createAllWindows;
   sceneBattle.createAllWindows = function () {
     _createAllWindows.call(this);

@@ -18,7 +18,6 @@ type SettingsGuide = {
 };
 
 declare interface Scene_Battle {
-  _guideWindowLayer: WindowLayer;
   _guideListWindow: Window_BattleGuideList;
   _guideTextWindow: Window_battleGuideText;
   _returnFromGuide: Window_Selectable|null;

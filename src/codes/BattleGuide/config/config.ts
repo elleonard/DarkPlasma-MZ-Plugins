@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2024/05/23",
+    version: "1.2.4",
+    description: "不要なウィンドウレイヤーを削除",
+  },
+  {
     date: "2024/01/15",
     version: "1.2.3",
     description: "ビルド方式を変更 (configをTypeScript化)",
