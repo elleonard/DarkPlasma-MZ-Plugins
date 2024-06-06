@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>画像の変更で向きやパターンを設定する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/06/07/change-image-with-pattern/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/06/07/change-image-with-pattern/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>画像の変更で向きやパターンを指定できるようにします。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="event1.png" alt="使用例" title="使用例"><br><img src="event2.png" alt="使用例" title="使用例"></p><p>倒れグラフィックに変更する場合など、単に画像の変更で行うと向きやパターンを制御できずに、1フレームだけ意図しないグラフィックが表示されることがあります。<br>本プラグインはその挙動を制御できるようにします。</p><p>プラグインコマンドで、対象のイベントにおいて実行される「画像の変更」の挙動を制御します。</p><h1 id="類似プラグイン"><a href="#類似プラグイン" class="headerlink" title="類似プラグイン"></a>類似プラグイン</h1><ul><li><a href="https://newrpg.seesaa.net/article/484920665.html">移動ルートの設定用コマンド（画像の変更など）を即時実行</a></li></ul><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangeImageWithPattern.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> マップ </tag>
+            
+            <tag> キャラクター </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>装備シーンで装備品の詳細説明を表示する</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/04/20/equip-detail/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/04/20/equip-detail/</url>
