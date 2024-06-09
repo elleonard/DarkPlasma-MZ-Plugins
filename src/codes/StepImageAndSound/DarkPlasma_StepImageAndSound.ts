@@ -216,7 +216,7 @@ function Game_CharacterBase_StepImageAndSoundMixIn(gameCharacterBase: Game_Chara
     this._moveCount++;
     if (this._moveCount % this.stepSpeed() === 0) {
       const tag = this.terrainTag();
-      const stepImageSettingOnMap = $gameMap.tileset().stepImageSetting[tag];
+      const stepImageSettingOnMap = $gameMap.tileset()?.stepImageSetting[tag];
 
       if (stepImageSettingOnMap) {
         const stepSettingTag = stepImageSettingOnMap.isDry && this.isWetStep() ? this._wet : tag;
