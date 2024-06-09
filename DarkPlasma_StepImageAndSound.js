@@ -1,9 +1,10 @@
-// DarkPlasma_StepImageAndSound 1.0.1
+// DarkPlasma_StepImageAndSound 1.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/06/09 1.0.2 イベントテストでエラーが出る不具合を修正
  * 2023/10/30 1.0.1 1フレームだけ意図しない位置に足跡がちらつく不具合を修正
  * 2022/09/23 1.0.0 公開
  */
@@ -205,7 +206,7 @@
  * @noteData tilesets
  *
  * @help
- * version: 1.0.1
+ * version: 1.0.2
  * タイルセットの設定に応じて、足跡画像を表示したり、足音SEを再生します。
  *
  * タイルセットに対して、メモ欄に地形タグごとに足跡画像と足音SEの設定を行います。
@@ -256,7 +257,7 @@
       this._offsetX = Number(settingList[0]);
       this._offsetY = Number(settingList[1]);
       this._scale = Number(
-        settingList.find((setting) => /^(\d+)[%％]$/.test(setting))?.match(/^(\d+)[%％]$/)[1] || 100
+        settingList.find((setting) => /^(\d+)[%％]$/.test(setting))?.match(/^(\d+)[%％]$/)[1] || 100,
       );
       this._fitAngle = settingList.some((setting) => /^fitAngle$/.test(setting));
       this._fitStep = settingList.some((setting) => /^fitStep$/.test(setting));
@@ -264,7 +265,7 @@
       this._wet = Number(settingList.find((setting) => /^wet(\d+)$/.test(setting))?.match(/^wet(\d+)$/)[1] || -1);
       this._speed = Number(
         settingList.find((setting) => /^animeSpeed(\d+)$/.test(setting))?.match(/^animeSpeed(\d+)$/)[1] ||
-          settings.animationSpeed
+          settings.animationSpeed,
       );
     }
     get filename() {
@@ -343,7 +344,7 @@
           .forEach((terrainTag) => {
             data.stepImageSetting[terrainTag] = new StepImageSetting(
               String(data.meta[`ステップエフェクト${terrainTag}`] || data.meta[`StepEffect${terrainTag}`]),
-              String(data.meta[`ステップエフェクト設定${terrainTag}`] || data.meta[`StepEffectSetting${terrainTag}`])
+              String(data.meta[`ステップエフェクト設定${terrainTag}`] || data.meta[`StepEffectSetting${terrainTag}`]),
             );
           });
         [...Array(7).keys()]
@@ -351,7 +352,7 @@
           .forEach((terrainTag) => {
             data.stepSoundSetting[terrainTag] = new StepSoundSetting(
               String(data.meta[`ステップサウンド${terrainTag}`] || data.meta[`StepSound${terrainTag}`]),
-              String(data.meta[`ステップサウンド設定${terrainTag}`] || data.meta[`StepSoundSetting${terrainTag}`])
+              String(data.meta[`ステップサウンド設定${terrainTag}`] || data.meta[`StepSoundSetting${terrainTag}`]),
             );
           });
       }
@@ -411,7 +412,7 @@
       this._moveCount++;
       if (this._moveCount % this.stepSpeed() === 0) {
         const tag = this.terrainTag();
-        const stepImageSettingOnMap = $gameMap.tileset().stepImageSetting[tag];
+        const stepImageSettingOnMap = $gameMap.tileset()?.stepImageSetting[tag];
         if (stepImageSettingOnMap) {
           const stepSettingTag = stepImageSettingOnMap.isDry && this.isWetStep() ? this._wet : tag;
           const stepSoundSetting = $gameMap.tileset().stepSoundSetting[stepSettingTag];
@@ -459,7 +460,7 @@
     gameCharacterBase.StepSeVolumeRate = function () {
       return Math.max(
         1.0 - $gameMap.distance(this.x, this.y, $gamePlayer.x, $gamePlayer.y) / settings.audioDistance,
-        0
+        0,
       );
     };
   }
