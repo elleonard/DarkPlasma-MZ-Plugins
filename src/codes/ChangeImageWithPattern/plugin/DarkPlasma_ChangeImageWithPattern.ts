@@ -27,29 +27,34 @@ function Game_Character_ChangeImageWithPatternMixIn(gameCharacter: Game_Characte
   const _initMembers = gameCharacter.initMembers;
   gameCharacter.initMembers = function () {
     _initMembers.call(this);
-    this._changeImageWith = {
+    this._changeImageWith = this.changeImageWith();
+    this._isPatternFixed = false;
+  };
+
+  gameCharacter.changeImageWith = function () {
+    return this._changeImageWith || {
       direction: 0,
       pattern: 1,
       fixPattern: false,
     };
-    this._isPatternFixed = false;
   };
 
   gameCharacter.setChangeImageWith = function (changeImageWith) {
-    this.setChangeImageWithDirection(changeImageWith.direction);
-    this.setChangeImageWithPattern(changeImageWith.pattern);
-    this.setChangeImageWithFixPattern(changeImageWith.fixPattern);
+    this._changeImageWith = changeImageWith;
   };
 
   gameCharacter.setChangeImageWithDirection = function (direction) {
+    this._changeImageWith = this.changeImageWith();
     this._changeImageWith.direction = direction;
   };
 
   gameCharacter.setChangeImageWithPattern = function (pattern) {
+    this._changeImageWith = this.changeImageWith();
     this._changeImageWith.pattern = pattern;
   };
 
   gameCharacter.setChangeImageWithFixPattern = function (fixPattern) {
+    this._changeImageWith = this.changeImageWith();
     this._changeImageWith.fixPattern = fixPattern;
   };
 
@@ -57,17 +62,17 @@ function Game_Character_ChangeImageWithPatternMixIn(gameCharacter: Game_Characte
   gameCharacter.processMoveCommand = function (command) {
     _processMoveCommand.call(this, command);
     if (command.code === Game_Character.ROUTE_CHANGE_IMAGE) {
-      if (this._changeImageWith.direction) {
+      if (this.changeImageWith().direction) {
         /**
          * 明示的に指定するため、向き固定を貫通する
          */
         const isDirectionFixed = this.isDirectionFixed();
         this.setDirectionFix(false);
-        this.setDirection(this._changeImageWith.direction);
+        this.setDirection(this.changeImageWith().direction);
         this.setDirectionFix(isDirectionFixed);
       }
-      this.setPattern(this._changeImageWith.pattern);
-      if (this._changeImageWith.fixPattern) {
+      this.setPattern(this.changeImageWith().pattern);
+      if (this.changeImageWith().fixPattern) {
         this.fixPattern();
       }
     }

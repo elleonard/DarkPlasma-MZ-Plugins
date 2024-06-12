@@ -7,13 +7,15 @@ type ChangeImageWith = {
 };
 
 declare interface Game_Character {
-  _changeImageWith: ChangeImageWith;
+  _changeImageWith: ChangeImageWith|undefined;
   _isPatternFixed: boolean;
 
   setChangeImageWith(changeImageWith: ChangeImageWith): void;
   setChangeImageWithDirection(direction: number): void;
   setChangeImageWithPattern(pattern: number): void;
   setChangeImageWithFixPattern(fixPattern: boolean): void;
+
+  changeImageWith(): ChangeImageWith;
 
   isPatternFixed(): boolean;
   fixPattern(): void;

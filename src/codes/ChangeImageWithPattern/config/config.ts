@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2024/06/13",
+    version: "1.0.1",
+    description: "導入前のセーブデータをロードするとエラーになる不具合の修正",
+  },
+  {
     date: "2024/06/07",
     version: "1.0.0",
     description: "公開",
