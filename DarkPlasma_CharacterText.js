@@ -1,9 +1,10 @@
-// DarkPlasma_CharacterText 2.0.0
+// DarkPlasma_CharacterText 2.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/06/13 2.0.1 有効なページがないイベントにメタタグを設定するとエラーになる不具合を修正
  * 2024/04/21 2.0.0 シーンが切り替わるとテキストが消える不具合を修正
  *                  Spriteset_Mapの一部メソッドのインターフェースに関する破壊的な変更
  * 2024/02/15 1.0.1 有効なページがないイベントにメタタグを設定するとエラーになる不具合を修正
@@ -45,7 +46,7 @@
  * @desc マップ上に表示しているテキストをすべて一時的に非表示にします。
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * マップ上のキャラクターの近傍にテキストを表示します。
  *
  * 表示したいイベントのメモ欄に <characterText> と記述し、
@@ -143,7 +144,7 @@
       return !!this.event().meta.characterText;
     };
     gameEvent.requestSetupCharacterText = function () {
-      if (this.hasText()) {
+      if (this.hasText() && this.page()) {
         const registerCommand = this.list().find(
           (command) =>
             command.code === 357 &&
