@@ -85,7 +85,7 @@ function Game_Event_CharacterTextMixIn(gameEvent: Game_Event) {
   };
 
   gameEvent.requestSetupCharacterText = function () {
-    if (this.hasText()) {
+    if (this.hasText() && this.page()) {
       const registerCommand = this.list()
         .find(command => command.code === 357
           && Utils.extractFileName(command.parameters[0]) === pluginName
