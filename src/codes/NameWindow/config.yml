@@ -3,6 +3,9 @@ DarkPlasma_NameWindow:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/07/08
+      version: 2.0.5
+      description: 'ゲーム中にアクター名を変更した場合、変更後の名前に色設定を適用できない不具合を修正'
     - date: 2023/06/02
       version: 2.0.4
       description: '自動名前色強制パラメータで、#から始まるカラーコードを無視できない不具合を修正'
