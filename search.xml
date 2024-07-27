@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>セーブファイルの最大数を変更する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/07/27/max-savefiles/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/07/27/max-savefiles/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>セーブファイルはデフォルトで20個まで作成できますが、その最大数を変更します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="max-savefiles.png" alt="使用例" title="使用例"></p><p>50個にした場合こうなります。(オートセーブが0番のため、最後のセーブファイルは49番になります)</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MaxSavefiles.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> セーブデータ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>画像の変更で向きやパターンを設定する</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/06/07/change-image-with-pattern/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/06/07/change-image-with-pattern/</url>
