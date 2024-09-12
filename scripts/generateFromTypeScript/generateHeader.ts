@@ -55,6 +55,15 @@ function generateHistories(histories: PluginHistorySchema[]) {
 }
 
 function generateHeaderMain(config: PluginConfigSchema) {
+  /**
+   * baseに定義したorderを見て@orderAfter,@orderBeforeの設定を追加
+   */
+  config.dependencies.base
+    .filter(baseDependency => baseDependency.order === "after" && config.dependencies.orderAfter.every(d => d.name !== baseDependency.name))
+    .forEach(dependency => config.dependencies.orderAfter.push(dependency));
+  config.dependencies.base
+    .filter(baseDependency => baseDependency.order === "before" && config.dependencies.orderBefore.every(d => d.name !== baseDependency.name))
+    .forEach(dependency => config.dependencies.orderBefore.push(dependency));
   return config.locates.sort((a, b) => a === "ja" ? 1 : b === "ja" ? -1 : 0)
     .map((language, index) => {
       const dependenciesText = config.dependencies
