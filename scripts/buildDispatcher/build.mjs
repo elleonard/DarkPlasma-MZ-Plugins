@@ -45,7 +45,7 @@ let configPath = path;
 if (fs.existsSync(`${path}/config/config.ts`)) {
   tsPath = `${tsPath}/plugin`;
   configPath = `${configPath}/config`;
-  await $`yarn ts-node --esm ./scripts/generateFromTypeScript/index.ts -f ${target} ${argv.exclude ? "-e" : ""}`;
+  await $`yarn node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/generateFromTypeScript/index.ts -f ${target} ${argv.exclude ? "-e" : ""}`;
 } else {
   await $`yarn node ./scripts/generateFromConfig -f ${target} ${argv.exclude ? "-e" : ""}`;
 }
