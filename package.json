@@ -18,7 +18,7 @@
     "buildIncremental:main": "zx ./scripts/buildDispatcher/buildIncremental.mjs",
     "buildAll": "run-s buildAll:* build:format build:copy",
     "buildAll:config": "node ./scripts/generateFromConfig",
-    "buildAll:configTs": "ts-node --esm ./scripts/generateFromTypeScript",
+    "buildAll:configTs": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/generateFromTypeScript",
     "buildAll:ts": "tsc --rootDir ./src",
     "buildAll:js": "rollup -c",
     "build:config": "zx ./scripts/buildDispatcher/build.mjs --configOnly --ts",
@@ -33,7 +33,7 @@
     "watch:config": "node ./scripts/generateFromConfig -w",
     "watch:js": "rollup -c -w",
     "watch:copy": "node ./scripts/copyToProject -w",
-    "generate": "ts-node --esm ./scripts/generateTemplate",
+    "generate": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/generateTemplate",
     "generate:config": "node ./scripts/generateConfig",
     "clean": "run-p clean:*",
     "clean:dist": "rimraf ./_dist"
