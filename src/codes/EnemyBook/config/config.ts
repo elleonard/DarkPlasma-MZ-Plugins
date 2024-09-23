@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
 import { createBooleanParam, createColorParam, createDatabaseArrayParam, createDummyParam, createNumberParam, createSelectParam, createStringParam, createStruct, createStructParam, createCommand, createDatabaseParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2024/09/24",
+    version: "5.3.2",
+    description: "プラグインコマンドの引数が設定できない不具合を修正",
+  },
   {
     date: "2024/02/04",
     version: "5.3.1",
