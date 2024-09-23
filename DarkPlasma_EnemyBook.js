@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.3.1
+// DarkPlasma_EnemyBook 5.3.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/09/24 5.3.2 プラグインコマンドの引数が設定できない不具合を修正
  * 2024/02/04 5.3.1 目次生成をリフレッシュごとに行うよう修正
  *            5.3.0 未登録の敵キャラもハイライトできるように変更
  * 2024/01/15 5.2.3 ビルド方式を変更 (configをTypeScript化)
@@ -178,7 +179,7 @@
  * @command add to enemyBook
  * @text add to enemy book
  * @desc Add enemy to book.
- * @param id
+ * @arg id
  * @text enemy id
  * @type enemy
  * @default 0
@@ -186,7 +187,7 @@
  * @command remove from enemyBook
  * @text remove from enemy book
  * @desc Remove enemy from book.
- * @param id
+ * @arg id
  * @text enemy id
  * @type enemy
  * @default 0
@@ -200,7 +201,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.3.1
+ * version: 5.3.2
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -379,7 +380,7 @@
  * @command add to enemyBook
  * @text 図鑑に登録する
  * @desc 指定した敵キャラを図鑑に登録します。
- * @param id
+ * @arg id
  * @text 敵キャラID
  * @type enemy
  * @default 0
@@ -387,7 +388,7 @@
  * @command remove from enemyBook
  * @text 図鑑から登録抹消する
  * @desc 指定した敵キャラを図鑑から登録抹消します。
- * @param id
+ * @arg id
  * @text 敵キャラID
  * @type enemy
  * @default 0
@@ -401,7 +402,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.3.1
+ * version: 5.3.2
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
