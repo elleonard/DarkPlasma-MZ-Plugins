@@ -33,7 +33,7 @@
     "watch:config": "node ./scripts/generateFromConfig -w",
     "watch:js": "rollup -c -w",
     "watch:copy": "node ./scripts/copyToProject -w",
-    "generate": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/generateTemplate",
+    "generate": "zx ./scripts/generateTemplate/generate.mjs",
     "generate:config": "node ./scripts/generateConfig",
     "clean": "run-p clean:*",
     "clean:dist": "rimraf ./_dist"
