@@ -14,6 +14,7 @@ declare interface Game_StorageItems {
   storeItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   fetchItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount: number): void;
   numItems(item: MZ.Item|MZ.Weapon|MZ.Armor): number;
+  hasItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
   allItems(): (MZ.Item|MZ.Weapon|MZ.Armor)[];
   maxItems(): number;
   canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
