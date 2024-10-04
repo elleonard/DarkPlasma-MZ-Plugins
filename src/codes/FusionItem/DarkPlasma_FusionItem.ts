@@ -460,7 +460,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
   }
 
   isCurrentItemEnabled() {
-    return this.isEnabled(this.index());
+    return this.isEnabledAt(this.index());
   }
 
   /**
@@ -480,18 +480,22 @@ class Window_FusionShopBuy extends Window_ShopBuy {
   }
 
   /**
-   * @param {number} index
-   * @return {boolean}
+   * index単位でなければ一意に定まらないため、別メソッドとして定義する
    */
-  //@ts-ignore
-  isEnabled(index: number): boolean {
+  isEnabledAt(index: number): boolean {
     const item = this.itemAt(index);
     const materials = this.materialsAt(index);
     return (
-      !!item &&
-      this.priceAt(index) <= this._money &&
+      super.isEnabled(item) &&
       materials.every((material) => $gameParty.numUsableItemsForFusion(material.data) >= material.count)
     );
+  }
+
+  /**
+   * @deprecated isEnabledAtを利用してください。
+   */
+  isEnabled(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean {
+    return this._data ? this.isEnabledAt(this._data.indexOf(item)) : false;
   }
 
   makeItemList() {
@@ -513,7 +517,7 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     const rect = this.itemLineRect(index);
     const priceWidth = this.priceWidth();
     const nameWidth = rect.width - priceWidth;
-    this.changePaintOpacity(this.isEnabled(index));
+    this.changePaintOpacity(this.isEnabledAt(index));
     this.drawItemName(item, rect.x, rect.y, nameWidth);
     this.drawPrice(price, rect.x + rect.width - priceWidth, rect.y, priceWidth);
     this.changePaintOpacity(true);
