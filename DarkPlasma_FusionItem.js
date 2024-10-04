@@ -1,9 +1,11 @@
-// DarkPlasma_FusionItem 1.3.1
+// DarkPlasma_FusionItem 2.0.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/04 2.0.0 所持数限界まで持っているアイテムを融合で作れる不具合の修正
+ *                  コアスクリプトの型との互換性を破壊しないよう変更 (Breaking Change)
  * 2023/12/27 1.3.1 品揃え情報のインターフェース化
  * 2023/05/13 1.3.0 価格描画を関数に切り出す
  *                  商品ウィンドウクラス定義をグローバルに公開
@@ -48,7 +50,7 @@
  * @type number[]
  *
  * @help
- * version: 1.3.1
+ * version: 2.0.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -258,7 +260,7 @@
                   };
                 })(
                   parsed.base ||
-                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}'
+                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}',
                 ),
               };
             })(e || '{}');
@@ -310,7 +312,7 @@
                   };
                 })(
                   parsed.base ||
-                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}'
+                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}',
                 ),
               };
             })(e || '{}');
@@ -362,7 +364,7 @@
                   };
                 })(
                   parsed.base ||
-                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}'
+                    '{"materialItems":[], "materialWeapons":[], "materialArmors":[], "gold":"0", "condition":"0"}',
                 ),
               };
             })(e || '{}');
@@ -385,15 +387,17 @@
       item.base.materialItems
         .map((material) => new FusionItemMaterial($dataItems[material.id], material.count))
         .concat(
-          item.base.materialWeapons.map((material) => new FusionItemMaterial($dataWeapons[material.id], material.count))
+          item.base.materialWeapons.map(
+            (material) => new FusionItemMaterial($dataWeapons[material.id], material.count),
+          ),
         )
         .concat(
-          item.base.materialArmors.map((material) => new FusionItemMaterial($dataArmors[material.id], material.count))
+          item.base.materialArmors.map((material) => new FusionItemMaterial($dataArmors[material.id], material.count)),
         ),
       item.base.gold,
       item.base.condition.switchId,
       item.base.condition.variableId,
-      item.base.condition.threshold
+      item.base.condition.threshold,
     );
   }
   PluginManager.registerCommand(pluginName, command_fusionShop, function (args) {
@@ -497,7 +501,7 @@
     gameParty.numEquippedItem = function (item) {
       return this.members().reduce(
         (result, actor) => result + actor.equips().filter((equip) => equip === item).length,
-        0
+        0,
       );
     };
   }
@@ -718,7 +722,7 @@
             x,
             materialY,
             width,
-            'right'
+            'right',
           );
         });
       }
@@ -743,7 +747,7 @@
       return this._materials && index >= 0 ? this._materials[index] : [];
     }
     isCurrentItemEnabled() {
-      return this.isEnabled(this.index());
+      return this.isEnabledAt(this.index());
     }
     /**
      * 元の実装は同一アイテムに対して複数の価格設定があることを考慮していないため、上書きする
@@ -760,18 +764,21 @@
       return this._price[index] || 0;
     }
     /**
-     * @param {number} index
-     * @return {boolean}
+     * index単位でなければ一意に定まらないため、別メソッドとして定義する
      */
-    //@ts-ignore
-    isEnabled(index) {
+    isEnabledAt(index) {
       const item = this.itemAt(index);
       const materials = this.materialsAt(index);
       return (
-        !!item &&
-        this.priceAt(index) <= this._money &&
+        super.isEnabled(item) &&
         materials.every((material) => $gameParty.numUsableItemsForFusion(material.data) >= material.count)
       );
+    }
+    /**
+     * @deprecated isEnabledAtを利用してください。
+     */
+    isEnabled(item) {
+      return this._data ? this.isEnabledAt(this._data.indexOf(item)) : false;
     }
     makeItemList() {
       this._data = [];
@@ -791,7 +798,7 @@
       const rect = this.itemLineRect(index);
       const priceWidth = this.priceWidth();
       const nameWidth = rect.width - priceWidth;
-      this.changePaintOpacity(this.isEnabled(index));
+      this.changePaintOpacity(this.isEnabledAt(index));
       this.drawItemName(item, rect.x, rect.y, nameWidth);
       this.drawPrice(price, rect.x + rect.width - priceWidth, rect.y, priceWidth);
       this.changePaintOpacity(true);
