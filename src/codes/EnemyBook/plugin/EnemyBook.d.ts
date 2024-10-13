@@ -115,15 +115,23 @@ declare interface Window_EnemyBookStatus extends Window_Base {
   _enemySprite: Sprite;
   _weakLines: number;
   _resistLines: number;
+
   drawPage(): void;
+  drawLevel(x: number, y: number): void;
   drawStatus(x: number, y: number): void;
-  isExcludedResistState(stateId: number): boolean;
-  stateRate(stateId: number): number;
+  drawExpAndGold(x: number, y: number): void;
+  drawDropItems(x: number, y: number): void;
+  drawWeakElementsAndStates(x: number, y: number): void;
+  drawResistElementsAndStates(x: number, y: number): void;
   drawNoEffectElementsAndStates(x: number, y: number, width: number): void;
   drawNoEffectsLabel(x: number, y: number, width: number): void;
 
   descriptionX(): number;
   descriptionY(): number;
+
+  isExcludedResistState(stateId: number): boolean;
+  stateRate(stateId: number): number;
+
 }
 
 declare interface Window_Command {
