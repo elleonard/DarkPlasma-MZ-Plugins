@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/10/14",
+    version: "1.0.1",
+    description: "依存プラグイン名の修正"
+  },
+  {
+    date: "2024/10/14",
     version: "1.0.0",
     description: "公開",
   }
@@ -19,7 +24,7 @@ export const config = new ConfigDefinitionBuilder(
   .withHistories(histories)
   .withLicense("MIT")
   .withBaseDependency({
-    name: "DarkPlasma_AllocateUniqueTraitCode",
+    name: "DarkPlasma_AllocateUniqueTraitId",
     version: "1.0.1",
     order: "after",
   })
