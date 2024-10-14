@@ -1,9 +1,10 @@
-// DarkPlasma_AdditionalAttackAnimation 2.0.4
+// DarkPlasma_AdditionalAttackAnimation 2.0.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/14 2.0.5 非推奨化
  * 2024/03/17 2.0.4 TypeScript移行
  * 2021/07/05 2.0.3 MZ 1.3.2に対応
  * 2021/06/22 2.0.2 サブフォルダからの読み込みに対応
@@ -28,13 +29,20 @@
  * @type struct<AdditionalAnimation>[]
  * @default []
  *
+
+ * @deprecated
+
+ *
  * @help
- * version: 2.0.4
+ * version: 2.0.5
  * 攻撃アニメーションを特定条件で追加します。
  *
  * 以下の条件でアニメーションを追加できます。
  * - 特定ステートにかかっている対象
  * - 特定の敵
+ *
+ * 本プラグインは利用を非推奨とします。
+ * DarkPlasma_AdditionalAttackedAnimationTrait の利用をご検討ください。
  *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_ExpandTargetScope version:1.0.8
