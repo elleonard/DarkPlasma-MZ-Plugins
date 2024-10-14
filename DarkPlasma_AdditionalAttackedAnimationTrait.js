@@ -1,9 +1,10 @@
-// DarkPlasma_AdditionalAttackedAnimationTrait 1.0.0
+// DarkPlasma_AdditionalAttackedAnimationTrait 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/14 1.0.1 依存プラグイン名の修正
  * 2024/10/14 1.0.0 公開
  */
 
@@ -15,11 +16,11 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
- * @base DarkPlasma_AllocateUniqueTraitCode
- * @orderAfter DarkPlasma_AllocateUniqueTraitCode
+ * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 攻撃を受ける際に追加アニメーションを表示する特徴を設定します。
  *
  * アクター、職業、装備、敵キャラ、ステートのメモ欄に以下のように記述すると
@@ -27,9 +28,9 @@
  * <additionalAttackedAnimation:1>
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_AllocateUniqueTraitCode version:1.0.1
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.1
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * DarkPlasma_AllocateUniqueTraitCode
+ * DarkPlasma_AllocateUniqueTraitId
  */
 
 (() => {
