@@ -2,7 +2,11 @@ DarkPlasma_AdditionalAttackAnimation:
   name: DarkPlasma_AdditionalAttackAnimation
   year: 2020
   license: MIT
+  deprecated: true
   histories:
+    - date: 2024/10/14
+      version: 2.0.5
+      description: '非推奨化'
     - date: 2024/03/17
       version: 2.0.4
       description: 'TypeScript移行'
@@ -82,3 +86,6 @@ DarkPlasma_AdditionalAttackAnimation:
       以下の条件でアニメーションを追加できます。
       - 特定ステートにかかっている対象
       - 特定の敵
+
+      本プラグインは利用を非推奨とします。
+      DarkPlasma_AdditionalAttackedAnimationTrait の利用をご検討ください。
