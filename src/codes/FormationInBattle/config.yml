@@ -3,6 +3,9 @@ DarkPlasma_FormationInBattle:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/10/17
+      version: 3.0.0
+      description: 'DarkPlasma_Formation 4.0.0対応'
     - date: 2024/03/07
       version: 2.1.2
       description: 'DarkPlasma_Formationとの順序関係を明記'
@@ -99,7 +102,7 @@ DarkPlasma_FormationInBattle:
   dependencies:
     base:
       - name: DarkPlasma_Formation
-        version: 2.0.0
+        version: 4.0.0
     orderAfter:
       - name: DarkPlasma_Formation
   help:

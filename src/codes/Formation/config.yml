@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/10/17
+      version: 4.0.0
+      description: 'マウスオーバーで選択ウィンドウを切り替える機能追加 (Breaking Change)'
     - date: 2023/12/09
       version: 3.0.0
       description: '座標系オフセットに関するプログラム上のインターフェース変更 (Breaking Change)'
@@ -162,8 +165,8 @@ DarkPlasma_Formation:
       例えば、DarkPlasma_FormationInMenuや
       トリアコンタンさんのMenuSubCommandがご利用いただけます。
 
-      バージョン2.0.0以降、FormationInBattleも
-      2.0.0に更新する必要があることに注意してください。
+      バージョン4.0.0以降、FormationInBattleも
+      3.0.0に更新する必要があることに注意してください。
 
       並び替えシーン開始スクリプト:
       SceneManager.push(Scene_Formation);

@@ -177,6 +177,7 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
 
     setupFormationWindows() {
       this.formationWaitingMemberWindow().setActivateAnotherWindow(() => this.activateBattleMemberWindow());
+      this.formationWaitingMemberWindow().setActivateByHover(() => this.activateWaitingMemberWindowByHover());
       this.formationWaitingMemberWindow().setStatusWindow(this.formationStatusWindow());
       this.formationWaitingMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
       this.formationWaitingMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
@@ -185,6 +186,7 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
       this.formationWaitingMemberWindow().select(0);
 
       this.formationBattleMemberWindow().setActivateAnotherWindow(() => this.activateWaitingMemberWindow());
+      this.formationBattleMemberWindow().setActivateByHover(() => this.activateBattleMemberWindowByHover());
       this.formationBattleMemberWindow().setStatusWindow(this.formationStatusWindow());
       this.formationBattleMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
       this.formationBattleMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
@@ -270,6 +272,20 @@ function Scene_FormationMixIn(sceneClass: typeof Scene_Base): typeof Scene_Forma
         }
       }
       return targetIndex();
+    }
+
+    activateBattleMemberWindowByHover() {
+      this.formationWaitingMemberWindow().deactivate();
+      this.formationBattleMemberWindow().activate();
+      this._currentWindow = this.formationBattleMemberWindow();
+    }
+
+    activateWaitingMemberWindowByHover() {
+      if (this.formationWaitingMemberWindow().maxItems() > 0) {
+        this.formationBattleMemberWindow().deactivate();
+        this.formationWaitingMemberWindow().activate();
+        this._currentWindow = this.formationWaitingMemberWindow();
+      }
     }
   };
 }
@@ -443,7 +459,7 @@ class Window_FormationStatus extends Window_SkillStatus {
     /**
      * 先頭の顔グラビットマップ
      */
-    this._topFaceBitmap = ImageManager.loadFace($gameParty.leader().faceName());
+    this._topFaceBitmap = ImageManager.loadFace($gameParty.leader()!.faceName());
     this._topFaceIsVisible = false;
   }
 
@@ -472,6 +488,7 @@ class Window_FormationMember extends Window_StatusBase {
   _bitmapsMustBeRedraw: Bitmap[];
   _pendingIndex: number;
   _activateAnotherWindow: () => void;
+  _activateByHover: () => void;
 
   _statusWindow: Window_FormationStatus | null = null;
   _statusParamsWindow: Window_StatusParams | null = null;
@@ -486,6 +503,10 @@ class Window_FormationMember extends Window_StatusBase {
 
   setActivateAnotherWindow(func: () => void) {
     this._activateAnotherWindow = func;
+  }
+
+  setActivateByHover(func: () => void) {
+    this._activateByHover = func;
   }
 
   setStatusWindow(statusWindow: Window_FormationStatus) {
@@ -671,6 +692,13 @@ class Window_FormationMember extends Window_StatusBase {
       return !$gameParty.forwardMembersAreAllDead();
     }
     return !$gameParty.isAllDead();
+  }
+
+  public processTouch(): void {
+    if (!this.active && this.isOpen() && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
+      this._activateByHover();
+    }
+    super.processTouch();
   }
 }
 

@@ -56,6 +56,9 @@ declare interface Scene_Battle {
   activateWaitingMemberWindow(): void;
   targetIndexOfActivateBattleMember(): number;
   targetIndexOfActivateWaitingMember(): number;
+  
+  activateBattleMemberWindowByHover(): void;
+  activateWaitingMemberWindowByHover(): void;
 
   moveCancelButtonToEdge(): void;
   returnCancelButton(): void;
