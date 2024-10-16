@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 2.1.2
+// DarkPlasma_FormationInBattle 3.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/17 3.0.0 DarkPlasma_Formation 4.0.0対応
  * 2024/03/07 2.1.2 DarkPlasma_Formationとの順序関係を明記
  * 2023/08/06 2.1.1 特定条件下でカーソルの合っていないアクターが選択されてしまう不具合を修正
  * 2023/07/29 2.1.0 DarkPlasma_Formation 2.1.0対応
@@ -62,14 +63,14 @@
  * @default true
  *
  * @help
- * version: 2.1.2
+ * version: 3.0.0
  * 戦闘シーンで並び替えできるようになります。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
  * 対象マップでの戦闘中に並び替えを選択できなくなります。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_Formation version:2.0.0
+ * DarkPlasma_Formation version:4.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_Formation
  */
@@ -380,6 +381,12 @@
     };
     sceneBattle.targetIndexOfActivateWaitingMember = function () {
       return baseClass.targetIndexOfActivateWaitingMember.call(this);
+    };
+    sceneBattle.activateBattleMemberWindowByHover = function () {
+      baseClass.activateBattleMemberWindowByHover.call(this);
+    };
+    sceneBattle.activateWaitingMemberWindowByHover = function () {
+      baseClass.activateWaitingMemberWindowByHover.call(this);
     };
     const _updateCancelButton = sceneBattle.updateCancelButton;
     sceneBattle.updateCancelButton = function () {

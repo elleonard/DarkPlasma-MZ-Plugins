@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 3.0.0
+// DarkPlasma_Formation 4.0.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/17 4.0.0 マウスオーバーで選択ウィンドウを切り替える機能追加 (Breaking Change)
  * 2023/12/09 3.0.0 座標系オフセットに関するプログラム上のインターフェース変更 (Breaking Change)
  * 2023/10/02 2.1.3 待機メンバーウィンドウにメンバーがいない際にカーソルが操作不能になる不具合を修正
  * 2023/09/04 2.1.2 キャラクター横配置の総数・間隔をウィンドウサイズに応じて変わるように変更
@@ -91,7 +92,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 3.0.0
+ * version: 4.0.0
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -101,8 +102,8 @@
  * 例えば、DarkPlasma_FormationInMenuや
  * トリアコンタンさんのMenuSubCommandがご利用いただけます。
  *
- * バージョン2.0.0以降、FormationInBattleも
- * 2.0.0に更新する必要があることに注意してください。
+ * バージョン4.0.0以降、FormationInBattleも
+ * 3.0.0に更新する必要があることに注意してください。
  *
  * 並び替えシーン開始スクリプト:
  * SceneManager.push(Scene_Formation);
@@ -203,7 +204,7 @@
           0,
           this.formationHelpWindow().height + this.waitingMemberWindowHeight(),
           this.formationStatusWindowWidth(),
-          this.formationStatusWindowHeight()
+          this.formationStatusWindowHeight(),
         );
       }
       formationStatusWindowWidth() {
@@ -220,7 +221,7 @@
           0,
           this.formationHelpWindow().height,
           this.battleMemberWindowWidth(),
-          this.waitingMemberWindowHeight()
+          this.waitingMemberWindowHeight(),
         );
       }
       battleMemberWindowWidth() {
@@ -237,7 +238,7 @@
           this.formationBattleMemberWindow().width,
           this.formationHelpWindow().height,
           Graphics.boxWidth - this.formationBattleMemberWindow().width,
-          this.waitingMemberWindowHeight()
+          this.waitingMemberWindowHeight(),
         );
       }
       waitingMemberWindowHeight() {
@@ -274,6 +275,7 @@
       }
       setupFormationWindows() {
         this.formationWaitingMemberWindow().setActivateAnotherWindow(() => this.activateBattleMemberWindow());
+        this.formationWaitingMemberWindow().setActivateByHover(() => this.activateWaitingMemberWindowByHover());
         this.formationWaitingMemberWindow().setStatusWindow(this.formationStatusWindow());
         this.formationWaitingMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
         this.formationWaitingMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
@@ -281,6 +283,7 @@
         this.formationWaitingMemberWindow().setHandler('cancel', () => this.onFormationCancel());
         this.formationWaitingMemberWindow().select(0);
         this.formationBattleMemberWindow().setActivateAnotherWindow(() => this.activateWaitingMemberWindow());
+        this.formationBattleMemberWindow().setActivateByHover(() => this.activateBattleMemberWindowByHover());
         this.formationBattleMemberWindow().setStatusWindow(this.formationStatusWindow());
         this.formationBattleMemberWindow().setStatusParamsWindow(this.formationStatusParamsWindow());
         this.formationBattleMemberWindow().setEquipWindow(this.formationEquipStatusWindow());
@@ -296,7 +299,7 @@
           0,
           this.formationWaitingMemberWindow().y,
           Graphics.boxWidth,
-          this.formationWaitingMemberWindow().height
+          this.formationWaitingMemberWindow().height,
         );
       }
       onFormationOk() {
@@ -361,6 +364,18 @@
           }
         }
         return targetIndex();
+      }
+      activateBattleMemberWindowByHover() {
+        this.formationWaitingMemberWindow().deactivate();
+        this.formationBattleMemberWindow().activate();
+        this._currentWindow = this.formationBattleMemberWindow();
+      }
+      activateWaitingMemberWindowByHover() {
+        if (this.formationWaitingMemberWindow().maxItems() > 0) {
+          this.formationBattleMemberWindow().deactivate();
+          this.formationWaitingMemberWindow().activate();
+          this._currentWindow = this.formationWaitingMemberWindow();
+        }
       }
     };
   }
@@ -447,7 +462,7 @@
         0,
         this.formationHelpWindow().height + this.formationStatusWindow().height + this.waitingMemberWindowHeight(),
         Scene_Status.prototype.statusParamsWidth.call(this),
-        this.formationStatusParamsWindowHeight()
+        this.formationStatusParamsWindowHeight(),
       );
     }
     formationStatusParamsWindowHeight() {
@@ -470,7 +485,7 @@
         this._statusParamsWindow.width,
         this._statusParamsWindow.y,
         Graphics.boxWidth - this._statusParamsWindow.width,
-        this._statusParamsWindow.height
+        this._statusParamsWindow.height,
       );
     }
     formationEquipStatusWindow() {
@@ -544,6 +559,9 @@
     }
     setActivateAnotherWindow(func) {
       this._activateAnotherWindow = func;
+    }
+    setActivateByHover(func) {
+      this._activateByHover = func;
     }
     setStatusWindow(statusWindow) {
       this._statusWindow = statusWindow;
@@ -703,6 +721,12 @@
         return !$gameParty.forwardMembersAreAllDead();
       }
       return !$gameParty.isAllDead();
+    }
+    processTouch() {
+      if (!this.active && this.isOpen() && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
+        this._activateByHover();
+      }
+      super.processTouch();
     }
   }
   class Window_FormationBattleMember extends Window_FormationMember {
