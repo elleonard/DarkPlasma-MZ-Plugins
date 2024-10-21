@@ -1,9 +1,10 @@
-// DarkPlasma_PassageByRegion 1.0.0
+// DarkPlasma_PassageByRegion 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/21 1.1.0 各方向の通行不可設定を優先するように変更
  * 2024/01/05 1.0.0 公開
  */
 
@@ -21,7 +22,7 @@
  * @default []
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * リージョンによって通行可能・通行不可のマスを指定できます。
  */
 /*~struct~Region:
@@ -31,7 +32,7 @@
  * @default 0
  *
  * @param through
- * @desc この設定がONの場合、タイル設定に関わらず通行可能になります。
+ * @desc この設定がONの場合、タイル設定に関わらず全方向に通行可能になります。各方向の通行不可設定が優先されます。
  * @text すり抜け
  * @type boolean
  * @default false
@@ -90,7 +91,10 @@
   function Game_Map_PassageByRegionMixIn(gameMap) {
     const _isPassable = gameMap.isPassable;
     gameMap.isPassable = function (x, y, d) {
-      return this.isPassableRegion(x, y) || (!this.isImpassableRegion(x, y, d) && _isPassable.call(this, x, y, d));
+      if (this.isImpassableRegion(x, y, d)) {
+        return false;
+      }
+      return this.isPassableRegion(x, y) || _isPassable.call(this, x, y, d);
     };
     gameMap.isPassableRegion = function (x, y) {
       const regionSetting = settings.regions.find((region) => region.id === this.regionId(x, y));
