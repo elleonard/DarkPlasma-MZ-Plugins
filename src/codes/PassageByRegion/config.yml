@@ -3,6 +3,9 @@ DarkPlasma_PassageByRegion:
   year: 2024
   license: MIT
   histories:
+    - date: 2024/10/21
+      version: 1.1.0
+      description: '各方向の通行不可設定を優先するように変更'
     - date: 2024/01/05
       version: 1.0.0
       description: '公開'
@@ -29,7 +32,7 @@ DarkPlasma_PassageByRegion:
         text:
           ja: すり抜け
         desc:
-          ja: この設定がONの場合、タイル設定に関わらず通行可能になります。
+          ja: この設定がONの場合、タイル設定に関わらず全方向に通行可能になります。各方向の通行不可設定が優先されます。
         type: boolean
         default: false
       - param: impassableUp

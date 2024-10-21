@@ -5,7 +5,10 @@ import { settings } from "./_build/DarkPlasma_PassageByRegion_parameters";
 function Game_Map_PassageByRegionMixIn(gameMap: Game_Map) {
   const _isPassable = gameMap.isPassable;
   gameMap.isPassable = function (x, y, d) {
-    return this.isPassableRegion(x, y) || !this.isImpassableRegion(x, y, d) && _isPassable.call(this, x, y, d);
+    if (this.isImpassableRegion(x, y, d)) {
+      return false;
+    }
+    return this.isPassableRegion(x, y) || _isPassable.call(this, x, y, d);
   };
 
   gameMap.isPassableRegion = function (x, y) {
