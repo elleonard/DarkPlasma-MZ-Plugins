@@ -23,17 +23,9 @@ declare interface Scene_Formation extends Scene_FormationMixInClass {
   _equipWindow: Window_StatusEquip;
   _battleMemberWindow: Window_FormationBattleMember;
   _waitingMemberWindow: Window_FormationWaitingMember;
-  _equipSkillWindow: Window_EquipSpecialSkill;
-  _rateWindow: Window_ActorStatusRate;
-  _backgroundOverlaySprite: Sprite;
 
   createBackground(): void;
-  createEquipSpecialSkillWindow(): void;
-  createStatusRateWindow(): void;
-  equipSpecialSkillWindowRect(): Rectangle;
-  rateWindowRect(): Rectangle;
   waitingMemberWindowHeight(): number;
-  toggleParamWindow(): void;
 }
 
 declare interface Window_FormationMember extends Window_StatusBase {
