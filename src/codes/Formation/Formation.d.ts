@@ -25,7 +25,14 @@ declare interface Scene_Formation extends Scene_FormationMixInClass {
   _waitingMemberWindow: Window_FormationWaitingMember;
 
   createBackground(): void;
+  createStatusParamsWindow(): void;
+  createStatusEquipWindow(): void;
+
+  statusParamsWindowRect(): Rectangle;
+  formationStatusParamsWindowHeight(): number;
+  formationStatusParamsWindowWidth(): number;
   waitingMemberWindowHeight(): number;
+  equipStatusWindowRect(): Rectangle;
 }
 
 declare interface Window_FormationMember extends Window_StatusBase {
@@ -44,7 +51,7 @@ declare interface Window_FormationSelect {
   actor(): Game_Actor;
 }
 
-declare interface Window_FormationStatus {
+declare interface Window_FormationStatus extends Window_SkillStatus {
 
 }
 
