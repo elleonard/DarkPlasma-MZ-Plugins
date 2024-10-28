@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.3.2
+// DarkPlasma_EnemyBook 5.4.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/28 5.4.0 セーブデータに含むクラス名の命名を見直し
  * 2024/09/24 5.3.2 プラグインコマンドの引数が設定できない不具合を修正
  * 2024/02/04 5.3.1 目次生成をリフレッシュごとに行うよう修正
  *            5.3.0 未登録の敵キャラもハイライトできるように変更
@@ -201,7 +202,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.3.2
+ * version: 5.4.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -402,7 +403,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.3.2
+ * version: 5.4.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -698,22 +699,22 @@
   PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function () {
     $gameSystem.clearEnemyBook();
   });
-  class EnemyBook {
+  class Game_EnemyBook {
     /**
-     * @param {EnemyBookPage[]} pages ページ一覧
+     * @param {Game_EnemyBookPage[]} pages ページ一覧
      */
     constructor(pages) {
       this._pages = pages;
     }
     /**
      * 初期状態（何も登録されていない）図鑑を返す
-     * @return {EnemyBook}
+     * @return {Game_EnemyBook}
      */
     static initialBook() {
-      return new EnemyBook(
+      return new Game_EnemyBook(
         $dataEnemies.map((enemy) => {
           return isRegisterableEnemy(enemy)
-            ? new EnemyBookPage(
+            ? new Game_EnemyBookPage(
                 false,
                 enemy.dropItems.map((_) => false),
               )
@@ -730,7 +731,7 @@
         this._pages = this._pages.concat(
           $dataEnemies.slice(this._pages.length).map((enemy) => {
             return isRegisterableEnemy(enemy)
-              ? new EnemyBookPage(
+              ? new Game_EnemyBookPage(
                   false,
                   enemy.dropItems.map((_) => false),
                 )
@@ -749,7 +750,7 @@
         .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
         .forEach(
           (enemy) =>
-            (this._pages[enemy.id] = new EnemyBookPage(
+            (this._pages[enemy.id] = new Game_EnemyBookPage(
               false,
               enemy.dropItems.map((_) => false),
             )),
@@ -852,7 +853,7 @@
       this._pages.filter((page) => page).forEach((page) => page.unregister());
     }
   }
-  class EnemyBookPage {
+  class Game_EnemyBookPage {
     /**
      * @param {boolean} isRegistered 登録フラグ
      * @param {boolean[]} dropItems ドロップアイテムごとに登録フラグ
@@ -888,7 +889,7 @@
   let enemyBook = null;
   function enemyBookInstance() {
     if (!enemyBook) {
-      enemyBook = EnemyBook.initialBook();
+      enemyBook = Game_EnemyBook.initialBook();
     }
     return enemyBook;
   }
@@ -1480,7 +1481,7 @@
     const _initialize = gameSystem.initialize;
     gameSystem.initialize = function () {
       _initialize.call(this);
-      enemyBook = EnemyBook.initialBook();
+      enemyBook = Game_EnemyBook.initialBook();
       this._enemyBook = enemyBookInstance();
     };
     const _Game_System_onAfterLoad = gameSystem.onAfterLoad;
@@ -1492,7 +1493,7 @@
           enemyBookInstance().flexPage();
         }
       } else {
-        enemyBook = EnemyBook.initialBook();
+        enemyBook = Game_EnemyBook.initialBook();
         this._enemyBook = enemyBookInstance();
       }
     };
@@ -1567,8 +1568,10 @@
     };
   }
   Game_Enemy_EnemyBookMixIn(Game_Enemy.prototype);
-  globalThis.EnemyBook = EnemyBook;
-  globalThis.EnemyBookPage = EnemyBookPage;
+  globalThis.EnemyBook = Game_EnemyBook;
+  globalThis.EnemyBookPage = Game_EnemyBookPage;
+  globalThis.Game_EnemyBook = Game_EnemyBook;
+  globalThis.Game_EnemyBookPage = Game_EnemyBookPage;
   globalThis.Scene_EnemyBook = Scene_EnemyBook;
   globalThis.EnemyBookWindows = EnemyBookWindows;
   globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
