@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2024/10/28",
+    version: "5.4.0",
+    description: "セーブデータに含むクラス名の命名を見直し",
+  },
+  {
     date: "2024/09/24",
     version: "5.3.2",
     description: "プラグインコマンドの引数が設定できない不具合を修正",

@@ -7,8 +7,8 @@ declare namespace MZ {
   }
 }
 
-declare interface EnemyBook {
-  _pages: (EnemyBookPage|null)[];
+declare interface Game_EnemyBook {
+  _pages: (Game_EnemyBookPage|null)[];
   flexPage(): void;
   percentRegisteredEnemy(): number;
   percentRegisteredDropItem(): number;
@@ -22,7 +22,7 @@ declare interface EnemyBook {
   clear(): void;
 }
 
-declare interface EnemyBookPage {
+declare interface Game_EnemyBookPage {
   _isRegistered: boolean;
   _dropItems: boolean[];
 
@@ -36,7 +36,7 @@ declare interface EnemyBookPage {
 }
 
 declare interface Game_System {
-  _enemyBook: EnemyBook;
+  _enemyBook: Game_EnemyBook;
   addToEnemyBook(enemyId: number): void;
   addDropItemToEnemyBook(enemyId: number, dropIndex: number): void;
   removeFromEnemyBook(enemyId: number): void;

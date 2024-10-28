@@ -58,24 +58,24 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function ()
   $gameSystem.clearEnemyBook();
 });
 
-class EnemyBook {
-  _pages: (EnemyBookPage|null)[];
+class Game_EnemyBook {
+  _pages: (Game_EnemyBookPage|null)[];
   /**
-   * @param {EnemyBookPage[]} pages ページ一覧
+   * @param {Game_EnemyBookPage[]} pages ページ一覧
    */
-  constructor(pages: (EnemyBookPage|null)[]) {
+  constructor(pages: (Game_EnemyBookPage|null)[]) {
     this._pages = pages;
   }
 
   /**
    * 初期状態（何も登録されていない）図鑑を返す
-   * @return {EnemyBook}
+   * @return {Game_EnemyBook}
    */
-  static initialBook(): EnemyBook {
-    return new EnemyBook(
+  static initialBook(): Game_EnemyBook {
+    return new Game_EnemyBook(
       $dataEnemies.map((enemy) => {
         return isRegisterableEnemy(enemy)
-          ? new EnemyBookPage(
+          ? new Game_EnemyBookPage(
               false,
               enemy.dropItems.map((_) => false)
             )
@@ -93,7 +93,7 @@ class EnemyBook {
       this._pages = this._pages.concat(
         $dataEnemies.slice(this._pages.length).map((enemy) => {
           return isRegisterableEnemy(enemy)
-            ? new EnemyBookPage(
+            ? new Game_EnemyBookPage(
                 false,
                 enemy.dropItems.map((_) => false)
               )
@@ -112,7 +112,7 @@ class EnemyBook {
       .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
       .forEach(
         (enemy) =>
-          (this._pages[enemy.id] = new EnemyBookPage(
+          (this._pages[enemy.id] = new Game_EnemyBookPage(
             false,
             enemy.dropItems.map((_) => false)
           ))
@@ -225,7 +225,7 @@ class EnemyBook {
   }
 }
 
-class EnemyBookPage {
+class Game_EnemyBookPage {
   _isRegistered: boolean;
   _dropItems: boolean[];
   /**
@@ -267,11 +267,11 @@ class EnemyBookPage {
  * 敵図鑑情報
  * Game_Systemからのみ直接アクセスされる
  */
-let enemyBook: EnemyBook|null = null;
+let enemyBook: Game_EnemyBook|null = null;
 
-function enemyBookInstance(): EnemyBook {
+function enemyBookInstance(): Game_EnemyBook {
   if (!enemyBook) {
-    enemyBook = EnemyBook.initialBook();
+    enemyBook = Game_EnemyBook.initialBook();
   }
   return enemyBook;
 }
@@ -955,7 +955,7 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
   const _initialize = gameSystem.initialize;
   gameSystem.initialize = function () {
     _initialize.call(this);
-    enemyBook = EnemyBook.initialBook();
+    enemyBook = Game_EnemyBook.initialBook();
     this._enemyBook = enemyBookInstance();
   };
   
@@ -968,7 +968,7 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
         enemyBookInstance().flexPage();
       }
     } else {
-      enemyBook = EnemyBook.initialBook();
+      enemyBook = Game_EnemyBook.initialBook();
       this._enemyBook = enemyBookInstance();
     }
   };
@@ -1061,8 +1061,8 @@ function Game_Enemy_EnemyBookMixIn(gameEnemy: Game_Enemy) {
 
 Game_Enemy_EnemyBookMixIn(Game_Enemy.prototype);
 
-type _EnemyBook = typeof EnemyBook;
-type _EnemyBookPage = typeof EnemyBookPage;
+type _Game_EnemyBook = typeof Game_EnemyBook;
+type _Game_EnemyBookPage = typeof Game_EnemyBookPage;
 type _Scene_EnemyBook = typeof Scene_EnemyBook;
 type _EnemyBookWindows = typeof EnemyBookWindows;
 type _Window_EnemyBookPercent = typeof Window_EnemyBookPercent;
@@ -1070,8 +1070,14 @@ type _Window_EnemyBookIndex = typeof Window_EnemyBookIndex;
 type _Window_EnemyBookStatus = typeof Window_EnemyBookStatus;
 
 declare global {
-  var EnemyBook: _EnemyBook;
-  var EnemyBookPage: _EnemyBookPage;
+  /**
+   * セーブデータ互換性のために保持
+   */
+  var EnemyBook: _Game_EnemyBook;
+  var EnemyBookPage: _Game_EnemyBookPage;
+
+  var Game_EnemyBook: _Game_EnemyBook;
+  var Game_EnemyBookPage: _Game_EnemyBookPage;
   var Scene_EnemyBook: _Scene_EnemyBook;
   var EnemyBookWindows: _EnemyBookWindows;
   var Window_EnemyBookPercent: _Window_EnemyBookPercent;
@@ -1079,8 +1085,11 @@ declare global {
   var Window_EnemyBookStatus: _Window_EnemyBookStatus;
 }
 
-globalThis.EnemyBook = EnemyBook;
-globalThis.EnemyBookPage = EnemyBookPage;
+globalThis.EnemyBook = Game_EnemyBook;
+globalThis.EnemyBookPage = Game_EnemyBookPage;
+
+globalThis.Game_EnemyBook = Game_EnemyBook;
+globalThis.Game_EnemyBookPage = Game_EnemyBookPage;
 globalThis.Scene_EnemyBook = Scene_EnemyBook;
 globalThis.EnemyBookWindows = EnemyBookWindows;
 globalThis.Window_EnemyBookPercent = Window_EnemyBookPercent;
