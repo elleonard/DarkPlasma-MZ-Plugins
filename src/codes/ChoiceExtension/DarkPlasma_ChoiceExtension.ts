@@ -1,3 +1,5 @@
+/// <reference path="./ChoiceExtension.d.ts" />
+
 import { settings } from './_build/DarkPlasma_ChoiceExtension_parameters';
 
 const EVENT_COMMAND = {
@@ -9,8 +11,11 @@ const EVENT_COMMAND = {
 /**
  * 一つにまとめた選択肢開始コマンド
  */
-class MergedSequencialChoicesIndex {
-  constructor(index, sequencialChoiceIndex) {
+class Game_MergedSequencialChoicesIndex {
+  _index: number;
+  _sequencialChoiceIndex: number;
+
+  constructor(index: number, sequencialChoiceIndex: number) {
     this._index = index;
     this._sequencialChoiceIndex = sequencialChoiceIndex;
   }
@@ -25,9 +30,8 @@ class MergedSequencialChoicesIndex {
 
   /**
    * 別の選択肢にマージされている
-   * @return {boolean}
    */
-  merged() {
+  merged(): boolean {
     return this.sequencialChoiceIndex > 0;
   }
 }
@@ -35,8 +39,11 @@ class MergedSequencialChoicesIndex {
 /**
  * 選択肢の分岐先コマンド位置及び、分岐結果位置（選択肢ウィンドウのindexに対応する）
  */
-class ChoiceBranchIndex {
-  constructor(commandIndex, branchIndex) {
+class Game_ChoiceBranchIndex {
+  _commandIndex: number;
+  _branchIndex: number;
+
+  constructor(commandIndex: number, branchIndex: number) {
     this._commandIndex = commandIndex;
     this._branchIndex = branchIndex;
   }
@@ -84,10 +91,9 @@ Game_Message.prototype.originalChoices = function () {
 
 /**
  * 元々の選択肢設定の中で、表示すべきものの元々のインデックス一覧を返す
- * @return {number[]}
  */
 Game_Message.prototype.originalIndexOfDiplayedChoices = function () {
-  const result = [];
+  const result: number[] = [];
   this.originalChoices().forEach((choice, index) => {
     if (choice.displayed) {
       result.push(index);
@@ -115,9 +121,9 @@ Game_Interpreter.prototype.setupChoices = function (params) {
   const choices = this.mergeSequencialChoices();
   const displayedChoices = choices.filter((choice) => choice.displayed);
   const cancelType = params[1] < choices.length ? params[1] : -2;
-  const defaultType = params.length > 2 ? params[2] : 0;
+  const defaultType = params.length > 2 ? params[2] || 0 : 0;
   const positionType = params.length > 3 ? params[3] : 2;
-  const background = params.length > 4 ? params[4] : 0;
+  const background = params.length > 4 ? params[4] || 0 : 0;
   $gameMessage.setChoices(
     displayedChoices.map((choice) => choice.displayName),
     defaultType,
@@ -125,7 +131,7 @@ Game_Interpreter.prototype.setupChoices = function (params) {
   );
   $gameMessage.setChoiceEnabled(displayedChoices.map((choice) => choice.enabled));
   $gameMessage.setChoiceBackground(background);
-  $gameMessage.setChoicePositionType(positionType);
+  $gameMessage.setChoicePositionType(positionType === undefined ? 2 : positionType);
   $gameMessage.setChoiceCallback((n) => {
     this._branch[this._indent] = n;
   });
@@ -136,21 +142,21 @@ Game_Interpreter.prototype.setupChoices = function (params) {
  * 連続した選択肢の内容をマージする
  */
 Game_Interpreter.prototype.mergeSequencialChoices = function () {
-  let choices = [];
+  let choices: OriginalChoice[] = [];
   let branchIndex = 0;
   for (
     let commandIndex = this._index, sequencialChoiceIndex = 0;
     commandIndex !== -1;
     commandIndex = this.followingChoiceCommandIndex(commandIndex), sequencialChoiceIndex++
   ) {
-    this._mergedChoices.push(new MergedSequencialChoicesIndex(commandIndex, sequencialChoiceIndex));
-    this._list[commandIndex].parameters[0].forEach((choice, index) => {
+    this._mergedChoices.push(new Game_MergedSequencialChoicesIndex(commandIndex, sequencialChoiceIndex));
+    this._list![commandIndex].parameters[0].forEach((choice: string, index: number) => {
       let choiceDisplayName = choice.replace(/\s*if\((.*?)\)/, '').replace(/\s*en\((.*?)\)/, '');
       let isDisplayed = /\s*if\((.*?)\)/.test(choice) ? this.evalChoiceIf(choice) : true;
       let isEnabled = /s*en\((.*?)\)/.test(choice) ? this.evalChoiceEnabled(choice) : true;
       if (isDisplayed) {
         this._choiceBranches.push(
-          new ChoiceBranchIndex(this.findChoiceBranchCommandIndex(commandIndex, index), branchIndex)
+          new Game_ChoiceBranchIndex(this.findChoiceBranchCommandIndex(commandIndex, index), branchIndex)
         );
         branchIndex++;
       }
@@ -193,8 +199,8 @@ Game_Interpreter.prototype.evalChoiceIf = function (choice) {
 Game_Interpreter.prototype.evalChoiceCondition = function (condition) {
   try {
     const parsedCondition = condition
-      .replace(/s\[(\d+)\]/g, (_, index) => $gameSwitches.value(index))
-      .replace(/v\[(\d+)\]/g, (_, index) => $gameVariables.value(index));
+      .replace(/s\[(\d+)\]/g, (_, index) => String($gameSwitches.value(index)))
+      .replace(/v\[(\d+)\]/g, (_, index) => String($gameVariables.value(index)));
     return !!eval(parsedCondition);
   } catch (e) {
     return false;
@@ -209,9 +215,9 @@ Game_Interpreter.prototype.evalChoiceCondition = function (condition) {
  * @return {number}
  */
 Game_Interpreter.prototype.findChoiceBranchCommandIndex = function (fromIndex, branchIndex) {
-  const fromCommand = this._list[fromIndex];
+  const fromCommand = this._list![fromIndex];
   return (
-    this._list
+    this._list!
       .slice(fromIndex)
       .findIndex(
         (command) =>
@@ -228,9 +234,9 @@ Game_Interpreter.prototype.findChoiceBranchCommandIndex = function (fromIndex, b
  * @return {number}
  */
 Game_Interpreter.prototype.findChoiceEndIndex = function (fromIndex) {
-  const fromCommand = this._list[fromIndex];
+  const fromCommand = this._list![fromIndex];
   return (
-    this._list
+    this._list!
       .slice(fromIndex)
       .findIndex((command) => fromCommand.indent === command.indent && command.code === EVENT_COMMAND.CHOICE_END) +
     fromIndex
@@ -243,10 +249,10 @@ Game_Interpreter.prototype.findChoiceEndIndex = function (fromIndex) {
  * @return {number}
  */
 Game_Interpreter.prototype.findChoiceStartIndex = function (fromIndex) {
-  const fromCommand = this._list[fromIndex];
+  const fromCommand = this._list![fromIndex];
   return (
     fromIndex -
-    this._list
+    this._list!
       .slice(0, fromIndex + 1)
       .reverse()
       .findIndex((command) => fromCommand.indent === command.indent && command.code === EVENT_COMMAND.CHOICE_START)
@@ -261,7 +267,7 @@ Game_Interpreter.prototype.findChoiceStartIndex = function (fromIndex) {
  */
 Game_Interpreter.prototype.followingChoiceCommandIndex = function (fromIndex) {
   const choiceEndCommandIndex = this.findChoiceEndIndex(fromIndex);
-  const targetCommand = this._list[choiceEndCommandIndex + 1];
+  const targetCommand = this._list![choiceEndCommandIndex + 1];
   return targetCommand.code === EVENT_COMMAND.CHOICE_START ? choiceEndCommandIndex + 1 : -1;
 };
 
@@ -290,3 +296,22 @@ Window_ChoiceList.prototype.makeCommandList = function () {
 Window_ChoiceList.prototype.maxLines = function () {
   return settings.maxPageRows;
 };
+
+type _Game_ChoiceBranchIndex = typeof Game_ChoiceBranchIndex;
+type _Game_MergedSequencialChoicesIndex = typeof Game_MergedSequencialChoicesIndex;
+declare global {
+  /**
+   * セーブデータ互換性のために保持
+   */
+  var ChoiceBranchIndex: _Game_ChoiceBranchIndex;
+  var MergedSequencialChoicesIndex: _Game_MergedSequencialChoicesIndex;
+
+  var Game_ChoiceBranchIndex: _Game_ChoiceBranchIndex;
+  var Game_MergedSequencialChoicesIndex: _Game_MergedSequencialChoicesIndex;
+}
+
+globalThis.ChoiceBranchIndex = Game_ChoiceBranchIndex;
+globalThis.MergedSequencialChoicesIndex = Game_MergedSequencialChoicesIndex;
+
+globalThis.Game_ChoiceBranchIndex = Game_ChoiceBranchIndex;
+globalThis.Game_MergedSequencialChoicesIndex = Game_MergedSequencialChoicesIndex;
