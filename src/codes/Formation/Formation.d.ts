@@ -25,6 +25,7 @@ declare interface Scene_Formation extends Scene_FormationMixInClass {
   _waitingMemberWindow: Window_FormationWaitingMember;
 
   createBackground(): void;
+  createStatusWindow(): void;
   createStatusParamsWindow(): void;
   createStatusEquipWindow(): void;
 

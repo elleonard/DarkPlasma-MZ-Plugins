@@ -452,15 +452,14 @@ declare global {
 globalThis.Scene_Formation = Scene_Formation;
 
 class Window_FormationStatus extends Window_SkillStatus {
-  _topFaceBitmap: Bitmap | null = null;
-  _topFaceIsVisible: boolean = false;
   loadFaceImages() {
     super.loadFaceImages();
     /**
-     * 先頭の顔グラビットマップ
+     * 先頭の顔グラビットマップの読み込みが間に合わなかった時のため
+     * ロード完了時にリフレッシュする
      */
-    this._topFaceBitmap = ImageManager.loadFace($gameParty.leader()!.faceName());
-    this._topFaceIsVisible = false;
+    ImageManager.loadFace($gameParty.leader()!.faceName())
+      .addLoadListener(() => this.refresh());
   }
 
   numVisibleRows() {
@@ -469,18 +468,6 @@ class Window_FormationStatus extends Window_SkillStatus {
 
   windowHeight() {
     return this.fittingHeight(this.numVisibleRows());
-  }
-
-  update() {
-    super.update();
-    /**
-     * 先頭のみ顔グラの読み込みが間に合わないケースがあるため、
-     * 準備完了を待って一度だけ再描画処理を走らせる
-     */
-    if (!this._topFaceIsVisible && this._topFaceBitmap && this._topFaceBitmap.isReady()) {
-      this.refresh();
-      this._topFaceIsVisible = true;
-    }
   }
 }
 
