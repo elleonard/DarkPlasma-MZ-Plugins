@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 4.0.0
+// DarkPlasma_Formation 4.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/10/30 4.0.1 先頭の顔グラビットマップロード時の処理が正常に動作していない不具合の修正
  * 2024/10/17 4.0.0 マウスオーバーで選択ウィンドウを切り替える機能追加 (Breaking Change)
  * 2023/12/09 3.0.0 座標系オフセットに関するプログラム上のインターフェース変更 (Breaking Change)
  * 2023/10/02 2.1.3 待機メンバーウィンドウにメンバーがいない際にカーソルが操作不能になる不具合を修正
@@ -92,7 +93,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 4.0.0
+ * version: 4.0.1
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -513,35 +514,19 @@
   }
   globalThis.Scene_Formation = Scene_Formation;
   class Window_FormationStatus extends Window_SkillStatus {
-    constructor() {
-      super(...arguments);
-      this._topFaceBitmap = null;
-      this._topFaceIsVisible = false;
-    }
     loadFaceImages() {
       super.loadFaceImages();
       /**
-       * 先頭の顔グラビットマップ
+       * 先頭の顔グラビットマップの読み込みが間に合わなかった時のため
+       * ロード完了時にリフレッシュする
        */
-      this._topFaceBitmap = ImageManager.loadFace($gameParty.leader().faceName());
-      this._topFaceIsVisible = false;
+      ImageManager.loadFace($gameParty.leader().faceName()).addLoadListener(() => this.refresh());
     }
     numVisibleRows() {
       return 4;
     }
     windowHeight() {
       return this.fittingHeight(this.numVisibleRows());
-    }
-    update() {
-      super.update();
-      /**
-       * 先頭のみ顔グラの読み込みが間に合わないケースがあるため、
-       * 準備完了を待って一度だけ再描画処理を走らせる
-       */
-      if (!this._topFaceIsVisible && this._topFaceBitmap && this._topFaceBitmap.isReady()) {
-        this.refresh();
-        this._topFaceIsVisible = true;
-      }
     }
   }
   class Window_FormationMember extends Window_StatusBase {
