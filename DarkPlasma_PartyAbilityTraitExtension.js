@@ -1,9 +1,12 @@
-// DarkPlasma_PartyAbilityTraitExtension 1.2.2
+// DarkPlasma_PartyAbilityTraitExtension 1.2.3
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/05 1.2.3 通常能力値乗算が効かない不具合を修正
+ *                  競合により特殊能力値加算、追加能力値乗算が効かない不具合を修正
+ *                  AddSParamTrait、MultiplyXParamTraitとの順序を明示
  * 2024/11/04 1.2.2 旧形式の記述で特殊能力値乗算が100倍になる不具合を修正
  *            1.2.1 特殊能力値乗算が正常に働かない不具合を修正
  *            1.2.0 メモ欄の記法を一新
@@ -28,9 +31,11 @@
  * @base DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_FilterEquip
  * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
+ * @orderAfter DarkPlasma_MultiplyXParamTrait
+ * @orderAfter DarkPlasma_AddSParamTrait
  *
  * @help
- * version: 1.2.2
+ * version: 1.2.3
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -100,15 +105,9 @@
  *   exr: 経験値獲得率
  *
  * ※1: 追加能力値加算
- * 追加能力値乗算プラグインとの順序によって、
- * パーティ能力による加算を乗算の対象にしたりしなかったりできます。
- * 追加能力値乗算プラグインが上の場合、
  * パーティ能力による加算は乗算の対象外になります。
  *
  * ※2: 特殊能力値乗算
- * 特殊能力値加算プラグインとの順序によって、
- * パーティ能力による乗算を特殊能力値加算の前後どちらで行うか決めることができます。
- * 特殊能力値加算プラグインが上の場合、
  * パーティ能力による乗算は加算の後に行います。
  *
  * 以下の構文は非推奨です。
@@ -155,6 +154,8 @@
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_FilterEquip
  * DarkPlasma_AllocateUniqueTraitDataId
+ * DarkPlasma_MultiplyXParamTrait
+ * DarkPlasma_AddSParamTrait
  */
 
 (() => {
@@ -395,11 +396,52 @@
     };
   }
   DataManager_PartyAbilityTraitMixIn(DataManager);
-  function Game_Actor_PartyAbilityTraitMixIn(gameActor) {
-    const _paramBasePlus = gameActor.paramBasePlus;
-    gameActor.paramBasePlus = function (paramId) {
+  function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase) {
+    const _paramBasePlus = gameBattlerBase.paramBasePlus;
+    gameBattlerBase.paramBasePlus = function (paramId) {
       return Math.max(0, _paramBasePlus.call(this, paramId) + this.paramPlusByPartyAbility(paramId));
     };
+    const _paramRate = gameBattlerBase.paramRate;
+    gameBattlerBase.paramRate = function (paramId) {
+      return _paramRate.call(this, paramId) * this.paramRateByPartyAbility(paramId);
+    };
+    gameBattlerBase.paramPlusByPartyAbility = function (paramId) {
+      return 0;
+    };
+    gameBattlerBase.paramRateByPartyAbility = function (paramId) {
+      return 1;
+    };
+    const _xparam = gameBattlerBase.xparam;
+    gameBattlerBase.xparam = function (paramId) {
+      return _xparam.call(this, paramId) + this.xparamPlusByPartyAbility(paramId);
+    };
+    const _xparamRate = gameBattlerBase.xparamRate;
+    gameBattlerBase.xparamRate = function (paramId) {
+      return _xparamRate.call(this, paramId) * this.xparamRateByPartyAbility(paramId);
+    };
+    gameBattlerBase.xparamPlusByPartyAbility = function (paramId) {
+      return 0;
+    };
+    gameBattlerBase.xparamRateByPartyAbility = function (paramId) {
+      return 1;
+    };
+    const _sparam = gameBattlerBase.sparam;
+    gameBattlerBase.sparam = function (paramId) {
+      return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
+    };
+    const _sparamPlus = gameBattlerBase.sparamPlus;
+    gameBattlerBase.sparamPlus = function (paramId) {
+      return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
+    };
+    gameBattlerBase.sparamPlusByPartyAbility = function (paramId) {
+      return 0;
+    };
+    gameBattlerBase.sparamRateByPartyAbility = function (paramId) {
+      return 1;
+    };
+  }
+  Game_BattlerBase_PartyAbilityTraitMixIn(Game_BattlerBase.prototype);
+  function Game_Actor_PartyAbilityTraitMixIn(gameActor) {
     /**
      * ステータス計算用の一時パーティをセットする
      * 一時アクターにのみセットされるため、この値はセーブデータには含まれない
@@ -414,27 +456,11 @@
     gameActor.paramRateByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).paramRateByPartyAbility(paramId);
     };
-    const _xparam = gameActor.xparam;
-    gameActor.xparam = function (paramId) {
-      return _xparam.call(this, paramId) + this.xparamPlusByPartyAbility(paramId);
-    };
-    const _xparamRate = gameActor.xparamRate;
-    gameActor.xparamRate = function (paramId) {
-      return _xparamRate.call(this, paramId) * this.xparamRateByPartyAbility(paramId);
-    };
     gameActor.xparamPlusByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).xparamPlusByPartyAbility(paramId);
     };
     gameActor.xparamRateByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).xparamRateByPartyAbility(paramId);
-    };
-    const _sparam = gameActor.sparam;
-    gameActor.sparam = function (paramId) {
-      return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
-    };
-    const _sparamPlus = gameActor.sparamPlus;
-    gameActor.sparamPlus = function (paramId) {
-      return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
     };
     gameActor.sparamPlusByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).sparamPlusByPartyAbility(paramId);
