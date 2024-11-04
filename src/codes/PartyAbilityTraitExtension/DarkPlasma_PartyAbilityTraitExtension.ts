@@ -294,7 +294,7 @@ function Game_Party_PartyAbilityTraitMixIn(gameParty: Game_Party) {
    * 特殊能力値を乗算するパーティ能力のパーティ全体の倍率
    */
   gameParty.sparamRateByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_SPARAM, partyAbilityDataIds.sparam.rate[paramId].id), 1);
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.sparam.rate[paramId].id), 1);
   };
 }
 
