@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueTraitId 1.0.1
+// DarkPlasma_AllocateUniqueTraitId 1.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/04 1.0.2 ヘルプの誤字修正
  * 2022/08/21 1.0.1 typescript移行
  * 2022/05/28 1.0.0 公開
  */
@@ -23,8 +24,8 @@
  * @default 71
  *
  * @help
- * version: 1.0.1
- * 特徴の特徴IDを確保し、利用できるようにします。
+ * version: 1.0.2
+ * 独自の特徴IDを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
  * 本プラグインを必要とする別のプラグインと一緒に利用してください。
