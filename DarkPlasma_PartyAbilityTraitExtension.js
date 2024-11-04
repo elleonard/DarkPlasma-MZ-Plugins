@@ -1,10 +1,11 @@
-// DarkPlasma_PartyAbilityTraitExtension 1.2.1
+// DarkPlasma_PartyAbilityTraitExtension 1.2.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2024/11/04 1.2.1 特殊能力値乗算が正常に働かない不具合を修正
+ * 2024/11/04 1.2.2 旧形式の記述で特殊能力値乗算が100倍になる不具合を修正
+ *            1.2.1 特殊能力値乗算が正常に働かない不具合を修正
  *            1.2.0 メモ欄の記法を一新
  *                  通常能力値乗算、特殊能力値加算、追加能力値に対応
  * 2024/03/17 1.1.2 TypeScript移行
@@ -23,10 +24,13 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_MultiplyXParamTrait
+ * @base DarkPlasma_AddSParamTrait
+ * @base DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_FilterEquip
+ * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -145,9 +149,12 @@
  * <partyAbility:mcr:80>
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_MultiplyXParamTrait version:1.0.0
+ * DarkPlasma_MultiplyXParamTrait version:1.0.1
+ * DarkPlasma_AddSParamTrait version:1.0.2
+ * DarkPlasma_AllocateUniqueTraitDataId version:1.1.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
- * DarkPlasma_FilterEquip version:1.0.0
+ * DarkPlasma_FilterEquip
+ * DarkPlasma_AllocateUniqueTraitDataId
  */
 
 (() => {
@@ -310,12 +317,12 @@
             {
               code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
               dataId: partyAbilityDataIds.sparam.rate[sparamId].id,
-              value: value,
+              value: value / 100,
             },
             {
               code: Game_BattlerBase.TRAIT_SPARAM,
               dataId: sparamDataIds.rate[sparamId].id,
-              value: value,
+              value: value / 100,
             },
           ];
         }
@@ -423,9 +430,11 @@
     };
     const _sparam = gameActor.sparam;
     gameActor.sparam = function (paramId) {
-      return (
-        _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId) + this.sparamPlusByPartyAbility(paramId)
-      );
+      return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
+    };
+    const _sparamPlus = gameActor.sparamPlus;
+    gameActor.sparamPlus = function (paramId) {
+      return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
     };
     gameActor.sparamPlusByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).sparamPlusByPartyAbility(paramId);
