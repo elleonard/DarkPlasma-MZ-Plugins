@@ -3,6 +3,9 @@ DarkPlasma_AllocateUniqueTraitId:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/11/04
+      version: 1.0.2
+      description: 'ヘルプの誤字修正'
     - date: 2022/08/21
       version: 1.0.1
       description: 'typescript移行'
@@ -30,7 +33,7 @@ DarkPlasma_AllocateUniqueTraitId:
     orderBefore: []
   help:
     ja: |
-      特徴の特徴IDを確保し、利用できるようにします。
+      独自の特徴IDを確保し、利用できるようにします。
 
       本プラグインは単体では機能しません。
       本プラグインを必要とする別のプラグインと一緒に利用してください。
