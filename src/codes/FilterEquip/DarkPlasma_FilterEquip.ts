@@ -162,23 +162,6 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
 
 Scene_Equip_FilterEquipMixIn(Scene_Equip.prototype);
 
-/**
- * 独自dataIdの定義用
- */
-const uniqueDataIds = {
-  [Game_BattlerBase.TRAIT_DEBUFF_RATE]: 8,
-  [Game_BattlerBase.TRAIT_XPARAM]: 10,
-  [Game_BattlerBase.TRAIT_SPARAM]: 10,
-  [Game_BattlerBase.TRAIT_SLOT_TYPE]: 2,
-  [Game_BattlerBase.TRAIT_SPECIAL_FLAG]: 4,
-  [Game_BattlerBase.TRAIT_PARTY_ABILITY]: 6,
-};
-
-/**
- * 独自dataIdのキャッシュ
- */
-const uniqueDataIdCache: { [key: string]: number } = {};
-
 const TRAIT_NAMES = {
   [Game_BattlerBase.TRAIT_ELEMENT_RATE]: settings.traitName.elementRate,
   [Game_BattlerBase.TRAIT_DEBUFF_RATE]: settings.traitName.debuffRate,
@@ -481,39 +464,6 @@ class EquipFilterBuilder {
     }
     return null;
   }
-
-  /**
-   * 独自のtraitIdを確保する
-   * @deprecated DarkPlasma_AllocateUniqueTraitIdを直接利用してください。
-   * @param {string} pluginName プラグイン名
-   * @param {string} traitName 特徴名
-   * @param {number} id ID
-   * @return {number}
-   */
-  static allocateUniqueTraitId(pluginName: string, traitName: string, id: number): number {
-    return uniqueTraitIdCache.allocate(pluginName, id, traitName).id;
-  }
-
-  /**
-   * 独自dataIdを確保する
-   * @param {string} pluginName プラグイン名
-   * @param {number} traitId 特徴ID
-   * @param {number} id ID
-   * @return {number}
-   */
-  static allocateUniqueDataId(pluginName: string, traitId: number, id: number): number {
-    const base = uniqueDataIds[traitId];
-    if (!base) {
-      throw new Error(`traitId: ${traitId} is not supported.`);
-    }
-    const cacheKey = `${pluginName}_${traitId}_${id}`;
-    if (uniqueDataIdCache[cacheKey]) {
-      return uniqueDataIdCache[cacheKey];
-    }
-    uniqueDataIdCache[cacheKey] = base;
-    uniqueDataIds[traitId]++;
-    return base;
-  }
 }
 
 
@@ -583,13 +533,8 @@ class EquipFilter {
     this._traits.forEach((trait) => trait.off());
   }
 
-  /**
-   * 指定した効果の絞り込みON/OFFの切り替え
-   * @param {number} traitIndex 特徴インデックス
-   * @param {number} effectIndex 効果インデックス
-   */
-  toggleEffect(traitIndex: number, effectIndex: number) {
-    this._traits[traitIndex].toggleEffect(effectIndex);
+  toggleEffectByName(traitIndex: number, effectName: string) {
+    this._traits[traitIndex].toggleEffectByName(effectName);
   }
 
   /**
@@ -639,16 +584,12 @@ class EquipFilter {
 
   /**
    * 絞り込み表示対象に含まれる効果か
-   * @param {number} traitIndex 特徴インデックス
-   * @param {number} effectIndex 効果インデックス
-   * @return {boolean}
    */
-  isIncludedEffect(traitIndex: number, effectIndex: number): boolean {
+  isIncludedEffect(traitIndex: number, effectName: string): boolean {
     return (
       traitIndex >= 0 &&
       traitIndex < this._traits.length &&
-      effectIndex < this._traits[traitIndex].effects.length &&
-      this._traits[traitIndex].effects[effectIndex].isIncluded()
+      !!this._traits[traitIndex].effects.find(effect => effect.name === effectName)?.isIncluded()
     );
   }
 }
@@ -683,7 +624,7 @@ class EquipFilter_Trait {
   }
 
   get effectNames() {
-    return this._effects.map((effect) => effect.name);
+    return [...new Set(this._effects.map((effect) => effect.name))];
   }
 
   toggle() {
@@ -694,8 +635,8 @@ class EquipFilter_Trait {
     this._isIncluded = false;
   }
 
-  toggleEffect(index: number) {
-    this._effects[index].toggle();
+  toggleEffectByName(name: string) {
+    this._effects.filter(effect => effect.name === name).forEach(effect => effect.toggle());
   }
 
   allOff() {
@@ -876,6 +817,9 @@ class Window_EquipFilterTrait extends Window_EquipFilter {
   }
 }
 
+/**
+ * dataIdの名前一覧
+ */
 class Window_EquipFilterEffect extends Window_EquipFilter {
   _filterTraitWindow: Window_EquipFilterTrait;
   /**
@@ -891,7 +835,7 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
 
   toggleFilter() {
     super.toggleFilter();
-    this._filter?.toggleEffect(this._filterTraitWindow.index(), this.index());
+    this._filter?.toggleEffectByName(this._filterTraitWindow.index(), this.filterNameList()[this.index()]);
   }
 
   allOff() {
@@ -899,7 +843,7 @@ class Window_EquipFilterEffect extends Window_EquipFilter {
   }
 
   isFilterOn(index: number) {
-    return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);
+    return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), this.filterNameList()[index]);
   }
 }
 
