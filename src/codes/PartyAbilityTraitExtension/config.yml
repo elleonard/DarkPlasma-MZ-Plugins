@@ -3,6 +3,10 @@ DarkPlasma_PartyAbilityTraitExtension:
   year: 2021
   license: MIT
   histories:
+    - date: 2024/11/04
+      version: 1.2.0
+      description: 'メモ欄の記法を一新'
+    - description: '通常能力値乗算、特殊能力値加算、追加能力値に対応'
     - date: 2024/03/17
       version: 1.1.2
       description: 'TypeScript移行'
@@ -27,7 +31,9 @@ DarkPlasma_PartyAbilityTraitExtension:
   commands: []
   structures:
   dependencies:
-    base: []
+    base:
+      - name: DarkPlasma_MultiplyXParamTrait
+        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_FilterEquip
         version: 1.0.0
@@ -39,6 +45,84 @@ DarkPlasma_PartyAbilityTraitExtension:
       パーティ全体に効果を及ぼす特徴を付与できます。
 
       基本構文:
+      <partyAbility:[trait]:[data]:[value]>
+      パーティ全体に[trait]で指定した特徴を、
+      特徴データ[data], 効果量[value]で付与します。
+
+      記述例
+      最大HP+10:
+      <partyAbility:paramPlus:mhp:10>
+
+      会心率+20:
+      <partyAbility:xparamPlus:cri:20>
+
+      床ダメージ率*0:
+      <partyAbility:sparamRate:fdr:0>
+
+      上記すべてを設定する
+      <partyAbility:
+        paramPlus:mhp:10
+        xparamPlus:cri:20
+        sparamRate:fdr:0
+      >
+
+      [trait]:
+        paramPlus: パラメータ加算
+        paramRate: パラメータ乗算
+        xparamPlus: 追加能力値加算(※1)
+        xparamRate: 追加能力値乗算
+        sparamPlus: 特殊能力値加算
+        sparamRate: 特殊能力値乗算(※2)
+      
+      param系特徴の[data]:
+        mhp: 最大HP
+        mmp: 最大MP
+        atk: 攻撃力
+        def: 防御力
+        mat: 魔法攻撃力
+        mdf: 魔法防御力
+        agi: 敏捷性
+        luk: 運
+      
+      xparam系特徴の[data]:
+        hit: 命中率
+        eva: 回避率
+        cri: 会心率
+        cev: 会心回避率
+        mev: 魔法回避率
+        mrf: 魔法反射率
+        cnt: 反撃率
+        hrg: HP再生率
+        mrg: MP再生率
+        trg: TP再生率
+      
+      sparam系特徴の[data]:
+        tgr: 狙われ率
+        grd: 防御効果率
+        rec: 回復効果率
+        pha: 薬の知識
+        mcr: MP消費率
+        tcr: TPチャージ率
+        pdr: 物理ダメージ率
+        mdr: 魔法ダメージ率
+        fdr: 床ダメージ率
+        exr: 経験値獲得率
+
+      ※1: 追加能力値加算
+      追加能力値乗算プラグインとの順序によって、
+      パーティ能力による加算を乗算の対象にしたりしなかったりできます。
+      追加能力値乗算プラグインが上の場合、
+      パーティ能力による加算は乗算の対象外になります。
+
+      ※2: 特殊能力値乗算
+      特殊能力値加算プラグインとの順序によって、
+      パーティ能力による乗算を特殊能力値加算の前後どちらで行うか決めることができます。
+      特殊能力値加算プラグインが上の場合、
+      パーティ能力による乗算は加算の後に行います。
+
+      以下の構文は非推奨です。
+      互換性のために維持していますが、
+      次のメジャーバージョンアップで廃止されます。
       <partyAbility:[effect]:[value]>
       パーティ全体に[effect]で指定した効果を、効果量[value]で付与します。
 
@@ -51,13 +135,14 @@ DarkPlasma_PartyAbilityTraitExtension:
         mdf: 魔法防御力加算
         agi: 敏捷性加算
         luk: 運加算
+
         tgr: 狙われ率乗算
         grd: 防御効果率乗算
         rec: 回復効果率乗算
         pha: 薬の知識乗算
         mcr: MP消費率乗算
         tcr: TPチャージ率乗算
-        phr: 物理ダメージ率乗算
+        pdr: 物理ダメージ率乗算
         mdr: 魔法ダメージ率乗算
         fdr: 床ダメージ率乗算
         exr: 経験値獲得率乗算

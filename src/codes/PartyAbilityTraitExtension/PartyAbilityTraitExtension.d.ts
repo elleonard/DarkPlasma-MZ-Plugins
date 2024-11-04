@@ -1,25 +1,31 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../AllocateUniqueTraitDataId/plugin/AllocateUniqueTraitDataId.d.ts" />
 /// <reference path="../FilterEquip/FilterEquip.d.ts" />
+/// <reference path="../MultiplyXParamTrait/plugin/MultiplyXParamTrait.d.ts" />
+
+declare namespace DataManager {
+  function parsePartyAbility(meta: string): MZ.Trait[];
+  function parsePartyAbilityLine(line: string): [MZ.Trait, MZ.Trait];
+}
 
 declare interface Game_Actor {
   _tempParty?: Game_Party;
 
   setTempParty(tempParty: Game_Party): void;
   paramPlusByPartyAbility(paramId: number): number;
+  paramRateByPartyAbility(paramId: number): number;
+  xparamPlusByPartyAbility(paramId: number): number;
+  xparamRateByPartyAbility(paramId: number): number;
+  sparamPlusByPartyAbility(paramId: number): number;
   sparamRateByPartyAbility(paramId: number): number;
-  partyAbilityTraitsSum(key: string): number;
-  partyAbilityTraitsPi(key: string): number;
 }
 
 declare interface Game_Party {
   paramPlusByPartyAbility(paramId: number): number;
+  paramRateByPartyAbility(paramId: number): number;
+  xparamPlusByPartyAbility(paramId: number): number;
+  xparamRateByPartyAbility(paramId: number): number;
+  sparamPlusByPartyAbility(paramId: number): number;
   sparamRateByPartyAbility(paramId: number): number;
-}
-
-declare class EquipFilterBuilder {
-  /**
-   * FilterEquipの役割とすべきかどうか怪しいので、利用元に暫定的に定義しておく
-   */
-  static allocateUniqueDataId(pluginName: string, traitId: number, id: number): number;
 }
