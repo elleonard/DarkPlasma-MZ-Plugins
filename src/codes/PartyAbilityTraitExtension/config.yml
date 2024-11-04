@@ -3,6 +3,11 @@ DarkPlasma_PartyAbilityTraitExtension:
   year: 2021
   license: MIT
   histories:
+    - date: 2024/11/05
+      version: 1.2.3
+      description: '通常能力値乗算が効かない不具合を修正'
+    - description: '競合により特殊能力値加算、追加能力値乗算が効かない不具合を修正'
+    - description: 'AddSParamTrait、MultiplyXParamTraitとの順序を明示'
     - date: 2024/11/04
       version: 1.2.2
       description: '旧形式の記述で特殊能力値乗算が100倍になる不具合を修正'
@@ -45,6 +50,8 @@ DarkPlasma_PartyAbilityTraitExtension:
     orderAfter:
       - name: DarkPlasma_FilterEquip
       - name: DarkPlasma_AllocateUniqueTraitDataId
+      - name: DarkPlasma_MultiplyXParamTrait
+      - name: DarkPlasma_AddSParamTrait
     orderBefore: []
   help:
     ja: |
@@ -117,15 +124,9 @@ DarkPlasma_PartyAbilityTraitExtension:
         exr: 経験値獲得率
 
       ※1: 追加能力値加算
-      追加能力値乗算プラグインとの順序によって、
-      パーティ能力による加算を乗算の対象にしたりしなかったりできます。
-      追加能力値乗算プラグインが上の場合、
       パーティ能力による加算は乗算の対象外になります。
 
       ※2: 特殊能力値乗算
-      特殊能力値加算プラグインとの順序によって、
-      パーティ能力による乗算を特殊能力値加算の前後どちらで行うか決めることができます。
-      特殊能力値加算プラグインが上の場合、
       パーティ能力による乗算は加算の後に行います。
 
       以下の構文は非推奨です。

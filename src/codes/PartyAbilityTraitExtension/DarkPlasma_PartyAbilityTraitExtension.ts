@@ -197,12 +197,65 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
 
 DataManager_PartyAbilityTraitMixIn(DataManager);
 
-function Game_Actor_PartyAbilityTraitMixIn(gameActor: Game_Actor) {
-  const _paramBasePlus = gameActor.paramBasePlus;
-  gameActor.paramBasePlus = function (paramId) {
+function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBase) {
+  const _paramBasePlus = gameBattlerBase.paramBasePlus;
+  gameBattlerBase.paramBasePlus = function (paramId) {
     return Math.max(0, _paramBasePlus.call(this, paramId) + this.paramPlusByPartyAbility(paramId));
   };
 
+  const _paramRate = gameBattlerBase.paramRate;
+  gameBattlerBase.paramRate = function (paramId) {
+    return _paramRate.call(this, paramId) * this.paramRateByPartyAbility(paramId);
+  };
+
+  gameBattlerBase.paramPlusByPartyAbility = function (paramId) {
+    return 0;
+  };
+
+  gameBattlerBase.paramRateByPartyAbility = function (paramId) {
+    return 1;
+  };
+
+  const _xparam = gameBattlerBase.xparam;
+  gameBattlerBase.xparam = function (paramId) {
+    return _xparam.call(this, paramId) + this.xparamPlusByPartyAbility(paramId);
+  };
+
+  const _xparamRate = gameBattlerBase.xparamRate;
+  gameBattlerBase.xparamRate = function (paramId) {
+    return _xparamRate.call(this, paramId) * this.xparamRateByPartyAbility(paramId);
+  };
+
+  gameBattlerBase.xparamPlusByPartyAbility = function (paramId) {
+    return 0;
+  };
+
+  gameBattlerBase.xparamRateByPartyAbility = function (paramId) {
+    return 1;
+  };
+
+  const _sparam = gameBattlerBase.sparam;
+  gameBattlerBase.sparam = function (paramId) {
+    return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
+  };
+
+  const _sparamPlus = gameBattlerBase.sparamPlus;
+  gameBattlerBase.sparamPlus = function (paramId) {
+    return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
+  };
+
+  gameBattlerBase.sparamPlusByPartyAbility = function (paramId) {
+    return 0;
+  };
+
+  gameBattlerBase.sparamRateByPartyAbility = function (paramId) {
+    return 1;
+  };
+}
+
+Game_BattlerBase_PartyAbilityTraitMixIn(Game_BattlerBase.prototype);
+
+function Game_Actor_PartyAbilityTraitMixIn(gameActor: Game_Actor) {
   /**
    * ステータス計算用の一時パーティをセットする
    * 一時アクターにのみセットされるため、この値はセーブデータには含まれない
@@ -220,32 +273,12 @@ function Game_Actor_PartyAbilityTraitMixIn(gameActor: Game_Actor) {
     return (this._tempParty || $gameParty).paramRateByPartyAbility(paramId);
   }
 
-  const _xparam = gameActor.xparam;
-  gameActor.xparam = function (paramId) {
-    return _xparam.call(this, paramId) + this.xparamPlusByPartyAbility(paramId);
-  };
-
-  const _xparamRate = gameActor.xparamRate;
-  gameActor.xparamRate = function (paramId) {
-    return _xparamRate.call(this, paramId) * this.xparamRateByPartyAbility(paramId);
-  };
-
   gameActor.xparamPlusByPartyAbility = function (paramId) {
     return (this._tempParty || $gameParty).xparamPlusByPartyAbility(paramId);
   };
 
   gameActor.xparamRateByPartyAbility = function (paramId) {
     return (this._tempParty || $gameParty).xparamRateByPartyAbility(paramId);
-  };
-
-  const _sparam = gameActor.sparam;
-  gameActor.sparam = function (paramId) {
-    return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
-  };
-
-  const _sparamPlus = gameActor.sparamPlus;
-  gameActor.sparamPlus = function (paramId) {
-    return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
   };
 
   gameActor.sparamPlusByPartyAbility = function (paramId) {
