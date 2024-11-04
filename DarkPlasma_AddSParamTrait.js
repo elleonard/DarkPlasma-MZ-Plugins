@@ -1,9 +1,10 @@
-// DarkPlasma_AddSParamTrait 1.0.0
+// DarkPlasma_AddSParamTrait 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/04 1.0.1 ParameterTextとの順序関係を明記
  * 2024/11/04 1.0.0 公開
  */
 
@@ -16,10 +17,11 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_AllocateUniqueTraitDataId
+ * @orderAfter DarkPlasma_ParameterText
  * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アクター、職業、装備、敵キャラ、ステートのメモ欄に指定の記述を行うことで
  * 特殊能力値を加算する特徴を追加します。
  * エディタで指定できる乗算特徴を適用した後に、この設定値が加算されます。
@@ -50,6 +52,7 @@
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_AllocateUniqueTraitDataId version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_ParameterText
  * DarkPlasma_AllocateUniqueTraitDataId
  */
 
