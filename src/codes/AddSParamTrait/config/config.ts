@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/11/04",
+    version: "1.0.1",
+    description: "ParameterTextとの順序関係を明記",
+  },
+  {
+    date: "2024/11/04",
     version: "1.0.0",
     description: "公開",
   }
@@ -22,6 +27,10 @@ export const config = new ConfigDefinitionBuilder(
     name: "DarkPlasma_AllocateUniqueTraitDataId",
     version: "1.0.0",
     order: "after",
+  })
+  .withOrderAfterDependency({
+    name: "DarkPlasma_ParameterText",
+    version: "1.0.5",
   })
   .withHelp(dedent`アクター、職業、装備、敵キャラ、ステートのメモ欄に指定の記述を行うことで
     特殊能力値を加算する特徴を追加します。
