@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/11/04",
+    version: "1.1.0",
+    description: "特徴データ名のDBロード後評価に対応",
+  },
+  {
+    date: "2024/11/04",
     version: "1.0.0",
     description: "公開",
   }
@@ -82,5 +87,25 @@ export const config = new ConfigDefinitionBuilder(
   .withLicense("MIT")
   .withStructure(structUniqueDataIds)
   .withParameters(parameters)
-  .withHelp(dedent`独自の特徴データIDを確保し、利用できるようにします。`)
+  .withOrderAfterDependency({
+    name: "DarkPlasma_FilterEquip",
+  })
+  .withHelp(dedent`独自の特徴データIDを確保し、利用できるようにします。
+
+  本プラグインは単体では機能しません。
+  本プラグインを必要とする別のプラグインと一緒に利用してください。
+
+  以下、プラグインの開発者向けの情報です。
+  uniqueTraitDataIdCache オブジェクトに対してリクエストを投げてください。
+
+  uniqueTraitDataIdCache.allocate
+    : (pluginName: string, traitId: number, localId: number, name: string|(() => string)) => UniqueTraitDataId
+    プラグインで独自の特殊フラグIDを確保します。
+    名前をデータベースロード後に評価する関数にすることもできます。
+
+  UniqueSpecialFlagId.prototype.id: number
+    確保した特殊フラグID
+
+  UniqueSpecialFlagId.prototype.name: string
+    確保した特殊フラグIDの名前`)
   .build();

@@ -8,7 +8,7 @@ declare interface UniqueTraitDataIdCache {
     [key: string]: UniqueTraitDataId;
   };
 
-  allocate(pluginName: string, traitId: number, localId: number, name: string): UniqueTraitDataId;
+  allocate(pluginName: string, traitId: number, localId: number, name: string | (() => string)): UniqueTraitDataId;
   key(pluginName: string, traitId: number, localId: number): string;
   nameByIds(traitId: number, dataId: number): string|undefined;
 }
@@ -19,4 +19,8 @@ declare interface UniqueTraitDataId {
 
   readonly id: number;
   readonly name: string;
+}
+
+declare interface Scene_Boot {
+  evaluateUniqueTraitDataNames(): void;
 }

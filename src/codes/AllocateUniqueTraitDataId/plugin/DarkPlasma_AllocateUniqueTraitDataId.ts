@@ -49,7 +49,7 @@ class UniqueTraitDataIdCache {
     this._cacheByIds = {};
   }
 
-  allocate(pluginName: string, traitId: number, localId: number, name: string): UniqueTraitDataId {
+  allocate(pluginName: string, traitId: number, localId: number, name: string|(() => string)): UniqueTraitDataId {
     this.validateTraitId(traitId);
     const key = this.key(pluginName, traitId, localId);
     if (!this._cache[key]) {
@@ -85,10 +85,17 @@ class UniqueTraitDataIdCache {
 class UniqueTraitDataId {
   _id: number;
   _name: string;
+  _lazyName: () => string;
 
-  constructor(id: number, name: string) {
+  constructor(id: number, name: string | (() => string)) {
     this._id = id;
-    this._name = name;
+    if (typeof name === "function") {
+      this._name = "";
+      this._lazyName = name;
+      lazyEvaluationTargets.push(this);
+    } else {
+      this._name = name;
+    }
   }
 
   get id() {
@@ -98,9 +105,29 @@ class UniqueTraitDataId {
   get name() {
     return this._name;
   }
+
+  evaluateName() {
+    this._name = this._lazyName();
+  }
 }
 
 globalThis.uniqueTraitDataIdCache = new UniqueTraitDataIdCache();
+
+const lazyEvaluationTargets: UniqueTraitDataId[] = [];
+
+function Scene_Boot_AllocateUniqueTraitDataIdMixIn(sceneBoot: Scene_Boot) {
+  const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
+  sceneBoot.onDatabaseLoaded = function () {
+    _onDatabaseLoaded.call(this);
+    this.evaluateUniqueTraitDataNames();
+  };
+
+  sceneBoot.evaluateUniqueTraitDataNames = function () {
+    lazyEvaluationTargets.forEach(dataId => dataId.evaluateName());
+  };
+}
+
+Scene_Boot_AllocateUniqueTraitDataIdMixIn(Scene_Boot.prototype);
 
 function Scene_Equip_AllocateUniqueTraitDataIdMixIn(sceneEquip: Scene_Equip) {
   if ("equipFilterBuilder" in sceneEquip) {
