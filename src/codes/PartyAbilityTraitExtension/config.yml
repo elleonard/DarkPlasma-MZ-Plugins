@@ -4,7 +4,9 @@ DarkPlasma_PartyAbilityTraitExtension:
   license: MIT
   histories:
     - date: 2024/11/04
-      version: 1.2.1
+      version: 1.2.2
+      description: '旧形式の記述で特殊能力値乗算が100倍になる不具合を修正'
+    - version: 1.2.1
       description: '特殊能力値乗算が正常に働かない不具合を修正'
     - version: 1.2.0
       description: 'メモ欄の記法を一新'
@@ -35,10 +37,14 @@ DarkPlasma_PartyAbilityTraitExtension:
   dependencies:
     base:
       - name: DarkPlasma_MultiplyXParamTrait
-        version: 1.0.0
+        version: 1.0.1
+      - name: DarkPlasma_AddSParamTrait
+        version: 1.0.2
+      - name: DarkPlasma_AllocateUniqueTraitDataId
+        version: 1.1.0
     orderAfter:
       - name: DarkPlasma_FilterEquip
-        version: 1.0.0
+      - name: DarkPlasma_AllocateUniqueTraitDataId
     orderBefore: []
   help:
     ja: |

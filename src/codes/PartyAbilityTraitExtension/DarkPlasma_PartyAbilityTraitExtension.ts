@@ -117,12 +117,12 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
           {
             code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
             dataId: partyAbilityDataIds.sparam.rate[sparamId].id,
-            value: value,
+            value: value/100,
           },
           {
             code: Game_BattlerBase.TRAIT_SPARAM,
             dataId: sparamDataIds.rate[sparamId].id,
-            value: value,
+            value: value/100,
           },
         ];
       }
@@ -240,7 +240,12 @@ function Game_Actor_PartyAbilityTraitMixIn(gameActor: Game_Actor) {
 
   const _sparam = gameActor.sparam;
   gameActor.sparam = function (paramId) {
-    return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId) + this.sparamPlusByPartyAbility(paramId);
+    return _sparam.call(this, paramId) * this.sparamRateByPartyAbility(paramId);
+  };
+
+  const _sparamPlus = gameActor.sparamPlus;
+  gameActor.sparamPlus = function (paramId) {
+    return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
   };
 
   gameActor.sparamPlusByPartyAbility = function (paramId) {

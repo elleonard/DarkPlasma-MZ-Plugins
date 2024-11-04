@@ -1,8 +1,8 @@
 /// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
 /// <reference path="../AllocateUniqueTraitDataId/plugin/AllocateUniqueTraitDataId.d.ts" />
 /// <reference path="../FilterEquip/FilterEquip.d.ts" />
 /// <reference path="../MultiplyXParamTrait/plugin/MultiplyXParamTrait.d.ts" />
+/// <reference path="../AddSParamTrait/plugin/AddSParamTrait.d.ts" />
 
 declare namespace DataManager {
   function parsePartyAbility(meta: string): MZ.Trait[];
