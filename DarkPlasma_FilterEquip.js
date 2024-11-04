@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.3.0
+// DarkPlasma_FilterEquip 1.4.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/04 1.4.0 同名の特徴データをマージする
  * 2024/03/02 1.3.0 特殊フラグのフラグ名を表示
  * 2023/05/21 1.2.0 絞り込み操作のキーを追加
  *                  色設定のパラメータの型を変更
@@ -29,8 +30,8 @@
  * @base DarkPlasma_ParameterText
  * @base DarkPlasma_CustomKeyHandler
  * @base DarkPlasma_AllocateUniqueTraitId
+ * @base DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_CustomKeyHandler
- * @orderAfter DarkPlasma_AllocateUniqueTraitId
  * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  * @orderBefore DarkPlasma_FilterEquip_RecentlyGained
  *
@@ -56,7 +57,7 @@
  * @default shift
  *
  * @help
- * version: 1.3.0
+ * version: 1.4.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -72,12 +73,7 @@
  *   絞り込み用データビルダー
  *   後述の絞り込み用データ生成のためのルール追加を行えます
  *   具体的な利用例は下記プラグインをご覧ください
- *    - DarkPlasma_PartyAbilityTraitExtension
  *    - DarkPlasma_FilterEquip_RecentlyGained
- *
- * EquipFilterBuilder.allocateUniqueDataId
- *   : (string, number, number) => number
- *   独自の効果IDを確保する
  *
  * EquipFilterBuilder.prototype.withEquipToTraitsRule
  *   : ((MZ.Weapon|MZ.Armor) => MZ.Trait[]) => EquipFilterBuilder
@@ -100,9 +96,9 @@
  * DarkPlasma_ParameterText version:1.0.4
  * DarkPlasma_CustomKeyHandler version:1.3.0
  * DarkPlasma_AllocateUniqueTraitId version:1.0.0
+ * DarkPlasma_AllocateUniqueTraitDataId version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
- * DarkPlasma_AllocateUniqueTraitId
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
@@ -431,21 +427,6 @@
     };
   }
   Scene_Equip_FilterEquipMixIn(Scene_Equip.prototype);
-  /**
-   * 独自dataIdの定義用
-   */
-  const uniqueDataIds = {
-    [Game_BattlerBase.TRAIT_DEBUFF_RATE]: 8,
-    [Game_BattlerBase.TRAIT_XPARAM]: 10,
-    [Game_BattlerBase.TRAIT_SPARAM]: 10,
-    [Game_BattlerBase.TRAIT_SLOT_TYPE]: 2,
-    [Game_BattlerBase.TRAIT_SPECIAL_FLAG]: 4,
-    [Game_BattlerBase.TRAIT_PARTY_ABILITY]: 6,
-  };
-  /**
-   * 独自dataIdのキャッシュ
-   */
-  const uniqueDataIdCache = {};
   const TRAIT_NAMES = {
     [Game_BattlerBase.TRAIT_ELEMENT_RATE]: settings.traitName.elementRate,
     [Game_BattlerBase.TRAIT_DEBUFF_RATE]: settings.traitName.debuffRate,
@@ -728,37 +709,6 @@
       }
       return null;
     }
-    /**
-     * 独自のtraitIdを確保する
-     * @deprecated DarkPlasma_AllocateUniqueTraitIdを直接利用してください。
-     * @param {string} pluginName プラグイン名
-     * @param {string} traitName 特徴名
-     * @param {number} id ID
-     * @return {number}
-     */
-    static allocateUniqueTraitId(pluginName, traitName, id) {
-      return uniqueTraitIdCache.allocate(pluginName, id, traitName).id;
-    }
-    /**
-     * 独自dataIdを確保する
-     * @param {string} pluginName プラグイン名
-     * @param {number} traitId 特徴ID
-     * @param {number} id ID
-     * @return {number}
-     */
-    static allocateUniqueDataId(pluginName, traitId, id) {
-      const base = uniqueDataIds[traitId];
-      if (!base) {
-        throw new Error(`traitId: ${traitId} is not supported.`);
-      }
-      const cacheKey = `${pluginName}_${traitId}_${id}`;
-      if (uniqueDataIdCache[cacheKey]) {
-        return uniqueDataIdCache[cacheKey];
-      }
-      uniqueDataIdCache[cacheKey] = base;
-      uniqueDataIds[traitId]++;
-      return base;
-    }
   }
   class EquipFilter {
     /**
@@ -816,13 +766,8 @@
     allOffTrait() {
       this._traits.forEach((trait) => trait.off());
     }
-    /**
-     * 指定した効果の絞り込みON/OFFの切り替え
-     * @param {number} traitIndex 特徴インデックス
-     * @param {number} effectIndex 効果インデックス
-     */
-    toggleEffect(traitIndex, effectIndex) {
-      this._traits[traitIndex].toggleEffect(effectIndex);
+    toggleEffectByName(traitIndex, effectName) {
+      this._traits[traitIndex].toggleEffectByName(effectName);
     }
     /**
      * 指定した特徴の効果をすべて表示する
@@ -867,16 +812,12 @@
     }
     /**
      * 絞り込み表示対象に含まれる効果か
-     * @param {number} traitIndex 特徴インデックス
-     * @param {number} effectIndex 効果インデックス
-     * @return {boolean}
      */
-    isIncludedEffect(traitIndex, effectIndex) {
+    isIncludedEffect(traitIndex, effectName) {
       return (
         traitIndex >= 0 &&
         traitIndex < this._traits.length &&
-        effectIndex < this._traits[traitIndex].effects.length &&
-        this._traits[traitIndex].effects[effectIndex].isIncluded()
+        !!this._traits[traitIndex].effects.find((effect) => effect.name === effectName)?.isIncluded()
       );
     }
   }
@@ -902,7 +843,7 @@
       return this._effects;
     }
     get effectNames() {
-      return this._effects.map((effect) => effect.name);
+      return [...new Set(this._effects.map((effect) => effect.name))];
     }
     toggle() {
       this._isIncluded = !this._isIncluded;
@@ -910,8 +851,8 @@
     off() {
       this._isIncluded = false;
     }
-    toggleEffect(index) {
-      this._effects[index].toggle();
+    toggleEffectByName(name) {
+      this._effects.filter((effect) => effect.name === name).forEach((effect) => effect.toggle());
     }
     allOff() {
       this._effects.forEach((effect) => effect.off());
@@ -1056,6 +997,9 @@
       return !!this._filter && this._filter.hasDataIdTrait(index);
     }
   }
+  /**
+   * dataIdの名前一覧
+   */
   class Window_EquipFilterEffect extends Window_EquipFilter {
     /**
      * @param {Window_EquipFilterTrait} filterTraitWindow 特徴ウィンドウ
@@ -1068,13 +1012,15 @@
     }
     toggleFilter() {
       super.toggleFilter();
-      this._filter?.toggleEffect(this._filterTraitWindow.index(), this.index());
+      this._filter?.toggleEffectByName(this._filterTraitWindow.index(), this.filterNameList()[this.index()]);
     }
     allOff() {
       this._filter?.allOffEffect(this._filterTraitWindow.index());
     }
     isFilterOn(index) {
-      return !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), index);
+      return (
+        !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), this.filterNameList()[index])
+      );
     }
   }
   Window_CustomKeyHandlerMixIn(settings.key, Window_EquipItem.prototype, FILTER_HANDLER_NAME);
