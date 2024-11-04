@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
 import { createNumberParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2024/11/04",
+    version: "1.1.0",
+    description: "非推奨化",
+  },
   {
     date: "2024/03/02",
     version: "1.0.0",
@@ -26,7 +32,15 @@ export const config = new ConfigDefinitionBuilder(
   .withHistories(histories)
   .withLicense("MIT")
   .withParameters(parameters)
-  .withHelp(dedent`特殊フラグ特徴のIDを確保し、利用できるようにします。
+  .withBaseDependency({
+    name: "DarkPlasma_AllocateUniqueTraitDataId",
+    version: "1.1.0",
+    order: "after",
+  })
+  .withHelp(dedent`本プラグインの利用は非推奨になりました。
+    DarkPlasma_AllocateUniqueTraitDataId の利用を検討してください。
+    
+  特殊フラグ特徴のIDを確保し、利用できるようにします。
   
   本プラグインは単体では機能しません。
   本プラグインを必要とする別のプラグインと一緒に利用してください。
