@@ -39,7 +39,7 @@ DataManager_MultiplyXParamTraitMixIn(DataManager);
 function Game_BattlerBase_AddSParamTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   const _sparam = gameBattlerBase.sparam;
   gameBattlerBase.sparam = function (paramId) {
-    return _sparam.call(this, paramId) * this.sparamPlus(paramId);
+    return _sparam.call(this, paramId) + this.sparamPlus(paramId);
   };
 
   gameBattlerBase.sparamPlus = function (paramId) {

@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/11/04",
+    version: "1.0.2",
+    description: "加算ではなく乗算になってしまっていた不具合を修正",
+  },
+  {
+    date: "2024/11/04",
     version: "1.0.1",
     description: "ParameterTextとの順序関係を明記",
   },
