@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueSpecialFlagId 1.0.0
+// DarkPlasma_AllocateUniqueSpecialFlagId 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/04 1.1.0 非推奨化
  * 2024/03/02 1.0.0 公開
  */
 
@@ -15,6 +16,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_AllocateUniqueTraitDataId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
+ *
  * @param startIdOfUniqueSpecialFlagId
  * @desc 独自に特殊フラグIDを確保する際の始点ID。わからない場合はそのままにしてください。
  * @text 独自特殊フラグID始点
@@ -22,7 +26,10 @@
  * @default 11
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
+ * 本プラグインの利用は非推奨になりました。
+ *   DarkPlasma_AllocateUniqueTraitDataId の利用を検討してください。
+ *
  * 特殊フラグ特徴のIDを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -41,70 +48,27 @@
  * UniqueSpecialFlagId.prototype.name: string
  *   確保した特殊フラグIDの名前
  *
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_AllocateUniqueTraitDataId version:1.1.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_AllocateUniqueTraitDataId
  */
 
 (() => {
   'use strict';
 
-  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
-    return arguments[1];
-  });
-
-  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
-
-  const pluginParameters = pluginParametersOf(pluginName);
-
-  const settings = {
-    startIdOfUniqueSpecialFlagId: Number(pluginParameters.startIdOfUniqueSpecialFlagId || 11),
-  };
-
-  let uniqueSpecialFlagId = settings.startIdOfUniqueSpecialFlagId;
   class UniqueSpecialFlagIdCache {
-    constructor() {
-      this._cache = {};
-      this._cacheById = {};
-    }
+    constructor() {}
     allocate(pluginName, localId, name) {
-      const key = this.key(pluginName, localId);
-      if (!this._cache[key]) {
-        this._cache[key] = new UniqueSpecialFlagId(uniqueSpecialFlagId, name);
-        this._cacheById[uniqueSpecialFlagId] = this._cache[key];
-        uniqueSpecialFlagId++;
-      }
-      return this._cache[key];
+      return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_SPECIAL_FLAG, localId, name);
     }
     key(pluginName, localId) {
       return `${pluginName}_${localId}`;
     }
     nameById(id) {
-      return this._cacheById[id] ? this._cacheById[id].name : undefined;
+      return uniqueTraitDataIdCache.nameByIds(Game_BattlerBase.TRAIT_SPECIAL_FLAG, id);
     }
   }
   globalThis.uniqueSpecialFlagIdCache = new UniqueSpecialFlagIdCache();
-  class UniqueSpecialFlagId {
-    constructor(id, name) {
-      this._id = id;
-      this._name = name;
-    }
-    get id() {
-      return this._id;
-    }
-    get name() {
-      return this._name;
-    }
-  }
-  function Scene_Equip_AllocateUniqueSpecialFlagIdMixIn(sceneEquip) {
-    if ('equipFilterBuilder' in sceneEquip) {
-      const _equipFilterBuilder = sceneEquip.equipFilterBuilder;
-      sceneEquip.equipFilterBuilder = function (equips) {
-        return _equipFilterBuilder.call(this, equips).withTraitToEffectNameRule((traitId, dataId) => {
-          if (traitId === Game_BattlerBase.TRAIT_SPECIAL_FLAG) {
-            return uniqueSpecialFlagIdCache.nameById(dataId) || null;
-          }
-          return null;
-        });
-      };
-    }
-  }
-  Scene_Equip_AllocateUniqueSpecialFlagIdMixIn(Scene_Equip.prototype);
 })();

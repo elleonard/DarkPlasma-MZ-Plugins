@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueTraitDataId 1.0.0
+// DarkPlasma_AllocateUniqueTraitDataId 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/04 1.1.0 特徴データ名のDBロード後評価に対応
  * 2024/11/04 1.0.0 公開
  */
 
@@ -15,6 +16,8 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @orderAfter DarkPlasma_FilterEquip
+ *
  * @param startId
  * @desc 各種特徴の独自ID始点を定義します。
  * @text 独自ID始点
@@ -22,8 +25,28 @@
  * @default {"debuffRate":"8","param":"8","xparam":"10","sparam":"10","slotType":"2","specialFlag":"4","partyAbility":"6"}
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 独自の特徴データIDを確保し、利用できるようにします。
+ *
+ * 本プラグインは単体では機能しません。
+ * 本プラグインを必要とする別のプラグインと一緒に利用してください。
+ *
+ * 以下、プラグインの開発者向けの情報です。
+ * uniqueTraitDataIdCache オブジェクトに対してリクエストを投げてください。
+ *
+ * uniqueTraitDataIdCache.allocate
+ *   : (pluginName: string, traitId: number, localId: number, name: string|(() => string)) => UniqueTraitDataId
+ *   プラグインで独自の特殊フラグIDを確保します。
+ *   名前をデータベースロード後に評価する関数にすることもできます。
+ *
+ * UniqueSpecialFlagId.prototype.id: number
+ *   確保した特殊フラグID
+ *
+ * UniqueSpecialFlagId.prototype.name: string
+ *   確保した特殊フラグIDの名前
+ *
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_FilterEquip
  */
 /*~struct~uniqueDataIds:
  * @param debuffRate
@@ -172,7 +195,13 @@
   class UniqueTraitDataId {
     constructor(id, name) {
       this._id = id;
-      this._name = name;
+      if (typeof name === 'function') {
+        this._name = '';
+        this._lazyName = name;
+        lazyEvaluationTargets.push(this);
+      } else {
+        this._name = name;
+      }
     }
     get id() {
       return this._id;
@@ -180,8 +209,23 @@
     get name() {
       return this._name;
     }
+    evaluateName() {
+      this._name = this._lazyName();
+    }
   }
   globalThis.uniqueTraitDataIdCache = new UniqueTraitDataIdCache();
+  const lazyEvaluationTargets = [];
+  function Scene_Boot_AllocateUniqueTraitDataIdMixIn(sceneBoot) {
+    const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
+    sceneBoot.onDatabaseLoaded = function () {
+      _onDatabaseLoaded.call(this);
+      this.evaluateUniqueTraitDataNames();
+    };
+    sceneBoot.evaluateUniqueTraitDataNames = function () {
+      lazyEvaluationTargets.forEach((dataId) => dataId.evaluateName());
+    };
+  }
+  Scene_Boot_AllocateUniqueTraitDataIdMixIn(Scene_Boot.prototype);
   function Scene_Equip_AllocateUniqueTraitDataIdMixIn(sceneEquip) {
     if ('equipFilterBuilder' in sceneEquip) {
       const _equipFilterBuilder = sceneEquip.equipFilterBuilder;
