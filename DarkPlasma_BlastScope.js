@@ -1,9 +1,10 @@
-// DarkPlasma_BlastScope 1.0.0
+// DarkPlasma_BlastScope 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/09 1.0.1 戦闘不能対象の範囲拡散の挙動が正常でない
  * 2024/11/09 1.0.0 公開
  */
 
@@ -22,7 +23,7 @@
  * @default 50
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * スキルやアイテムの範囲設定に「拡散」を追加します。
  *
  * 範囲設定の陣営が「敵」または「味方」かつ数が「単体」であるような
@@ -144,7 +145,7 @@
       if (this.isBlastScope()) {
         result.push(
           ...result.flatMap((battler) =>
-            this.makeSubTargets(battler, (targetIndex) => unit.smoothDeadTarget(targetIndex)),
+            this.makeSubTargets(battler, (targetIndex) => unit.smoothDeadNextTarget(this._targetIndex, targetIndex)),
           ),
         );
       }
