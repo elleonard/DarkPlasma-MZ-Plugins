@@ -3,6 +3,9 @@ DarkPlasma_PositionDamageRate:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/11/08
+      version: 1.0.5
+      description: '追加能力値に関するプラグインと競合する不具合を修正'
     - date: 2024/10/15
       version: 1.0.4
       description: 'TypeScript移行'

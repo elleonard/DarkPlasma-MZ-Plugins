@@ -7,9 +7,9 @@ const SPARAM_ID = {
   MAGICAL_DAMAGE_RATE: 7,
 };
 
-function Game_Actor_PositionDamageRateMixIn(gameActor: Game_Actor) {
-  const _sparam = gameActor.sparam;
-  gameActor.sparam = function (sparamId) {
+function Game_BattlerBase_PositionDamageRateMixIn(gameBattlerBase: Game_BattlerBase) {
+  const _sparam = gameBattlerBase.sparam;
+  gameBattlerBase.sparam = function (sparamId) {
     const value = _sparam.call(this, sparamId);
     if (sparamId === SPARAM_ID.PHYSICAL_DAMAGE_RATE) {
       return value * this.physicalDamageRateByPosition();
@@ -19,7 +19,19 @@ function Game_Actor_PositionDamageRateMixIn(gameActor: Game_Actor) {
     }
     return value;
   };
-  
+
+  gameBattlerBase.physicalDamageRateByPosition = function () {
+    return 1;
+  };
+
+  gameBattlerBase.magicalDamageRateByPosition = function () {
+    return 1;
+  };
+}
+
+Game_BattlerBase_PositionDamageRateMixIn(Game_BattlerBase.prototype);
+
+function Game_Actor_PositionDamageRateMixIn(gameActor: Game_Actor) {
   gameActor.physicalDamageRateByPosition = function () {
     const index = this.originalIndex();
     return (
