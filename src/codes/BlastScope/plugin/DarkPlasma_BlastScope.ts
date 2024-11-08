@@ -114,7 +114,7 @@ function Game_Action_BlastScopeMixIn(gameAction: Game_Action) {
       result.push(...result
         .flatMap(battler => this.makeSubTargets(
           battler,
-          (targetIndex) => unit.smoothDeadTarget(targetIndex)
+          (targetIndex) => unit.smoothDeadNextTarget(this._targetIndex, targetIndex)
         ))
       );
     }

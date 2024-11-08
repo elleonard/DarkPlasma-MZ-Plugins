@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/11/09",
+    version: "1.0.1",
+    description: "戦闘不能対象の範囲拡散の挙動が正常でない",
+  },
+  {
+    date: "2024/11/09",
     version: "1.0.0",
     description: "公開",
   }
