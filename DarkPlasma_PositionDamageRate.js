@@ -1,9 +1,10 @@
-// DarkPlasma_PositionDamageRate 1.0.5
+// DarkPlasma_PositionDamageRate 1.0.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/11 1.0.6 後衛のダメージ率が変わってしまう不具合を修正
  * 2024/11/08 1.0.5 追加能力値に関するプラグインと競合する不具合を修正
  * 2024/10/15 1.0.4 TypeScript移行
  *                  装備画面で物理ダメージ率、魔法ダメージ率の差分を出そうとする場合に正常な値が表示できない不具合の修正
@@ -34,7 +35,7 @@
  * @default ["100"]
  *
  * @help
- * version: 1.0.5
+ * version: 1.0.6
  * 前衛アクターの立ち位置（先頭から何番目か）で
  * 受けるダメージの倍率を変更します。
  */
@@ -86,6 +87,9 @@
   function Game_Actor_PositionDamageRateMixIn(gameActor) {
     gameActor.physicalDamageRateByPosition = function () {
       const index = this.originalIndex();
+      if ($gameParty.maxBattleMembers() <= index) {
+        return 1;
+      }
       return (
         (settings.physicalDamageRates.length > index
           ? settings.physicalDamageRates[index]
@@ -94,6 +98,12 @@
     };
     gameActor.magicalDamageRateByPosition = function () {
       const index = this.originalIndex();
+      /**
+       * tempActorの場合は isBattleMember は使えない
+       */
+      if ($gameParty.maxBattleMembers() <= index) {
+        return 1;
+      }
       return (
         (settings.magicalDamageRates.length > index
           ? settings.magicalDamageRates[index]
