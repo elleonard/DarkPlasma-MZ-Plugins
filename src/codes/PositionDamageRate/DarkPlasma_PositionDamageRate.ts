@@ -34,6 +34,9 @@ Game_BattlerBase_PositionDamageRateMixIn(Game_BattlerBase.prototype);
 function Game_Actor_PositionDamageRateMixIn(gameActor: Game_Actor) {
   gameActor.physicalDamageRateByPosition = function () {
     const index = this.originalIndex();
+    if ($gameParty.maxBattleMembers() <= index) {
+      return 1;
+    }
     return (
       (settings.physicalDamageRates.length > index
         ? settings.physicalDamageRates[index]
@@ -43,6 +46,12 @@ function Game_Actor_PositionDamageRateMixIn(gameActor: Game_Actor) {
   
   gameActor.magicalDamageRateByPosition = function () {
     const index = this.originalIndex();
+    /**
+     * tempActorの場合は isBattleMember は使えない
+     */
+    if ($gameParty.maxBattleMembers() <= index) {
+      return 1;
+    }
     return (
       (settings.magicalDamageRates.length > index
         ? settings.magicalDamageRates[index]
