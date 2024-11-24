@@ -682,7 +682,7 @@ class Window_FormationMember extends Window_StatusBase {
   }
 
   public processTouch(): void {
-    if (!this.active && this.isOpen() && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
+    if (!this.active && this.visible && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
       this._activateByHover();
     }
     super.processTouch();
