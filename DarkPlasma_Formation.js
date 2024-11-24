@@ -1,9 +1,10 @@
-// DarkPlasma_Formation 4.0.1
+// DarkPlasma_Formation 4.0.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/11/24 4.0.2 マウスオーバーで切り替える判定を並び替え時以外はしないように変更
  * 2024/10/30 4.0.1 先頭の顔グラビットマップロード時の処理が正常に動作していない不具合の修正
  * 2024/10/17 4.0.0 マウスオーバーで選択ウィンドウを切り替える機能追加 (Breaking Change)
  * 2023/12/09 3.0.0 座標系オフセットに関するプログラム上のインターフェース変更 (Breaking Change)
@@ -93,7 +94,7 @@
  * @text 並び替えシーンを開く
  *
  * @help
- * version: 4.0.1
+ * version: 4.0.2
  * 並び替えシーンを提供します。
  *
  * プラグインコマンドで並び替えシーンを開始できます。
@@ -708,7 +709,7 @@
       return !$gameParty.isAllDead();
     }
     processTouch() {
-      if (!this.active && this.isOpen() && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
+      if (!this.active && this.visible && TouchInput.isHovered() && this.hitIndex() >= 0 && this._activateByHover) {
         this._activateByHover();
       }
       super.processTouch();
