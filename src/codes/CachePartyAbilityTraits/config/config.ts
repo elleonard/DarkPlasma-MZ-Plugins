@@ -6,6 +6,13 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/11/30",
+    version: "1.0.1",
+    description: "PartyAbilityTraitExtensionとの依存関係明記",
+  },
+  {
+    description: "パーティ能力特徴による能力差分表示の色が正常に変化しない不具合を修正",
+  },
+  {
     version: "1.0.0",
     description: "公開",
   }
@@ -51,6 +58,11 @@ export const config = new ConfigDefinitionBuilder(
   .withLicense("MIT")
   .withStructure(structClearCache)
   .withParameters(parameters)
+  .withBaseDependency({
+    name: "DarkPlasma_PartyAbilityTraitExtension",
+    version: "1.2.3",
+    order: "after",
+  })
   .withHelp(dedent`DarkPlasma_PartyAbilityTraitExtensionで追加するパーティ能力特徴をキャッシュし、
     再計算を抑制します。
     パーティ能力特徴によってパフォーマンスに影響が出ていると感じた場合にお試しください。

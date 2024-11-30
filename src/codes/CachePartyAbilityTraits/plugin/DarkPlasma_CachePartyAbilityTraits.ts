@@ -2,6 +2,8 @@
 
 import { settings } from '../config/_build/DarkPlasma_CachePartyAbilityTraits_parameters';
 
+// TODO: tempPartyの場合はキャッシュ貫通
+
 function Game_Temp_CachePartyAbilityTraitsMixIn(gameTemp: Game_Temp) {
   const _initialize = gameTemp.initialize;
   gameTemp.initialize = function () {
@@ -36,6 +38,9 @@ Game_Temp_CachePartyAbilityTraitsMixIn(Game_Temp.prototype);
 function Game_Party_CachePartyAbilityTraitsMixIn(gameParty: Game_Party) {
   const _calcPartyAbilityTraitMethodWithCache = function (originalMethod: (paramId: number) => number, type: PartyAbilityTraitType) {
     return function (this: Game_Party, paramId: number) {
+      if (this._ignorePartyAbilityCache) {
+        return originalMethod.call(this, paramId);
+      }
       const cached = $gameTemp.cachedPartyAbilityTrait(type, paramId);
       if (cached === undefined) {
         const value = originalMethod.call(this, paramId);
@@ -52,6 +57,10 @@ function Game_Party_CachePartyAbilityTraitsMixIn(gameParty: Game_Party) {
   gameParty.xparamRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.xparamRateByPartyAbility, "xparamRate");
   gameParty.sparamPlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.sparamPlusByPartyAbility, "sparamPlus");
   gameParty.sparamRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.sparamRateByPartyAbility, "sparamRate");
+
+  gameParty.setIgnorePartyAbilityCache = function () {
+    this._ignorePartyAbilityCache = true;
+  };
 
   const _addActor = gameParty.addActor;
   gameParty.addActor = function (actorId) {
@@ -120,6 +129,15 @@ function Game_Actor_CachePartyAbilityTraitsMixIn(gameActor: Game_Actor) {
     if (settings.clearCache.changeEquip) {
       this._equips.forEach(e => Game_Item_CachePartyAbilityTraitsMixIn(e));
     }
+  };
+
+  const _setTempParty = gameActor.setTempParty;
+  gameActor.setTempParty = function (tempParty) {
+    /**
+     * ステータス差分表示用の一時パーティはキャッシュを参照せず、更新しない
+     */
+    tempParty.setIgnorePartyAbilityCache();
+    _setTempParty.call(this, tempParty);
   };
 
   const _eraseState = gameActor.eraseState;

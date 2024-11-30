@@ -13,6 +13,12 @@ declare interface Game_Temp {
   clearPartyAbilityTraitsCache(): void;
 }
 
+declare interface Game_Party {
+  _ignorePartyAbilityCache: boolean|undefined;
+
+  setIgnorePartyAbilityCache(): void;
+}
+
 declare interface Game_Actors {
   setEquipsClearCacheMixIn(): void;
 }
