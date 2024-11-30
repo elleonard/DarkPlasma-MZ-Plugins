@@ -86,7 +86,6 @@
       : { changeEquip: true, changeState: true, changeClass: true },
   };
 
-  // TODO: tempPartyの場合はキャッシュ貫通
   function Game_Temp_CachePartyAbilityTraitsMixIn(gameTemp) {
     const _initialize = gameTemp.initialize;
     gameTemp.initialize = function () {
