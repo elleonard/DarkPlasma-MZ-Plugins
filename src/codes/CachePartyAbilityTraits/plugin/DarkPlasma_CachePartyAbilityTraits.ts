@@ -2,8 +2,6 @@
 
 import { settings } from '../config/_build/DarkPlasma_CachePartyAbilityTraits_parameters';
 
-// TODO: tempPartyの場合はキャッシュ貫通
-
 function Game_Temp_CachePartyAbilityTraitsMixIn(gameTemp: Game_Temp) {
   const _initialize = gameTemp.initialize;
   gameTemp.initialize = function () {
