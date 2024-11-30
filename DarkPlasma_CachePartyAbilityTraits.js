@@ -1,10 +1,12 @@
-// DarkPlasma_CachePartyAbilityTraits 1.0.0
+// DarkPlasma_CachePartyAbilityTraits 1.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2024/11/30 1.0.0 公開
+ * 2024/11/30 1.0.1 PartyAbilityTraitExtensionとの依存関係明記
+ *                  パーティ能力特徴による能力差分表示の色が正常に変化しない不具合を修正
+ *            1.0.0 公開
  */
 
 /*:
@@ -15,6 +17,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_PartyAbilityTraitExtension
+ * @orderAfter DarkPlasma_PartyAbilityTraitExtension
+ *
  * @param clearCache
  * @desc キャッシュクリアの設定を行います。
  * @text キャッシュクリア
@@ -22,7 +27,7 @@
  * @default {"changeEquip":"true","changeState":"true","changeClass":"true"}
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * DarkPlasma_PartyAbilityTraitExtensionで追加するパーティ能力特徴をキャッシュし、
  * 再計算を抑制します。
  * パーティ能力特徴によってパフォーマンスに影響が出ていると感じた場合にお試しください。
@@ -32,6 +37,11 @@
  * - 装備を変更した時
  * - アクターにステートが付加されたり、解除された時
  * - 職業が変わった時
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_PartyAbilityTraitExtension version:1.2.3
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_PartyAbilityTraitExtension
  */
 /*~struct~ClearCache:
  * @param changeEquip
@@ -76,6 +86,7 @@
       : { changeEquip: true, changeState: true, changeClass: true },
   };
 
+  // TODO: tempPartyの場合はキャッシュ貫通
   function Game_Temp_CachePartyAbilityTraitsMixIn(gameTemp) {
     const _initialize = gameTemp.initialize;
     gameTemp.initialize = function () {
@@ -99,6 +110,9 @@
   function Game_Party_CachePartyAbilityTraitsMixIn(gameParty) {
     const _calcPartyAbilityTraitMethodWithCache = function (originalMethod, type) {
       return function (paramId) {
+        if (this._ignorePartyAbilityCache) {
+          return originalMethod.call(this, paramId);
+        }
         const cached = $gameTemp.cachedPartyAbilityTrait(type, paramId);
         if (cached === undefined) {
           const value = originalMethod.call(this, paramId);
@@ -132,6 +146,9 @@
       gameParty.sparamRateByPartyAbility,
       'sparamRate',
     );
+    gameParty.setIgnorePartyAbilityCache = function () {
+      this._ignorePartyAbilityCache = true;
+    };
     const _addActor = gameParty.addActor;
     gameParty.addActor = function (actorId) {
       _addActor.call(this, actorId);
@@ -188,6 +205,14 @@
       if (settings.clearCache.changeEquip) {
         this._equips.forEach((e) => Game_Item_CachePartyAbilityTraitsMixIn(e));
       }
+    };
+    const _setTempParty = gameActor.setTempParty;
+    gameActor.setTempParty = function (tempParty) {
+      /**
+       * ステータス差分表示用の一時パーティはキャッシュを参照せず、更新しない
+       */
+      tempParty.setIgnorePartyAbilityCache();
+      _setTempParty.call(this, tempParty);
     };
     const _eraseState = gameActor.eraseState;
     gameActor.eraseState = function (stateId) {
