@@ -1,6 +1,7 @@
 /// <reference path="./AddSParamTrait.d.ts" />
 
 import { pluginName } from '../../../common/pluginName';
+import { settings } from '../config/_build/DarkPlasma_AddSParamTrait_parameters';
 
 const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'] as const;
 
@@ -39,7 +40,23 @@ DataManager_MultiplyXParamTraitMixIn(DataManager);
 function Game_BattlerBase_AddSParamTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   const _sparam = gameBattlerBase.sparam;
   gameBattlerBase.sparam = function (paramId) {
-    return _sparam.call(this, paramId) + this.sparamPlus(paramId);
+    const value = _sparam.call(this, paramId) + this.sparamPlus(paramId);
+    const limitSetting = settings.statusLimit[SPARAM_KEYS[paramId]];
+    if (limitSetting.enableLowerLimit) {
+      if (limitSetting.enableUpperLimit) {
+        return value.clamp(
+          limitSetting.lowerLimit,
+          limitSetting.upperLimit
+        );
+      } else {
+        return Math.max(limitSetting.lowerLimit, value);
+      }
+    } else {
+      if (limitSetting.enableUpperLimit) {
+        return Math.min(limitSetting.upperLimit, value);
+      }
+    }
+    return value;
   };
 
   gameBattlerBase.sparamPlus = function (paramId) {
