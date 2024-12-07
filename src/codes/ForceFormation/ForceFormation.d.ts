@@ -20,6 +20,10 @@ declare interface Game_Party {
   resetForceFormationChanged(): void;
 }
 
+declare interface Game_Actor {
+  isForceFormationEnabled(): boolean;
+}
+
 declare interface Game_Map {
   isForceFormationEnabled(): boolean;
 }

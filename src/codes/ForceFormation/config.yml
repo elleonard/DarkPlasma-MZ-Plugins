@@ -3,6 +3,9 @@ DarkPlasma_ForceFormation:
   year: 2020
   license: MIT
   histories:
+    - date: 2024/12/07
+      version: 2.5.0
+      description: 'アクターを強制入れ替え可否のインターフェース公開'
     - date: 2023/11/18
       version: 2.4.0
       description: '入れ替え処理のインターフェース公開'

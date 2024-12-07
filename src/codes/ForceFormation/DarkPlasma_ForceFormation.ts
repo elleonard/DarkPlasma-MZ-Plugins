@@ -88,12 +88,14 @@ function Game_Party_ForceFormationMixIn(gameParty: Game_Party) {
         ? result.concat([this.allMembers().indexOf(member)])
         : result;
     }, []);
-    this.battleMembers().forEach((deadMember, index) => {
-      const swapTargetIndex = aliveMemberIndexes[index] ? aliveMemberIndexes[index] : null;
-      if (swapTargetIndex) {
-        this.swapOrder(deadMember.index(), swapTargetIndex);
-      }
-    });
+    this.battleMembers()
+      .filter(actor => actor.isForceFormationEnabled())
+      .forEach((deadMember, index) => {
+        const swapTargetIndex = aliveMemberIndexes[index] ? aliveMemberIndexes[index] : null;
+        if (swapTargetIndex) {
+          this.swapOrder(deadMember.index(), swapTargetIndex);
+        }
+      });
     $gameTemp.requestBattleRefresh();
     this._forceFormationChanged = true;
   };
@@ -108,6 +110,18 @@ function Game_Party_ForceFormationMixIn(gameParty: Game_Party) {
 }
 
 Game_Party_ForceFormationMixIn(Game_Party.prototype);
+
+function Game_Actor_ForceFormationMixIn(gameActor: Game_Actor) {
+  /**
+   * このアクターを強制入れ替えの対象にして良いかどうか
+   * パーティ単位やマップ単位での強制入れ替え可否はここでは取り扱わない
+   */
+  gameActor.isForceFormationEnabled = function () {
+    return true;
+  };
+}
+
+Game_Actor_ForceFormationMixIn(Game_Actor.prototype);
 
 function Window_BattleLog_ForceFormationMixIn(windowClass: Window_BattleLog) {
   /**
