@@ -1,9 +1,10 @@
-// DarkPlasma_ForceFormation 2.4.0
+// DarkPlasma_ForceFormation 2.5.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/07 2.5.0 アクターを強制入れ替え可否のインターフェース公開
  * 2023/11/18 2.4.0 入れ替え処理のインターフェース公開
  * 2023/06/17 2.3.5 TypeScript移行
  * 2022/03/31 2.3.4 TemplateEvent.jsと併用すると戦闘テストできない不具合を修正
@@ -55,7 +56,7 @@
  * @default 0
  *
  * @help
- * version: 2.4.0
+ * version: 2.5.0
  * 戦闘時 前衛が全滅したら強制的に後衛と入れ替えます。
  *
  * マップのメモ欄に<disableForceFormation>と書くことで、
@@ -83,7 +84,7 @@
 
   const settings = {
     forceFormationMessage: String(
-      pluginParameters.forceFormationMessage || `倒れた前衛に代わって後衛が戦闘に加わった！`
+      pluginParameters.forceFormationMessage || `倒れた前衛に代わって後衛が戦闘に加わった！`,
     ),
     forceFormationCommonEvent: Number(pluginParameters.forceFormationCommonEvent || 0),
     forceTurnChange: String(pluginParameters.forceTurnChange || false) === 'true',
@@ -166,12 +167,14 @@
           ? result.concat([this.allMembers().indexOf(member)])
           : result;
       }, []);
-      this.battleMembers().forEach((deadMember, index) => {
-        const swapTargetIndex = aliveMemberIndexes[index] ? aliveMemberIndexes[index] : null;
-        if (swapTargetIndex) {
-          this.swapOrder(deadMember.index(), swapTargetIndex);
-        }
-      });
+      this.battleMembers()
+        .filter((actor) => actor.isForceFormationEnabled())
+        .forEach((deadMember, index) => {
+          const swapTargetIndex = aliveMemberIndexes[index] ? aliveMemberIndexes[index] : null;
+          if (swapTargetIndex) {
+            this.swapOrder(deadMember.index(), swapTargetIndex);
+          }
+        });
       $gameTemp.requestBattleRefresh();
       this._forceFormationChanged = true;
     };
@@ -183,6 +186,16 @@
     };
   }
   Game_Party_ForceFormationMixIn(Game_Party.prototype);
+  function Game_Actor_ForceFormationMixIn(gameActor) {
+    /**
+     * このアクターを強制入れ替えの対象にして良いかどうか
+     * パーティ単位やマップ単位での強制入れ替え可否はここでは取り扱わない
+     */
+    gameActor.isForceFormationEnabled = function () {
+      return true;
+    };
+  }
+  Game_Actor_ForceFormationMixIn(Game_Actor.prototype);
   function Window_BattleLog_ForceFormationMixIn(windowClass) {
     /**
      * 強制的に入れ替わった際にメッセージを表示する
