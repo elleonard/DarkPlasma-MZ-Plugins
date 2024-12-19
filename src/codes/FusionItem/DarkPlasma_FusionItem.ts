@@ -486,7 +486,9 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     const item = this.itemAt(index);
     const materials = this.materialsAt(index);
     return (
-      super.isEnabled(item) &&
+      !!item &&
+      this.priceAt(index) <= this._money &&
+      !$gameParty.hasMaxItems(item) &&
       materials.every((material) => $gameParty.numUsableItemsForFusion(material.data) >= material.count)
     );
   }
