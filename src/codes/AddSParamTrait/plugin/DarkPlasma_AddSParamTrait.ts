@@ -13,15 +13,19 @@ function DataManager_MultiplyXParamTraitMixIn(dataManager: typeof DataManager) {
     _extractMetadata.call(this, data);
     if ("traits" in data) {
       if (data.meta.addSParam) {
-        data.traits.push(this.parseAddSParamTrait(String(data.meta.addSParam)));
+        data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
       }
     }
   };
 
-  dataManager.parseAddSParamTrait = function (meta) {
-    const metaTokens = meta.split(":").map(token => token.trim());
+  dataManager.parseAddSParamTraits = function (meta) {
+    return meta.trim().split("\n").map(line => this.parseAddSParamTrait(line));
+  };
+
+  dataManager.parseAddSParamTrait = function (line) {
+    const metaTokens = line.split(":").map(token => token.trim());
     if (metaTokens.length < 2) {
-      throw Error(`特殊能力値加算の特徴の記述が不正です: ${meta}`);
+      throw Error(`特殊能力値加算の特徴の記述が不正です: ${line}`);
     }
     const paramId = SPARAM_KEYS.indexOf(metaTokens[0] as typeof SPARAM_KEYS[number]);
     if (paramId < 0) {

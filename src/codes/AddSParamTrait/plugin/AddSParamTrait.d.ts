@@ -2,7 +2,8 @@
 /// <reference path="../../AllocateUniqueTraitDataId/plugin/AllocateUniqueTraitDataId.d.ts" />
 
 declare namespace DataManager {
-  function parseAddSParamTrait(meta: string): MZ.Trait;
+  function parseAddSParamTraits(meta: string): MZ.Trait[];
+  function parseAddSParamTrait(line: string): MZ.Trait;
 }
 
 declare interface Game_BattlerBase {

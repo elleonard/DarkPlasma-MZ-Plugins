@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2024/12/19",
+    version: "1.2.0",
+    description: "複数の特徴を指定できる記法を追加",
+  },
+  {
     date: "2024/12/01",
     version: "1.1.0",
     description: "限界値設定を追加",
@@ -134,6 +139,12 @@ export const config = new ConfigDefinitionBuilder(
 
     物理ダメージ率-10％
     <addSParam:pdr:-10>
+
+    物理ダメージ率-10％, 魔法ダメージ率-10％
+    <addSParam:
+      pdr:-10
+      mdr:-10
+    >
     
     基本構文:
     <addSParam:[param]:[value]>
