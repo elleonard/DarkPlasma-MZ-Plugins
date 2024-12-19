@@ -1,9 +1,10 @@
-// DarkPlasma_AddSParamTrait 1.1.0
+// DarkPlasma_AddSParamTrait 1.2.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/19 1.2.0 複数の特徴を指定できる記法を追加
  * 2024/12/01 1.1.0 限界値設定を追加
  * 2024/11/04 1.0.2 加算ではなく乗算になってしまっていた不具合を修正
  * 2024/11/04 1.0.1 ParameterTextとの順序関係を明記
@@ -29,7 +30,7 @@
  * @default {"tgr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","grd":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","rec":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","pha":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","mcr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","tcr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","pdr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","mdr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","fdr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}","exr":"{\"enableUpperLimit\":\"false\",\"upperLimit\":\"999999\",\"enableLowerLimit\":\"true\",\"lowerLimit\":\"0\"}"}
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * アクター、職業、装備、敵キャラ、ステートのメモ欄に指定の記述を行うことで
  * 特殊能力値を加算する特徴を追加します。
  * エディタで指定できる乗算特徴を適用した後に、この設定値が加算されます。
@@ -40,6 +41,12 @@
  *
  * 物理ダメージ率-10％
  * <addSParam:pdr:-10>
+ *
+ * 物理ダメージ率-10％, 魔法ダメージ率-10％
+ * <addSParam:
+ *   pdr:-10
+ *   mdr:-10
+ * >
  *
  * 基本構文:
  * <addSParam:[param]:[value]>
@@ -293,14 +300,20 @@
       _extractMetadata.call(this, data);
       if ('traits' in data) {
         if (data.meta.addSParam) {
-          data.traits.push(this.parseAddSParamTrait(String(data.meta.addSParam)));
+          data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
         }
       }
     };
-    dataManager.parseAddSParamTrait = function (meta) {
-      const metaTokens = meta.split(':').map((token) => token.trim());
+    dataManager.parseAddSParamTraits = function (meta) {
+      return meta
+        .trim()
+        .split('\n')
+        .map((line) => this.parseAddSParamTrait(line));
+    };
+    dataManager.parseAddSParamTrait = function (line) {
+      const metaTokens = line.split(':').map((token) => token.trim());
       if (metaTokens.length < 2) {
-        throw Error(`特殊能力値加算の特徴の記述が不正です: ${meta}`);
+        throw Error(`特殊能力値加算の特徴の記述が不正です: ${line}`);
       }
       const paramId = SPARAM_KEYS.indexOf(metaTokens[0]);
       if (paramId < 0) {
