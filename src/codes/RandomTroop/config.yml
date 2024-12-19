@@ -3,6 +3,9 @@ DarkPlasma_RandomTroop:
   year: 2023
   license: MIT
   histories:
+    - date: 2024/12/19
+      version: 1.1.0
+      description: '種別による敵キャラデータ一覧取得インターフェース追加'
     - date: 2023/10/24
       version: 1.0.2
       description: 'ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正'

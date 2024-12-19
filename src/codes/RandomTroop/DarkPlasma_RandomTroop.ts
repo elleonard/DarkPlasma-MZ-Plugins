@@ -20,6 +20,10 @@ function DataManager_RandomTrooMixIn(dataManager: typeof DataManager) {
         .map(tag => tag.trim());
     }
   };
+
+  dataManager.enemiesWithTag = function (tag) {
+    return $dataEnemies.filter(enemy => enemy?.typeTags.includes(tag));
+  };
 }
 
 DataManager_RandomTrooMixIn(DataManager);
@@ -56,9 +60,7 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
         .filter(enemy => enemy.rate > Math.randomInt(100))
         .forEach(enemy => {
           const candidates = enemy.enemyIds.concat(
-            $dataEnemies
-              .filter(data => data && data.typeTags.includes(enemy.tag))
-              .map(data => data.id)
+            DataManager.enemiesWithTag(enemy.tag).map(data => data.id)
           );
           this._enemies.push(new Game_Enemy(candidates[Math.randomInt(candidates.length)], 0, 0));
         });

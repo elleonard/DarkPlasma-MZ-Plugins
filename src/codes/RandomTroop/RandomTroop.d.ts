@@ -6,6 +6,10 @@ declare namespace MZ {
   }
 }
 
+declare namespace DataManager {
+  function enemiesWithTag(tag: string): MZ.Enemy[];
+}
+
 declare interface Game_Troop {
   _isRandomTroop: boolean|undefined;
 
