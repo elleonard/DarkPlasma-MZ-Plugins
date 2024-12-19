@@ -1,9 +1,10 @@
-// DarkPlasma_RandomTroop 1.0.2
+// DarkPlasma_RandomTroop 1.1.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/19 1.1.0 種別による敵キャラデータ一覧取得インターフェース追加
  * 2023/10/24 1.0.2 ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正
  *            1.0.1 DarkPlasma_EnemyBookとの依存関係を明記
  * 2023/08/21 1.0.0 公開
@@ -40,7 +41,7 @@
  * @type struct<RandomTroopEnemy>[]
  *
  * @help
- * version: 1.0.2
+ * version: 1.1.0
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -140,6 +141,9 @@
           .map((tag) => tag.trim());
       }
     };
+    dataManager.enemiesWithTag = function (tag) {
+      return $dataEnemies.filter((enemy) => enemy?.typeTags.includes(tag));
+    };
   }
   DataManager_RandomTrooMixIn(DataManager);
   function Game_Troop_RandomTroopMixIn(gameTroop) {
@@ -171,9 +175,7 @@
         args.troop
           .filter((enemy) => enemy.rate > Math.randomInt(100))
           .forEach((enemy) => {
-            const candidates = enemy.enemyIds.concat(
-              $dataEnemies.filter((data) => data && data.typeTags.includes(enemy.tag)).map((data) => data.id)
-            );
+            const candidates = enemy.enemyIds.concat(DataManager.enemiesWithTag(enemy.tag).map((data) => data.id));
             this._enemies.push(new Game_Enemy(candidates[Math.randomInt(candidates.length)], 0, 0));
           });
         this.makeUniqueNames();
@@ -235,7 +237,7 @@
         const currentEnemyLine = Math.ceil((index + 1) / enemyPerLine); // 注目しているエネミーの列
         let x = Math.floor(
           (Graphics.boxWidth * (index % enemyPerLine)) / (enemyPerLine * 1.2) +
-            (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line)
+            (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line),
         );
         let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine));
         sprite.setHome(x, y);
@@ -310,14 +312,14 @@
       // ただし、枠をはみ出ないようにする
       const offsetX = Math.min(
         Math.ceil(((this.bitmap?.height || 0) * this.scale.y) / 2) * (partitionCellY / lineCount),
-        cellSizeX / 2
+        cellSizeX / 2,
       );
       // Y軸は画像縦サイズの半分だけ下げる
       // 横並びの場合、若干縦軸をずらす
       // ただし、枠をはみ出ないようにする
       const offsetY = Math.min(
         Math.ceil(((this.bitmap?.height || 0) * this.scale.y) / 2) * (1 + partitionCellX / lineCount),
-        cellSizeY / 2
+        cellSizeY / 2,
       );
       this._homeX = cellSizeX * partitionCellX + cellSizeX / 2 + offsetX;
       this._homeY = cellSizeY * partitionCellY + cellSizeY / 2 + offsetY;
