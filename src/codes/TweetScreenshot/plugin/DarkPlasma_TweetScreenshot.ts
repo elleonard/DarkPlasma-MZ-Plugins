@@ -24,7 +24,8 @@ function SceneManager_TweetScreenshotMixIn(sceneManager: typeof SceneManager) {
     }).then(response => {
       response.json().then(json => {
         if (json.status === 200) {
-          const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(json.data.link.replace('.jpg', ''))}`;
+          const imageUrl: string = json.data.link.replace(/.(jpg|jpeg)$/, '');
+          const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(imageUrl)}`;
           const exec = require('child_process').exec;
           if (process.platform === 'win32') {
             exec(`rundll32.exe url.dll,FileProtocolHandler "${tweetUrl}"`);

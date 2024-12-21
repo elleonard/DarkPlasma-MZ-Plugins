@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
 import { createStringParam, createCommand, createMultilineStringParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2024/12/21",
+    version: "2.0.2",
+    description: "ツイートの画像リンクから.jpeg拡張子を除去",
+  },
   {
     date: "2024/01/15",
     version: "2.0.1",
