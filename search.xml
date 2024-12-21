@@ -658,7 +658,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2023/03/12/screenshot-gallery/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/03/12/screenshot-gallery/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ゲーム内でスクリーンショットを撮影し、記録する機能を提供します。<br>スクリーンショットギャラリーシーンで、スクリーンショットを閲覧できます。</p><p><a href="/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/" title="ゲーム画面のキャプチャをツイートする">ゲーム画面のキャプチャをツイートする</a>(2.0.0以降)との連携で、ギャラリーシーンから画像をツイートできます。<h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="gallery.jpeg" alt="使用例" title="使用例"></p><p>※画像へのカーソル画像表示は本プラグインの機能には含まれません。<br><a href="https://awaya3ji.seesaa.net/article/488927664.html">FesCursor.js</a>等をご利用ください。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ScreenshotGallery.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ゲーム内でスクリーンショットを撮影し、記録する機能を提供します。<br>スクリーンショットギャラリーシーンで、スクリーンショットを閲覧できます。</p><p><a href="/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/" title="ゲーム画面のキャプチャをツイートする">ゲーム画面のキャプチャをツイートする</a>(2.0.0以降)との連携で、ギャラリーシーンから画像をツイートできます。<h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="gallery.jpeg" alt="使用例" title="使用例"></p><p>※画像へのカーソル画像表示は本プラグインの機能には含まれません。<br><a href="https://awaya3ji.seesaa.net/article/488927664.html">FesCursor.js</a>等をご利用ください。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ScreenshotGallery.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangeScreenshotSetting.js">スクリーンショットの設定を変更する</a></li></ul>]]></content>
       
       
       <categories>
@@ -683,7 +683,7 @@
       <link href="/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/"/>
       <url>/DarkPlasma-MZ-Plugins/2023/03/05/tweet-screenshot/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ゲーム画面のキャプチャをツイートする機能を提供します。<br>imgurにゲーム画面のキャプチャをアップロードし、そのURLをツイートする画面をブラウザで表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="tweet.png" alt="使用例" title="使用例"><br><img src="tweet-screenshot.png" alt="使用例" title="使用例"></p><h1 id="利用の前提"><a href="#利用の前提" class="headerlink" title="利用の前提"></a>利用の前提</h1><p>本プラグインの利用のためには、imgurのクライアントIDが必要となります。</p><ol><li><a href="https://imgur.com/">imgur</a>にアカウントを作成する</li><li><a href="https://api.imgur.com/oauth2/addclient">Register an Application</a>からアプリケーションを作成する</li></ol><p><img src="register-an-application.png" alt="アプリケーションの作成" title="アプリケーションの作成"><br>ゲームごとにアプリケーションを作成し、そのクライアントIDをプラグインパラメータに設定してください。</p><p>本プラグインはブラウザプレイに対応しません。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_TweetScreenshot.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ゲーム画面のキャプチャをツイートする機能を提供します。<br>imgurにゲーム画面のキャプチャをアップロードし、そのURLをツイートする画面をブラウザで表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="tweet.png" alt="使用例" title="使用例"><br><img src="tweet-screenshot.png" alt="使用例" title="使用例"></p><h1 id="利用の前提"><a href="#利用の前提" class="headerlink" title="利用の前提"></a>利用の前提</h1><p>本プラグインの利用のためには、imgurのクライアントIDが必要となります。</p><ol><li><a href="https://imgur.com/">imgur</a>にアカウントを作成する</li><li><a href="https://api.imgur.com/oauth2/addclient">Register an Application</a>からアプリケーションを作成する</li></ol><p><img src="register-an-application.png" alt="アプリケーションの作成" title="アプリケーションの作成"><br>ゲームごとにアプリケーションを作成し、そのクライアントIDをプラグインパラメータに設定してください。</p><p>本プラグインはブラウザプレイに対応しません。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_TweetScreenshot.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangeScreenshotSetting.js">スクリーンショットの設定を変更する</a></li></ul>]]></content>
       
       
       <categories>
@@ -861,6 +861,8 @@
             
             <tag> 装備 </tag>
             
+            <tag> 特徴 </tag>
+            
         </tags>
       
     </entry>
@@ -951,6 +953,8 @@
             <tag> MV版あり </tag>
             
             <tag> 能力値 </tag>
+            
+            <tag> 特徴 </tag>
             
         </tags>
       

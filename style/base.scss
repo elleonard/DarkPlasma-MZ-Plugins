@@ -1,0 +1,70 @@
+@import url("//at.alicdn.com/t/font_2266068_otkvzqnxk0g.css");
+
+@import "common/variable";
+@import "themes/theme";
+
+:root {
+
+  body {
+    margin: 0;
+    height: 100vh;
+    padding-top: 45px;
+
+    a {
+      color: inherit;
+
+      &:hover, &:hover .iconfont {
+        text-decoration: none;
+        color: $activeColor!important;
+      }
+    }
+
+    .tag.post-item-tag {
+      margin-right: 5px;
+
+      font-weight: bold;
+      color: darkorange;
+      font-style: normal;
+
+      border-radius: 10px;
+      background: transparent;
+      border: 2px solid darkorange;
+    }
+
+    .button.is-default {
+      height: 40px;
+
+      border: none;
+      border-radius: $borderRadius;
+      color: var(--second-text-color);
+      background: var(--third-bg-color);
+    }
+
+    > main {
+      flex-grow: 2;
+      flex-basis: 0;
+    }
+
+    > footer {
+      margin: 0 30px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+      .sns-container .iconfont {
+        margin: 0 5px;
+        font-size: 30px;
+      }
+    }
+  }
+
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .alignright {
+    float: right
+  }
+}
+
+@import "widget-header";
