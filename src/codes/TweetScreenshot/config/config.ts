@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2024/12/21",
+    version: "2.1.0",
+    description: "ChangeScreenshotSettingに対応"
+  },
+  {
+    date: "2024/12/21",
     version: "2.0.2",
     description: "ツイートの画像リンクから.jpeg拡張子を除去",
   },

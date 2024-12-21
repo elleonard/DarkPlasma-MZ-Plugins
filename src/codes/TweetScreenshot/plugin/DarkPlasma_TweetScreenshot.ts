@@ -7,7 +7,8 @@ const IMAGE_UPLOAD_API_URL = "https://api.imgur.com/3/image";
 
 function SceneManager_TweetScreenshotMixIn(sceneManager: typeof SceneManager) {
   sceneManager.tweetScreenshot = function () {
-    this.tweetImage(this.snap());
+    const snap: Bitmap = this.snapForScreenshot();
+    this.tweetImage(snap);
   };
 
   sceneManager.tweetImage = function (image) {
@@ -45,6 +46,10 @@ function SceneManager_TweetScreenshotMixIn(sceneManager: typeof SceneManager) {
 
   sceneManager.notifyTweetScreenshotError = function (error) {
     console.log(error);
+  };
+
+  sceneManager.snapForScreenshot = function () {
+    return this.snap();
   };
 }
 

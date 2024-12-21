@@ -4,6 +4,9 @@ DarkPlasma_ScreenshotGallery:
   license: MIT
   histories:
     - date: 2024/12/21
+      version: 2.0.0
+      description: 'スクリーンショットの設定変更プラグインコマンドを別プラグインに分離'
+    - date: 2024/12/21
       version: 1.2.0
       description: 'スクリーンショットの設定を変更するプラグインコマンドを追加'
     - date: 2023/10/20
@@ -108,19 +111,6 @@ DarkPlasma_ScreenshotGallery:
     - command: sceneScreenshot
       text:
         ja: スクショギャラリーを開く
-    - command: changeScreenshotSetting
-      text:
-        ja: スクショ設定を変更する
-      args:
-        - arg: rect
-          text:
-            ja: 位置と範囲
-          type: Rectangle
-          default:
-            x: 0
-            y: 0
-            width: 816
-            height: 624
   structures:
     Se:
       - param: name

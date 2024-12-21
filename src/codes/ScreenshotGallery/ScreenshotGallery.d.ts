@@ -1,18 +1,14 @@
 /// <reference path="../../typings/rmmz.d.ts" />
 /// <reference path="../TweetScreenshot/plugin/TweetScreenshot.d.ts" />
 
-declare namespace Bitmap {
-  function snapRectangle(stage: Stage, rect: Rectangle): Bitmap;
-}
-
 declare interface Bitmap {
   drawFrame(x: number, y: number, width: number, height: number, thick: number, color: string): void;
 }
 
 declare interface SceneManager {
-  saveScreenshot(format: string, rect?: Rectangle): void;
+  saveScreenshot(format: string): void;
   saveImage(filename: string, format: string, base64Image: string): void;
-  snapRectangle(rect: Rectangle): Bitmap;
+  snapForScreenshot(): Bitmap;
 }
 
 declare namespace ImageManager {
@@ -26,13 +22,6 @@ declare namespace ImageManager {
 
 declare namespace StorageManager {
   function screenshotDirPath(): string;
-}
-
-declare interface Game_Temp {
-  _screenshotRectangle: Rectangle|undefined;
-
-  screenshotRectangle(): Rectangle|undefined;
-  setScreenshotRectangle(rect: Rectangle|undefined): void;
 }
 
 declare interface Scene_Base {
