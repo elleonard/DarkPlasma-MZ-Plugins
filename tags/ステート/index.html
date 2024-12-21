@@ -1,85 +1,473 @@
-<!DOCTYPE html><html class="appearance-dark" lang="ja"><head><meta charset="UTF-8"><title>RPGツクールMZ向けプラグイン</title><meta name="description" content="DarkPlasma_シリーズの解説"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><meta property="og:type" content="website"><meta property="og:title" content="RPGツクールMZ向けプラグイン"><meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/index.html"><meta property="og:site_name" content="RPGツクールMZ向けプラグイン"><meta property="og:description" content="DarkPlasma_シリーズの解説"><meta property="og:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><meta property="og:locale" content="ja"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@elleonard_f"><meta name="twitter:title" content="RPGツクールMZ向けプラグイン"><meta name="twitter:description" content="DarkPlasma_シリーズの解説"><meta name="twitter:creator" content="@elleonard_f"><meta name="twitter:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><!-- Google Analytics --><!-- End Google Analytics -->
-<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="../.././favicon/favicon.ico"><link rel="stylesheet" href="../.././style/common/bulma.css"><link rel="stylesheet" href="../.././style/base.css"><link rel="stylesheet" href="../.././style/common/helper.css"><script src="../.././js/common.js"></script><link rel="stylesheet" href="../.././style/widget-post-list.css"><meta name="generator" content="Hexo 6.0.0"></head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="../../index.html">RPGツクールMZ向けプラグイン</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Tags · ステート</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../.././archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../.././archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2024/02/23/critical-damage-rate-trait/critical-damage-rate-trait.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2024/02/23/critical-damage-rate-trait/"><img class="post-cover-img js-img-fadeIn" src="../../2024/02/23/critical-damage-rate-trait/critical-damage-rate-trait.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E8%A3%85%E5%82%99"><i class="tag post-item-tag">装備</i></a><a href="../.././tags/%E8%81%B7%E6%A5%AD"><i class="tag post-item-tag">職業</i></a><a href="../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><i class="tag post-item-tag">アクター</i></a><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9"><i class="tag post-item-tag">敵キャラ</i></a><a href="../.././tags/%E7%89%B9%E5%BE%B4"><i class="tag post-item-tag">特徴</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2024/02/23/critical-damage-rate-trait/">会心ダメージ率を増減する特徴</a></h2><time class="has-text-grey" datetime="2024-02-23T06:36:37.000Z">2024-02-23</time><p class="is-flex-grow-2 mt-2">概要デフォルトの会心ダメージ率を設定します。(RPGツクールのデフォルト会心ダメージ率は300％)また、会心ダメージ率を増減させる特徴を設定できます。
-使用例
-ミシェルの会心ダメージ率を+150％します。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の特徴IDを確保する独自の特徴を追加するため、利用には本プラグインが必要になります。
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
-GitHub
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="../../favicon/safari-pinned-tab.svg" color="#222">
 
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2024/02/23/critical-damage-rate-trait/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="会心ダメージ率を増減する特徴 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2024/02/23/critical-damage-rate-trait/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2023/09/17/level-x-state/setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2023/09/17/level-x-state/"><img class="post-cover-img js-img-fadeIn" src="../../2023/09/17/level-x-state/setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><i class="tag post-item-tag">アイテム</i></a><a href="../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><i class="tag post-item-tag">スキル</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2023/09/17/level-x-state/">レベルが特定数値の倍数の対象にのみ有効なステート付加効果</a></h2><time class="has-text-grey" datetime="2023-09-17T09:14:06.000Z">2023-09-17</time><p class="is-flex-grow-2 mt-2">概要レベルが特定数値の倍数の対象にのみ有効なステート付加を行う使用効果を提供します。
-使用例
-レベルが5の倍数の対象に戦闘不能を付与する設定です。
-敵キャラへの適用について本プラグインで提供する効果は、レベルを持たない対象に効果を発揮しません。RPGツクールMZデフォルトでは敵キャラはレベルを持ちません。
-敵キャラにレベルを追加するプラグインを使用することにより、本プラグインで提供する効果を敵キャラに対しても発揮できるようになります。
+<link rel="stylesheet" href="../../css/main.css">
 
-DarkPlasma_EnemyLevel
-NRP_EnemyPercentParams
-KRD_MZ_EnemyLevel
 
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の効果コードIDを確..</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2023/09/17/level-x-state/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="レベルが特定数値の倍数の対象にのみ有効なステート付加効果 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/09/17/level-x-state/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2023/09/17/actor-command-trait/setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2023/09/17/actor-command-trait/"><img class="post-cover-img js-img-fadeIn" src="../../2023/09/17/actor-command-trait/setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E8%A3%85%E5%82%99"><i class="tag post-item-tag">装備</i></a><a href="../.././tags/%E8%81%B7%E6%A5%AD"><i class="tag post-item-tag">職業</i></a><a href="../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><i class="tag post-item-tag">アクター</i></a><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2023/09/17/actor-command-trait/">アクターコマンドを変更する特徴</a></h2><time class="has-text-grey" datetime="2023-09-17T08:52:57.000Z">2023-09-17</time><p class="is-flex-grow-2 mt-2">概要アクターコマンドを変更する特徴を定義します。
-使用例
-暴走モードでは、アクターコマンドがスキル292だけになる設定をしています。
 
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の特徴IDを確保する独自の特徴を追加するため、利用には本プラグインが必要になります。
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-GitHub
+<script class="next-config" data-name="main" type="application/json">{"hostname":"elleonard.github.io","root":"/DarkPlasma-MZ-Plugins/","images":"../../images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"検索…","empty":"検索結果が見つかりませんでした: ${query}","hits_time":"${hits} の結果が ${time} ms で見つかりました","hits":"${hits} 件の結果が見つかりました"}}</script><script src="../../js/config.js"></script>
 
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2023/09/17/actor-command-trait/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="アクターコマンドを変更する特徴 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/09/17/actor-command-trait/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2023/06/22/remove-state-by-mp/setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2023/06/22/remove-state-by-mp/"><img class="post-cover-img js-img-fadeIn" src="../../2023/06/22/remove-state-by-mp/setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2023/06/22/remove-state-by-mp/">MPが一定値以下になった際に解除するステート</a></h2><time class="has-text-grey" datetime="2023-06-22T02:11:59.000Z">2023-06-22</time><p class="is-flex-grow-2 mt-2">概要MPが一定値以下になったときに解除されるステートを作成できます。
-設定例
-MPを毎ターン5％消費する代わりに会心率を+100％するステートです。MPが0以下になると解除されます。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2023/06/22/remove-state-by-mp/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="MPが一定値以下になった際に解除するステート | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/06/22/remove-state-by-mp/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2023/06/16/regenerate-by-value-trait/setting1.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2023/06/16/regenerate-by-value-trait/"><img class="post-cover-img js-img-fadeIn" src="../../2023/06/16/regenerate-by-value-trait/setting1.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E8%A3%85%E5%82%99"><i class="tag post-item-tag">装備</i></a><a href="../.././tags/%E8%81%B7%E6%A5%AD"><i class="tag post-item-tag">職業</i></a><a href="../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><i class="tag post-item-tag">アクター</i></a><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9"><i class="tag post-item-tag">敵キャラ</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2023/06/16/regenerate-by-value-trait/">HP再生値 MP再生値特徴</a></h2><time class="has-text-grey" datetime="2023-06-16T03:57:07.000Z">2023-06-16</time><p class="is-flex-grow-2 mt-2">概要HP再生値、MP再生値特徴を定義します。再生値特徴は再生率と異なり、HPやMPの上限値に対する割合ではなく、値によってターン経過時に回復・スリップダメージを受けます。
-設定例
-アクター「リード」に、毎ターンHPが10回復する特徴を追加します。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の特徴IDを確保する独自の特徴を追加するため、利用には本プラグインが必要になります。
+    <meta name="description" content="DarkPlasma_シリーズの解説">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RPGツクールMZ向けプラグイン">
+<meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88/index.html">
+<meta property="og:site_name" content="RPGツクールMZ向けプラグイン">
+<meta property="og:description" content="DarkPlasma_シリーズの解説">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:author" content="DarkPlasma">
+<meta name="twitter:card" content="summary">
 
-GitHub
 
-カスタムIDサンプルプラグイン特徴による回復量を動的に変動させたい場合は、カスタムIDを定義した上で追加のプラグインを書いてください。
-サンプルプラグイン
+<link rel="canonical" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88/">
 
-サンプルプラグインのパラメータで指定した変数の値分だけ毎ターンHPを回復する特徴..</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2023/06/16/regenerate-by-value-trait/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="HP再生値 MP再生値特徴 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/06/16/regenerate-by-value-trait/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2023/06/03/state-buff-on-battle-start/setting1.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2023/06/03/state-buff-on-battle-start/"><img class="post-cover-img js-img-fadeIn" src="../../2023/06/03/state-buff-on-battle-start/setting1.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93"><i class="tag post-item-tag">強化・弱体</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2023/06/03/state-buff-on-battle-start/">戦闘開始時にステート/強化/弱体にかかる</a></h2><time class="has-text-grey" datetime="2023-06-03T02:17:45.000Z">2023-06-03</time><p class="is-flex-grow-2 mt-2">概要アクター、職業、装備、ステート、敵キャラのメモ欄に指定のタグを記述することで、戦闘開始時にステート/強化/弱体にかかる特徴を追加します。
-設定例
-戦闘開始時にID4,5いずれかのステートと、ID6のステートを付加します。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の特徴IDを確保する独自の特徴を追加するため、利用には本プラグインが必要になります。
 
-GitHub
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"ja","comments":"","permalink":"","path":"tags/ステート/index.html","title":""}</script>
 
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2023/06/03/state-buff-on-battle-start/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="戦闘開始時にステート/強化/弱体にかかる | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/06/03/state-buff-on-battle-start/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2022/08/21/fix-parameter-trait/setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2022/08/21/fix-parameter-trait/"><img class="post-cover-img js-img-fadeIn" src="../../2022/08/21/fix-parameter-trait/setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E8%A3%85%E5%82%99"><i class="tag post-item-tag">装備</i></a><a href="../.././tags/%E8%81%B7%E6%A5%AD"><i class="tag post-item-tag">職業</i></a><a href="../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><i class="tag post-item-tag">アクター</i></a><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../.././tags/%E8%83%BD%E5%8A%9B%E5%80%A4"><i class="tag post-item-tag">能力値</i></a><a href="../.././tags/%E7%89%B9%E5%BE%B4"><i class="tag post-item-tag">特徴</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2022/08/21/fix-parameter-trait/">能力値を固定する特徴</a></h2><time class="has-text-grey" datetime="2022-08-21T13:22:17.000Z">2022-08-21</time><p class="is-flex-grow-2 mt-2">概要アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、指定の能力値または追加能力値を固定する特徴を追加します。この特徴による能力値の固定は、他の装備や特徴による能力値の増減を無視して適用されます。
-使用例
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-前提プラグイン独自の特徴IDを確保する能力値を固定する特徴プラグインを利用するには本プラグインが必要になります。
-GitHub(MZ版)GitHub(MV版)
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2022/08/21/fix-parameter-trait/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="能力値を固定する特徴 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/08/21/fix-parameter-trait/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2022/08/13/remove-state-by-escape/setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2022/08/13/remove-state-by-escape/"><img class="post-cover-img js-img-fadeIn" src="../../2022/08/13/remove-state-by-escape/setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a><a href="../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../.././tags/%E6%88%A6%E9%97%98"><i class="tag post-item-tag">戦闘</i></a><a href="../.././tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93"><i class="tag post-item-tag">強化・弱体</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2022/08/13/remove-state-by-escape/">逃走行動によってステート・強化・弱体解除</a></h2><time class="has-text-grey" datetime="2022-08-13T00:03:14.000Z">2022-08-13</time><p class="is-flex-grow-2 mt-2">概要逃走行動によってステート・強化・弱体を解除するかどうかを設定します。
-解説逃走行動によって戦闘を離脱したバトラーは、その時点ですべてのステートが解除されます。強化・弱体は解除されず、戦闘終了後にも残り続けてしまいます。そのため、本プラグインはステートや強化・弱体に逃走行動によって解除するかどうかを設定します。
-詳しくは【RPGツクールMV/MZ】行動による逃走とその仕様にて解説しています。
-使用例
-逃走行動によって暗闇ステートを解除しない設定です。
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2022/08/13/remove-state-by-escape/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="逃走行動によってステート・強化・弱体解除 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/08/13/remove-state-by-escape/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2022/03/11/state-rate-alias/setting1.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2022/03/11/state-rate-alias/"><img class="post-cover-img js-img-fadeIn" src="../../2022/03/11/state-rate-alias/setting1.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2022/03/11/state-rate-alias/">別のステートの有効度及び無効フラグを参照するステート</a></h2><time class="has-text-grey" datetime="2022-03-11T02:54:55.000Z">2022-03-11</time><p class="is-flex-grow-2 mt-2">概要別のステートの有効度及び無効フラグを参照するステートを作成できます。
-使用例
-設定例では、ID:41の猛毒ステートを付与しようとする際、成功判定にID:40の毒ステートの有効度及び無効フラグを用います。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2022/03/11/state-rate-alias/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="別のステートの有効度及び無効フラグを参照するステート | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/03/11/state-rate-alias/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../2022/03/11/state-alias-by-side/setting1.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../.././2022/03/11/state-alias-by-side/"><img class="post-cover-img js-img-fadeIn" src="../../2022/03/11/state-alias-by-side/setting1.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><i class="tag post-item-tag">ステート</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../.././2022/03/11/state-alias-by-side/">敵味方に応じてステートを変更</a></h2><time class="has-text-grey" datetime="2022-03-11T02:47:00.000Z">2022-03-11</time><p class="is-flex-grow-2 mt-2">概要対象が敵であるか味方であるかに応じて、付与されるステートを変更します。
-使用例
-ステートID4の味方毒を敵キャラに付与しようとすると、ステートID34の敵毒になります。逆に、ステートID34の敵毒をアクターに付与しようとすると、ステートID4の味方毒になります。
-成功判定においては、付与しようとした元々のステートの有効度、無効フラグが用いられることに注意してください。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../.././2022/03/11/state-alias-by-side/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="敵味方に応じてステートを変更 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/03/11/state-alias-by-side/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><section class="paginator is-flex is-justify-content-flex-end is-flex-wrap-wrap mt-5"><span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="extend next" rel="next" href="page/2/"><i class="iconfont icon-next has-text-grey"></i></a></section></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container tag-widget is-in-tag-page"><h3>Tags</h3><section><a href="../.././tags/%E8%A3%85%E5%82%99"><span class="tag post-item-tag" style="margin-bottom: 5px;">装備</span></a><a href="../.././tags/%E8%81%B7%E6%A5%AD"><span class="tag post-item-tag" style="margin-bottom: 5px;">職業</span></a><a href="../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><span class="tag post-item-tag" style="margin-bottom: 5px;">アクター</span></a><a href="../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">ステート</span></a><a href="../.././tags/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0"><span class="tag post-item-tag" style="margin-bottom: 5px;">システム</span></a><a href="../.././tags/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">イベント</span></a><a href="../.././tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">テキスト</span></a><a href="../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><span class="tag post-item-tag" style="margin-bottom: 5px;">MV版あり</span></a><a href="../.././tags/%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3"><span class="tag post-item-tag" style="margin-bottom: 5px;">パーティ</span></a><a href="../.././tags/%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">並び替え</span></a><a href="../.././tags/%E6%88%A6%E9%97%98"><span class="tag post-item-tag" style="margin-bottom: 5px;">戦闘</span></a><a href="../.././tags/%E3%83%9E%E3%83%83%E3%83%97"><span class="tag post-item-tag" style="margin-bottom: 5px;">マップ</span></a><a href="../.././tags/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC"><span class="tag post-item-tag" style="margin-bottom: 5px;">キャラクター</span></a><a href="../.././tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9"><span class="tag post-item-tag" style="margin-bottom: 5px;">敵キャラ</span></a><a href="../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><span class="tag post-item-tag" style="margin-bottom: 5px;">アイテム</span></a><a href="../.././tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9"><span class="tag post-item-tag" style="margin-bottom: 5px;">データベース</span></a><a href="../.././tags/%E3%83%94%E3%82%AF%E3%83%81%E3%83%A3"><span class="tag post-item-tag" style="margin-bottom: 5px;">ピクチャ</span></a><a href="../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><span class="tag post-item-tag" style="margin-bottom: 5px;">スキル</span></a><a href="../.././tags/%E8%83%BD%E5%8A%9B%E5%80%A4"><span class="tag post-item-tag" style="margin-bottom: 5px;">能力値</span></a><a href="../.././tags/%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF"><span class="tag post-item-tag" style="margin-bottom: 5px;">セーブデータ</span></a><a href="../.././tags/%E7%89%B9%E5%BE%B4"><span class="tag post-item-tag" style="margin-bottom: 5px;">特徴</span></a><a href="../.././tags/%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3"><span class="tag post-item-tag" style="margin-bottom: 5px;">オプション</span></a><a href="../.././tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97"><span class="tag post-item-tag" style="margin-bottom: 5px;">ダメージ計算</span></a><a href="../.././tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93"><span class="tag post-item-tag" style="margin-bottom: 5px;">強化・弱体</span></a></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>タグ: ステート | RPGツクールMZ向けプラグイン</title>
+  
 
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
 
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com/elleonard_f"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/elleonard"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section><p><span>Copyright ©</span><span> DarkPlasma (NPlasma) 2024</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
 
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
 
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></body></html>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="../../css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="ナビゲーションバーの切り替え" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/DarkPlasma-MZ-Plugins/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">RPGツクールMZ向けプラグイン</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">DarkPlasma_シリーズの解説</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="検索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="../../index.html" rel="section">Home</a></li><li class="menu-item menu-item-about"><a href="../.././2021/12/30/about" rel="section">About</a></li><li class="menu-item menu-item-archives"><a href="../.././archives" rel="section">Archive</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          見出し
+        </li>
+        <li class="sidebar-nav-overview">
+          概要
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="DarkPlasma"
+      src="../.././img/lily300.jpg">
+  <p class="site-author-name" itemprop="name">DarkPlasma</p>
+  <div class="site-description" itemprop="description">DarkPlasma_シリーズの解説</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="../.././archives">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">ポスト</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">カテゴリ</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">タグ</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/elleonard" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;elleonard" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/elleonard_f" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;elleonard_f" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-inner"><div class="tag-cloud">
+  <div class="tag-cloud-title">
+    全 24 タグ
+  </div>
+  <div class="tag-cloud-tags">
+    <a href="../MV%E7%89%88%E3%81%82%E3%82%8A/" style="font-size: 12px;" class="tag-cloud-10">MV版あり</a> <a href="../%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-9">アイテム</a> <a href="../%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-3">アクター</a> <a href="../%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88/" style="font-size: 12px;" class="tag-cloud-4">イベント</a> <a href="../%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3/" style="font-size: 12px;" class="tag-cloud-0">オプション</a> <a href="../%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-2">キャラクター</a> <a href="../%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-3">システム</a> <a href="../%E3%82%B9%E3%82%AD%E3%83%AB/" style="font-size: 12px;" class="tag-cloud-7">スキル</a> <a href="" style="font-size: 12px;" class="tag-cloud-9">ステート</a> <a href="../%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF/" style="font-size: 12px;" class="tag-cloud-2">セーブデータ</a> <a href="../%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97/" style="font-size: 12px;" class="tag-cloud-1">ダメージ計算</a> <a href="../%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88/" style="font-size: 12px;" class="tag-cloud-6">テキスト</a> <a href="../%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/" style="font-size: 12px;" class="tag-cloud-1">データベース</a> <a href="../%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3/" style="font-size: 12px;" class="tag-cloud-2">パーティ</a> <a href="../%E3%83%94%E3%82%AF%E3%83%81%E3%83%A3/" style="font-size: 12px;" class="tag-cloud-2">ピクチャ</a> <a href="../%E3%83%9E%E3%83%83%E3%83%97/" style="font-size: 12px;" class="tag-cloud-6">マップ</a> <a href="../%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88/" style="font-size: 12px;" class="tag-cloud-1">並び替え</a> <a href="../%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93/" style="font-size: 12px;" class="tag-cloud-2">強化・弱体</a> <a href="../%E6%88%A6%E9%97%98/" style="font-size: 12px;" class="tag-cloud-7">戦闘</a> <a href="../%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9/" style="font-size: 12px;" class="tag-cloud-2">敵キャラ</a> <a href="../%E7%89%B9%E5%BE%B4/" style="font-size: 12px;" class="tag-cloud-3">特徴</a> <a href="../%E8%81%B7%E6%A5%AD/" style="font-size: 12px;" class="tag-cloud-3">職業</a> <a href="../%E8%83%BD%E5%8A%9B%E5%80%A4/" style="font-size: 12px;" class="tag-cloud-0">能力値</a> <a href="../%E8%A3%85%E5%82%99/" style="font-size: 12px;" class="tag-cloud-8">装備</a>
+  </div>
+</div>
+</div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://ci-en.net/creator/15997" title="https:&#x2F;&#x2F;ci-en.net&#x2F;creator&#x2F;15997" rel="noopener" target="_blank">ci-en</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner tag posts-collapse">
+
+
+  
+  
+  
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        <h1 class="collection-header">ステート
+          <small>タグ</small>
+        </h1>
+      </div>
+
+      
+    <div class="collection-year">
+      <span class="collection-header">2024</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2024-02-23T15:36:37+09:00"
+              content="2024-02-23">
+          02-23
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2024/02/23/critical-damage-rate-trait/" itemprop="url">
+            <span itemprop="name">会心ダメージ率を増減する特徴</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+    <div class="collection-year">
+      <span class="collection-header">2023</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2023-09-17T18:14:06+09:00"
+              content="2023-09-17">
+          09-17
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2023/09/17/level-x-state/" itemprop="url">
+            <span itemprop="name">レベルが特定数値の倍数の対象にのみ有効なステート付加効果</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2023-09-17T17:52:57+09:00"
+              content="2023-09-17">
+          09-17
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2023/09/17/actor-command-trait/" itemprop="url">
+            <span itemprop="name">アクターコマンドを変更する特徴</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2023-06-22T11:11:59+09:00"
+              content="2023-06-22">
+          06-22
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2023/06/22/remove-state-by-mp/" itemprop="url">
+            <span itemprop="name">MPが一定値以下になった際に解除するステート</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2023-06-16T12:57:07+09:00"
+              content="2023-06-16">
+          06-16
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2023/06/16/regenerate-by-value-trait/" itemprop="url">
+            <span itemprop="name">HP再生値 MP再生値特徴</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2023-06-03T11:17:45+09:00"
+              content="2023-06-03">
+          06-03
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2023/06/03/state-buff-on-battle-start/" itemprop="url">
+            <span itemprop="name">戦闘開始時にステート/強化/弱体にかかる</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+    <div class="collection-year">
+      <span class="collection-header">2022</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-08-21T22:22:17+09:00"
+              content="2022-08-21">
+          08-21
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2022/08/21/fix-parameter-trait/" itemprop="url">
+            <span itemprop="name">能力値を固定する特徴</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-08-13T09:03:14+09:00"
+              content="2022-08-13">
+          08-13
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2022/08/13/remove-state-by-escape/" itemprop="url">
+            <span itemprop="name">逃走行動によってステート・強化・弱体解除</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-03-11T11:54:55+09:00"
+              content="2022-03-11">
+          03-11
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2022/03/11/state-rate-alias/" itemprop="url">
+            <span itemprop="name">別のステートの有効度及び無効フラグを参照するステート</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-03-11T11:47:00+09:00"
+              content="2022-03-11">
+          03-11
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../2022/03/11/state-alias-by-side/" itemprop="url">
+            <span itemprop="name">敵味方に応じてステートを変更</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+    </div>
+  </div>
+  
+  
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="extend next" rel="next" title="次のページ" aria-label="次のページ" href="page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkPlasma</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="../../js/comments.js"></script><script src="../../js/utils.js"></script><script src="../../js/motion.js"></script><script src="../../js/sidebar.js"></script><script src="../../js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"elleonard/DarkPlasma-blog-comments","issue_term":"pathname","theme":"github-light"}</script>
+<script src="../../js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

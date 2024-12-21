@@ -1,14 +1,359 @@
-<!DOCTYPE html><html class="appearance-dark" lang="ja"><head><meta charset="UTF-8"><title>攻撃属性すべてを計算に用いる</title><meta name="description" content="DarkPlasma_シリーズの解説"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><meta property="og:type" content="website"><meta property="og:title" content="攻撃属性すべてを計算に用いる"><meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/index.html"><meta property="og:site_name" content="RPGツクールMZ向けプラグイン"><meta property="og:description" content="DarkPlasma_シリーズの解説"><meta property="og:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><meta property="og:locale" content="ja"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@elleonard_f"><meta name="twitter:title" content="攻撃属性すべてを計算に用いる"><meta name="twitter:description" content="DarkPlasma_シリーズの解説"><meta name="twitter:creator" content="@elleonard_f"><meta name="twitter:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><!-- Google Analytics --><!-- End Google Analytics -->
-<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="../../../.././favicon/favicon.ico"><link rel="stylesheet" href="../../../.././style/common/bulma.css"><link rel="stylesheet" href="../../../.././style/base.css"><link rel="stylesheet" href="../../../.././style/common/helper.css"><script src="../../../.././js/common.js"></script><link rel="stylesheet" href="../../../.././style/post.css"><link rel="stylesheet" href="../../../.././style/themes/highlight-theme-light.css"><link rel="stylesheet" href="../../../.././style/widget-post-list.css"><script src="../../../../js/highlight.pack.js"></script><meta name="description" content="概要攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。
-RPGツクールMZ（MV）デフォルトの仕様として、攻撃属性が複数ある場合は最も有効な属性のみがダメージ計算に利用されます。この仕様を変更し、すべての攻撃属性を乗算または加算してダメージ計算を行います。
-関連プラグイン
-複数の属性を持つスキル・アイテム(MZ版)
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-"><meta name="generator" content="Hexo 6.0.0"></head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="../../../../index.html">RPGツクールMZ向けプラグイン</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><div class="is-full-height" id="postTopic"><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">攻撃属性すべてを計算に用いる</p><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Click back to the top</p></div></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="../../../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../../../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../../../.././archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="../../../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../../../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../../../.././archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center container is-max-widescreen section pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column post-page content is-three-quarters"><article class="post-item-card p-4 pb-5"><header class="my-4"><a href="../../../../tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../../../../tags/%E6%88%A6%E9%97%98"><i class="tag post-item-tag">戦闘</i></a><a href="../../../../tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97"><i class="tag post-item-tag">ダメージ計算</i></a></header><h1 class="mt-0 mb-1 is-family-serif" id="postTitle">攻撃属性すべてを計算に用いる</h1><time class="has-text-grey" datetime="2023-04-06T00:36:44.000Z">2023-04-06</time><article class="mt-2 post-content"><h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。</p>
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="../../../../favicon/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="../../../../css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"elleonard.github.io","root":"/DarkPlasma-MZ-Plugins/","images":"../../../../images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"検索…","empty":"検索結果が見つかりませんでした: ${query}","hits_time":"${hits} の結果が ${time} ms で見つかりました","hits":"${hits} 件の結果が見つかりました"}}</script><script src="../../../../js/config.js"></script>
+
+    <meta name="description" content="攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻撃属性すべてを計算に用いる">
+<meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/index.html">
+<meta property="og:site_name" content="RPGツクールMZ向けプラグイン">
+<meta property="og:description" content="攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2023-04-06T00:36:44.000Z">
+<meta property="article:modified_time" content="2024-12-21T15:39:49.302Z">
+<meta property="article:author" content="DarkPlasma">
+<meta property="article:tag" content="MV版あり">
+<meta property="article:tag" content="戦闘">
+<meta property="article:tag" content="ダメージ計算">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"ja","comments":true,"permalink":"https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/","path":"2023/04/06/multi-element-rate/","title":"攻撃属性すべてを計算に用いる"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>攻撃属性すべてを計算に用いる | RPGツクールMZ向けプラグイン</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="../../../../css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="ナビゲーションバーの切り替え" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/DarkPlasma-MZ-Plugins/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">RPGツクールMZ向けプラグイン</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">DarkPlasma_シリーズの解説</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="検索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="../../../../index.html" rel="section">Home</a></li><li class="menu-item menu-item-about"><a href="../../../.././2021/12/30/about" rel="section">About</a></li><li class="menu-item menu-item-archives"><a href="../../../.././archives" rel="section">Archive</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          見出し
+        </li>
+        <li class="sidebar-nav-overview">
+          概要
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%96%A2%E9%80%A3%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3"><span class="nav-number">2.</span> <span class="nav-text">関連プラグイン</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%B8%E3%81%AE%E3%83%AA%E3%83%B3%E3%82%AF"><span class="nav-number">3.</span> <span class="nav-text">ダウンロードページへのリンク</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="DarkPlasma"
+      src="../../../.././img/lily300.jpg">
+  <p class="site-author-name" itemprop="name">DarkPlasma</p>
+  <div class="site-description" itemprop="description">DarkPlasma_シリーズの解説</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="../../../.././archives">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">ポスト</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">カテゴリ</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">タグ</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/elleonard" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;elleonard" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/elleonard_f" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;elleonard_f" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-inner"><div class="tag-cloud">
+  <div class="tag-cloud-title">
+    全 24 タグ
+  </div>
+  <div class="tag-cloud-tags">
+    <a href="../../../../tags/MV%E7%89%88%E3%81%82%E3%82%8A/" style="font-size: 12px;" class="tag-cloud-10">MV版あり</a> <a href="../../../../tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-9">アイテム</a> <a href="../../../../tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-3">アクター</a> <a href="../../../../tags/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88/" style="font-size: 12px;" class="tag-cloud-4">イベント</a> <a href="../../../../tags/%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3/" style="font-size: 12px;" class="tag-cloud-0">オプション</a> <a href="../../../../tags/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-2">キャラクター</a> <a href="../../../../tags/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-3">システム</a> <a href="../../../../tags/%E3%82%B9%E3%82%AD%E3%83%AB/" style="font-size: 12px;" class="tag-cloud-7">スキル</a> <a href="../../../../tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88/" style="font-size: 12px;" class="tag-cloud-9">ステート</a> <a href="../../../../tags/%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF/" style="font-size: 12px;" class="tag-cloud-2">セーブデータ</a> <a href="../../../../tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97/" style="font-size: 12px;" class="tag-cloud-1">ダメージ計算</a> <a href="../../../../tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88/" style="font-size: 12px;" class="tag-cloud-6">テキスト</a> <a href="../../../../tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/" style="font-size: 12px;" class="tag-cloud-1">データベース</a> <a href="../../../../tags/%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3/" style="font-size: 12px;" class="tag-cloud-2">パーティ</a> <a href="../../../../tags/%E3%83%94%E3%82%AF%E3%83%81%E3%83%A3/" style="font-size: 12px;" class="tag-cloud-2">ピクチャ</a> <a href="../../../../tags/%E3%83%9E%E3%83%83%E3%83%97/" style="font-size: 12px;" class="tag-cloud-6">マップ</a> <a href="../../../../tags/%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88/" style="font-size: 12px;" class="tag-cloud-1">並び替え</a> <a href="../../../../tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93/" style="font-size: 12px;" class="tag-cloud-2">強化・弱体</a> <a href="../../../../tags/%E6%88%A6%E9%97%98/" style="font-size: 12px;" class="tag-cloud-7">戦闘</a> <a href="../../../../tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9/" style="font-size: 12px;" class="tag-cloud-2">敵キャラ</a> <a href="../../../../tags/%E7%89%B9%E5%BE%B4/" style="font-size: 12px;" class="tag-cloud-3">特徴</a> <a href="../../../../tags/%E8%81%B7%E6%A5%AD/" style="font-size: 12px;" class="tag-cloud-3">職業</a> <a href="../../../../tags/%E8%83%BD%E5%8A%9B%E5%80%A4/" style="font-size: 12px;" class="tag-cloud-0">能力値</a> <a href="../../../../tags/%E8%A3%85%E5%82%99/" style="font-size: 12px;" class="tag-cloud-8">装備</a>
+  </div>
+</div>
+</div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://ci-en.net/creator/15997" title="https:&#x2F;&#x2F;ci-en.net&#x2F;creator&#x2F;15997" rel="noopener" target="_blank">ci-en</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ja">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="攻撃属性すべてを計算に用いる | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          攻撃属性すべてを計算に用いる
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2023-04-06 09:36:44" itemprop="dateCreated datePublished" datetime="2023-04-06T09:36:44+09:00">2023-04-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:39:49" itemprop="dateModified" datetime="2024-12-22T00:39:49+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../../../../tags/MV%E7%89%88%E3%81%82%E3%82%8A/" rel="tag"># MV版あり</a>
+        <a href="../../../../tags/%E6%88%A6%E9%97%98/" rel="tag"># 戦闘</a>
+        <a href="../../../../tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97/" rel="tag"># ダメージ計算</a>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>攻撃属性が複数ある場合、そのすべてをダメージ計算に利用します。</p>
 <p>RPGツクールMZ（MV）デフォルトの仕様として、攻撃属性が複数ある場合は最も有効な属性のみがダメージ計算に利用されます。<br>この仕様を変更し、すべての攻撃属性を乗算または加算してダメージ計算を行います。</p>
 <h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiElementAction.js">複数の属性を持つスキル・アイテム(MZ版)</a></li>
 </ul>
-<h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a target="_blank" rel="noopener" href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiElementRate.js">GitHub(MZ版)</a><br><a target="_blank" rel="noopener" href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_MultiElementRate.js">GitHub(MV版)</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>
-</article><section class="jump-container is-flex is-justify-content-space-between my-6"><!-- em is empty placeholder--><a class="button is-default" href="../../13/save-event-locations/" title="イベントの位置と向きを記録する"><i class="iconfont icon-prev mr-2 has-text-grey"></i><span class="has-text-weight-semibold">Previous: イベントの位置と向きを記録する</span></a><a class="button is-default" href="../../../03/12/screenshot-gallery/" title="スクリーンショットギャラリー"><span class="has-text-weight-semibold">Next: スクリーンショットギャラリー</span><i class="iconfont icon-next ml-2 has-text-grey"></i></a></section><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="攻撃属性すべてを計算に用いる | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><article class="mt-6 comment-container"><script async repo="elleonard/DarkPlasma-blog-comments" src="https://utteranc.es/client.js" issue-term="pathname" theme="preferred-color-scheme"></script></article></article></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><main class="aside-card-container categories-widget category-page"><h3>Categories</h3><section><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="../../../../categories/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E8%A7%A3%E8%AA%AC/">プラグイン解説</a><span class="category-list-count">60</span></li></ul></section></main><main class="aside-card-container tag-widget"><h3>Tags</h3><section><a href="../../../.././tags/%E8%A3%85%E5%82%99"><span class="tag post-item-tag" style="margin-bottom: 5px;">装備</span></a><a href="../../../.././tags/%E8%81%B7%E6%A5%AD"><span class="tag post-item-tag" style="margin-bottom: 5px;">職業</span></a><a href="../../../.././tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC"><span class="tag post-item-tag" style="margin-bottom: 5px;">アクター</span></a><a href="../../../.././tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">ステート</span></a><a href="../../../.././tags/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0"><span class="tag post-item-tag" style="margin-bottom: 5px;">システム</span></a><a href="../../../.././tags/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">イベント</span></a><a href="../../../.././tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">テキスト</span></a><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><span class="tag post-item-tag" style="margin-bottom: 5px;">MV版あり</span></a><a href="../../../.././tags/%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3"><span class="tag post-item-tag" style="margin-bottom: 5px;">パーティ</span></a><a href="../../../.././tags/%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88"><span class="tag post-item-tag" style="margin-bottom: 5px;">並び替え</span></a><a href="../../../.././tags/%E6%88%A6%E9%97%98"><span class="tag post-item-tag" style="margin-bottom: 5px;">戦闘</span></a><a href="../../../.././tags/%E3%83%9E%E3%83%83%E3%83%97"><span class="tag post-item-tag" style="margin-bottom: 5px;">マップ</span></a><a href="../../../.././tags/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC"><span class="tag post-item-tag" style="margin-bottom: 5px;">キャラクター</span></a><a href="../../../.././tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9"><span class="tag post-item-tag" style="margin-bottom: 5px;">敵キャラ</span></a><a href="../../../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><span class="tag post-item-tag" style="margin-bottom: 5px;">アイテム</span></a><a href="../../../.././tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9"><span class="tag post-item-tag" style="margin-bottom: 5px;">データベース</span></a><a href="../../../.././tags/%E3%83%94%E3%82%AF%E3%83%81%E3%83%A3"><span class="tag post-item-tag" style="margin-bottom: 5px;">ピクチャ</span></a><a href="../../../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><span class="tag post-item-tag" style="margin-bottom: 5px;">スキル</span></a><a href="../../../.././tags/%E8%83%BD%E5%8A%9B%E5%80%A4"><span class="tag post-item-tag" style="margin-bottom: 5px;">能力値</span></a><a href="../../../.././tags/%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF"><span class="tag post-item-tag" style="margin-bottom: 5px;">セーブデータ</span></a><a href="../../../.././tags/%E7%89%B9%E5%BE%B4"><span class="tag post-item-tag" style="margin-bottom: 5px;">特徴</span></a><a href="../../../.././tags/%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3"><span class="tag post-item-tag" style="margin-bottom: 5px;">オプション</span></a><a href="../../../.././tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97"><span class="tag post-item-tag" style="margin-bottom: 5px;">ダメージ計算</span></a><a href="../../../.././tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93"><span class="tag post-item-tag" style="margin-bottom: 5px;">強化・弱体</span></a></section></main></aside></div></article></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com/elleonard_f"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/elleonard"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section><p><span>Copyright ©</span><span> DarkPlasma (NPlasma) 2024</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script src="../../../../js/post.js"></script></body></html>
+<h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a target="_blank" rel="noopener" href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_MultiElementRate.js">GitHub(MZ版)</a><br><a target="_blank" rel="noopener" href="https://github.com/elleonard/DarkPlasma-MV-Plugins/blob/release/DarkPlasma_MultiElementRate.js">GitHub(MV版)</a><br>ダウンロード方法については <a href="2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="../../../../tags/MV%E7%89%88%E3%81%82%E3%82%8A/" rel="tag"># MV版あり</a>
+              <a href="../../../../tags/%E6%88%A6%E9%97%98/" rel="tag"># 戦闘</a>
+              <a href="../../../../tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97/" rel="tag"># ダメージ計算</a>
+          </div>
+
+        
+  <div class="clearfix">
+    <div class="alignright">
+      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="攻撃属性すべてを計算に用いる | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/04/06/multi-element-rate/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="../../../03/12/screenshot-gallery/" rel="prev" title="スクリーンショットギャラリー">
+                  <i class="fa fa-angle-left"></i> スクリーンショットギャラリー
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="../../13/save-event-locations/" rel="next" title="イベントの位置と向きを記録する">
+                  イベントの位置と向きを記録する <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkPlasma</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="../../../../js/comments.js"></script><script src="../../../../js/utils.js"></script><script src="../../../../js/motion.js"></script><script src="../../../../js/sidebar.js"></script><script src="../../../../js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"elleonard/DarkPlasma-blog-comments","issue_term":"pathname","theme":"github-light"}</script>
+<script src="../../../../js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

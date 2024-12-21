@@ -1,102 +1,470 @@
-<!DOCTYPE html><html class="appearance-dark" lang="ja"><head><meta charset="UTF-8"><title>RPGツクールMZ向けプラグイン</title><meta name="description" content="DarkPlasma_シリーズの解説"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><meta property="og:type" content="website"><meta property="og:title" content="RPGツクールMZ向けプラグイン"><meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/index.html"><meta property="og:site_name" content="RPGツクールMZ向けプラグイン"><meta property="og:description" content="DarkPlasma_シリーズの解説"><meta property="og:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><meta property="og:locale" content="ja"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@elleonard_f"><meta name="twitter:title" content="RPGツクールMZ向けプラグイン"><meta name="twitter:description" content="DarkPlasma_シリーズの解説"><meta name="twitter:creator" content="@elleonard_f"><meta name="twitter:image" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins//img/ogp.png"><!-- Google Analytics --><!-- End Google Analytics -->
-<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="../../../.././favicon/favicon.ico"><link rel="stylesheet" href="../../../.././style/common/bulma.css"><link rel="stylesheet" href="../../../.././style/base.css"><link rel="stylesheet" href="../../../.././style/common/helper.css"><script src="../../../.././js/common.js"></script><link rel="stylesheet" href="../../../.././style/widget-post-list.css"><meta name="generator" content="Hexo 6.0.0"></head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="../../../../index.html">RPGツクールMZ向けプラグイン</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Categories · プラグイン解説</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="../../../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../../../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../../../.././archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="../../../../index.html">Home</a></h3><h3 class="is-inline-block"><a href="../../../.././2021/12/30/about">About</a></h3><h3 class="is-inline-block"><a href="../../../.././archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/07/skill-cooldown/skill-cooldown.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/07/skill-cooldown/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/07/skill-cooldown/skill-cooldown.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../../../.././tags/%E6%88%A6%E9%97%98"><i class="tag post-item-tag">戦闘</i></a><a href="../../../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><i class="tag post-item-tag">スキル</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/07/skill-cooldown/">スキル使用のクールタイムを設定する</a></h2><time class="has-text-grey" datetime="2022-01-06T23:47:12.000Z">2022-01-07</time><p class="is-flex-grow-2 mt-2">概要戦闘中、スキルXの使用後、スキルYの使用を一定ターン数制限できます。
-使用例
-スキルID172（強撃）の使用をトリガーにして、3ターンの間同スキルが使えなくする設定です。
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-派生プラグインスキルクールタイムを戦闘後も継続する
-GitHub(MZ版)
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/07/skill-cooldown/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="スキル使用のクールタイムを設定する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/07/skill-cooldown/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/03/expand-target-scope/expand-target-scope-setting.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/03/expand-target-scope/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/03/expand-target-scope/expand-target-scope-setting.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E6%88%A6%E9%97%98"><i class="tag post-item-tag">戦闘</i></a><a href="../../../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><i class="tag post-item-tag">アイテム</i></a><a href="../../../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><i class="tag post-item-tag">スキル</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/03/expand-target-scope/">スキル,アイテムの対象を全体化する</a></h2><time class="has-text-grey" datetime="2022-01-03T05:54:42.000Z">2022-01-03</time><p class="is-flex-grow-2 mt-2">概要単体を対象とするスキルやアイテムの対象を全体化可能にします。全体化可能に設定した行動は、対象選択の際に特定のキーを押すことで対象範囲を切り替えることができます。
-使用例
-ファイアⅠを全体化可能にし、全体化した際のアニメーションを70番に変更する設定です。
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-関連プラグイン
-対象範囲切り替えボタンプラグイン
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="../../../../favicon/safari-pinned-tab.svg" color="#222">
 
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/03/expand-target-scope/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="スキル,アイテムの対象を全体化する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/02/auto-highlight/auto-highlight.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/02/auto-highlight/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/02/auto-highlight/auto-highlight.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88"><i class="tag post-item-tag">テキスト</i></a><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/02/auto-highlight/">指定した語句に自動で色をつける</a></h2><time class="has-text-grey" datetime="2022-01-02T10:58:48.000Z">2022-01-02</time><p class="is-flex-grow-2 mt-2">概要指定した語句に自動的に色をつけます。
-使用例
-スキル名やアイテム名についてもハイライトの対象とすることができます。
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/02/auto-highlight/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="指定した語句に自動で色をつける | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/02/auto-highlight/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/01/highlight-new-item/highlight-new-item.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/01/highlight-new-item/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/01/highlight-new-item/highlight-new-item.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../../../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><i class="tag post-item-tag">アイテム</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/01/highlight-new-item/">新規入手アイテムを強調表示する</a></h2><time class="has-text-grey" datetime="2022-01-01T09:40:32.000Z">2022-01-01</time><p class="is-flex-grow-2 mt-2">概要新規入手アイテムを強調表示します。
-使用例
-入手したハイポーションが強調表示されています。カーソルを合わせて1操作すると新規入手フラグが消え、通常の色に戻ります。
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/01/highlight-new-item/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="新規入手アイテムを強調表示する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/highlight-new-item/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/01/formation/formation.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/01/formation/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/01/formation/formation.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3"><i class="tag post-item-tag">パーティ</i></a><a href="../../../.././tags/%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88"><i class="tag post-item-tag">並び替え</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/01/formation/">並び替えシーン</a></h2><time class="has-text-grey" datetime="2022-01-01T07:13:22.000Z">2022-01-01</time><p class="is-flex-grow-2 mt-2">概要パーティメンバーを並び替えるシーンを提供します。
-使用例
-本プラグイン単体では、メニュー画面から並び替えシーンを開くことができません。以下の方法でメニュー画面から並び替えシーンを開くことができます。
-
-メニュー拡張系のプラグインを利用して Scene_Formation を呼び出すよう設定する
-メニューの並び替えでシーンを呼び出すプラグインを利用する
-
-また、戦闘中に並び替えシーンを開くためには戦闘中に並び替えを行うプラグインが必要です。
-紹介動画
-
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-関連プラグイン
-メニューの並び替えでシーンを呼び出す
-戦闘中に並び替えを行う
-
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/01/formation/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="並び替えシーン | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/formation/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/01/enemy-book/enemy-book.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/01/enemy-book/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/01/enemy-book/enemy-book.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../../../.././tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9"><i class="tag post-item-tag">敵キャラ</i></a><a href="../../../.././tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9"><i class="tag post-item-tag">データベース</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/01/enemy-book/">敵キャラ図鑑</a></h2><time class="has-text-grey" datetime="2022-01-01T06:37:44.000Z">2022-01-01</time><p class="is-flex-grow-2 mt-2">概要遭遇時に敵キャラを登録する図鑑シーンを提供します。
-使用例
-図鑑を開く方法マップ上であれば、プラグインコマンドで開くことができます。
-特徴本プラグインには、下記機能があります。
-
-DarkPlasma_OrderIdAliasで表示順を設定できる
-
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-前提プラグインシステムのタイプや弱体にアイコンを設定する (MZ版のみ)MZ版v5.0.0以降、本プラグインが必要になります。図鑑上に表示する属性や弱体のアイコンは、本プラグインで設定します。
-GitHub(MZ版)
-追加プラグイン戦闘中に敵キャラ図鑑を開く (MZ版のみ)MZ版v5.0.0以降、本体から戦闘中に開く機能..</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/01/enemy-book/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="敵キャラ図鑑 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/enemy-book/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2022/01/01/order-id-alias/order-id-alias.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2022/01/01/order-id-alias/"><img class="post-cover-img js-img-fadeIn" src="../../../../2022/01/01/order-id-alias/order-id-alias.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a><a href="../../../.././tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0"><i class="tag post-item-tag">アイテム</i></a><a href="../../../.././tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9"><i class="tag post-item-tag">データベース</i></a><a href="../../../.././tags/%E3%82%B9%E3%82%AD%E3%83%AB"><i class="tag post-item-tag">スキル</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2022/01/01/order-id-alias/">アイテムやスキルの表示順を設定する</a></h2><time class="has-text-grey" datetime="2022-01-01T06:09:24.000Z">2022-01-01</time><p class="is-flex-grow-2 mt-2">概要アイテムやスキルの並び順を、データベース上のIDとは別に設定できるようになります。
-使用例
-ダウンロードページへのリンクGitHub(MZ版)GitHub(MV版)ダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2022/01/01/order-id-alias/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="アイテムやスキルの表示順を設定する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2021/12/30/dark-map/dark-map.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2021/12/30/dark-map/"><img class="post-cover-img js-img-fadeIn" src="../../../../2021/12/30/dark-map/dark-map.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E3%83%9E%E3%83%83%E3%83%97"><i class="tag post-item-tag">マップ</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2021/12/30/dark-map/">暗いマップと明かり</a></h2><time class="has-text-grey" datetime="2021-12-30T11:53:52.000Z">2021-12-30</time><p class="is-flex-grow-2 mt-2">概要暗いマップを作ることができます。プレイヤーやイベントの周囲を明るくすることができます。
-本プラグインは簡単化のため、機能と設定項目を絞っています。複雑な機能・設定をお求めの場合、類似の異なるプラグインをお試しください。
-使用例
-派生プラグイン
-明かりの中にいるかどうか判定するプラグインコマンド
-
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2021/12/30/dark-map/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="暗いマップと明かり | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2021/12/30/dark-map/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2021/12/30/change-battleback/change-battleback.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2021/12/30/change-battleback/"><img class="post-cover-img js-img-fadeIn" src="../../../../2021/12/30/change-battleback/change-battleback.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E6%88%A6%E9%97%98"><i class="tag post-item-tag">戦闘</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2021/12/30/change-battleback/">戦闘中に戦闘背景を変更する</a></h2><time class="has-text-grey" datetime="2021-12-30T11:21:12.000Z">2021-12-30</time><p class="is-flex-grow-2 mt-2">概要戦闘中に戦闘背景を変更するプラグインコマンドを提供します。イベントコマンドの戦闘背景の変更は、戦闘中に実行しても即座に効果が現れません。本プラグインコマンドを利用することで、戦闘の演出として戦闘背景を変更することができます。
-使用例
-ダウンロードページへのリンクGitHubダウンロード方法については このブログは何？ を参照してください。
-</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2021/12/30/change-battleback/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="戦闘中に戦闘背景を変更する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2021/12/30/change-battleback/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="../../../../2021/12/29/auto-line-break/auto-line-break.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="../../../.././2021/12/29/auto-line-break/"><img class="post-cover-img js-img-fadeIn" src="../../../../2021/12/29/auto-line-break/auto-line-break.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="../../../.././tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88"><i class="tag post-item-tag">テキスト</i></a><a href="../../../.././tags/MV%E7%89%88%E3%81%82%E3%82%8A"><i class="tag post-item-tag">MV版あり</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="../../../.././2021/12/29/auto-line-break/">ウィンドウ幅を超えるテキストを自動で折り返す</a></h2><time class="has-text-grey" datetime="2021-12-29T13:53:35.000Z">2021-12-29</time><p class="is-flex-grow-2 mt-2">概要ウィンドウ幅を超えるようなテキストを自動で改行します。
-使用例
-意図せず改行される場合本プラグインを導入すると、他プラグインによって追加されたウィンドウでも自動改行され、意図しない改行が発生する可能性があります。その場合は、対象プラグインのウィンドウクラス名を自動改行無効ウィンドウ設定に追加してください。
-よく問題になるプラグインとクラス名(MZ)
-
-
-プラグイン名
-バージョン（※）
-ウィンドウクラス名
+<link rel="stylesheet" href="../../../../css/main.css">
 
 
 
-通知メッセージプラグイン - 鳥小屋
-1.3.0
-Window_NotifyMessage
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"elleonard.github.io","root":"/DarkPlasma-MZ-Plugins/","images":"../../../../images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"検索…","empty":"検索結果が見つかりませんでした: ${query}","hits_time":"${hits} の結果が ${time} ms で見つかりました","hits":"${hits} 件の結果が見つかりました"}}</script><script src="../../../../js/config.js"></script>
+
+    <meta name="description" content="DarkPlasma_シリーズの解説">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RPGツクールMZ向けプラグイン">
+<meta property="og:url" content="https://elleonard.github.io/DarkPlasma-MZ-Plugins/categories/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E8%A7%A3%E8%AA%AC/page/6/index.html">
+<meta property="og:site_name" content="RPGツクールMZ向けプラグイン">
+<meta property="og:description" content="DarkPlasma_シリーズの解説">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:author" content="DarkPlasma">
+<meta name="twitter:card" content="summary">
 
 
-メッセージの中央揃えプラグイン
-1.4.1
-Window_MessageDummy
+<link rel="canonical" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/categories/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E8%A7%A3%E8%AA%AC/page/6/">
 
 
-動的文字列ピクチャ生成プラグイン
-2.6.1
-Window_Dummy
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"ja","comments":"","permalink":"","path":"categories/プラグイン解説/page/6/index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>カテゴリ: プラグイン解説 | RPGツクールMZ向けプラグイン</title>
+  
 
 
-（※）筆者が確認したバージョン。
-ダウ..</p><a class="button is-default mt-2 has-text-weight-semibold" href="../../../.././2021/12/29/auto-line-break/">Read more</a><div class="clearfix"><div class="alignright"><a class="twitter-share-button" target="_blank" rel="noopener" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="ウィンドウ幅を超えるテキストを自動で折り返す | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2021/12/29/auto-line-break/" data-via="elleonard_f" data-show-count="false"></a></div></div><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></section></article><section class="paginator is-flex is-justify-content-flex-end is-flex-wrap-wrap mt-5"><a class="extend prev" rel="prev" href="../5/"><i class="iconfont icon-prev has-text-grey"></i></a><a class="page-number" href="../../">1</a><span class="space">&hellip;</span><a class="page-number" href="../4/">4</a><a class="page-number" href="../5/">5</a><span class="page-number current">6</span></section></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container categories-widget category-page"><h3>Categories</h3><section><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="../../">プラグイン解説</a><span class="category-list-count">60</span></li></ul></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
 
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
 
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com/elleonard_f"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/elleonard"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section><p><span>Copyright ©</span><span> DarkPlasma (NPlasma) 2024</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
 
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
 
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></body></html>
+
+
+  <noscript>
+    <link rel="stylesheet" href="../../../../css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="ナビゲーションバーの切り替え" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/DarkPlasma-MZ-Plugins/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">RPGツクールMZ向けプラグイン</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">DarkPlasma_シリーズの解説</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="検索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="../../../../index.html" rel="section">Home</a></li><li class="menu-item menu-item-about"><a href="../../../.././2021/12/30/about" rel="section">About</a></li><li class="menu-item menu-item-archives"><a href="../../../.././archives" rel="section">Archive</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          見出し
+        </li>
+        <li class="sidebar-nav-overview">
+          概要
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="DarkPlasma"
+      src="../../../.././img/lily300.jpg">
+  <p class="site-author-name" itemprop="name">DarkPlasma</p>
+  <div class="site-description" itemprop="description">DarkPlasma_シリーズの解説</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="../../../.././archives">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">ポスト</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">カテゴリ</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">タグ</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/elleonard" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;elleonard" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/elleonard_f" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;elleonard_f" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-inner"><div class="tag-cloud">
+  <div class="tag-cloud-title">
+    全 24 タグ
+  </div>
+  <div class="tag-cloud-tags">
+    <a href="../../../../tags/MV%E7%89%88%E3%81%82%E3%82%8A/" style="font-size: 12px;" class="tag-cloud-10">MV版あり</a> <a href="../../../../tags/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-9">アイテム</a> <a href="../../../../tags/%E3%82%A2%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-3">アクター</a> <a href="../../../../tags/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88/" style="font-size: 12px;" class="tag-cloud-4">イベント</a> <a href="../../../../tags/%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3/" style="font-size: 12px;" class="tag-cloud-0">オプション</a> <a href="../../../../tags/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC/" style="font-size: 12px;" class="tag-cloud-2">キャラクター</a> <a href="../../../../tags/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/" style="font-size: 12px;" class="tag-cloud-3">システム</a> <a href="../../../../tags/%E3%82%B9%E3%82%AD%E3%83%AB/" style="font-size: 12px;" class="tag-cloud-7">スキル</a> <a href="../../../../tags/%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88/" style="font-size: 12px;" class="tag-cloud-9">ステート</a> <a href="../../../../tags/%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF/" style="font-size: 12px;" class="tag-cloud-2">セーブデータ</a> <a href="../../../../tags/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97/" style="font-size: 12px;" class="tag-cloud-1">ダメージ計算</a> <a href="../../../../tags/%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88/" style="font-size: 12px;" class="tag-cloud-6">テキスト</a> <a href="../../../../tags/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/" style="font-size: 12px;" class="tag-cloud-1">データベース</a> <a href="../../../../tags/%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3/" style="font-size: 12px;" class="tag-cloud-2">パーティ</a> <a href="../../../../tags/%E3%83%94%E3%82%AF%E3%83%81%E3%83%A3/" style="font-size: 12px;" class="tag-cloud-2">ピクチャ</a> <a href="../../../../tags/%E3%83%9E%E3%83%83%E3%83%97/" style="font-size: 12px;" class="tag-cloud-6">マップ</a> <a href="../../../../tags/%E4%B8%A6%E3%81%B3%E6%9B%BF%E3%81%88/" style="font-size: 12px;" class="tag-cloud-1">並び替え</a> <a href="../../../../tags/%E5%BC%B7%E5%8C%96%E3%83%BB%E5%BC%B1%E4%BD%93/" style="font-size: 12px;" class="tag-cloud-2">強化・弱体</a> <a href="../../../../tags/%E6%88%A6%E9%97%98/" style="font-size: 12px;" class="tag-cloud-7">戦闘</a> <a href="../../../../tags/%E6%95%B5%E3%82%AD%E3%83%A3%E3%83%A9/" style="font-size: 12px;" class="tag-cloud-2">敵キャラ</a> <a href="../../../../tags/%E7%89%B9%E5%BE%B4/" style="font-size: 12px;" class="tag-cloud-3">特徴</a> <a href="../../../../tags/%E8%81%B7%E6%A5%AD/" style="font-size: 12px;" class="tag-cloud-3">職業</a> <a href="../../../../tags/%E8%83%BD%E5%8A%9B%E5%80%A4/" style="font-size: 12px;" class="tag-cloud-0">能力値</a> <a href="../../../../tags/%E8%A3%85%E5%82%99/" style="font-size: 12px;" class="tag-cloud-8">装備</a>
+  </div>
+</div>
+</div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://ci-en.net/creator/15997" title="https:&#x2F;&#x2F;ci-en.net&#x2F;creator&#x2F;15997" rel="noopener" target="_blank">ci-en</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner category posts-collapse">
+
+
+  
+  
+  
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        <h1 class="collection-header">プラグイン解説
+          <small>カテゴリ</small>
+        </h1>
+      </div>
+
+      
+    <div class="collection-year">
+      <span class="collection-header">2022</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-07T08:47:12+09:00"
+              content="2022-01-07">
+          01-07
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/07/skill-cooldown/" itemprop="url">
+            <span itemprop="name">スキル使用のクールタイムを設定する</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-03T14:54:42+09:00"
+              content="2022-01-03">
+          01-03
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/03/expand-target-scope/" itemprop="url">
+            <span itemprop="name">スキル,アイテムの対象を全体化する</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-02T19:58:48+09:00"
+              content="2022-01-02">
+          01-02
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/02/auto-highlight/" itemprop="url">
+            <span itemprop="name">指定した語句に自動で色をつける</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-01T18:40:32+09:00"
+              content="2022-01-01">
+          01-01
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/01/highlight-new-item/" itemprop="url">
+            <span itemprop="name">新規入手アイテムを強調表示する</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-01T16:13:22+09:00"
+              content="2022-01-01">
+          01-01
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/01/formation/" itemprop="url">
+            <span itemprop="name">並び替えシーン</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-01T15:37:44+09:00"
+              content="2022-01-01">
+          01-01
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/01/enemy-book/" itemprop="url">
+            <span itemprop="name">敵キャラ図鑑</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2022-01-01T15:09:24+09:00"
+              content="2022-01-01">
+          01-01
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2022/01/01/order-id-alias/" itemprop="url">
+            <span itemprop="name">アイテムやスキルの表示順を設定する</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+    <div class="collection-year">
+      <span class="collection-header">2021</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2021-12-30T20:53:52+09:00"
+              content="2021-12-30">
+          12-30
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2021/12/30/dark-map/" itemprop="url">
+            <span itemprop="name">暗いマップと明かり</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2021-12-30T20:21:12+09:00"
+              content="2021-12-30">
+          12-30
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2021/12/30/change-battleback/" itemprop="url">
+            <span itemprop="name">戦闘中に戦闘背景を変更する</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2021-12-29T22:53:35+09:00"
+              content="2021-12-29">
+          12-29
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="../../../../2021/12/29/auto-line-break/" itemprop="url">
+            <span itemprop="name">ウィンドウ幅を超えるテキストを自動で折り返す</span>
+          </a>
+      </div>
+
+      
+    </header>
+  </article>
+
+    </div>
+  </div>
+  
+  
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" title="前のページ" aria-label="前のページ" href="../5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="../../">1</a><span class="space">&hellip;</span><a class="page-number" href="../5/">5</a><span class="page-number current">6</span>
+  </nav>
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkPlasma</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="../../../../js/comments.js"></script><script src="../../../../js/utils.js"></script><script src="../../../../js/motion.js"></script><script src="../../../../js/sidebar.js"></script><script src="../../../../js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"elleonard/DarkPlasma-blog-comments","issue_term":"pathname","theme":"github-light"}</script>
+<script src="../../../../js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>
