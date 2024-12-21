@@ -1,9 +1,10 @@
-// DarkPlasma_TweetScreenshot 2.0.1
+// DarkPlasma_TweetScreenshot 2.0.2
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/21 2.0.2 ツイートの画像リンクから.jpeg拡張子を除去
  * 2024/01/15 2.0.1 ビルド方式を変更 (configをTypeScript化)
  * 2023/03/12 2.0.0 ツイート用インターフェース変更
  * 2023/03/05 1.0.0 公開
@@ -31,7 +32,7 @@
  * @text スクリーンショットをツイートする
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * ゲーム画面のキャプチャをimgurに匿名でアップロードし、
  * そのURLを付与したツイート画面を開きます。
  *
@@ -78,7 +79,8 @@
             .json()
             .then((json) => {
               if (json.status === 200) {
-                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(json.data.link.replace('.jpg', ''))}`;
+                const imageUrl = json.data.link.replace(/.(jpg|jpeg)$/, '');
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText(imageUrl)}`;
                 const exec = require('child_process').exec;
                 if (process.platform === 'win32') {
                   exec(`rundll32.exe url.dll,FileProtocolHandler "${tweetUrl}"`);
