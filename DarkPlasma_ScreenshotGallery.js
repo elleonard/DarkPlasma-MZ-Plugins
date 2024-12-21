@@ -1,9 +1,10 @@
-// DarkPlasma_ScreenshotGallery 1.1.1
+// DarkPlasma_ScreenshotGallery 1.2.0
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/21 1.2.0 スクリーンショットの設定を変更するプラグインコマンドを追加
  * 2023/10/20 1.1.1 ロード時のディレクトリパスを統一
  *                  何も選択していない状態で決定キーを押すと操作不能になる不具合を修正
  * 2023/10/13 1.1.0 撮影時にフラッシュ・プレビューする機能を追加
@@ -80,8 +81,15 @@
  * @command sceneScreenshot
  * @text スクショギャラリーを開く
  *
+ * @command changeScreenshotSetting
+ * @text スクショ設定を変更する
+ * @arg rect
+ * @text 位置と範囲
+ * @type struct<Rectangle>
+ * @default {"x":"0", "y":"0", "width":"816", "height":"624"}
+ *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  * スクリーンショットの撮影、保存を可能とし
  * 保存したスクリーンショットをゲーム内で閲覧するシーンを提供します。
  *
@@ -250,27 +258,36 @@
       };
     })(
       pluginParameters.preview ||
-        '{"show":"true", "frameWidth":"4", "duration":"60", "rect":"{\\"x\\":\\"16\\", \\"y\\":\\"16\\", \\"width\\":\\"102\\", \\"height\\":\\"78\\"}"}'
+        '{"show":"true", "frameWidth":"4", "duration":"60", "rect":"{\\"x\\":\\"16\\", \\"y\\":\\"16\\", \\"width\\":\\"102\\", \\"height\\":\\"78\\"}"}',
     ),
   };
 
+  function parseArgs_changeScreenshotSetting(args) {
+    return {
+      rect: ((parameter) => {
+        const parsed = JSON.parse(parameter);
+        return {
+          x: Number(parsed.x || 16),
+          y: Number(parsed.y || 16),
+          width: Number(parsed.width || 102),
+          height: Number(parsed.height || 78),
+        };
+      })(args.rect || '{"x":"0", "y":"0", "width":"816", "height":"624"}'),
+    };
+  }
+
   const command_sceneScreenshot = 'sceneScreenshot';
 
+  const command_changeScreenshotSetting = 'changeScreenshotSetting';
+
   function SceneManager_ScreenshotGalleryMixIn(sceneManager) {
-    sceneManager.saveScreenshot = function (format) {
+    sceneManager.saveScreenshot = function (format, rect) {
       const dataURLFormat = format === 'jpg' ? 'image/jpeg' : `image/${format}`;
       const now = new Date();
-      const name = `${now.getFullYear()}-${(now.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}-${now
-        .getHours()
-        .toString()
-        .padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now
-        .getSeconds()
-        .toString()
-        .padStart(2, '0')}${now.getMilliseconds().toString().padStart(4, '0')}`;
+      const name = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}-${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}${now.getMilliseconds().toString().padStart(4, '0')}`;
       ImageManager.setLatestScreenshotName(name);
-      this.saveImage(name, format, this.snap().canvas.toDataURL(dataURLFormat, 1).replace(/^.*,/, ''));
+      const snap = rect ? this.snapRectangle(rect) : this.snap();
+      this.saveImage(name, format, snap.canvas.toDataURL(dataURLFormat, 1).replace(/^.*,/, ''));
     };
     sceneManager.saveImage = function (filename, format, base64Image) {
       const fs = require('fs');
@@ -279,6 +296,12 @@
         fs.mkdirSync(dirpath);
       }
       fs.writeFileSync(`${dirpath}${filename}.${format}`, Buffer.from(base64Image, 'base64'));
+    };
+    sceneManager.snapRectangle = function (rect) {
+      if (!this._scene) {
+        throw Error('スクリーンショットを保存できません。');
+      }
+      return Bitmap.snapRectangle(this._scene, rect);
     };
   }
   SceneManager_ScreenshotGalleryMixIn(SceneManager);
@@ -320,6 +343,14 @@
   PluginManager.registerCommand(pluginName, command_sceneScreenshot, function () {
     SceneManager.push(Scene_ScreenshotGallery);
   });
+  PluginManager.registerCommand(pluginName, command_changeScreenshotSetting, function (args) {
+    const parsedArgs = parseArgs_changeScreenshotSetting(args);
+    const rect =
+      parsedArgs.rect.width === 0 || parsedArgs.rect.height === 0
+        ? undefined
+        : new Rectangle(parsedArgs.rect.x, parsedArgs.rect.y, parsedArgs.rect.width, parsedArgs.rect.height);
+    $gameTemp.setScreenshotRectangle(rect);
+  });
   function Bitmap_ScreenshotGalleryMixIn(bitmap) {
     const _startLoading = bitmap._startLoading;
     bitmap._startLoading = function () {
@@ -346,6 +377,39 @@
     };
   }
   Bitmap_ScreenshotGalleryMixIn(Bitmap.prototype);
+  Bitmap.snapRectangle = function (stage, rect) {
+    const bitmap = new Bitmap(rect.width, rect.height);
+    const renderTexture = PIXI.RenderTexture.create({
+      width: rect.x + rect.width,
+      height: rect.y + rect.height,
+    });
+    if (stage) {
+      const renderer = Graphics.app.renderer;
+      renderer.render(stage, renderTexture);
+      stage.worldTransform.identity();
+      const canvas = renderer.extract.canvas(renderTexture);
+      bitmap.context.drawImage(canvas, rect.x, rect.y, rect.width, rect.height, 0, 0, rect.width, rect.height);
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    renderTexture.destroy(true);
+    bitmap.baseTexture.update();
+    return bitmap;
+  };
+  function Game_Temp_ScreenshotGalleryMixIn(gameTemp) {
+    const _initialize = gameTemp.initialize;
+    gameTemp.initialize = function () {
+      _initialize.call(this);
+      this.setScreenshotRectangle(undefined);
+    };
+    gameTemp.setScreenshotRectangle = function (rect) {
+      this._screenshotRectangle = rect;
+    };
+    gameTemp.screenshotRectangle = function () {
+      return this._screenshotRectangle;
+    };
+  }
+  Game_Temp_ScreenshotGalleryMixIn(Game_Temp.prototype);
   function Scene_ScreenshotGalleryMixIn(sceneClass) {
     const _start = sceneClass.start;
     sceneClass.start = function () {
@@ -361,7 +425,7 @@
       this._previewContainer = new Sprite();
       this._previewContainer.bitmap = new Bitmap(
         settings.preview.rect.width + settings.preview.frameWidth * 2,
-        settings.preview.rect.height + settings.preview.frameWidth * 2
+        settings.preview.rect.height + settings.preview.frameWidth * 2,
       );
       this._previewContainer.x = settings.preview.rect.x - settings.preview.frameWidth;
       this._previewContainer.y = settings.preview.rect.y - settings.preview.frameWidth;
@@ -371,7 +435,7 @@
         settings.preview.rect.width + settings.preview.frameWidth * 2,
         settings.preview.rect.height + settings.preview.frameWidth * 2,
         settings.preview.frameWidth,
-        ColorManager.textColor(0)
+        ColorManager.textColor(0),
       );
       this.addChild(this._previewContainer);
       this._previewSprite = new Sprite();
@@ -412,7 +476,7 @@
          */
         this.clearFlash();
         this.hidePreview();
-        SceneManager.saveScreenshot(settings.format);
+        SceneManager.saveScreenshot(settings.format, $gameTemp.screenshotRectangle());
         if (settings.se.name) {
           AudioManager.playSe(settings.se);
           this.startFlash();
@@ -483,6 +547,7 @@
         this._galleryWindow.activate();
       } else {
         this._sprite.bitmap = this._galleryWindow.currentItem();
+        this._sprite.adjustPosition();
         this._sprite.show();
         this._galleryWindow.deactivate();
       }
@@ -562,6 +627,10 @@
       if (this._okHandler) {
         this._okHandler();
       }
+    }
+    adjustPosition() {
+      this.x = Math.floor((Graphics.width - (this.bitmap?.width || Graphics.width)) / 2);
+      this.y = Math.floor((Graphics.height - (this.bitmap?.height || Graphics.height)) / 2);
     }
   }
   globalThis.Scene_ScreenshotGallery = Scene_ScreenshotGallery;
