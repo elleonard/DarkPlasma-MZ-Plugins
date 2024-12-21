@@ -33,6 +33,8 @@
  * - DarkPlasma_ScreenshotGallery.js
  * - DarkPlasma_TweetScreenshot.js
  *
+ * 本プラグインで設定した内容はセーブデータに含まれます。
+ *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_ScreenshotGallery
  * DarkPlasma_TweetScreenshot
