@@ -5,6 +5,8 @@ category:
 date: 2024-01-23 13:00:55
 tags:
   - アイテム
+description: アイテムシーンでアイテムを選択して決定キーを押した際、個別で「つかう」コマンドを表示します。
+thumbnail: item-command.png
 ---
 
 # 概要

@@ -6,6 +6,8 @@ date: 2022-01-01 18:40:32
 tags:
   - アイテム
   - MV版あり
+description: 新規入手アイテムを強調表示します。
+thumbnail: highlight-new-item.png
 ---
 
 # 概要

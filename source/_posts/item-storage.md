@@ -5,6 +5,8 @@ category:
 date: 2022-01-10 17:50:21
 tags:
   - アイテム
+description: アイテムを預けたり取り出したりできる倉庫を提供します。
+thumbnail: item-storage.png
 ---
 
 # 概要

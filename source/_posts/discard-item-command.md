@@ -5,6 +5,8 @@ category:
 date: 2024-01-23 13:07:56
 tags:
   - アイテム
+description: アイテムシーンでアイテムにカーソルを合わせて決定キーを押した際、「捨てる」コマンドを表示します。
+thumbnail: discard-item-command.png
 ---
 
 # 概要

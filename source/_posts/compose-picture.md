@@ -5,6 +5,8 @@ category:
 date: 2024-04-13 15:53:56
 tags:
   - ピクチャ
+description: 複数の画像ファイルを合成して1枚のピクチャとして扱います。
+thumbnail: event.png
 ---
 
 # 概要

@@ -7,6 +7,8 @@ tags:
   - テキスト
   - スキル
   - MV版あり
+description: スキルに詳細説明文を設定して表示します。
+thumbnail: skill-detail.png
 ---
 
 # 概要

@@ -6,6 +6,8 @@ date: 2024-03-01 21:35:02
 tags:
   - マップ
   - キャラクター
+description: マップ上のキャラクターに残像を表示します。
+thumbnail: afterimage.png
 ---
 
 # 概要

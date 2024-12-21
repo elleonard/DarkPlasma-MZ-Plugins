@@ -5,6 +5,8 @@ category:
 date: 2021-12-30 20:53:52
 tags:
   - マップ
+description: 暗いマップを作ることができます。
+thumbnail: dark-map.png
 ---
 
 # 概要

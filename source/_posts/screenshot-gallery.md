@@ -25,3 +25,7 @@ tags:
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ScreenshotGallery.js)
 ダウンロード方法については {% post_link about %} を参照してください。
+
+# 関連プラグイン
+
+- [スクリーンショットの設定を変更する](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ChangeScreenshotSetting.js)

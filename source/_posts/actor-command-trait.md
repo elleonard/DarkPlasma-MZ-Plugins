@@ -8,6 +8,8 @@ tags:
   - 職業
   - アクター
   - ステート
+description: アクターコマンドを変更する特徴を定義します。
+thumbnail: actor-command-trait.png
 ---
 
 # 概要

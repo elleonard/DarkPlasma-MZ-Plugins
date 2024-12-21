@@ -7,6 +7,8 @@ tags:
   - データベース
   - 敵キャラ
   - MV版あり
+description: 遭遇時に敵キャラを登録する図鑑シーンを提供します。
+thumbnail: enemy-book.png
 ---
 
 # 概要

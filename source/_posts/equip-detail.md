@@ -6,6 +6,8 @@ date: 2024-04-20 15:23:52
 tags:
   - 装備
   - テキスト
+description: 装備品に詳細説明文を設定して、装備シーンで表示します。
+thumbnail: equip-detail.png
 ---
 
 # 概要

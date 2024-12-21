@@ -5,6 +5,8 @@ category:
 date: 2023-11-04 11:55:44
 tags:
   - テキスト
+description: テキストに影をつける制御文字を提供します。
+thumbnail: text-shadow.png
 ---
 
 # 概要

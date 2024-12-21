@@ -6,6 +6,8 @@ date: 2022-01-02 19:58:48
 tags:
   - テキスト
   - MV版あり
+description: 指定した語句に自動的に色をつけます。
+thumbnail: auto-highlight.png
 ---
 
 # 概要

@@ -6,6 +6,8 @@ date: 2021-12-29 22:53:35
 tags:
   - テキスト
   - MV版あり
+description: ウィンドウ幅を超えるようなテキストを自動で改行します。
+thumbnail: auto-line-break.png
 ---
 
 # 概要

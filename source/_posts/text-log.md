@@ -7,6 +7,8 @@ tags:
   - イベント
   - テキスト
   - MV版あり
+description: イベントで表示されたテキストをログとして保持、表示します。
+thumbnail: text-log.png
 ---
 
 # 概要

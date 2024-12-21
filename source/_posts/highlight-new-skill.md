@@ -5,6 +5,8 @@ category:
 date: 2022-10-30 14:42:53
 tags:
   - スキル
+description: 新規に習得したスキルを強調表示します。
+thumbnail: highlight-new-skill.png
 ---
 
 # 概要

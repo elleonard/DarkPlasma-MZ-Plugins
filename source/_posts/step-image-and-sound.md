@@ -5,6 +5,8 @@ category:
 date: 2024-03-28 11:45:38
 tags:
   - マップ
+description: キャラクターが歩行した際に足跡画像を表示したり、足音SEを再生します
+thumbnail: step-image-and-sound.png
 ---
 
 # 概要

@@ -5,6 +5,9 @@ category:
 date: 2024-07-27 14:02:11
 tags:
   - セーブデータ
+description: |
+  セーブファイルの最大数を変更します。
+thumbnail: max-savefiles.png
 ---
 
 # 概要

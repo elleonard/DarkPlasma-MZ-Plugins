@@ -6,6 +6,8 @@ date: 2023-10-20 12:34:51
 tags:
   - アイテム
   - テキスト
+description: アイテムに詳細説明文を設定して表示します。
+thumbnail: item-detail.png
 ---
 
 # 概要

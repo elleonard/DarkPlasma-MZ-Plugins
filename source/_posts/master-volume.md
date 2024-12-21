@@ -5,6 +5,8 @@ category:
 date: 2022-08-07 20:26:11
 tags:
   - オプション
+description: マスターボリューム設定オプションを追加します。
+thumbnail: master-volume.png
 ---
 
 # 概要

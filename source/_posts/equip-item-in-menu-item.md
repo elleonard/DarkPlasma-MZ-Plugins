@@ -6,6 +6,8 @@ date: 2024-01-23 13:03:33
 tags:
   - アイテム
   - 装備
+description: アイテムシーンで武器・防具にカーソルを合わせて決定を押した際、「装備」コマンドを表示します。
+thumbnail: equip-command.png
 ---
 
 # 概要

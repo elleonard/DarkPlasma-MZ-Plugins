@@ -6,6 +6,8 @@ date: 2022-01-01 16:13:22
 tags:
   - パーティ
   - 並び替え
+description: パーティメンバーを並び替えるシーンを提供します。
+thumbnail: formation.png
 ---
 
 # 概要
