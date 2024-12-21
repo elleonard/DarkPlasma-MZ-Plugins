@@ -47,5 +47,7 @@ export const config = new ConfigDefinitionBuilder(
   .withHelp(dedent`下記プラグインにおけるスクリーンショットの設定を変更します。
     
     - DarkPlasma_ScreenshotGallery.js
-    - DarkPlasma_TweetScreenshot.js`)
+    - DarkPlasma_TweetScreenshot.js
+    
+    本プラグインで設定した内容はセーブデータに含まれます。`)
   .build();
