@@ -2,10 +2,10 @@
 
 import { settings } from "./_build/DarkPlasma_ScreenshotGallery_parameters";
 import { pluginName } from "../../common/pluginName";
-import { command_sceneScreenshot } from "./_build/DarkPlasma_ScreenshotGallery_commands";
+import { command_changeScreenshotSetting, command_sceneScreenshot, parseArgs_changeScreenshotSetting } from "./_build/DarkPlasma_ScreenshotGallery_commands";
 
 function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) {
-  sceneManager.saveScreenshot = function (format) {
+  sceneManager.saveScreenshot = function (format, rect) {
     const dataURLFormat = format === "jpg" ? "image/jpeg" : `image/${format}`;
     const now = new Date();
     const name = `${now.getFullYear()
@@ -17,10 +17,11 @@ function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) 
       }${now.getMilliseconds().toString().padStart(4, '0')
       }`;
     ImageManager.setLatestScreenshotName(name);
+    const snap: Bitmap = rect ? this.snapRectangle(rect) : this.snap();
     this.saveImage(
       name,
       format,
-      this.snap().canvas.toDataURL(dataURLFormat, 1).replace(/^.*,/, '')
+      snap.canvas.toDataURL(dataURLFormat, 1).replace(/^.*,/, '')
     );
   };
 
@@ -31,6 +32,13 @@ function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) 
       fs.mkdirSync(dirpath);
     }
     fs.writeFileSync(`${dirpath}${filename}.${format}`, Buffer.from(base64Image, 'base64'));
+  };
+
+  sceneManager.snapRectangle = function (rect) {
+    if (!this._scene) {
+      throw Error("スクリーンショットを保存できません。");
+    }
+    return Bitmap.snapRectangle(this._scene, rect);
   };
 }
 
@@ -82,6 +90,14 @@ PluginManager.registerCommand(pluginName, command_sceneScreenshot, function () {
   SceneManager.push(Scene_ScreenshotGallery);
 });
 
+PluginManager.registerCommand(pluginName, command_changeScreenshotSetting, function(args) {
+  const parsedArgs = parseArgs_changeScreenshotSetting(args);
+  const rect = parsedArgs.rect.width === 0 || parsedArgs.rect.height === 0
+    ? undefined
+    : new Rectangle(parsedArgs.rect.x, parsedArgs.rect.y, parsedArgs.rect.width, parsedArgs.rect.height);
+  $gameTemp.setScreenshotRectangle(rect);
+});
+
 function Bitmap_ScreenshotGalleryMixIn(bitmap: Bitmap) {
   const _startLoading = bitmap._startLoading;
   bitmap._startLoading = function () {
@@ -110,6 +126,44 @@ function Bitmap_ScreenshotGalleryMixIn(bitmap: Bitmap) {
 }
 
 Bitmap_ScreenshotGalleryMixIn(Bitmap.prototype);
+
+Bitmap.snapRectangle = function (stage, rect) {
+  const bitmap = new Bitmap(rect.width, rect.height);
+  const renderTexture = PIXI.RenderTexture.create({
+    width: rect.x + rect.width,
+    height: rect.y + rect.height,
+  });
+  if (stage) {
+    const renderer = Graphics.app.renderer;
+    renderer.render(stage, renderTexture);
+    stage.worldTransform.identity();
+    const canvas = renderer.extract.canvas(renderTexture);
+    bitmap.context.drawImage(canvas, rect.x, rect.y, rect.width, rect.height, 0, 0, rect.width, rect.height);
+    canvas.width = 0;
+    canvas.height = 0;
+  }
+  renderTexture.destroy(true);
+  bitmap.baseTexture.update();
+  return bitmap;
+};
+
+function Game_Temp_ScreenshotGalleryMixIn(gameTemp: Game_Temp) {
+  const _initialize = gameTemp.initialize;
+  gameTemp.initialize = function () {
+    _initialize.call(this);
+    this.setScreenshotRectangle(undefined);
+  };
+
+  gameTemp.setScreenshotRectangle = function (rect) {
+    this._screenshotRectangle = rect;
+  };
+
+  gameTemp.screenshotRectangle = function () {
+    return this._screenshotRectangle;
+  };
+}
+
+Game_Temp_ScreenshotGalleryMixIn(Game_Temp.prototype);
 
 function Scene_ScreenshotGalleryMixIn(sceneClass: Scene_Base) {
   const _start = sceneClass.start;
@@ -183,7 +237,7 @@ function Scene_ScreenshotGalleryMixIn(sceneClass: Scene_Base) {
        */
       this.clearFlash();
       this.hidePreview();
-      SceneManager.saveScreenshot(settings.format);
+      SceneManager.saveScreenshot(settings.format, $gameTemp.screenshotRectangle());
       if (settings.se.name) {
         AudioManager.playSe(settings.se);
         this.startFlash();
@@ -272,6 +326,7 @@ class Scene_ScreenshotGallery extends Scene_Base {
       this._galleryWindow.activate();
     } else {
       this._sprite.bitmap = this._galleryWindow.currentItem();
+      this._sprite.adjustPosition();
       this._sprite.show();
       this._galleryWindow.deactivate();
     }
@@ -370,6 +425,11 @@ class Sprite_Screenshot extends Sprite_Clickable {
     if (this._okHandler) {
       this._okHandler();
     }
+  }
+
+  adjustPosition() {
+    this.x = Math.floor((Graphics.width - (this.bitmap?.width || Graphics.width))/2);
+    this.y = Math.floor((Graphics.height - (this.bitmap?.height || Graphics.height))/2);
   }
 }
 
