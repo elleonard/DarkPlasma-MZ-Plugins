@@ -1382,7 +1382,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #bd7ae3;
+    background: #7f9aa3;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2261,7 +2261,7 @@ pre code {
 }
 .post-tags {
   margin-top: 40px;
-  text-align: center;
+  text-align: right;
 }
 .post-tags a {
   display: inline-block;
@@ -2275,12 +2275,18 @@ pre code {
   font-size: 0.875em;
   margin-top: 1em;
   padding-top: 1em;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  float: right;
 }
 .social-like a {
   border-bottom: none;
+}
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.alignright {
+  float: right;
 }
 .reward-container {
   margin: 1em 0 0;
@@ -2743,7 +2749,6 @@ header.header {
 }
 @media (min-width: 992px) {
   .sidebar {
-    position: sticky;
     top: 12px;
   }
   .sidebar-toggle {
