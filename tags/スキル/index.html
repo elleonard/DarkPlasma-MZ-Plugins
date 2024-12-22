@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
-  <link rel="mask-icon" href="../../favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="../.././favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../.././favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../.././favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="../.././favicon/safari-pinned-tab.svg" color="#222">
 
 <link rel="stylesheet" href="../../css/main.css">
 
@@ -18,7 +19,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"elleonard.github.io","root":"/DarkPlasma-MZ-Plugins/","images":"../../images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"検索…","empty":"検索結果が見つかりませんでした: ${query}","hits_time":"${hits} の結果が ${time} ms で見つかりました","hits":"${hits} 件の結果が見つかりました"}}</script><script src="../../js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"elleonard.github.io","root":"/DarkPlasma-MZ-Plugins/","images":"../../images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"検索…","empty":"検索結果が見つかりませんでした: ${query}","hits_time":"${hits} の結果が ${time} ms で見つかりました","hits":"${hits} 件の結果が見つかりました"},"path":"../../search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="../../js/config.js"></script>
 
     <meta name="description" content="DarkPlasma_シリーズの解説">
 <meta property="og:type" content="website">
@@ -78,6 +79,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="検索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -86,11 +88,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="../../index.html" rel="section">Home</a></li><li class="menu-item menu-item-about"><a href="../.././2021/12/30/about" rel="section">About</a></li><li class="menu-item menu-item-archives"><a href="../.././archives" rel="section">Archive</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>検索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="検索…" spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -179,190 +207,754 @@
 
     </div>
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner tag posts-expand">
 
 
   
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">スキル
-          <small>タグ</small>
-        </h1>
-      </div>
+    
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/11/25/random-skill/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2023/11/25/random-skill/" class="post-title-link" itemprop="url">指定したスキルのうちどれかひとつを発動する使用効果</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2023-11-25 16:56:44" itemprop="dateCreated datePublished" datetime="2023-11-25T16:56:44+09:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:34:27" itemprop="dateModified" datetime="2024-12-22T00:34:27+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>指定したスキルのうちどれかひとつを発動する使用効果を実現します。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2023/11/25/random-skill/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="指定したスキルのうちどれかひとつを発動する使用効果 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/11/25/random-skill/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-11-25T16:56:44+09:00"
-              content="2023-11-25">
-          11-25
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="../../2023/11/25/random-skill/" itemprop="url">
-            <span itemprop="name">指定したスキルのうちどれかひとつを発動する使用効果</span>
-          </a>
-      </div>
-
+    <footer class="post-footer">
+        <div class="post-eof"></div>
       
-    </header>
+    </footer>
   </article>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-17T18:14:06+09:00"
-              content="2023-09-17">
-          09-17
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="../../2023/09/17/level-x-state/" itemprop="url">
-            <span itemprop="name">レベルが特定数値の倍数の対象にのみ有効なステート付加効果</span>
-          </a>
-      </div>
 
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/09/17/level-x-state/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2023/09/17/level-x-state/" class="post-title-link" itemprop="url">レベルが特定数値の倍数の対象にのみ有効なステート付加効果</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2023-09-17 18:14:06" itemprop="dateCreated datePublished" datetime="2023-09-17T18:14:06+09:00">2023-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:37:45" itemprop="dateModified" datetime="2024-12-22T00:37:45+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../%E3%82%B9%E3%83%86%E3%83%BC%E3%83%88/" rel="tag"># ステート</a>
+        <a href="../%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" rel="tag"># アイテム</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>レベルが特定数値の倍数の対象にのみ有効なステート付加を行う使用効果を提供します。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2023/09/17/level-x-state/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="レベルが特定数値の倍数の対象にのみ有効なステート付加効果 | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2023/09/17/level-x-state/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
       
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-10-30T14:42:53+09:00"
-              content="2022-10-30">
-          10-30
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/10/30/highlight-new-skill/" itemprop="url">
-            <span itemprop="name">新規に習得したスキルを強調表示する</span>
-          </a>
-      </div>
-
+    <footer class="post-footer">
+        <div class="post-eof"></div>
       
-    </header>
+    </footer>
   </article>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-06-02T11:04:15+09:00"
-              content="2022-06-02">
-          06-02
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/06/02/unusable-item-with-map-event/" itemprop="url">
-            <span itemprop="name">マップイベント中は使用できないアイテム・スキル</span>
-          </a>
-      </div>
 
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/10/30/highlight-new-skill/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/10/30/highlight-new-skill/" class="post-title-link" itemprop="url">新規に習得したスキルを強調表示する</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-10-30 14:42:53" itemprop="dateCreated datePublished" datetime="2022-10-30T14:42:53+09:00">2022-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:43:08" itemprop="dateModified" datetime="2024-12-22T00:43:08+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>新規に習得したスキルを強調表示します。</p>
+            <img src="../../2022/10/30/highlight-new-skill/highlight-new-skill.png" />
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/10/30/highlight-new-skill/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="新規に習得したスキルを強調表示する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/10/30/highlight-new-skill/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
       
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-01-07T11:25:26+09:00"
-              content="2022-01-07">
-          01-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/01/07/skill-detail/" itemprop="url">
-            <span itemprop="name">スキルの詳細説明文を表示する</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-01-07T08:47:12+09:00"
-              content="2022-01-07">
-          01-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/01/07/skill-cooldown/" itemprop="url">
-            <span itemprop="name">スキル使用のクールタイムを設定する</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-01-03T14:54:42+09:00"
-              content="2022-01-03">
-          01-03
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/01/03/expand-target-scope/" itemprop="url">
-            <span itemprop="name">スキル,アイテムの対象を全体化する</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-01-01T15:09:24+09:00"
-              content="2022-01-01">
-          01-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="../../2022/01/01/order-id-alias/" itemprop="url">
-            <span itemprop="name">アイテムやスキルの表示順を設定する</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
     </div>
-  </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/06/02/unusable-item-with-map-event/" class="post-title-link" itemprop="url">マップイベント中は使用できないアイテム・スキル</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-06-02 11:04:15" itemprop="dateCreated datePublished" datetime="2022-06-02T11:04:15+09:00">2022-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:46:08" itemprop="dateModified" datetime="2024-12-22T00:46:08+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" rel="tag"># アイテム</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>マップイベント実行中に使用できないアイテム・スキルを実現します。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/06/02/unusable-item-with-map-event/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="マップイベント中は使用できないアイテム・スキル | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/06/02/unusable-item-with-map-event/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/07/skill-detail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/01/07/skill-detail/" class="post-title-link" itemprop="url">スキルの詳細説明文を表示する</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-01-07 11:25:26" itemprop="dateCreated datePublished" datetime="2022-01-07T11:25:26+09:00">2022-01-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:45:23" itemprop="dateModified" datetime="2024-12-22T00:45:23+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88/" rel="tag"># テキスト</a>
+        <a href="../MV%E7%89%88%E3%81%82%E3%82%8A/" rel="tag"># MV版あり</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>スキルに詳細説明文を設定して表示します。</p>
+            <img src="../../2022/01/07/skill-detail/skill-detail.png" />
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/01/07/skill-detail/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="スキルの詳細説明文を表示する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/07/skill-detail/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/07/skill-cooldown/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/01/07/skill-cooldown/" class="post-title-link" itemprop="url">スキル使用のクールタイムを設定する</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-01-07 08:47:12" itemprop="dateCreated datePublished" datetime="2022-01-07T08:47:12+09:00">2022-01-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:45:10" itemprop="dateModified" datetime="2024-12-22T00:45:10+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../MV%E7%89%88%E3%81%82%E3%82%8A/" rel="tag"># MV版あり</a>
+        <a href="../%E6%88%A6%E9%97%98/" rel="tag"># 戦闘</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>スキルXの使用後、スキルYの使用を一定ターン数制限できます。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/01/07/skill-cooldown/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="スキル使用のクールタイムを設定する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/07/skill-cooldown/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/01/03/expand-target-scope/" class="post-title-link" itemprop="url">スキル,アイテムの対象を全体化する</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-01-03 14:54:42" itemprop="dateCreated datePublished" datetime="2022-01-03T14:54:42+09:00">2022-01-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:42:07" itemprop="dateModified" datetime="2024-12-22T00:42:07+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../%E6%88%A6%E9%97%98/" rel="tag"># 戦闘</a>
+        <a href="../%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" rel="tag"># アイテム</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>単体を対象とするスキルやアイテムの対象を全体化可能にします。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/01/03/expand-target-scope/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="スキル,アイテムの対象を全体化する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/03/expand-target-scope/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../.././img/lily300.jpg">
+      <meta itemprop="name" content="DarkPlasma">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="DarkPlasma_シリーズの解説">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | RPGツクールMZ向けプラグイン">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="../../2022/01/01/order-id-alias/" class="post-title-link" itemprop="url">アイテムやスキルの表示順を設定する</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">投稿日</span>
+
+      <time title="作成日：2022-01-01 15:09:24" itemprop="dateCreated datePublished" datetime="2022-01-01T15:09:24+09:00">2022-01-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">編集日</span>
+      <time title="修正日：2024-12-22 00:44:08" itemprop="dateModified" datetime="2024-12-22T00:44:08+09:00">2024-12-22</time>
+    </span>
+    <span class="post-meta-item">
+        <a href="../MV%E7%89%88%E3%81%82%E3%82%8A/" rel="tag"># MV版あり</a>
+        <a href="../%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/" rel="tag"># アイテム</a>
+        <a href="../%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/" rel="tag"># データベース</a>
+        <a href="" rel="tag"># スキル</a>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>アイテムやスキルの並び順を、データベース上のIDとは別に設定できるようになります。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../2022/01/01/order-id-alias/">
+                続きを読む &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+          <div class="clearfix">
+            <div class="alignright">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw" data-text="アイテムやスキルの表示順を設定する | RPGツクールMZ向けプラグイン" data-url="https://elleonard.github.io/DarkPlasma-MZ-Plugins/2022/01/01/order-id-alias/" data-via="elleonard_f" class="twitter-hashtag-button" data-show-count="false">Post</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   
   
   
@@ -408,7 +1000,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="../../js/comments.js"></script><script src="../../js/utils.js"></script><script src="../../js/motion.js"></script><script src="../../js/sidebar.js"></script><script src="../../js/next-boot.js"></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="../../js/third-party/search/local-search.js"></script>
+
 
 
 

@@ -20,7 +20,7 @@ document.addEventListener('page:loaded', () => {
         parent.parentNode.replaceChild(box, parent);
       });
       mermaid.initialize({
-        theme    : CONFIG.darkmode && window.matchMedia('(prefers-color-scheme: dark)').matches ? CONFIG.mermaid.theme.dark : CONFIG.mermaid.theme.light,
+        theme    : CONFIG.darkmode ? CONFIG.mermaid.theme.dark : CONFIG.mermaid.theme.light,
         logLevel : 4,
         flowchart: { curve: 'linear' },
         gantt    : { axisFormat: '%m/%d/%Y' },
