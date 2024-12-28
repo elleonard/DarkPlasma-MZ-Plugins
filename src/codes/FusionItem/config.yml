@@ -3,6 +3,9 @@ DarkPlasma_FusionItem:
   year: 2022
   license: MIT
   histories:
+    - date: 2024/12/28
+      version: 2.1.0
+      description: '品揃えフィルタ用インターフェース追加'
     - date: 2024/12/19
       version: 2.0.1
       description: '価格による有効判定が正常でない不具合の修正'

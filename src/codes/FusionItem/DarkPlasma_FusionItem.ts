@@ -500,12 +500,16 @@ class Window_FusionShopBuy extends Window_ShopBuy {
     return this._data ? this.isEnabledAt(this._data.indexOf(item)) : false;
   }
 
+  includes(goods: FusionItemGoodsInterface): boolean {
+    return goods.isValid();
+  }
+
   makeItemList() {
     this._data = [];
     this._price = [];
     this._materials = [];
     this._fusionGoods
-      .filter((goods) => goods.isValid())
+      .filter((goods) => this.includes(goods))
       .forEach((goods) => {
         this._data.push(goods.result);
         this._price.push(goods.gold);
