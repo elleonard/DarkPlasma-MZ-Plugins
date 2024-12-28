@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 2.0.1
+// DarkPlasma_FusionItem 2.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2024/12/28 2.1.0 品揃えフィルタ用インターフェース追加
  * 2024/12/19 2.0.1 価格による有効判定が正常でない不具合の修正
  * 2024/10/04 2.0.0 所持数限界まで持っているアイテムを融合で作れる不具合の修正
  *                  コアスクリプトの型との互換性を破壊しないよう変更 (Breaking Change)
@@ -51,7 +52,7 @@
  * @type number[]
  *
  * @help
- * version: 2.0.1
+ * version: 2.1.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -783,12 +784,15 @@
     isEnabled(item) {
       return this._data ? this.isEnabledAt(this._data.indexOf(item)) : false;
     }
+    includes(goods) {
+      return goods.isValid();
+    }
     makeItemList() {
       this._data = [];
       this._price = [];
       this._materials = [];
       this._fusionGoods
-        .filter((goods) => goods.isValid())
+        .filter((goods) => this.includes(goods))
         .forEach((goods) => {
           this._data.push(goods.result);
           this._price.push(goods.gold);
