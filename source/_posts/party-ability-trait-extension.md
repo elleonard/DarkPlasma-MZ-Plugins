@@ -26,3 +26,13 @@ description: パーティ全体に効果を及ぼす特徴を設定可能にし�
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_PartyAbilityTraitExtension.js)
 ダウンロード方法については {% post_link about %} を参照してください。
+
+# 関連プラグイン
+
+## [パーティ能力特徴をキャッシュする](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CachePartyAbilityTraits.js)
+
+不要なパーティ能力特徴の再計算を避けるためにキャッシュするプラグインです。
+
+パーティ能力特徴は、一人のアクターが持つ特徴でパーティ全体に影響を及ぼします。
+そのため、アクターのパラメーター参照が多い場面においてゲームパフォーマンスの低下が発生することがあります。
+特徴の変化がないケースにおいては、パーティ能力特徴をいちいち都度計算するのは無駄なので、キャッシュしてパフォーマンスの低下を避けます。
