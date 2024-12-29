@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>敵キャラ用 経験値倍率特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/"/>
+      <url>/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>敵が倒された場合に、その敵から獲得できる経験値報酬に倍率をかける特徴を提供します。</p><h1 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h1><p><img src="exp-rate.png" alt="設定例" title="設定例"></p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateWithDeath.js">戦闘不能になっても消えないステートプラグイン</a>で指定したステートに対し、特徴を追加しています。<br>このステートにかかった状態の敵を倒すと、その敵から獲得できる経験値報酬が1.5倍になります。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpRateTraitForEnemy.js">GitHub</a><br>ダウンロード方法については <a href="2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 敵キャラ </tag>
+            
+            <tag> 特徴 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>セーブファイルの最大数を変更する</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/07/27/max-savefiles/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/07/27/max-savefiles/</url>
