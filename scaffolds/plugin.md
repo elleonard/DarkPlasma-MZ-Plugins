@@ -4,6 +4,8 @@ date: {{ date }}
 tags:
 category:
   - プラグイン解説
+description: 
+thumbnail: 
 ---
 
 # 概要
