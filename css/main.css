@@ -1382,7 +1382,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #b5ff91;
+    background: #98fa6e;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2280,13 +2280,21 @@ pre code {
 .social-like a {
   border-bottom: none;
 }
-.clearfix::after {
-  content: "";
-  display: block;
-  clear: both;
-}
 .alignright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   float: right;
+}
+.alignright a {
+  display: flex;
+  border-bottom: none;
+  align-items: center;
+  justify-content: center;
+}
+.alignright iframe,
+.alignright img {
+  margin-bottom: 0px;
 }
 .reward-container {
   margin: 1em 0 0;
