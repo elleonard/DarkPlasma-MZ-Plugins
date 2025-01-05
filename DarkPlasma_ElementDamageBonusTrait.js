@@ -1,9 +1,10 @@
-// DarkPlasma_ElementDamageBonusTrait 1.0.0
+// DarkPlasma_ElementDamageBonusTrait 1.0.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/01/05 1.0.1 単一属性の行動の属性を正常に反映できない不具合を修正
  * 2025/01/05 1.0.0 公開
  */
 
@@ -19,7 +20,7 @@
  * @orderAfter DarkPlasma_MultiElementAction
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アクター、職業、装備、敵キャラ、ステートのメモ欄に
  * elementDamageBonusメモタグを設定することで
  * 指定した属性のダメージ倍率を増減する特徴を設定できます。
@@ -121,7 +122,11 @@
     };
     if (!gameAction.actionAttackElements) {
       gameAction.actionAttackElements = function () {
-        return this.subject().attackElements();
+        const elementId = this.item().damage.elementId;
+        if (elementId < 0) {
+          return this.subject().attackElements();
+        }
+        return [elementId];
       };
     }
   }
