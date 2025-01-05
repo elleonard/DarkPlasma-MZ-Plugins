@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/01/05",
+    version: "1.1.1",
+    description: "依存プラグインのバージョン更新",
+  },
+  {
+    date: "2025/01/05",
     version: "1.1.0",
     description: "異なる属性のダメージ倍率を加算するか乗算するかの設定を追加",
   },
@@ -43,7 +48,7 @@ export const config = new ConfigDefinitionBuilder(
   })
   .withOrderAfterDependency({
     name: "DarkPlasma_MultiElementAction",
-    version: "1.1.0",
+    version: "1.1.1",
   })
   .withHelp(dedent`アクター、職業、装備、敵キャラ、ステートのメモ欄に
     elementDamageBonusメモタグを設定することで
