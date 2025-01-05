@@ -10,13 +10,13 @@ function Game_Action_MultiElementActionMixIn(gameAction: Game_Action) {
       .split(',')
       .map(elementName => $dataSystem.elements.indexOf(elementName));
     if (additionalElementIds.some(elementId => elementId < 0) || this.item()!.damage.elementId < 0) {
-      return this.subject().attackElements()
+      return [...new Set(this.subject().attackElements()
         .concat(
           [this.item()!.damage.elementId],
           additionalElementIds
-        ).filter(elementId => elementId >= 0);
+        ).filter(elementId => elementId >= 0))];
     }
-    return additionalElementIds.concat([this.item()!.damage.elementId]);
+    return [...new Set(additionalElementIds.concat([this.item()!.damage.elementId]))];
   };
 }
 
