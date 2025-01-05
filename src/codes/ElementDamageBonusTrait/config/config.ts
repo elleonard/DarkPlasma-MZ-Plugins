@@ -6,6 +6,11 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/01/05",
+    version: "1.0.1",
+    description: "単一属性の行動の属性を正常に反映できない不具合を修正",
+  },
+  {
+    date: "2025/01/05",
     version: "1.0.0",
     description: "公開",
   }

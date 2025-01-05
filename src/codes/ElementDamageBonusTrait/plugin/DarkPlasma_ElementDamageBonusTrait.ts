@@ -74,7 +74,11 @@ function Game_Action_ElementDamageBonusTraitMixIn(gameAction: Game_Action) {
 
   if (!gameAction.actionAttackElements) {
     gameAction.actionAttackElements = function () {
-      return this.subject().attackElements();
+      const elementId = this.item()!.damage.elementId;
+      if (elementId < 0) {
+        return this.subject().attackElements();
+      }
+      return [elementId];
     };
   }
 }
