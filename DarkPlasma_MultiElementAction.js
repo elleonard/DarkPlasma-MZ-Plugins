@@ -1,9 +1,10 @@
-// DarkPlasma_MultiElementAction 1.1.0
+// DarkPlasma_MultiElementAction 1.1.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/01/05 1.1.1 属性一覧から重複を除去
  * 2023/03/29 1.1.0 行動の攻撃属性一覧を取得するインターフェースを追加
  *            1.0.0 公開
  */
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * スキルやアイテムに属性を追加します。
  *
  * 属性を追加したいスキルやアイテムのメモ欄に
@@ -53,12 +54,16 @@
         .split(',')
         .map((elementName) => $dataSystem.elements.indexOf(elementName));
       if (additionalElementIds.some((elementId) => elementId < 0) || this.item().damage.elementId < 0) {
-        return this.subject()
-          .attackElements()
-          .concat([this.item().damage.elementId], additionalElementIds)
-          .filter((elementId) => elementId >= 0);
+        return [
+          ...new Set(
+            this.subject()
+              .attackElements()
+              .concat([this.item().damage.elementId], additionalElementIds)
+              .filter((elementId) => elementId >= 0),
+          ),
+        ];
       }
-      return additionalElementIds.concat([this.item().damage.elementId]);
+      return [...new Set(additionalElementIds.concat([this.item().damage.elementId]))];
     };
   }
   Game_Action_MultiElementActionMixIn(Game_Action.prototype);
