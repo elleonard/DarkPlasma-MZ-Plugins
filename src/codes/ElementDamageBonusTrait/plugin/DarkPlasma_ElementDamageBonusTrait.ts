@@ -2,6 +2,7 @@
 
 import { pluginName } from '../../../common/pluginName';
 import { hasTraits } from '../../../common/data/hasTraits';
+import { settings } from '../config/_build/DarkPlasma_ElementDamageBonusTrait_parameters';
 
 const elementDamageBonusTrait = uniqueTraitIdCache.allocate(pluginName, 1, "属性ダメージボーナス");
 
@@ -60,16 +61,35 @@ function Scene_Boot_ElementDamageBonusTraitMixIn(sceneBoot: Scene_Boot) {
 
 Scene_Boot_ElementDamageBonusTraitMixIn(Scene_Boot.prototype);
 
+function Game_BattlerBase_ElementDamageBonusTraitMixIn(gameBattlerBase: Game_BattlerBase) {
+  gameBattlerBase.elementAttackDamageBonus = function (elementId) {
+    return this.traitsSum(elementDamageBonusTrait.id, elementId);
+  };
+
+  gameBattlerBase.elementAttackDamageRate = function (elementId) {
+    return 1 + this.elementAttackDamageBonus(elementId)/100;
+  };
+}
+
+Game_BattlerBase_ElementDamageBonusTraitMixIn(Game_BattlerBase.prototype);
+
 function Game_Action_ElementDamageBonusTraitMixIn(gameAction: Game_Action) {
   const _calcElementRate = gameAction.calcElementRate;
   gameAction.calcElementRate = function (target) {
     const result = _calcElementRate.call(this, target);
-    return result + this.elementDamageBonus(this.actionAttackElements());
+    return result * this.elementDamageBonus(this.actionAttackElements());
   };
 
   gameAction.elementDamageBonus = function (elements) {
-    return elements
-      .reduce((result, elementId) => this.subject().traitsSum(elementDamageBonusTrait.id, elementId) + result, 0)/100;
+    return settings.addition
+      ? elements.reduce(
+          (result, elementId) => this.subject().elementAttackDamageBonus(elementId) + result,
+          100
+        )/100
+      : elements.reduce(
+          (result, elementId) => this.subject().elementAttackDamageRate(elementId) * result,
+          1
+        );
   };
 
   if (!gameAction.actionAttackElements) {

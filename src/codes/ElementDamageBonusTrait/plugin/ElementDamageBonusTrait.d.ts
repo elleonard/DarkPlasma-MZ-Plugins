@@ -8,6 +8,11 @@ declare namespace DataManager {
   function extractElementDamageBonusTraitsSub(meta: string): MZ.Trait[];
 }
 
+declare interface Game_BattlerBase {
+  elementAttackDamageBonus(elementId: number): number;
+  elementAttackDamageRate(elementId: number): number;
+}
+
 declare interface Game_Action {
   elementDamageBonus(elements: number[]): number;
 }
