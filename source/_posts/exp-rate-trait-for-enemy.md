@@ -24,3 +24,11 @@ description: 敵が倒された場合に、その敵から獲得できる経験�
 
 [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpRateTraitForEnemy.js)
 ダウンロード方法については {% post_link about %} を参照してください。
+
+## 前提プラグイン
+
+### 独自の特徴IDを確保する
+
+独自の特徴を追加するため、利用には本プラグインが必要になります。
+
+- [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js)
