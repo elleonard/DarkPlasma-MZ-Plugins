@@ -4,11 +4,38 @@
   
     
     <entry>
+      <title>属性ダメージボーナス特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2025/01/26/element-damage-bonus-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2025/01/26/element-damage-bonus-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>属性攻撃によるダメージ倍率を増減させる特徴を提供します。</p><h1 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h1><p><img src="/DarkPlasma-MZ-Plugins/2023/09/17/actor-command-trait/-trait/setting.png" alt="設定例" title="設定例"></p><p>この防具は、装備者の火属性ダメージを46.6％増加させます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ElementDamageBonusTrait.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自の特徴を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 特徴 </tag>
+            
+            <tag> 属性 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>敵キャラ用 経験値倍率特徴</title>
       <link href="/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/"/>
       <url>/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>敵が倒された場合に、その敵から獲得できる経験値報酬に倍率をかける特徴を提供します。</p><h1 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h1><p><img src="/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/exp-rate.png" alt="設定例" title="設定例"></p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateWithDeath.js">戦闘不能になっても消えないステートプラグイン</a>で指定したステートに対し、特徴を追加しています。<br>このステートにかかった状態の敵を倒すと、その敵から獲得できる経験値報酬が1.5倍になります。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpRateTraitForEnemy.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>敵が倒された場合に、その敵から獲得できる経験値報酬に倍率をかける特徴を提供します。</p><h1 id="設定例"><a href="#設定例" class="headerlink" title="設定例"></a>設定例</h1><p><img src="/DarkPlasma-MZ-Plugins/2024/12/29/exp-rate-trait-for-enemy/exp-rate.png" alt="設定例" title="設定例"></p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateWithDeath.js">戦闘不能になっても消えないステートプラグイン</a>で指定したステートに対し、特徴を追加しています。<br>このステートにかかった状態の敵を倒すと、その敵から獲得できる経験値報酬が1.5倍になります。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ExpRateTraitForEnemy.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自の特徴を追加するため、利用には本プラグインが必要になります。</p><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></li></ul>]]></content>
       
       
       <categories>
