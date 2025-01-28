@@ -6,18 +6,33 @@ import { settings } from '../config/_build/DarkPlasma_BattleGuide_parameters';
 
 class Data_BattleGuide {
   _title: string;
-  _texts: string[];
+  _pages: Data_BattleGuidePage[];
   _condition: Data_BattleGuideCondition;
 
-  /**
-   * @param {string} title
-   * @param {string[]} texts
-   * @param {Data_BattleGuideCondition} condition
-   */
-  constructor(title: string, texts: string[], condition: Data_BattleGuideCondition) {
+  constructor(title: string, pages: Data_BattleGuidePage[], condition: Data_BattleGuideCondition) {
     this._title = title;
-    this._texts = texts;
+    this._pages = pages;
     this._condition = condition;
+  }
+
+  static fromPluginSetting(title: string, texts: string[], condition: Data_BattleGuideCondition): Data_BattleGuide {
+    return new Data_BattleGuide(
+      title,
+      texts.map(text => new Data_BattleGuidePage(text)),
+      condition
+    );
+  }
+
+  static fromGlossaryItem(item: MZ.Item, condition: Data_BattleGuideCondition): Data_BattleGuide {
+    const texts = getGlossaryDescription(item);
+    if (!texts) {
+      throw Error(`説明文のない用語です: ${item.name}`);
+    }
+    return new Data_BattleGuide(
+      item.name,
+      texts.map((_, index) => Data_BattleGuidePage.fromGlossaryItem(item, index+1)),
+      condition
+    );
   }
 
   get title() {
@@ -25,7 +40,11 @@ class Data_BattleGuide {
   }
 
   get texts() {
-    return this._texts;
+    return this._pages.map(page => page.text);
+  }
+
+  picture(page: number): Data_BattleGuidePicture|undefined {
+    return this._pages[page].picture;
   }
 
   /**
@@ -33,6 +52,117 @@ class Data_BattleGuide {
    */
   isValid(): boolean {
     return this._condition.isValid();
+  }
+}
+
+class Data_BattleGuidePage {
+  _text: string;
+  _picture?: Data_BattleGuidePicture;
+  _condition?: Data_BattleGuideCondition;
+
+  constructor(text: string, picture?: Data_BattleGuidePicture, condition?: Data_BattleGuideCondition) {
+    this._text = text;
+    this._picture = picture;
+    this._condition = condition;
+  }
+
+  static fromGlossaryItem(item: MZ.Item, page: number): Data_BattleGuidePage {
+    const pageSuffix = page === 1 ? "" : `${page}`;
+    return new Data_BattleGuidePage(
+      String(item.meta[`SG説明${pageSuffix}`] || item.meta[`SGDescription${pageSuffix}`]),
+      Data_BattleGuidePicture.fromGlossaryItem(item, page),
+      Data_BattleGuideCondition.fromGlossaryItem(item, page)
+    );
+  }
+
+  get text() {
+    return this._text;
+  }
+
+  get picture() {
+    return this._picture;
+  }
+}
+
+type Data_BattleGuidePicturePriority = "bottom"|"top";
+type Data_BattleGuidePictureAlign = "left"|"center"|"right";
+
+class Data_BattleGuidePicture {
+  _name: string;
+  _xOffset: number;
+  _yOffset: number;
+  _priority: Data_BattleGuidePicturePriority;
+  _align: Data_BattleGuidePictureAlign;
+
+  constructor(
+    name: string,
+    xOffset: number,
+    yOffset: number,
+    priority: Data_BattleGuidePicturePriority,
+    align: Data_BattleGuidePictureAlign
+  ) {
+    this._name = name;
+    this._xOffset = xOffset;
+    this._yOffset = yOffset;
+    this._priority = priority;
+    this._align = align;
+  }
+
+  static fromGlossaryItem(item: MZ.Item, page: number): Data_BattleGuidePicture|undefined {
+    const pageSuffix = page === 1 ? "" : `${page}`;
+    const name = item.meta[`SGピクチャ${pageSuffix}`] || item.meta[`SGPicture${pageSuffix}`];
+    if (!name) {
+      return undefined;
+    }
+    const xOffset = Number(item.meta[`SGピクチャX${pageSuffix}`] || item.meta[`SGPictureX${pageSuffix}`] || 0);
+    const yOffset = Number(item.meta[`SGピクチャY${pageSuffix}`] || item.meta[`SGPictureY${pageSuffix}`] || 0);
+    const sceneGlossaryParameters = PluginManager.parameters("SceneGlossary");
+    const priority = String(item.meta[`SGピクチャ優先度${pageSuffix}`] || item.meta[`SGPicturePriority${pageSuffix}`] || sceneGlossaryParameters.PicturePriority);
+    const align = String(item.meta[`SGピクチャ揃え${pageSuffix}`] || item.meta[`SGPictureAlign${pageSuffix}`] || sceneGlossaryParameters.PictureAlign);
+    if (priority !== "top" && priority !== "bottom") {
+      throw Error(`不正な優先度設定です: ${item.name}: ${priority}`);
+    }
+    if (align !== "left" && align !== "center" && align !== "right") {
+      throw Error(`不正な揃え設定です: ${item.name}: ${align}`)
+    }
+    return new Data_BattleGuidePicture(
+      String(name),
+      xOffset,
+      yOffset,
+      priority,
+      align
+    );
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get xOffset() {
+    return this._xOffset;
+  }
+
+  get yOffset() {
+    return this._yOffset;
+  }
+
+  get priority() {
+    return this._priority;
+  }
+
+  get align() {
+    return this._align;
+  }
+
+  adjustedX(baseX: number, contentsWidth: number, pictureWidth: number): number {
+    switch (this.align) {
+      case "left":
+        return baseX + this.xOffset;
+      case "center":
+        return baseX + contentsWidth / 2 - pictureWidth / 2 + this.xOffset;
+      case "right":
+        return baseX + contentsWidth - pictureWidth + this.xOffset;
+    }
   }
 }
 
@@ -50,6 +180,29 @@ class Data_BattleGuideCondition {
     this._switchId = switchId;
     this._variableId = variableId;
     this._threshold = threshold;
+  }
+
+  static fromGlossaryItem(item: MZ.Item, page: number): Data_BattleGuideCondition|undefined {
+    /**
+     * 1ページ目は設定なし
+     */
+    if (page < 2) {
+      return undefined;
+    }
+    /**
+     * 2ページ目以降は、前のページの設定を引き継ぐ
+     */
+    for (let i = page; i >= 2; i--) {
+      const switchId = item.meta[`表示スイッチ${i}`];
+      if (switchId) {
+        return new Data_BattleGuideCondition(
+          Number(switchId),
+          0,
+          0
+        );
+      }
+    }
+    return undefined;
   }
 
   /**
@@ -76,8 +229,6 @@ function isGlossaryItem(item: MZ.Item): boolean {
 
 /**
  * SceneGlossary.js で定義される用語集アイテムの説明文を取得する
- * @param {MZ.Item} item
- * @return {string[]|null}
  */
 function getGlossaryDescription(item: MZ.Item): string[]|null {
   if (!isGlossaryItem(item)) {
@@ -105,11 +256,24 @@ function Scene_Boot_GuideMixIn(sceneBoot: Scene_Boot) {
   sceneBoot.onDatabaseLoaded = function () {
     _onDatabaseLoaded.call(this);
     $dataBattleGuides = settings.guides.map((guide: SettingsGuide) => {
-      return new Data_BattleGuide(
-        guide.title,
-        getGlossaryDescription($dataItems[guide.glossaryItem]) || guide.texts,
-        new Data_BattleGuideCondition(guide.condition.switchId, guide.condition.variableId, guide.condition.threshold)
-      );
+      return guide.glossaryItem
+        ? Data_BattleGuide.fromGlossaryItem(
+            $dataItems[guide.glossaryItem],
+            new Data_BattleGuideCondition(
+              guide.condition.switchId,
+              guide.condition.variableId,
+              guide.condition.threshold
+            )
+          )
+        : Data_BattleGuide.fromPluginSetting(
+            guide.title,
+            guide.texts,
+            new Data_BattleGuideCondition(
+              guide.condition.switchId,
+              guide.condition.variableId,
+              guide.condition.threshold
+            )
+          );
     });
   };
 }
@@ -343,7 +507,14 @@ class Window_BattleGuideText extends Window_Base {
   refresh() {
     this.contents.clear();
     if (this._guide) {
-      this.drawTextEx(this._guide.texts[this._page], 0, 0);
+      const text = this._guide.texts[this._page];
+      const picture = this._guide.picture(this._page);
+      if (picture) {
+        const bitmap = ImageManager.loadPicture(picture.name);
+        bitmap.addLoadListener(() => this.drawGuide(text, 0, 0, bitmap, picture));
+      } else {
+        this.drawTextEx(text, 0, 0);
+      }
       this.drawPageNumber();
     }
     this.updateArrows();
@@ -362,6 +533,33 @@ class Window_BattleGuideText extends Window_Base {
       (settings.showPageNumber === SHOW_PAGE_NUMBER.DEFAULT && this.maxPage() > 1) ||
       settings.showPageNumber === SHOW_PAGE_NUMBER.ALWAYS
     );
+  }
+
+  drawGuide(text: string, x: number, y: number, bitmap?: Bitmap, picture?: Data_BattleGuidePicture) {
+    const pictureHandler = bitmap && picture
+      ? () => {
+          const pictureAlignX = 
+          this.drawPicture(
+            bitmap,
+            picture.adjustedX(x, this.contentsWidth(), bitmap.width),
+            y + picture.yOffset
+          )
+        }
+      : () => {};
+    if (picture?.priority === "top") {
+      pictureHandler();
+    }
+    this.drawTextEx(text, x, y);
+    if (picture?.priority === "bottom") {
+      pictureHandler();
+    }
+  }
+
+  drawPicture(bitmap: Bitmap, x: number, y: number) {
+    const scale = 1;
+    const dw = bitmap.width * scale;
+    const dh = bitmap.height * scale;
+    this.contents.blt(bitmap, 0, 0, bitmap.width, bitmap.height, x, y, dw, dh);
   }
 
   drawPageNumber() {

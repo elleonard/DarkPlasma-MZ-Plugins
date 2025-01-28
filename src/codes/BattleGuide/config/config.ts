@@ -1,9 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
-import { createStruct, createStructParam, createStringParam, createStructArrayParam, createMultilineStringArrayParam, createDatabaseParam, createNumberParam, createSelectParam, createBooleanParam } from '../../../../modules/config/createParameter.js';
+import { createStruct, createStructParam, createStringParam, createStructArrayParam, createMultilineStringArrayParam, createDatabaseParam, createNumberParam, createSelectParam, createBooleanParam, createMultilineStringParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/01/28",
+    version: "1.3.0",
+    description: "SG表示スイッチNタグ及び一部のSGピクチャ関連タグに対応",
+  },
   {
     date: "2024/05/23",
     version: "1.2.4",
@@ -105,7 +110,7 @@ const structGuide = createStruct(
       {
         type: "item",
         text: "用語集参照アイテム",
-        description: "SceneGlossaryで設定した説明文を参照します。指定した場合、内容設定を無視します。",
+        description: "SceneGlossaryで設定した説明文を参照します。指定した場合、名前と内容設定を無視します。",
       }
     ),
     createStructParam(
@@ -238,5 +243,12 @@ export const config = new ConfigDefinitionBuilder(
   })
   .withHelp(dedent`戦闘中に手引書を表示することができます。
 
-  SceneGlossaryのSG説明、SGDescriptionのみを参照できます。`)
+  SceneGlossaryの一部タグを利用可能です。
+  - SG説明, SGDescription
+  - SG表示スイッチ, SGVisibleSwitch
+  - SGピクチャ, SGPicture
+  - SGピクチャX, SGPictureX
+  - SGピクチャY, SGPictureY
+  - SGピクチャ優先度, SGPicturePriority
+  - SGピクチャ揃え, SGPictureAlign`)
   .build();
