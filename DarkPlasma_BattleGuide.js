@@ -1,10 +1,11 @@
-// DarkPlasma_BattleGuide 1.3.0
+// DarkPlasma_BattleGuide 1.3.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2025/01/28 1.3.0 SG表示スイッチNタグ及び一部のSGピクチャ関連タグに対応
+ * 2025/01/28 1.3.1 SG表示スイッチNタグが正常に動作しない不具合を修正
+ *            1.3.0 SG表示スイッチNタグ及び一部のSGピクチャ関連タグに対応
  * 2024/05/23 1.2.4 不要なウィンドウレイヤーを削除
  * 2024/01/15 1.2.3 ビルド方式を変更 (configをTypeScript化)
  * 2022/11/13 1.2.2 typescript移行
@@ -81,7 +82,7 @@
  * @default 手引書
  *
  * @help
- * version: 1.3.0
+ * version: 1.3.1
  * 戦闘中に手引書を表示することができます。
  *
  * SceneGlossaryの一部タグを利用可能です。
@@ -267,7 +268,7 @@
       return this._title;
     }
     get texts() {
-      return this._pages.map((page) => page.text);
+      return this._pages.filter((page) => page.isValid()).map((page) => page.text);
     }
     picture(page) {
       return this._pages[page].picture;
@@ -298,6 +299,9 @@
     }
     get picture() {
       return this._picture;
+    }
+    isValid() {
+      return !this._condition || this._condition.isValid();
     }
   }
   class Data_BattleGuidePicture {
@@ -383,7 +387,7 @@
        * 2ページ目以降は、前のページの設定を引き継ぐ
        */
       for (let i = page; i >= 2; i--) {
-        const switchId = item.meta[`表示スイッチ${i}`];
+        const switchId = item.meta[`SG表示スイッチ${i}`];
         if (switchId) {
           return new Data_BattleGuideCondition(Number(switchId), 0, 0);
         }
@@ -425,13 +429,33 @@
     }
     return result;
   }
-  /**
-   * @type {Data_BattleGuide[]}
-   */
   let $dataBattleGuides = [];
-  /**
-   * @param {Scene_Boot.prototype} sceneBoot
-   */
+  function Game_Temp_BattleGuideMixIn(gameTemp) {
+    const _initialize = gameTemp.initialize;
+    gameTemp.initialize = function () {
+      _initialize.call(this);
+      this._needsBattleGuideRefresh = false;
+    };
+    gameTemp.requestBattleGuideRefresh = function () {
+      this._needsBattleGuideRefresh = $gameParty.inBattle();
+    };
+    gameTemp.clearBattleGuideRefreshRequest = function () {
+      this._needsBattleGuideRefresh = false;
+    };
+    gameTemp.isBattleGuideRefreshRequested = function () {
+      return this._needsBattleGuideRefresh;
+    };
+  }
+  Game_Temp_BattleGuideMixIn(Game_Temp.prototype);
+  function Game_Switches_Variables_BattleGuideMixIn(gameClass) {
+    const _onChange = gameClass.onChange;
+    gameClass.onChange = function () {
+      _onChange.call(this);
+      $gameTemp.requestBattleGuideRefresh();
+    };
+  }
+  Game_Switches_Variables_BattleGuideMixIn(Game_Switches.prototype);
+  Game_Switches_Variables_BattleGuideMixIn(Game_Variables.prototype);
   function Scene_Boot_GuideMixIn(sceneBoot) {
     const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
     sceneBoot.onDatabaseLoaded = function () {
@@ -661,6 +685,13 @@
       }
       this.updateArrows();
     }
+    update() {
+      super.update();
+      if ($gameTemp.isBattleGuideRefreshRequested()) {
+        this.refresh();
+        $gameTemp.clearBattleGuideRefreshRequest();
+      }
+    }
     updateArrows() {
       this.downArrowVisible = this._page > 0;
       this.upArrowVisible = this._page < this.maxPage() - 1;
@@ -678,11 +709,7 @@
       const pictureHandler =
         bitmap && picture
           ? () => {
-              const pictureAlignX = this.drawPicture(
-                bitmap,
-                picture.adjustedX(x, this.contentsWidth(), bitmap.width),
-                y + picture.yOffset,
-              );
+              this.drawPicture(bitmap, picture.adjustedX(x, this.contentsWidth(), bitmap.width), y + picture.yOffset);
             }
           : () => {};
       if (picture?.priority === 'top') {
