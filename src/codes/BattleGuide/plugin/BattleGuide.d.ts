@@ -17,6 +17,14 @@ type SettingsGuide = {
   },
 };
 
+declare interface Game_Temp {
+  _needsBattleGuideRefresh: boolean;
+
+  requestBattleGuideRefresh(): void;
+  clearBattleGuideRefreshRequest(): void;
+  isBattleGuideRefreshRequested(): boolean;
+}
+
 declare interface Scene_Battle {
   _guideListWindow: Window_BattleGuideList;
   _guideTextWindow: Window_battleGuideText;

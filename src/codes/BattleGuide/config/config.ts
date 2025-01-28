@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/01/28",
+    version: "1.3.1",
+    description: "SG表示スイッチNタグが正常に動作しない不具合を修正"
+  },
+  {
     version: "1.3.0",
     description: "SG表示スイッチNタグ及び一部のSGピクチャ関連タグに対応",
   },

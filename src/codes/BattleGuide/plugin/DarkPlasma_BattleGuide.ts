@@ -40,7 +40,7 @@ class Data_BattleGuide {
   }
 
   get texts() {
-    return this._pages.map(page => page.text);
+    return this._pages.filter(page => page.isValid()).map(page => page.text);
   }
 
   picture(page: number): Data_BattleGuidePicture|undefined {
@@ -81,6 +81,10 @@ class Data_BattleGuidePage {
 
   get picture() {
     return this._picture;
+  }
+
+  isValid(): boolean {
+    return !this._condition || this._condition.isValid();
   }
 }
 
@@ -193,7 +197,7 @@ class Data_BattleGuideCondition {
      * 2ページ目以降は、前のページの設定を引き継ぐ
      */
     for (let i = page; i >= 2; i--) {
-      const switchId = item.meta[`表示スイッチ${i}`];
+      const switchId = item.meta[`SG表示スイッチ${i}`];
       if (switchId) {
         return new Data_BattleGuideCondition(
           Number(switchId),
@@ -243,14 +247,41 @@ function getGlossaryDescription(item: MZ.Item): string[]|null {
   return result;
 }
 
-/**
- * @type {Data_BattleGuide[]}
- */
 let $dataBattleGuides: Data_BattleGuide[] = [];
 
-/**
- * @param {Scene_Boot.prototype} sceneBoot
- */
+function Game_Temp_BattleGuideMixIn(gameTemp: Game_Temp) {
+  const _initialize = gameTemp.initialize;
+  gameTemp.initialize = function () {
+    _initialize.call(this);
+    this._needsBattleGuideRefresh = false;
+  };
+
+  gameTemp.requestBattleGuideRefresh = function () {
+    this._needsBattleGuideRefresh = $gameParty.inBattle();
+  };
+
+  gameTemp.clearBattleGuideRefreshRequest = function () {
+    this._needsBattleGuideRefresh = false;
+  };
+
+  gameTemp.isBattleGuideRefreshRequested = function () {
+    return this._needsBattleGuideRefresh;
+  };
+}
+
+Game_Temp_BattleGuideMixIn(Game_Temp.prototype);
+
+function Game_Switches_Variables_BattleGuideMixIn(gameClass: Game_Switches|Game_Variables) {
+  const _onChange = gameClass.onChange;
+  gameClass.onChange = function () {
+    _onChange.call(this);
+    $gameTemp.requestBattleGuideRefresh();
+  };
+}
+
+Game_Switches_Variables_BattleGuideMixIn(Game_Switches.prototype);
+Game_Switches_Variables_BattleGuideMixIn(Game_Variables.prototype);
+
 function Scene_Boot_GuideMixIn(sceneBoot: Scene_Boot) {
   const _onDatabaseLoaded = sceneBoot.onDatabaseLoaded;
   sceneBoot.onDatabaseLoaded = function () {
@@ -520,6 +551,14 @@ class Window_BattleGuideText extends Window_Base {
     this.updateArrows();
   }
 
+  public update(): void {
+    super.update();
+    if ($gameTemp.isBattleGuideRefreshRequested()) {
+      this.refresh();
+      $gameTemp.clearBattleGuideRefreshRequest();
+    }
+  }
+
   updateArrows() {
     this.downArrowVisible = this._page > 0;
     this.upArrowVisible = this._page < this.maxPage() - 1;
@@ -538,7 +577,6 @@ class Window_BattleGuideText extends Window_Base {
   drawGuide(text: string, x: number, y: number, bitmap?: Bitmap, picture?: Data_BattleGuidePicture) {
     const pictureHandler = bitmap && picture
       ? () => {
-          const pictureAlignX = 
           this.drawPicture(
             bitmap,
             picture.adjustedX(x, this.contentsWidth(), bitmap.width),
