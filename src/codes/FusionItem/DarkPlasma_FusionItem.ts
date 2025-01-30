@@ -3,11 +3,6 @@ import { pluginName } from '../../common/pluginName';
 import { command_fusionShop, parseArgs_fusionShop } from './_build/DarkPlasma_FusionItem_commands';
 import { settings } from './_build/DarkPlasma_FusionItem_parameters';
 
-/**
- * @param {MZ.Item | MZ.Weapon | MZ.Armor} data
- * @param {object} item
- * @returns
- */
 function toFusionItemGood(data: MZ.Item | MZ.Weapon | MZ.Armor, item: FusionItem.Settings.PresetItem) {
   return new FusionItemGoods(
     data,

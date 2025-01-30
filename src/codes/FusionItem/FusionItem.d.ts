@@ -129,6 +129,8 @@ declare interface Window_FusionShopStatus extends Window_ShopStatus {
 }
 
 declare interface Window_FusionShopBuy extends Window_ShopBuy {
+  _materials: FusionItemMaterialInterface[][];
+
   setupFusionGoods(fusionGoods: FusionItemGoodsInterface[]): void;
   drawPrice(price: number, x: number, y: number, width: number): void;
   includes(goods: FusionItemGoodsInterface): boolean;
