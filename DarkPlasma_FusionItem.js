@@ -378,11 +378,6 @@
     commandName: String(pluginParameters.commandName || `融合する`),
   };
 
-  /**
-   * @param {MZ.Item | MZ.Weapon | MZ.Armor} data
-   * @param {object} item
-   * @returns
-   */
   function toFusionItemGood(data, item) {
     return new FusionItemGoods(
       data,
