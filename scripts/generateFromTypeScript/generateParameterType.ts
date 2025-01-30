@@ -79,12 +79,18 @@ export function paramToType(pluginId: string, param: PluginParameterSchema): str
     case "color":
       return "string|number";
     case "select":
-      if (param.options[0].value === undefined) {
+      if (param.options[0].value === undefined || !Number.isFinite(param.options[0])) {
         return "string";
       }
       return typeof param.options[0].value;
     case "color[]":
+      return "(string|number)[]";
     case "select[]":
+      if (param.options.every(option => option.value === undefined || !Number.isFinite(option.value))) {
+        return "string[]";
+      } else if (param.options.every(option => Number.isFinite(option.value))) {
+        return "number[]";
+      }
       return "(string|number)[]";
     case "file":
     case "multiline_string":

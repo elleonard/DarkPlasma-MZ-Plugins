@@ -1,4 +1,4 @@
-import { PluginConfigSchema, PluginParameterArraySchema, PluginParameterSchema, PluginParameterStructSchema } from "../../modules/config/configSchema.js";
+import { I18nText, PluginConfigSchema, PluginParameterArraySchema, PluginParameterSchema, PluginParameterStructSchema } from "../../modules/config/configSchema.js";
 import { createBooleanParam, createNumberParam, createSelectParam, createStringParam, createStructParam } from "../../modules/config/createParameter.js";
 
 export function generateParser(config: PluginConfigSchema, parameter: PluginParameterSchema, objectName?: string): string {
@@ -104,15 +104,48 @@ function toSubParameter(config: PluginConfigSchema, parameter: PluginParameterAr
     case 'select[]':
       return createSelectParam("e", {
         text: "",
-        options: [],
+        options: convertOptions(parameter.options),
         default: "",
-      })
+      });
     case 'struct[]':
       return createStructParam("e", {
         struct: config.structures.find(struct => struct.name === parameter.struct)!,
         text: "",
-      })
+      });
   }
+}
+
+/**
+ * 選択配列型のための変換
+ */
+function convertOptions(options: {
+  name: (string | Record<string, string>) & (string | Record<string, string> | undefined),
+  value?: string | number | undefined
+}[]): {
+  name: string | I18nText,
+  value?: string | number | undefined,
+}[] {
+  return options.map(option => {
+    if (option.name && typeof option.name !== "string") {
+      if (!("ja" in option.name)) {
+        throw Error(`I18nText must have ja. ${option.name}`);
+      }
+      const name: I18nText = {
+        ja: option.name["ja"],
+        en: option.name["en"],
+        ko: option.name["ko"],
+        zh: option.name["zh"],
+      };
+      return {
+        name: name,
+        value: option.value,
+      };
+    }
+    return {
+      name: option.name,
+      value: option.value,
+    };
+  });
 }
 
 function structParser(config: PluginConfigSchema, parameter: PluginParameterStructSchema, objectName?: string) {
