@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.4.0
+// DarkPlasma_FilterEquip 1.5.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/01/31 1.5.0 同名の特徴をマージする
  * 2024/11/04 1.4.0 同名の特徴データをマージする
  * 2024/03/02 1.3.0 特殊フラグのフラグ名を表示
  * 2023/05/21 1.2.0 絞り込み操作のキーを追加
@@ -57,7 +58,7 @@
  * @default shift
  *
  * @help
- * version: 1.4.0
+ * version: 1.5.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -729,7 +730,10 @@
       return this._traits;
     }
     get traitNames() {
-      return this._traits.map((trait) => trait.name);
+      return [...new Set(this._traits.map((trait) => trait.name))];
+    }
+    traitsByName(traitName) {
+      return this._traits.filter((trait) => trait.name === traitName);
     }
     /**
      * @param {EquipFilter_Trait} trait 絞り込み用特徴
@@ -737,19 +741,18 @@
     addTrait(trait) {
       this._traits.push(trait);
     }
-    /**
-     * @param {number} index
-     * @returns {string[]}
-     */
-    effectNames(index) {
-      return index >= 0 && index < this._traits.length ? this._traits[index].effectNames : [];
+    effectsOf(traitName) {
+      return this.traitsByName(traitName).flatMap((trait) => trait.effects);
     }
     /**
-     * 特徴に対する絞り込みON/OFFの切り替え
-     * @param {number} index 特徴インデックス
+     * @param traitName 特徴名
+     * @returns その名前の特徴が持つ効果名リスト
      */
-    toggleTrait(index) {
-      this._traits[index].toggle();
+    effectNamesOf(traitName) {
+      return this.traitsByName(traitName).flatMap((trait) => trait.effectNames);
+    }
+    toggleTraitByName(traitName) {
+      this.traitsByName(traitName).forEach((trait) => trait.toggle());
     }
     /**
      * 全ての特徴・効果の絞り込みをOFFにする（すべて表示する）
@@ -766,23 +769,21 @@
     allOffTrait() {
       this._traits.forEach((trait) => trait.off());
     }
-    toggleEffectByName(traitIndex, effectName) {
-      this._traits[traitIndex].toggleEffectByName(effectName);
+    toggleEffectByName(traitName, effectName) {
+      this.traitsByName(traitName).forEach((trait) => trait.toggleEffectByName(effectName));
     }
     /**
      * 指定した特徴の効果をすべて表示する
-     * @param {number} traitIndex 特徴インデックス
      */
-    allOffEffect(traitIndex) {
-      this._traits[traitIndex].allOff();
+    allOffEffect(traitName) {
+      this.traitsByName(traitName).forEach((trait) => trait.allOff());
     }
     /**
-     * 効果IDを持つ特徴であるか
-     * @param {number} traitIndex 特徴インデックス
-     * @return {boolean}
+     * データIDを持つ特徴であるか
+     * 同名の特徴が複数ある場合、そのうちひとつでもデータIDを持っていれば真
      */
-    hasDataIdTrait(traitIndex) {
-      return traitIndex < this._traits.length && this._traits[traitIndex].effects.length > 0;
+    hasDataIdTrait(traitName) {
+      return this.traitsByName(traitName).some((trait) => trait.effects.length > 0);
     }
     /**
      * 表示すべき装備であるか
@@ -799,25 +800,22 @@
         (trait) =>
           trait.isIncluded() &&
           trait.hasTraitItem(itemTraits) &&
-          (trait.effects.every((effect) => !effect.isIncluded()) || trait.hasIncludedEffectItem(itemTraits)),
+          (this.effectsOf(trait.name).every((effect) => !effect.isIncluded()) ||
+            trait.hasIncludedEffectItem(itemTraits)),
       );
     }
     /**
      * 絞り込み表示対象に含まれる特徴か
-     * @param {number} index 特徴インデックス
-     * @return {boolean}
      */
-    isIncludedTrait(index) {
-      return index < this._traits.length && this._traits[index].isIncluded();
+    isIncludedTrait(traitName) {
+      return !!this._traits.find((trait) => trait.name === traitName)?.isIncluded();
     }
     /**
      * 絞り込み表示対象に含まれる効果か
      */
-    isIncludedEffect(traitIndex, effectName) {
-      return (
-        traitIndex >= 0 &&
-        traitIndex < this._traits.length &&
-        !!this._traits[traitIndex].effects.find((effect) => effect.name === effectName)?.isIncluded()
+    isIncludedEffect(traitName, effectName) {
+      return !!this.traitsByName(traitName).some((trait) =>
+        trait.effects.find((effect) => effect.name === effectName)?.isIncluded(),
       );
     }
   }
@@ -968,6 +966,12 @@
     filterNameList() {
       return [];
     }
+    filterName(index) {
+      return this.filterNameList()[index];
+    }
+    currentFilterName() {
+      return this.filterName(this.index());
+    }
     refresh() {
       this._data = this.filterNameList().concat(['すべて表示', '閉じる']);
       if (this._itemWindow) {
@@ -985,16 +989,16 @@
     }
     toggleFilter() {
       super.toggleFilter();
-      this._filter?.toggleTrait(this.index());
+      this._filter?.toggleTraitByName(this.currentFilterName());
     }
     allOff() {
       this._filter?.allOffTrait();
     }
     isFilterOn(index) {
-      return !!this._filter && this._filter.isIncludedTrait(index);
+      return !!this._filter && this._filter.isIncludedTrait(this.filterName(index));
     }
     needsOkHandler(index) {
-      return !!this._filter && this._filter.hasDataIdTrait(index);
+      return !!this._filter && this._filter.hasDataIdTrait(this.filterName(index));
     }
   }
   /**
@@ -1008,18 +1012,21 @@
       this._filterTraitWindow = filterTraitWindow;
     }
     filterNameList() {
-      return this._filter && this._filterTraitWindow ? this._filter.effectNames(this._filterTraitWindow.index()) : [];
+      return this._filter && this._filterTraitWindow
+        ? this._filter.effectNamesOf(this._filterTraitWindow.currentFilterName())
+        : [];
     }
     toggleFilter() {
       super.toggleFilter();
-      this._filter?.toggleEffectByName(this._filterTraitWindow.index(), this.filterNameList()[this.index()]);
+      this._filter?.toggleEffectByName(this._filterTraitWindow.currentFilterName(), this.currentFilterName());
     }
     allOff() {
-      this._filter?.allOffEffect(this._filterTraitWindow.index());
+      this._filter?.allOffEffect(this._filterTraitWindow.currentFilterName());
     }
     isFilterOn(index) {
       return (
-        !!this._filter && this._filter.isIncludedEffect(this._filterTraitWindow.index(), this.filterNameList()[index])
+        !!this._filter &&
+        this._filter.isIncludedEffect(this._filterTraitWindow.currentFilterName(), this.filterName(index))
       );
     }
   }
