@@ -3,6 +3,9 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
+    - date: 2025/01/31
+      version: 1.5.0
+      description: '同名の特徴をマージする'
     - date: 2024/11/04
       version: 1.4.0
       description: '同名の特徴データをマージする'
