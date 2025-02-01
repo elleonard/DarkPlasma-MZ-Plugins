@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/02/02",
+    version: "1.1.1",
+    description: "合成する画像のオフセット設定が想定と異なる不具合を修正",
+  },
+  {
     date: "2024/04/13",
     version: "1.1.0",
     description: '画像ファイル名に制御文字を使用可能にする',

@@ -12,8 +12,8 @@ PluginManager.registerCommand(pluginName, command_composePicture, function (args
     parsedArgs.additionalImages.map(image => $gameScreen.allocateAdditionalPicture(
       `../${image.name}`, // picturesとして扱う
       basePicture?.origin() || 0,
-      image.offsetX - (basePicture?.x() || 0),
-      image.offsetY - (basePicture?.y() || 0),
+      image.offsetX,
+      image.offsetY,
       image.scaleX,
       image.scaleY,
       image.opacity,
