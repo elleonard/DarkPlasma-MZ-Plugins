@@ -1,9 +1,10 @@
-// DarkPlasma_ComposePicture 1.1.0
+// DarkPlasma_ComposePicture 1.1.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/02/02 1.1.1 合成する画像のオフセット設定が想定と異なる不具合を修正
  * 2024/04/13 1.1.0 画像ファイル名に制御文字を使用可能にする
  * 2024/04/13 1.0.0 公開
  */
@@ -38,7 +39,7 @@
  * @default []
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 画像を合成して1枚のピクチャとして扱うプラグインコマンドを提供します。
  *
  * 本プラグインはセーブデータにピクチャの合成情報を追加します。
@@ -138,8 +139,8 @@
         $gameScreen.allocateAdditionalPicture(
           `../${image.name}`, // picturesとして扱う
           basePicture?.origin() || 0,
-          image.offsetX - (basePicture?.x() || 0),
-          image.offsetY - (basePicture?.y() || 0),
+          image.offsetX,
+          image.offsetY,
           image.scaleX,
           image.scaleY,
           image.opacity,
