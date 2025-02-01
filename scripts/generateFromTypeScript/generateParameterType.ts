@@ -79,7 +79,7 @@ export function paramToType(pluginId: string, param: PluginParameterSchema): str
     case "color":
       return "string|number";
     case "select":
-      if (param.options[0].value === undefined || !Number.isFinite(param.options[0])) {
+      if (param.options[0].value === undefined || !Number.isFinite(param.options[0].value)) {
         return "string";
       }
       return typeof param.options[0].value;
