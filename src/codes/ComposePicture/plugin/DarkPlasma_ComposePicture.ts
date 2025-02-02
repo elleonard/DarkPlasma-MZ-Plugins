@@ -172,7 +172,10 @@ function Sprite_Picture_ComposePictureMixIn(spritePicture: Sprite_Picture) {
   const _loadBitmap = spritePicture.loadBitmap;
   spritePicture.loadBitmap = function () {
     _loadBitmap.call(this);
-    this.bitmap?.addLoadListener(() => this._forceUpdateCompose = true);
+    this.bitmap?.addLoadListener(() => {
+      this._forceUpdateCompose = true;
+      this.updateCompose();
+  });
   };
 }
 
