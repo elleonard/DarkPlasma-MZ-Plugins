@@ -1,9 +1,10 @@
-// DarkPlasma_FusionItem 2.1.0
+// DarkPlasma_FusionItem 2.1.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/02/13 2.1.1 融合可能条件のデフォルト値が意図しない型になっていた不具合の修正
  * 2024/12/28 2.1.0 品揃えフィルタ用インターフェース追加
  * 2024/12/19 2.0.1 価格による有効判定が正常でない不具合の修正
  * 2024/10/04 2.0.0 所持数限界まで持っているアイテムを融合で作れる不具合の修正
@@ -52,7 +53,7 @@
  * @type number[]
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
@@ -135,7 +136,7 @@
  * @desc 指定した場合、この条件がすべて満たされる場合のみ融合ショップに表示します。
  * @text 融合可能条件
  * @type struct<FusionGoodCondition>
- * @default ["{\"switchId\":\"0\"}","{\"variableId\":\"0\"}","{\"threshold\":\"0\"}"]
+ * @default {"switchId":"0", "variableId":"0", "threshold":"0"}
  */
 /*~struct~MaterialItem:
  * @param id
@@ -258,7 +259,7 @@
                         variableId: Number(parsed.variableId || 0),
                         threshold: Number(parsed.threshold || 0),
                       };
-                    })(parsed.condition || '[{"switchId":"0"},{"variableId":"0"},{"threshold":"0"}]'),
+                    })(parsed.condition || '{"switchId":"0", "variableId":"0", "threshold":"0"}'),
                   };
                 })(
                   parsed.base ||
@@ -310,7 +311,7 @@
                         variableId: Number(parsed.variableId || 0),
                         threshold: Number(parsed.threshold || 0),
                       };
-                    })(parsed.condition || '[{"switchId":"0"},{"variableId":"0"},{"threshold":"0"}]'),
+                    })(parsed.condition || '{"switchId":"0", "variableId":"0", "threshold":"0"}'),
                   };
                 })(
                   parsed.base ||
@@ -362,7 +363,7 @@
                         variableId: Number(parsed.variableId || 0),
                         threshold: Number(parsed.threshold || 0),
                       };
-                    })(parsed.condition || '[{"switchId":"0"},{"variableId":"0"},{"threshold":"0"}]'),
+                    })(parsed.condition || '{"switchId":"0", "variableId":"0", "threshold":"0"}'),
                   };
                 })(
                   parsed.base ||
