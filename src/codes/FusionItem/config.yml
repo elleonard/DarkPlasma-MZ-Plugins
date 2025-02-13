@@ -3,6 +3,9 @@ DarkPlasma_FusionItem:
   year: 2022
   license: MIT
   histories:
+    - date: 2025/02/13
+      version: 2.1.1
+      description: '融合可能条件のデフォルト値が意図しない型になっていた不具合の修正'
     - date: 2024/12/28
       version: 2.1.0
       description: '品揃えフィルタ用インターフェース追加'
@@ -125,9 +128,9 @@ DarkPlasma_FusionItem:
           ja: 指定した場合、この条件がすべて満たされる場合のみ融合ショップに表示します。
         type: FusionGoodCondition
         default:
-          - switchId: 0
-          - variableId: 0
-          - threshold: 0
+          switchId: 0
+          variableId: 0
+          threshold: 0
     FusionGoodCondition:
       - param: switchId
         text:
