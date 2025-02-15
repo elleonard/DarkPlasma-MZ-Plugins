@@ -1,9 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema } from '../../../../modules/config/configSchema.js';
-import { createBooleanParam, createCommand } from '../../../../modules/config/createParameter.js';
+import { createBooleanParam, createCommand, createStringArrayParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/02/15",
+    version: "1.1.0",
+    description: "クラス名のホワイトリスト設定を追加",
+  },
   {
     date: "2024/10/28",
     version: "1.0.0",
@@ -36,6 +41,13 @@ const parameters: PluginParameterSchema[] = [
     text: "汚染の可能性ありを表示",
     description: "検出結果に含まれる 汚染の可能性あり を表示します。",
     default: true,
+  }),
+  createStringArrayParam("whitelist", {
+    text: "汚染なしクラス名",
+    description: "ここに指定したクラス名は汚染なしと判定します。",
+    default: [
+      "Filter_Controller",  // FilterControllerMZ
+    ],
   }),
 ];
 

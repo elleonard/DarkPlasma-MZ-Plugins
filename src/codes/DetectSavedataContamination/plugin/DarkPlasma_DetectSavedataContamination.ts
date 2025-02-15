@@ -150,9 +150,7 @@ function DataManager_DetectSavedataContaminationMixIn(dataManager: typeof DataMa
    * 汚染なしと推定される独自クラス名を列挙する
    */
   dataManager.whitelistContaminationLevelClassNames = function () {
-    return [
-      "Filter_Controller",  // FilterControllerMZ
-    ];
+    return settings.whitelist;
   };
 }
 
