@@ -1,9 +1,10 @@
-// DarkPlasma_DetectSavedataContamination 1.0.0
+// DarkPlasma_DetectSavedataContamination 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/02/15 1.1.0 クラス名のホワイトリスト設定を追加
  * 2024/10/28 1.0.0 公開
  */
 
@@ -39,12 +40,18 @@
  * @type boolean
  * @default true
  *
+ * @param whitelist
+ * @desc ここに指定したクラス名は汚染なしと判定します。
+ * @text 汚染なしクラス名
+ * @type string[]
+ * @default ["Filter_Controller"]
+ *
  * @command detect
  * @text 汚染を検出する
  * @desc セーブデータ汚染を検出します。結果を開発者コンソールに表示します。
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * プラグインやスクリプトによるセーブデータの汚染を検出します。
  *
  * セーブデータに含まれるオブジェクトのクラス名を元に汚染を検知します。
@@ -79,6 +86,11 @@
     showClean: String(pluginParameters.showClean || false) === 'true',
     showGood: String(pluginParameters.showGood || false) === 'true',
     showWarn: String(pluginParameters.showWarn || true) === 'true',
+    whitelist: pluginParameters.whitelist
+      ? JSON.parse(pluginParameters.whitelist).map((e) => {
+          return String(e || ``);
+        })
+      : ['Filter_Controller'],
   };
 
   PluginManager.registerCommand(pluginName, command_detect, function () {
@@ -222,9 +234,7 @@
      * 汚染なしと推定される独自クラス名を列挙する
      */
     dataManager.whitelistContaminationLevelClassNames = function () {
-      return [
-        'Filter_Controller', // FilterControllerMZ
-      ];
+      return settings.whitelist;
     };
   }
   DataManager_DetectSavedataContaminationMixIn(DataManager);
