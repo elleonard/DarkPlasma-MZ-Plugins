@@ -1,4 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../Scene_MessageMixIn/Scene_MessageMixIn.d.ts" />
 
 declare namespace FusionItem {
   namespace Settings {
@@ -78,18 +79,21 @@ declare class Scene_ShopLike<TBuyWindow> extends Scene_MenuBase {
   prepare(goods: TGoods[]): void;
 
   create(): void;
+
   createGoldWindow(): void;
+  createDummyWindow(): void;
+  createNumberWindow(): void;
+  createCategoryWindow(): void;
+  createBuyWindow(): void;
+  createSellWindow(): void;
+
   goldWindowRect(): Rectangle;
   commandWindowRect(): Rectangle;
-  createDummyWindow(): void;
   dummyWindowRect(): Rectangle;
-  createNumberWindow(): void;
   numberWindowRect(): Rectangle;
   statusWindowRect(): Rectangle;
   buyWindowRect(): Rectangle;
-  createCategoryWindow(): void;
   categoryWindowRect(): Rectangle;
-  createSellWindow(): void;
   sellWindowRect(): Rectangle;
   statusWidth(): number;
 
@@ -134,4 +138,6 @@ declare interface Window_FusionShopBuy extends Window_ShopBuy {
   setupFusionGoods(fusionGoods: FusionItemGoodsInterface[]): void;
   drawPrice(price: number, x: number, y: number, width: number): void;
   includes(goods: FusionItemGoodsInterface): boolean;
+  materials(): FusionItemMaterialInterface[];
+  materialsAt(index: number): FusionItemMaterialInterface[];
 }
