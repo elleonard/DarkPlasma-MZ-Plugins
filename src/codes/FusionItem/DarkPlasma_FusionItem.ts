@@ -172,7 +172,6 @@ function Scene_ShopLikeMixIn<TScene extends Constructor, TBuyWindow>(sceneClass:
     }
 
     create() {
-      super.create();
       Scene_Shop.prototype.create.call(this);
     }
 
@@ -358,10 +357,10 @@ class Scene_FusionItem extends Scene_ShopLikeMixIn<typeof Scene_MenuBase, Window
   }
 
   doBuy(number: number) {
-    super.doBuy(number);
     this._materials.forEach((material) => {
       $gameParty.loseItem(material.data, material.count * number, settings.useEquip);
     });
+    super.doBuy(number);
   }
 
   maxBuy() {
@@ -373,6 +372,10 @@ class Scene_FusionItem extends Scene_ShopLikeMixIn<typeof Scene_MenuBase, Window
 
   buyingPrice() {
     return this._buyWindow.price();
+  }
+
+  mustKeepGoldWindowY(): boolean {
+    return true;
   }
 }
 

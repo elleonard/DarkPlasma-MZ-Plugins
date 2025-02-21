@@ -19,7 +19,9 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
     this._messageWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
     this.addChild(this._messageWindowLayer);
     this.createMessageWindow();
-    this.createGoldWindow();
+    if (!this._goldWindow) {
+      this.createGoldWindow();
+    }
     this.createNameBoxWindow();
     this.createChoiceListWindow();
     this.createNumberInputWindow();
@@ -29,8 +31,15 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
 
   sceneClass.createMessageWindow = function () {
     this._messageWindow = new Window_Message(this.messageWindowRect());
+    this._messageWindow.setMustKeepGoldWindowY(this.mustKeepGoldWindowY());
     this._messageWindowLayer.addChild(this._messageWindow);
   };
+
+  if (!sceneClass.mustKeepGoldWindowY) {
+    sceneClass.mustKeepGoldWindowY = function () {
+      return this.constructor.name === "Scene_Shop";
+    };
+  }
 
   sceneClass.messageWindowRect = function () {
     return Scene_Message.prototype.messageWindowRect.call(this);
@@ -119,6 +128,23 @@ function Window_Selectable_MessageMixIn(windowClass: Window_Selectable) {
 }
 
 Window_Selectable_MessageMixIn(Window_Selectable.prototype);
+
+function Window_Message_KeepGoldWindowYMixIn(windowMessage: Window_Message) {
+  windowMessage.setMustKeepGoldWindowY = function (mustKeep) {
+    this._mustKeepGoldWindowY = mustKeep;
+  };
+
+  const _updatePlacement = windowMessage.updatePlacement;
+  windowMessage.updatePlacement = function () {
+    const goldWindowY = this._goldWindow.y;
+    _updatePlacement.call(this);
+    if (this._mustKeepGoldWindowY) {
+      this._goldWindow.y = goldWindowY;
+    }
+  };
+}
+
+Window_Message_KeepGoldWindowYMixIn(Window_Message.prototype);
 
 settings.scenes
   .filter(scene => scene in globalThis && scene !== "Scene_Map" && scene !== "Scene_Battle")
