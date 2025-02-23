@@ -6,7 +6,7 @@ DarkPlasma_FusionItem:
     - date: 2025/02/23
       version: 2.2.0
       description: 'Scene_MessageMixIn 1.0.3に対応'
-    - description:: '多重にウィンドウ生成が行われる不具合を修正'
+    - description: '多重にウィンドウ生成が行われる不具合を修正'
     - date: 2025/02/13
       version: 2.1.1
       description: '融合可能条件のデフォルト値が意図しない型になっていた不具合の修正'
