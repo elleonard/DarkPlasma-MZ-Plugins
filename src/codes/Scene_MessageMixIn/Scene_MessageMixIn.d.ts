@@ -22,6 +22,8 @@ declare interface Scene_Base {
   createEventItemWindow(): void;
   eventItemWindowRect(): Rectangle;
   associateWindows(): void;
+
+  mustKeepGoldWindowY(): boolean;
 }
 
 declare interface Window_Selectable {
@@ -29,4 +31,10 @@ declare interface Window_Selectable {
   _deactivatedByMessage: boolean;
 
   isAssociatedWithMessageWindow(): boolean;
+}
+
+declare interface Window_Message {
+  _mustKeepGoldWindowY: boolean;
+
+  setMustKeepGoldWindowY(mustKeep: boolean): void;
 }

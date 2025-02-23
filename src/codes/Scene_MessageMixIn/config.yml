@@ -3,6 +3,9 @@ DarkPlasma_Scene_MessageMixIn:
   year: 2023
   license: MIT
   histories:
+    - date: 2025/02/23
+      version: 1.0.3
+      description: 'ショップシーンに表示するとお金ウィンドウが複製されて位置がズレる不具合を修正'
     - date: 2023/09/21
       version: 1.0.2
       description: 'TextLogと併用するとログウィンドウを閉じることができない不具合を修正'
