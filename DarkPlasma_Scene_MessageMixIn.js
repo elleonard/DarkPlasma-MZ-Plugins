@@ -1,9 +1,10 @@
-// DarkPlasma_Scene_MessageMixIn 1.0.2
+// DarkPlasma_Scene_MessageMixIn 1.0.3
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/02/23 1.0.3 ショップシーンに表示するとお金ウィンドウが複製されて位置がズレる不具合を修正
  * 2023/09/21 1.0.2 TextLogと併用するとログウィンドウを閉じることができない不具合を修正
  * 2023/01/18 1.0.1 すでにお金ウィンドウがあるシーンにはお金ウィンドウを再定義しない
  *                  指定シーンを開こうとするとエラーが起きる不具合を修正
@@ -24,7 +25,7 @@
  * @default []
  *
  * @help
- * version: 1.0.2
+ * version: 1.0.3
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
  * $gameMessage.add などでメッセージを追加した際に、
@@ -63,7 +64,9 @@
       this._messageWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
       this.addChild(this._messageWindowLayer);
       this.createMessageWindow();
-      this.createGoldWindow();
+      if (!this._goldWindow) {
+        this.createGoldWindow();
+      }
       this.createNameBoxWindow();
       this.createChoiceListWindow();
       this.createNumberInputWindow();
@@ -72,8 +75,14 @@
     };
     sceneClass.createMessageWindow = function () {
       this._messageWindow = new Window_Message(this.messageWindowRect());
+      this._messageWindow.setMustKeepGoldWindowY(this.mustKeepGoldWindowY());
       this._messageWindowLayer.addChild(this._messageWindow);
     };
+    if (!sceneClass.mustKeepGoldWindowY) {
+      sceneClass.mustKeepGoldWindowY = function () {
+        return this.constructor.name === 'Scene_Shop';
+      };
+    }
     sceneClass.messageWindowRect = function () {
       return Scene_Message.prototype.messageWindowRect.call(this);
     };
@@ -148,6 +157,20 @@
     };
   }
   Window_Selectable_MessageMixIn(Window_Selectable.prototype);
+  function Window_Message_KeepGoldWindowYMixIn(windowMessage) {
+    windowMessage.setMustKeepGoldWindowY = function (mustKeep) {
+      this._mustKeepGoldWindowY = mustKeep;
+    };
+    const _updatePlacement = windowMessage.updatePlacement;
+    windowMessage.updatePlacement = function () {
+      const goldWindowY = this._goldWindow.y;
+      _updatePlacement.call(this);
+      if (this._mustKeepGoldWindowY) {
+        this._goldWindow.y = goldWindowY;
+      }
+    };
+  }
+  Window_Message_KeepGoldWindowYMixIn(Window_Message.prototype);
   settings.scenes
     .filter((scene) => scene in globalThis && scene !== 'Scene_Map' && scene !== 'Scene_Battle')
     .forEach((scene) => Scene_MessageMixIn(window[scene].prototype));

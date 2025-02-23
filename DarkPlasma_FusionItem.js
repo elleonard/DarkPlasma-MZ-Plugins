@@ -1,9 +1,11 @@
-// DarkPlasma_FusionItem 2.1.1
+// DarkPlasma_FusionItem 2.2.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/02/23 2.2.0 Scene_MessageMixIn 1.0.3に対応
+ *                  undefined
  * 2025/02/13 2.1.1 融合可能条件のデフォルト値が意図しない型になっていた不具合の修正
  * 2024/12/28 2.1.0 品揃えフィルタ用インターフェース追加
  * 2024/12/19 2.0.1 価格による有効判定が正常でない不具合の修正
@@ -27,6 +29,8 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @orderBefore DarkPlasma_Scene_MessageMixIn
  *
  * @param presets
  * @text 品揃えプリセット
@@ -53,12 +57,15 @@
  * @type number[]
  *
  * @help
- * version: 2.1.1
+ * version: 2.2.0
  * 複数のアイテム、武器、防具、お金を
  * ひとつのアイテムに変換する融合ショップを提供します。
  *
  * プラグインパラメータで品揃えプリセットを登録し、
  * プラグインコマンドでプリセットIDを指定してください。
+ *
+ * 下記プラグインと共に利用する場合、それよりも上に追加してください。
+ * DarkPlasma_Scene_MessageMixIn
  */
 /*~struct~FusionGoods:
  * @param id
@@ -511,7 +518,6 @@
         this._item = null;
       }
       create() {
-        super.create();
         Scene_Shop.prototype.create.call(this);
       }
       createGoldWindow() {
@@ -660,10 +666,10 @@
       this._helpWindow.clear();
     }
     doBuy(number) {
-      super.doBuy(number);
       this._materials.forEach((material) => {
         $gameParty.loseItem(material.data, material.count * number, settings.useEquip);
       });
+      super.doBuy(number);
     }
     maxBuy() {
       const max = super.maxBuy();
@@ -673,6 +679,9 @@
     }
     buyingPrice() {
       return this._buyWindow.price();
+    }
+    mustKeepGoldWindowY() {
+      return true;
     }
   }
   globalThis.Scene_FusionItem = Scene_FusionItem;
