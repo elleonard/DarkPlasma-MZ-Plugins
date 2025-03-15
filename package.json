@@ -29,13 +29,13 @@
     "build:format": "prettier ./_dist/**/*.js --write --ignore-path=.prettierignore",
     "build:copy": "node ./scripts/copyToProject",
     "ts:build:config": "",
-    "watch": "run-p watch:*",
+    "watch": "run-p 'watch:*'",
     "watch:config": "node ./scripts/generateFromConfig -w",
     "watch:js": "rollup -c -w",
     "watch:copy": "node ./scripts/copyToProject -w",
     "generate": "zx ./scripts/generateTemplate/generate.mjs",
     "generate:config": "node ./scripts/generateConfig",
-    "clean": "run-p clean:*",
+    "clean": "run-p 'clean:*'",
     "clean:dist": "rimraf ./_dist"
   },
   "husky": {
@@ -61,7 +61,6 @@
     "@types/mkdirp": "^2.0.0",
     "@types/prettier": "^3.0.0",
     "chokidar": "^4.0.3",
-    "cpx": "^1.5.0",
     "ejs": "^3.1.5",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^8.5.0",

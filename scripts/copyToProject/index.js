@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as cpx from 'cpx';
+import * as chokidar from 'chokidar';
 import * as YAML from 'yaml';
 import { fileURLToPath } from 'url';
 
@@ -28,11 +28,19 @@ config.projectDirs
     try {
       if (isWatch) {
         srcPluginDirsRelative.forEach((dir) => {
-          const srcPlugins = path.join(__dirname, '..', '..', '_dist', dir, 'DarkPlasma_*.js');
+          const srcDir = path.join(__dirname, '..', '..', '_dist', dir);
           const distDir = dir === 'codes' || dir === 'excludes'
             ? path.join(projectDir, 'js', 'plugins')
             : path.join(projectDir, 'js', 'plugins', dir);
-          cpx.watch(srcPlugins, distDir);
+          const copy = (from) => {
+            const pluginName = path.basename(from);
+            const to = path.join(distDir, pluginName);
+            fs.copyFileSync(from, to);
+            console.log(`copy plugin ${pluginName} to ${projectDir} done.`);
+          };
+          chokidar.watch(srcDir.replaceAll('\\', '/'), { ignoreInitial: true })
+            .on('add', copy)
+            .on('change', copy);
         });
       } else {
         srcPluginDirsRelative.forEach((dir) => {
@@ -40,7 +48,7 @@ config.projectDirs
           const distDir = dir === 'codes' || dir === 'excludes'
             ? path.join(projectDir, 'js', 'plugins')
             : path.join(projectDir, 'js', 'plugins', dir);
-          cpx.copy(srcPlugins, distDir);
+          fs.copyFileSync(srcPlugins, distDir);
         });
         console.log(`copy plugins to ${projectDir} done.`);
       }

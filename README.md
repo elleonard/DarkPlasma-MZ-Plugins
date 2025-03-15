@@ -16,9 +16,9 @@ Please see [branch for release](https://github.com/elleonard/DarkPlasma-MZ-Plugi
 
 # ビルドしたい How to build plugin?
 
-NodeJS (v16以降) と Yarn (v1.22.18以降) が必要です。
+NodeJS (v20以降) と Yarn (v2.3.4以降) が必要です。
 
-To build plugin, it needs to install NodeJS (v16 or later), Yarn (v1.22.18 or later).
+To build plugin, it needs to install NodeJS (v20 or later), Yarn (v2.3.4 or later).
 
 ```bash
 yarn install
@@ -50,6 +50,7 @@ Then, `DarkPlasma_<plugin>.js` is built and you can see it in `./_dist/codes/` d
 Please check built plugin by copying it into RMMZ test project's `./js/plugins/` directory.
 
 ./scripts/copyToProject/config.yml に、プロジェクトのディレクトリパスを追記した上でビルドすると、自動的にプロジェクトにコピーしてくれます。
+(watchオプションは正常に機能しません。PRを歓迎します)
 
 If you set `./scripts/copyToProject/config.yml` and building plugin, it automatically copy the plugin to the project.
 
@@ -89,7 +90,7 @@ RPG ツクール MZ 向けプラグインだけ書きたいのであれば、ほ
 
 ### src/codes
 
-`yarn generate (プラグイン名)` コマンドにより、プラグイン名のディレクトリを作り、その下に `DarkPlasma_(プラグイン名).js` という名前でプラグインのソースコード本体と、 `config.ts` を配置します。
+`yarn generate (プラグイン名)` コマンドにより、プラグイン名のディレクトリを作り、その下に `DarkPlasma_(プラグイン名).ts` という名前でプラグインのソースコード本体と、 `config.ts` を配置します。
 
 プラグインを書いたり修正したりする場合、必ずこのソースコード本体と `config.ts` を編集してください。  
 ただし、configのTypeScript化は現在進行中で、YAMLの設定ファイルを利用している箇所もあります。
