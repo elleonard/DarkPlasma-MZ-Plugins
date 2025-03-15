@@ -5,7 +5,7 @@ DarkPlasma_AutoLineBreak:
   histories:
     - date: 2023/09/21
       version: 1.4.1
-      description: 'リファクタ____'
+      description: 'リファクタ'
     - date: 2023/01/28
       version: 1.4.0
       description: '一時的に自動改行を無効にする制御文字を追加'

@@ -12,11 +12,11 @@ jobs:
       TZ: 'Asia/Tokyo'
       COMMITTER_EMAIL: '6374339+elleonard@users.noreply.github.com'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: release
           path: release
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: master
           path: stage
@@ -36,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
         working-directory: ./stage
       - run: yarn buildIncremental
         working-directory: ./stage

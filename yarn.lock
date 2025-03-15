@@ -686,15 +686,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mkdirp@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/mkdirp@npm:2.0.0"
-  dependencies:
-    mkdirp: "npm:*"
-  checksum: 10c0/4ffc9905d84ec76b256f706fb4b4eedd0f63f260c0b3d3c7b13172582d046dfd0db661f314e8e15e1fb81d8b7ae5507a38dcf4a4f425c945d113694d6bb5c3a9
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 14.6.4
   resolution: "@types/node@npm:14.6.4"
@@ -713,15 +704,6 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: 10c0/1d3012ab2fcdad1ba313e1d065b737578f6506c8958e2a7a5bdbdef517c7e930796cb1599ee067d5dee942fb3a764df64b5eef7e9ae98548d776e86dcffba985
-  languageName: node
-  linkType: hard
-
-"@types/prettier@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@types/prettier@npm:3.0.0"
-  dependencies:
-    prettier: "npm:*"
-  checksum: 10c0/edab8c0c0e56936e89c919cac17e384a9f231ce12062fb3beeb45bc45e7dcc4035dd3d7df3333b0bdd39f3b4501f22267a9dba45e22b9728c139857142e90282
   languageName: node
   linkType: hard
 
@@ -1172,8 +1154,6 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^16.0.1"
     "@types/ejs": "npm:^3.1.5"
     "@types/glob": "npm:^8.1.0"
-    "@types/mkdirp": "npm:^2.0.0"
-    "@types/prettier": "npm:^3.0.0"
     chokidar: "npm:^4.0.3"
     ejs: "npm:^3.1.5"
     eslint: "npm:^9.22.0"
@@ -2867,7 +2847,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:*, mkdirp@npm:^3.0.1":
+"mkdirp@npm:^3.0.1":
   version: 3.0.1
   resolution: "mkdirp@npm:3.0.1"
   bin:
@@ -3365,7 +3345,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:*, prettier@npm:^3.2.1":
+"prettier@npm:^3.2.1":
   version: 3.2.1
   resolution: "prettier@npm:3.2.1"
   bin:

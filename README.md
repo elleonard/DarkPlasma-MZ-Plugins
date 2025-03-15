@@ -16,9 +16,9 @@ Please see [branch for release](https://github.com/elleonard/DarkPlasma-MZ-Plugi
 
 # ビルドしたい How to build plugin?
 
-NodeJS (v20以降) と Yarn (v2.3.4以降) が必要です。
+NodeJS (v20以降) と Yarn (v4.7.0以降) が必要です。
 
-To build plugin, it needs to install NodeJS (v20 or later), Yarn (v2.3.4 or later).
+To build plugin, it needs to install NodeJS (v20 or later), Yarn (v4.7.0 or later).
 
 ```bash
 yarn install
