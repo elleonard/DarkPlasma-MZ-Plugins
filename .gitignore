@@ -1,6 +1,7 @@
 _dist/
 node_modules/
 **/_build/*
+.yarn/
 
 DarkPlasma_*.js
 
