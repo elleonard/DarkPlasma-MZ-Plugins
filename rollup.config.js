@@ -1,9 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { globSync } from 'glob';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import applyTemplate from './extensions/rollup/rollup-apply-template';
+import applyTemplate from './extensions/rollup/rollup-apply-template.js';
+
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const targetJsList = (() => {
   const targetFile = (() => {
