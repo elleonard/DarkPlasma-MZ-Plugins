@@ -86,5 +86,7 @@ for (let target of buildTargets) {
   await $`yarn rollup -c  --environment TARGET:${target} ${argv.exclude ? "-e" : ""}`;
 };
 
-await $`yarn build:format`;
-await $`yarn build:copy`;
+if (buildTargets.length > 0) {
+  await $`yarn build:format`;
+  await $`yarn build:copy`;
+}
