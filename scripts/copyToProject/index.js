@@ -48,7 +48,12 @@ config.projectDirs
           const distDir = dir === 'codes' || dir === 'excludes'
             ? path.join(projectDir, 'js', 'plugins')
             : path.join(projectDir, 'js', 'plugins', dir);
-          fs.copyFileSync(srcPlugins, distDir);
+          fs.glob(srcPlugins, (err, matches) => {
+            if (err) {
+              throw err;
+            }
+            matches.forEach(src => fs.copyFileSync(src, path.join(distDir, path.basename(src))));
+          });
         });
         console.log(`copy plugins to ${projectDir} done.`);
       }
