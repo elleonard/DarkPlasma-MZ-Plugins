@@ -1,9 +1,11 @@
 DarkPlasma_ChoiceExtension:
   name: DarkPlasma_ChoiceExtension
-  version: '1.1.1'
   year: 2020
   license: MIT
   histories:
+    - date: 2025/03/22
+      version: 1.2.1
+      description: 'キャンセル選択肢の設定が分岐・禁止でなく非表示の選択肢がある場合にキャンセルすると、正常に選択結果を実行しない不具合を修正'
     - date: 2024/10/28
       version: 1.2.0
       description: 'セーブデータに含むクラス名の命名を見直し'
@@ -40,10 +42,6 @@ DarkPlasma_ChoiceExtension:
     ja: |
       選択肢を拡張します。
 
-      注意:
-        本プラグインはMPP_ChoiceEXの機能を一部MZ対応していますが、
-        積極的に全機能を移植するつもりはありません。
-
       選択肢の文章中に
       if(条件式)
       を書くと、条件次第で項目の表示非表示を切り替えます。
@@ -63,6 +61,8 @@ DarkPlasma_ChoiceExtension:
       それらに設定された選択肢をまとめて表示します。
 
       デフォルトやキャンセル時の挙動は最初の選択肢コマンドのものが適用されます。
+      キャンセルの選択肢が非表示になっている場合にキャンセルすると
+      何もせずに選択肢の処理を終了します。
 
       プログラムインターフェース:
       $gameMessage.originalChoices() : object[]
