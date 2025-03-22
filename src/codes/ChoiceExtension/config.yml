@@ -3,6 +3,9 @@ DarkPlasma_ChoiceExtension:
   year: 2020
   license: MIT
   histories:
+    - date: 2025/03/23
+      version: 1.2.2
+      description: 'キャンセル時の挙動が分岐または禁止の場合にエラーが発生する不具合を修正'
     - date: 2025/03/22
       version: 1.2.1
       description: 'キャンセル選択肢の設定が分岐・禁止でなく非表示の選択肢がある場合にキャンセルすると、正常に選択結果を実行しない不具合を修正'

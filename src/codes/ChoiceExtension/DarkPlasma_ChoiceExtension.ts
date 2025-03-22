@@ -126,6 +126,9 @@ function Game_Interpreter_ChoiceExtensionMixIn(gameInterpreter: Game_Interpreter
     const choices = this.mergeSequencialChoices();
     const displayedChoices = choices.filter((choice) => choice.displayed);
     const cancelType = params[1] < choices.length ? ((originalCancelIndex: number) => {
+      if (params[1] < 0) {
+        return params[1];
+      }
       /**
        * キャンセル時の選択肢が表示されているなら、そこに合わせる
        */
