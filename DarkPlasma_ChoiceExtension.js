@@ -1,9 +1,10 @@
-// DarkPlasma_ChoiceExtension 1.2.1
+// DarkPlasma_ChoiceExtension 1.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/03/23 1.2.2 キャンセル時の挙動が分岐または禁止の場合にエラーが発生する不具合を修正
  * 2025/03/22 1.2.1 キャンセル選択肢の設定が分岐・禁止でなく非表示の選択肢がある場合にキャンセルすると、正常に選択結果を実行しない不具合を修正
  * 2024/10/28 1.2.0 セーブデータに含むクラス名の命名を見直し
  *                  typescript移行
@@ -28,7 +29,7 @@
  * @default 6
  *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
  * 選択肢を拡張します。
  *
  * 選択肢の文章中に
@@ -179,6 +180,9 @@
       const cancelType =
         params[1] < choices.length
           ? ((originalCancelIndex) => {
+              if (params[1] < 0) {
+                return params[1];
+              }
               /**
                * キャンセル時の選択肢が表示されているなら、そこに合わせる
                */
