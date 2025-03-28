@@ -7,7 +7,7 @@ import { toJsTypeCategory, TYPE_CATEGORIES } from "./generateParser.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-export async function generateParameterType(config, pluginId) {
+export async function generateParameterType(config, pluginId, namespace) {
   let result = "";
   if (config.structures) {
     result += Object.entries(config.structures).map(([name, structure]) => {
@@ -19,7 +19,7 @@ export async function generateParameterType(config, pluginId) {
   }
 
   if (config.parameters && config.parameters.length > 0) {
-    result += `export namespace settings {
+    result += `export namespace ${namespace ? namespace : "settings"} {
       ${config.parameters.filter(param => !param.dummy).map(param => `const ${param.param}: ${paramToType(pluginId, param)}`).join(';\n')};
     }`;
   }

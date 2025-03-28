@@ -2,6 +2,10 @@
 
 declare var skillCooldownManager: SkillCooldownManager;
 
+declare namespace ColorManager {
+  function cooldownTextColor(): string;
+}
+
 declare interface SkillCooldownManager {
   initialize(): void;
 
@@ -33,4 +37,10 @@ declare interface Game_BattlerBase {
   decreaseCooldownTurns(): void;
 
   initialSkillCooldowns(): Game_SkillCooldown[];
+}
+
+declare interface Window_SkillList {
+  mustDisplayCooldownText(skill: MZ.Skill): boolean;
+  cooldownText(skill: MZ.Skill): string;
+  cooldownTurn(skill: MZ.Skill): number;
 }

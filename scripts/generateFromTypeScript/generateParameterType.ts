@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const prettierConfig = path.resolve(__dirname, '..', '..', '.prettierrc');
 
-export async function generateParameterType(config: PluginConfigSchema, pluginId: string) {
+export async function generateParameterType(config: PluginConfigSchema, pluginId: string, namespace?: string) {
   let result = "";
   if (config.structures) {
     result += config.structures.map((structure) => {
@@ -18,7 +18,7 @@ export async function generateParameterType(config: PluginConfigSchema, pluginId
   }
 
   if (config.parameters && config.parameters.length > 0) {
-    result += `export namespace settings {
+    result += `export namespace ${namespace ? namespace: "settings"} {
       ${config.parameters.filter(param => param.type !== "dummy").map(param => `const ${param.param}: ${paramToType(pluginId, param)}`).join(';\n')};
     }`;
   }

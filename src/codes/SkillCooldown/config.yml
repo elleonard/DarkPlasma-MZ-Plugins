@@ -3,6 +3,10 @@ DarkPlasma_SkillCooldown:
   year: 2020
   license: MIT
   histories:
+    - date: 2025/03/28
+      version: 2.5.0
+      description: 'スキルクールダウン表示用テキスト関連のインターフェース追加'
+    - description: 'スキルクールダウン表示色設定をカラーパレット対応'
     - date: 2024/01/24
       version: 2.4.1
       description: 'リファクタ'
@@ -88,7 +92,7 @@ DarkPlasma_SkillCooldown:
         ja: クールタイムの表示色
       text:
         ja: クールタイム表示色
-      type: number
+      type: color
       default: 2
       parent: displaySetting
     - param: decreaseBenchwarmersCooldown

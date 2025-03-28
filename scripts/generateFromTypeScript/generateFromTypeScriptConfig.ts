@@ -18,15 +18,18 @@ export async function generateFromTypeScriptConfig(file: string) {
 
   fs.writeFileSync(path.resolve(distDir, `${config.name}_header.js`), generateHeader(config));
 
+  const pluginName = config.name.replace(`DarkPlasma_`, '');
   const parameterReader = await generateParameterReader(config, distDir);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_parameters.js`), parameterReader);
   const parameterReaderFunction = await generateParameterReaderFunction(config, distDir);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_parametersOf.js`), parameterReaderFunction);
-  const parameterType = await generateParameterType(config, config.name.replace(`DarkPlasma_`, ''));
+  const parameterType = await generateParameterType(config, pluginName);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_parameters.d.ts`), parameterType);
+  const parameterOfType = await generateParameterType(config, pluginName, `settingsOf${pluginName}`);
+  fs.writeFileSync(path.resolve(distDir, `${config.name}_parametersOf.d.ts`), parameterOfType);
   const pluginCommands = await generatePluginCommand(config);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_commands.js`), pluginCommands);
-  const commandType = await generateCommandType(config, config.name.replace(`DarkPlasma_`, ''));
+  const commandType = await generateCommandType(config, pluginName);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_commands.d.ts`), commandType);
   fs.writeFileSync(path.resolve(distDir, `${config.name}_version.ts`), generateVersion(config));
   fs.writeFileSync(path.resolve(distDir, `${config.name}_version.d.ts`), generateVersionType(config));

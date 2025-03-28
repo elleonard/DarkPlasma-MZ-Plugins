@@ -272,6 +272,16 @@ class SkillCooldownManager {
 
 const skillCooldownManager = new SkillCooldownManager();
 
+function ColorManager_SkillCooldownMixIn(colorManager: typeof ColorManager) {
+  colorManager.cooldownTextColor = function () {
+    return typeof settings.cooldownTextColor === "string"
+      ? settings.cooldownTextColor
+      : this.textColor(settings.cooldownTextColor);
+  };
+}
+
+ColorManager_SkillCooldownMixIn(ColorManager);
+
 PluginManager.registerCommand(pluginName, command_plusCooldownTurns, function (args) {
   const parsedArgs = parseArgs_plusCooldownTurns(args);
   const targetBattlers = parsedArgs.actors.length === 0
@@ -423,13 +433,24 @@ Game_Enemy_SkillCooldownMixIn(Game_Enemy.prototype);
 function Window_SkillList_SkillCooldownMixIn(windowClass: Window_SkillList) {
   const _drawSkillCost = windowClass.drawSkillCost;
   windowClass.drawSkillCost = function (skill, x, y, width) {
-    if (settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
-      const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, `${this._actor.cooldownTurn(skill)}`);
-      this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
-      this.drawText(cooldownText, x, y, width, 'right');
+    if (this.mustDisplayCooldownText(skill)) {
+      this.changeTextColor(ColorManager.cooldownTextColor());
+      this.drawText(this.cooldownText(skill), x, y, width, 'right');
     } else {
       _drawSkillCost.call(this, skill, x, y, width);
     }
+  };
+
+  windowClass.mustDisplayCooldownText = function (skill) {
+    return settings.displayCooldownTurn && !!this._actor && this._actor.isDuringCooldown(skill);
+  };
+
+  windowClass.cooldownText = function (skill) {
+    return settings.cooldownFormat.replace(/\{turn\}/gi, `${this.cooldownTurn(skill)}`);
+  };
+
+  windowClass.cooldownTurn = function (skill) {
+    return this._actor ? this._actor.cooldownTurn(skill) : 0;
   };
 }
 

@@ -16,6 +16,7 @@ export async function generateFromConfig(file) {
 
   for (let key of Object.keys(config)) {
     const currentConfig = config[key];
+    const pluginName = key.replace(`DarkPlasma_`, '');
     fs.writeFileSync(path.resolve(distDir, `${key}_header.js`), generateHeader(currentConfig));
     const parameterReader = await generateParameterReader(currentConfig, distDir);
     fs.writeFileSync(path.resolve(distDir, `${key}_parameters.js`), parameterReader);
@@ -23,9 +24,11 @@ export async function generateFromConfig(file) {
     fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.js`), parameterReaderFunction);
     const pluginCommands = await generatePluginCommand(currentConfig, distDir);
     fs.writeFileSync(path.resolve(distDir, `${key}_commands.js`), pluginCommands);
-    const parameterType = await generateParameterType(currentConfig, key.replace(`DarkPlasma_`, ''));
+    const parameterType = await generateParameterType(currentConfig, pluginName);
     fs.writeFileSync(path.resolve(distDir, `${key}_parameters.d.ts`), parameterType);
-    const commandType = await generateCommandType(currentConfig, key.replace(`DarkPlasma_`, ''));
+    const parameterOfType = await generateParameterType(currentConfig, pluginName, `settingsOf${pluginName}`);
+    fs.writeFileSync(path.resolve(distDir, `${key}_parametersOf.d.ts`), parameterOfType);
+    const commandType = await generateCommandType(currentConfig, pluginName);
     fs.writeFileSync(path.resolve(distDir, `${key}_commands.d.ts`), commandType);
     fs.writeFileSync(path.resolve(distDir, `${key}_version.js`), generateVersion(currentConfig));
     fs.writeFileSync(path.resolve(distDir, `${key}_version.d.ts`), generateVersionType(currentConfig));
