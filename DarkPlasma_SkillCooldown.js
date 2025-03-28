@@ -1,9 +1,11 @@
-// DarkPlasma_SkillCooldown 2.4.1
+// DarkPlasma_SkillCooldown 2.5.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/03/28 2.5.0 スキルクールダウン表示用テキスト関連のインターフェース追加
+ *                  スキルクールダウン表示色設定をカラーパレット対応
  * 2024/01/24 2.4.1 リファクタ
  * 2023/03/09 2.4.0 柔軟なクールタイム開始のインターフェース追加
  *            2.3.3 クールタイム初期化タイミングの変更
@@ -57,7 +59,7 @@
  * @param cooldownTextColor
  * @desc クールタイムの表示色
  * @text クールタイム表示色
- * @type number
+ * @type color
  * @default 2
  * @parent displaySetting
  *
@@ -97,7 +99,7 @@
  * @type skill[]
  *
  * @help
- * version: 2.4.1
+ * version: 2.5.0
  * スキルにクールタイムを指定します。
  * バトラーがスキルXを使用した後、
  * そのバトラーのスキルYの使用を一定ターン数制限することができます。
@@ -164,7 +166,9 @@
     }),
     displayCooldownTurn: String(pluginParameters.displayCooldownTurn || true) === 'true',
     cooldownFormat: String(pluginParameters.cooldownFormat || `CT:{turn}`),
-    cooldownTextColor: Number(pluginParameters.cooldownTextColor || 2),
+    cooldownTextColor: pluginParameters.cooldownTextColor?.startsWith('#')
+      ? String(pluginParameters.cooldownTextColor)
+      : Number(pluginParameters.cooldownTextColor || 2),
     decreaseBenchwarmersCooldown: String(pluginParameters.decreaseBenchwarmersCooldown || true) === 'true',
   };
 
@@ -432,6 +436,14 @@
     }
   }
   const skillCooldownManager = new SkillCooldownManager();
+  function ColorManager_SkillCooldownMixIn(colorManager) {
+    colorManager.cooldownTextColor = function () {
+      return typeof settings.cooldownTextColor === 'string'
+        ? settings.cooldownTextColor
+        : this.textColor(settings.cooldownTextColor);
+    };
+  }
+  ColorManager_SkillCooldownMixIn(ColorManager);
   PluginManager.registerCommand(pluginName, command_plusCooldownTurns, function (args) {
     const parsedArgs = parseArgs_plusCooldownTurns(args);
     const targetBattlers =
@@ -564,13 +576,21 @@
   function Window_SkillList_SkillCooldownMixIn(windowClass) {
     const _drawSkillCost = windowClass.drawSkillCost;
     windowClass.drawSkillCost = function (skill, x, y, width) {
-      if (settings.displayCooldownTurn && this._actor && this._actor.isDuringCooldown(skill)) {
-        const cooldownText = settings.cooldownFormat.replace(/\{turn\}/gi, `${this._actor.cooldownTurn(skill)}`);
-        this.changeTextColor(ColorManager.textColor(settings.cooldownTextColor));
-        this.drawText(cooldownText, x, y, width, 'right');
+      if (this.mustDisplayCooldownText(skill)) {
+        this.changeTextColor(ColorManager.cooldownTextColor());
+        this.drawText(this.cooldownText(skill), x, y, width, 'right');
       } else {
         _drawSkillCost.call(this, skill, x, y, width);
       }
+    };
+    windowClass.mustDisplayCooldownText = function (skill) {
+      return settings.displayCooldownTurn && !!this._actor && this._actor.isDuringCooldown(skill);
+    };
+    windowClass.cooldownText = function (skill) {
+      return settings.cooldownFormat.replace(/\{turn\}/gi, `${this.cooldownTurn(skill)}`);
+    };
+    windowClass.cooldownTurn = function (skill) {
+      return this._actor ? this._actor.cooldownTurn(skill) : 0;
     };
   }
   Window_SkillList_SkillCooldownMixIn(Window_SkillList.prototype);
