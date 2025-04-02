@@ -1,10 +1,11 @@
-// DarkPlasma_InputSequentialCommand 1.0.0
+// DarkPlasma_InputSequentialCommand 1.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2025/04/02 1.0.0 公開
+ * 2025/04/02 1.1.0 バッファサイズ設定を追加
+ *            1.0.0 公開
  */
 
 /*:
@@ -15,8 +16,14 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @param bufferSize
+ * @desc 記憶するコマンドバッファのサイズを指定します。
+ * @text コマンドバッファサイズ
+ * @type number
+ * @default 10
+ *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 一連のコマンド入力をチェックできます。
  *
  * Input.clearBuffer(): void
@@ -28,6 +35,18 @@
 
 (() => {
   'use strict';
+
+  const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
+    return arguments[1];
+  });
+
+  const pluginParametersOf = (pluginName) => PluginManager.parameters(pluginName);
+
+  const pluginParameters = pluginParametersOf(pluginName);
+
+  const settings = {
+    bufferSize: Number(pluginParameters.bufferSize || 10),
+  };
 
   function Input_SequentialCommandMixIn(input) {
     const _initialize = input.initialize;
@@ -56,6 +75,9 @@
       for (const name in this._currentState) {
         if (this._currentState[name] && this._pressedTime === 0) {
           this._commandBuffer.push(name);
+          if (this._commandBuffer.length > settings.bufferSize) {
+            this._commandBuffer.splice(-settings.bufferSize);
+          }
         }
       }
     };
