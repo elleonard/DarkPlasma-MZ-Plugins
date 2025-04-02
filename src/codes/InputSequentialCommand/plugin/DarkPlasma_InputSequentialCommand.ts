@@ -1,5 +1,7 @@
 /// <reference path="./InputSequentialCommand.d.ts" />
 
+import { settings } from '../config/_build/DarkPlasma_InputSequentialCommand_parameters';
+
 function Input_SequentialCommandMixIn(input: typeof Input) {
   const _initialize = input.initialize;
   input.initialize = function () {
@@ -30,6 +32,9 @@ function Input_SequentialCommandMixIn(input: typeof Input) {
     for (const name in this._currentState) {
       if (this._currentState[name] && this._pressedTime === 0) {
         this._commandBuffer.push(name);
+        if (this._commandBuffer.length > settings.bufferSize) {
+          this._commandBuffer.splice(-settings.bufferSize);
+        }
       }
     }
   };
