@@ -1,9 +1,11 @@
-// DarkPlasma_ExpandTargetScope 1.4.2
+// DarkPlasma_ExpandTargetScope 1.5.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/04/12 1.5.0 MP消費関連の競合対策
+ *                  対象全体化によるMP消費倍率インターフェース追加
  * 2023/01/17 1.4.2 味方向けの全体化倍率が有効でない不具合を修正
  * 2023/01/16 1.4.1 pageup, pagedownキーでの対象範囲変更が正常に動作しない不具合を修正
  * 2023/01/14 1.4.0 拡張プラグイン用インターフェース追加
@@ -28,7 +30,7 @@
  * 2020/09/05 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc スキル/アイテムの対象全体化
  * @author DarkPlasma
  * @license MIT
@@ -68,7 +70,7 @@
  * @default false
  *
  * @help
- * version: 1.4.2
+ * version: 1.5.0
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -94,7 +96,7 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    switchScopeButton: String(pluginParameters.switchScopeButton || 'shift'),
+    switchScopeButton: String(pluginParameters.switchScopeButton || `shift`),
     damageRateForAll: Number(pluginParameters.damageRateForAll || 70),
     mpCostRateForAll: Number(pluginParameters.mpCostRateForAll || 100),
     skipTargetSelectionForAll: String(pluginParameters.skipTargetSelectionForAll || false) === 'true',
@@ -127,7 +129,7 @@
      */
     gameTemp.processSyncSelectionEffect = function (battler) {
       this._syncSelectionEffectRequestedBattlers = this._syncSelectionEffectRequestedBattlers.filter(
-        (b) => b !== battler
+        (b) => b !== battler,
       );
     };
     gameTemp.isExpandScopeTargetRequested = function () {
@@ -224,15 +226,21 @@
     };
   }
   Game_Unit_ExpandTargetScopeMixIn(Game_Unit.prototype);
+  function Game_BattlerBase_ExpandTargetScopeMixIn(gameBattlerBase) {
+    const _skillMpCost = gameBattlerBase.skillMpCost;
+    gameBattlerBase.skillMpCost = function (skill) {
+      return Math.floor((_skillMpCost.call(this, skill) * this.mpCostRateByExpandScope()) / 100);
+    };
+    gameBattlerBase.mpCostRateByExpandScope = function () {
+      return 100;
+    };
+  }
+  Game_BattlerBase_ExpandTargetScopeMixIn(Game_BattlerBase.prototype);
   function Game_Battler_ExpandTargetScopeMixIn(gameBattler) {
-    const _skillMpCost = gameBattler.skillMpCost;
-    gameBattler.skillMpCost = function (skill) {
-      const value = _skillMpCost.call(this, skill);
+    const _mpCostRateByExpandScope = gameBattler.mpCostRateByExpandScope;
+    gameBattler.mpCostRateByExpandScope = function () {
       const action = this.currentAction();
-      if (action && action.isExpandedScope()) {
-        return Math.floor((value * settings.mpCostRateForAll) / 100);
-      }
-      return value;
+      return action?.isExpandedScope() ? settings.mpCostRateForAll : _mpCostRateByExpandScope.call(this);
     };
     gameBattler.resetAllActionsExpandedScope = function () {
       this._actions.forEach((action) => action.resetExpandScope());
