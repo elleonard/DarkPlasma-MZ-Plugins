@@ -146,15 +146,26 @@ function Game_Unit_ExpandTargetScopeMixIn(gameUnit: Game_Unit) {
 
 Game_Unit_ExpandTargetScopeMixIn(Game_Unit.prototype);
 
+function Game_BattlerBase_ExpandTargetScopeMixIn(gameBattlerBase: Game_BattlerBase) {
+  const _skillMpCost = gameBattlerBase.skillMpCost;
+  gameBattlerBase.skillMpCost = function (skill) {
+    return Math.floor(_skillMpCost.call(this, skill) * this.mpCostRateByExpandScope() / 100);
+  };
+
+  gameBattlerBase.mpCostRateByExpandScope = function () {
+    return 100;
+  };
+}
+
+Game_BattlerBase_ExpandTargetScopeMixIn(Game_BattlerBase.prototype);
+
 function Game_Battler_ExpandTargetScopeMixIn(gameBattler: Game_Battler) {
-  const _skillMpCost = gameBattler.skillMpCost;
-  gameBattler.skillMpCost = function (this: Game_Battler, skill: MZ.Skill) {
-    const value = _skillMpCost.call(this, skill);
+  const _mpCostRateByExpandScope = gameBattler.mpCostRateByExpandScope;
+  gameBattler.mpCostRateByExpandScope = function () {
     const action = this.currentAction();
-    if (action && action.isExpandedScope()) {
-      return Math.floor((value * settings.mpCostRateForAll) / 100);
-    }
-    return value;
+    return action?.isExpandedScope()
+      ? settings.mpCostRateForAll
+      : _mpCostRateByExpandScope.call(this);
   };
 
   gameBattler.resetAllActionsExpandedScope = function (this: Game_Battler) {

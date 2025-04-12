@@ -19,6 +19,10 @@ declare interface Game_Unit {
   selectAll(): void;
 }
 
+declare interface Game_BattlerBase {
+  mpCostRateByExpandScope(): number;
+}
+
 declare interface Game_Battler {
   resetAllActionsExpandedScope(): void;
 }
