@@ -3,6 +3,9 @@ DarkPlasma_ChoiceExtension:
   year: 2020
   license: MIT
   histories:
+    - date: 2025/04/14
+      version: 1.2.3
+      description: 'ループ・ラベルジャンプと併用すると正常に選択結果を実行しない不具合を修正'
     - date: 2025/03/23
       version: 1.2.2
       description: 'キャンセル時の挙動が分岐または禁止の場合にエラーが発生する不具合を修正'

@@ -84,7 +84,6 @@ function Game_Message_ChoiceExtensionMixIn(gameMessage: Game_Message) {
    *   displayed: boolean,
    *   enabled: boolean
    * }
-   * @return {object[]}
    */
   gameMessage.originalChoices = function () {
     return this._originalChoices;
@@ -123,6 +122,7 @@ function Game_Interpreter_ChoiceExtensionMixIn(gameInterpreter: Game_Interpreter
     if (this.currentCommandIsMergedChoice()) {
       return;
     }
+    this._choiceBranches = [];
     const choices = this.mergeSequencialChoices();
     const displayedChoices = choices.filter((choice) => choice.displayed);
     const cancelType = params[1] < choices.length ? ((originalCancelIndex: number) => {
