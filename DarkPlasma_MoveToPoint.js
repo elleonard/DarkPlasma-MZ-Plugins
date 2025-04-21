@@ -1,13 +1,14 @@
-// DarkPlasma_MoveToPoint 1.0.0
-// Copyright (c) 2022 DarkPlasma
+// DarkPlasma_MoveToPoint 1.0.1
+// Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/04/21 1.0.1 設定値をtypescript化
  * 2022/11/05 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 指定座標にプレイヤーやイベントを移動させる
  * @author DarkPlasma
  * @license MIT
@@ -18,11 +19,15 @@
  * @command movePlayerTo
  * @text プレイヤーを移動する
  * @arg x
+ * @desc 移動先X座標を設定します。
  * @text X座標
  * @type number
+ * @default 0
  * @arg y
+ * @desc 移動先Y座標を設定します。
  * @text Y座標
  * @type number
+ * @default 0
  * @arg skip
  * @text 移動できない場合飛ばす
  * @type boolean
@@ -35,11 +40,15 @@
  * @command moveThisTo
  * @text このイベントを移動する
  * @arg x
+ * @desc 移動先X座標を設定します。
  * @text X座標
  * @type number
+ * @default 0
  * @arg y
+ * @desc 移動先Y座標を設定します。
  * @text Y座標
  * @type number
+ * @default 0
  * @arg skip
  * @text 移動できない場合飛ばす
  * @type boolean
@@ -55,12 +64,17 @@
  * @text イベントID
  * @type number
  * @min 1
+ * @default 0
  * @arg x
+ * @desc 移動先X座標を設定します。
  * @text X座標
  * @type number
+ * @default 0
  * @arg y
+ * @desc 移動先Y座標を設定します。
  * @text Y座標
  * @type number
+ * @default 0
  * @arg skip
  * @text 移動できない場合飛ばす
  * @type boolean
@@ -71,7 +85,7 @@
  * @default true
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 指定座標にプレイヤー、イベントを移動させるプラグインコマンドを提供します。
  */
 
@@ -177,7 +191,7 @@
               $gameMap.roundXWithDirection(node.x, dir),
               $gameMap.roundYWithDirection(node.y, dir),
               node.realCost + 1,
-              node
+              node,
             );
             const openNode = openNodes.find((openNode) => openNode.x === newNode.x && openNode.y === newNode.y);
             if (openNode) {
