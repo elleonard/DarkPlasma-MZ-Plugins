@@ -43,6 +43,8 @@ export function paramToType(pluginId, param) {
       return typeCategory;
     case TYPE_CATEGORIES.COLOR:
       return "string|number";
+    case TYPE_CATEGORIES.LOCATION:
+      return "{ mapId: number; x: number; y: number; }";
     case TYPE_CATEGORIES.ARRAY:
       const arrayOf = {
         type: param.type.replace('[]', ''),

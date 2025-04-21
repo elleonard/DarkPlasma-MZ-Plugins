@@ -46,6 +46,7 @@ export function paramToType(pluginId: string, param: PluginParameterSchema): str
     case "enemy":
     case "icon":
     case "item":
+    case "map":
     case "number":
     case "skill":
     case "state":
@@ -78,6 +79,8 @@ export function paramToType(pluginId: string, param: PluginParameterSchema): str
       return "boolean[]";
     case "color":
       return "string|number";
+    case "location":
+      return "{ mapId: number; x: number; y: number; }"
     case "select":
       if (param.options[0].value === undefined || !Number.isFinite(param.options[0].value)) {
         return "string";

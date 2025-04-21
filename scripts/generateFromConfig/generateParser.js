@@ -7,6 +7,7 @@ export const TYPE_CATEGORIES = {
   ARRAY: "array",
   STRUCT: "struct",
   COLOR: "color",
+  LOCATION: "location",
 };
 
 export function toJsTypeCategory(parameter) {
@@ -30,6 +31,7 @@ export function toJsTypeCategory(parameter) {
     case 'variable':
     case 'common_event':
     case 'icon':
+    case 'map':
       return TYPE_CATEGORIES.NUMBER;
     case 'boolean':
       return TYPE_CATEGORIES.BOOLEAN;
@@ -41,6 +43,8 @@ export function toJsTypeCategory(parameter) {
       }
     case 'color': // #始まりの16進数を許可する
       return TYPE_CATEGORIES.COLOR;
+    case 'location':
+      return TYPE_CATEGORIES.LOCATION;
     default:
       // structure or array
       if (parameter.type.endsWith('[]')) {
@@ -65,6 +69,8 @@ export function generateParser(config, parameter, symbolType) {
     case TYPE_CATEGORIES.COLOR:
       parser = colorParser(parameter, symbolType);
       break;
+    case TYPE_CATEGORIES.LOCATION:
+      parser = locationParser(parameter, symbolType);
     case TYPE_CATEGORIES.ARRAY:
       parser = arrayParser(config, parameter, symbolType);
       break;
@@ -90,6 +96,17 @@ function booleanParser(parameter, symbolType) {
 
 function colorParser(parameter, symbolType) {
   return `${parameterSymbol(parameter, symbolType)}?.startsWith("#") ? String(${parameterSymbol(parameter, symbolType)}) : ${numberParser(parameter, symbolType)}`;
+}
+
+function locationParser(parameter, symbolType) {
+  return `(() => {
+  const parsed = JSON.parse(${parameterSymbol(parameter, symbolType)});
+  return {
+    mapId: Number(parsed.mapId),
+    x: Number(parsed.x),
+    y: Number(parsed.y),
+  };
+})()`;
 }
 
 function arrayParser(config, parameter, symbolType) {

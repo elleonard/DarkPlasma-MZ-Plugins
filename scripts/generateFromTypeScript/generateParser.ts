@@ -26,11 +26,14 @@ export function generateParser(config: PluginConfigSchema, parameter: PluginPara
     case 'variable':
     case 'common_event':
     case 'icon':
+    case 'map':
       return numberParser(parameter, objectName);
     case 'boolean':
       return booleanParser(parameter, objectName);
     case 'color': // #始まりの16進数を許可する
       return colorParser(parameter, objectName);
+    case 'location':
+      return locationParser(parameter, objectName);
     case 'select':
       if (parameter.options[0].value !== undefined && Number.isFinite(parameter.options[0].value)) {
         return numberParser(parameter, objectName);
@@ -62,6 +65,17 @@ function booleanParser(parameter: PluginParameterSchema, objectName?: string) {
 
 function colorParser(parameter: PluginParameterSchema, objectName?: string) {
   return `${parameterSymbol(parameter, objectName)}?.startsWith("#") ? String(${parameterSymbol(parameter, objectName)}) : ${numberParser(parameter, objectName)}`;
+}
+
+function locationParser(parameter: PluginParameterSchema, objectName?: string) {
+  return `(() => {
+  const parsed = JSON.parse(${parameterSymbol(parameter, objectName)});
+  return {
+    mapId: Number(parsed.mapId),
+    x: Number(parsed.x),
+    y: Number(parsed.y),
+  };
+})()`;
 }
 
 function arrayParser(
