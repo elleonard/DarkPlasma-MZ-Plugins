@@ -1,7 +1,7 @@
 /// <reference path="./MoveToPoint.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { command_moveEventTo, command_movePlayerTo, command_moveThisTo, parseArgs_moveEventTo, parseArgs_movePlayerTo, parseArgs_moveThisTo } from './_build/DarkPlasma_MoveToPoint_commands';
+import { pluginName } from '../../../common/pluginName';
+import { command_moveEventTo, command_movePlayerTo, command_moveThisTo, parseArgs_moveEventTo, parseArgs_movePlayerTo, parseArgs_moveThisTo } from '../config/_build/DarkPlasma_MoveToPoint_commands';
 
 class ASterNode {
   _x: number;

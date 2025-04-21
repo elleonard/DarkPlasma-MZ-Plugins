@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
 
 declare interface Game_Character {
   moveRouteListTo(x: number, y: number): MZ.MoveCommand[];
