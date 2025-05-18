@@ -1,9 +1,10 @@
-// DarkPlasma_StateGroup 1.2.0
+// DarkPlasma_StateGroup 1.2.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/05/18 1.2.1 プラグインパラメータでグループ設定を行うと起動時にエラーで停止する不具合を修正
  * 2022/10/15 1.2.0 DarkPlasma_StateBuffOnBattleStartにおけるグループに対する優位の挙動を定義
  * 2022/10/10 1.1.1 typescript移行
  * 2022/06/21 1.1.0 ステートを複数グループに所属させる
@@ -14,7 +15,7 @@
  * 2020/08/27 1.0.0 MZ版公開
  */
 
-/*:ja
+/*:
  * @plugindesc ステートをグルーピングする
  * @author DarkPlasma
  * @license MIT
@@ -30,7 +31,7 @@
  * @default []
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * ステートをグルーピングします。
  * 同じグループに属するステートは重ねがけできません。
  *
@@ -99,7 +100,7 @@
       return ((parameter) => {
         const parsed = JSON.parse(parameter);
         return {
-          name: String(parsed.name || ''),
+          name: String(parsed.name || ``),
           states: JSON.parse(parsed.states || '[]').map((e) => {
             return Number(e || 0);
           }),
@@ -241,7 +242,7 @@
     static initialStateGroup() {
       return settings.groups.map((group) => {
         const stateGroup = new StateGroup(group.name);
-        group.states.forEach(stateGroup.addState);
+        group.states.forEach((stateId, priority) => stateGroup.addState(stateId, priority));
         return stateGroup;
       });
     }
@@ -296,7 +297,7 @@
           StateGroupManager.addStateToGroup(
             String(data.meta.StateGroup),
             data.id,
-            Number(data.meta.StatePriority || 0)
+            Number(data.meta.StatePriority || 0),
           );
         }
       }
@@ -360,7 +361,7 @@
       const statesOnBattleStart = _statesOnBattleStart.call(this);
       return statesOnBattleStart.filter((stateOnBattleStart) => {
         const groupA = StateGroupManager.groupByName(
-          String($dataStates[stateOnBattleStart.stateId].meta.OverwriteStateGroup)
+          String($dataStates[stateOnBattleStart.stateId].meta.OverwriteStateGroup),
         );
         if (groupA) {
           /**
@@ -373,7 +374,7 @@
           return statesOnBattleStart
             .filter((s) => {
               const overWriteGroup = StateGroupManager.groupByName(
-                String($dataStates[s.stateId].meta.OverwriteStateGroup)
+                String($dataStates[s.stateId].meta.OverwriteStateGroup),
               );
               return overWriteGroup && groupBList.includes(overWriteGroup);
             })
