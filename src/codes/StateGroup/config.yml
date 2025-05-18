@@ -3,6 +3,9 @@ DarkPlasma_StateGroup:
   year: 2020
   license: MIT
   histories:
+    - date: 2025/05/18
+      version: 1.2.1
+      description: 'プラグインパラメータでグループ設定を行うと起動時にエラーで停止する不具合を修正'
     - date: 2022/10/15
       version: 1.2.0
       description: 'DarkPlasma_StateBuffOnBattleStartにおけるグループに対する優位の挙動を定義'

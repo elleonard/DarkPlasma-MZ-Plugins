@@ -152,7 +152,7 @@ class StateGroupManager {
   static initialStateGroup(): StateGroup[] {
     return settings.groups.map((group: StateGroupSetting) => {
       const stateGroup = new StateGroup(group.name);
-      group.states.forEach(stateGroup.addState);
+      group.states.forEach((stateId, priority) => stateGroup.addState(stateId, priority));
       return stateGroup;
     });
   }
