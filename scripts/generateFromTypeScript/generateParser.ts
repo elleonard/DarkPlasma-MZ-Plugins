@@ -69,11 +69,11 @@ function colorParser(parameter: PluginParameterSchema, objectName?: string) {
 
 function locationParser(parameter: PluginParameterSchema, objectName?: string) {
   return `(() => {
-  const parsed = JSON.parse(${parameterSymbol(parameter, objectName)});
+  const location = JSON.parse(${parameterSymbol(parameter, objectName)});
   return {
-    mapId: Number(parsed.mapId),
-    x: Number(parsed.x),
-    y: Number(parsed.y),
+    mapId: Number(location.mapId),
+    x: Number(location.x),
+    y: Number(location.y),
   };
 })()`;
 }
