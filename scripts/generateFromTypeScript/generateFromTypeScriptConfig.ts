@@ -13,6 +13,9 @@ import { generateVersion, generateVersionType } from './generateVersion.js';
 
 export async function generateFromTypeScriptConfig(file: string) {
   const config = parseConfig(file);
+  if (config.draft) {
+    return;
+  }
   const distDir = path.resolve(file, '..', '_build');
   mkdirp.sync(distDir);
 

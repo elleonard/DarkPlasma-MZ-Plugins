@@ -300,6 +300,7 @@ export const pluginConfigSchema = z.object({
   license: z.string(),
   histories: z.array(pluginHistory),
   deprecated: z.boolean().default(false).optional(),
+  draft: z.boolean().default(false).optional(),
   locates: z.array(pluginLocate),
   plugindesc: stringOrI18nString,
   parameters: z.array(pluginParameter).default([]),

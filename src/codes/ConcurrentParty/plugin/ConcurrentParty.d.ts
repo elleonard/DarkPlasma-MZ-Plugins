@@ -31,7 +31,7 @@ declare interface Game_DevidedParty {
   _members: Game_Actor[];
   _position: Game_DevidedPartyPosition;
 
-  position: Game_DevidedPartyPosition;
+  readonly position: Game_DevidedPartyPosition;
 
   setPosition(position: Game_DevidedPartyPosition): void;
   updatePosition(): void;
@@ -43,6 +43,7 @@ declare interface Game_DevidedParty {
   allMembers(): Game_Actor[];
   transferTo(fadeType: number): void;
   swapOrder(index1: number, index2: number): void;
+  isValid(): boolean;
 }
 
 declare interface Scene_Map {

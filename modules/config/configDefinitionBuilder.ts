@@ -13,6 +13,8 @@ export class ConfigDefinitionBuilder {
   _dependencies: PluginDependenciesSchema;
   _help: string | I18nText;
 
+  _draft: boolean;
+
   constructor(
     name: string,
     year: number,
@@ -33,6 +35,7 @@ export class ConfigDefinitionBuilder {
       orderBefore: [],
     };
     this._help = "";
+    this._draft = false;
   }
 
   pluginName() {
@@ -56,6 +59,11 @@ export class ConfigDefinitionBuilder {
 
   withLocate(locate: PluginLocateSchema) {
     this._locates.push(locate);
+    return this;
+  }
+
+  withDraft(draft: boolean) {
+    this._draft = draft;
     return this;
   }
 
@@ -124,6 +132,7 @@ export class ConfigDefinitionBuilder {
       histories: this._histories,
       locates: this._locates,
       plugindesc: this._plugindesc,
+      draft: this._draft,
       parameters: this._parameters,
       commands: this._commands,
       structures: this._structures,
