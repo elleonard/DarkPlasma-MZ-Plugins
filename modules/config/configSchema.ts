@@ -166,6 +166,15 @@ const pluginParameterLocation = pluginParameterBase.extend({
   }),
 });
 
+const pluginParameterLocationArray = pluginParameterLocation.extend({
+  type: z.literal('location[]'),
+  default: z.array(z.object({
+    mapId: z.number(),
+    x: z.number(),
+    y: z.number(),
+  })).default([]),
+});
+
 const structOrI18nStruct = z.union([z.record(z.any()), z.record(z.record(z.any()))]);
 
 const pluginParameterStruct = pluginParameterBase.extend({
@@ -206,6 +215,7 @@ const pluginParameter = z.union([
   pluginParameterIconArray,
   pluginParameterMap,
   pluginParameterLocation,
+  pluginParameterLocationArray,
 ]);
 
 export const pluginParameterArray = z.union([
@@ -219,6 +229,7 @@ export const pluginParameterArray = z.union([
   pluginParameterStructArray,
   pluginParameterColorArray,
   pluginParameterIconArray,
+  pluginParameterLocationArray,
 ]);
 
 const pluginStruct = z.object({
@@ -341,6 +352,7 @@ export type PluginParameterIconSchema = z.infer<typeof pluginParameterIcon>;
 export type PluginParameterIconArraySchema = z.infer<typeof pluginParameterIconArray>;
 export type PluginParameterMapSchema = z.infer<typeof pluginParameterMap>;
 export type PluginParameterLocationSchema = z.infer<typeof pluginParameterLocation>;
+export type PluginParameterLocationArraySchema = z.infer<typeof pluginParameterLocationArray>;
 export type PluginParameterStructSchema = z.infer<typeof pluginParameterStruct>;
 export type PluginParameterStructArraySchema = z.infer<typeof pluginParameterStructArray>;
 

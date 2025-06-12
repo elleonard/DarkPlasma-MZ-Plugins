@@ -1,8 +1,27 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
 
+type ChangePartyProcess = "fadeOut" | "fadeIn" | "transfer" | "commonEvent";
+type ChangePartyQueue = ChangePartyProcess[];
+
+declare interface Game_Temp {
+  _changePartyQueue: ChangePartyQueue;
+
+  dequeueChangePartyProcess(): ChangePartyProcess|undefined;
+  enqueueChangePartyProcess(process: ChangePartyProcess): void;
+}
+
+declare interface Game_Screen {
+  isFadeBusy(): boolean;
+}
+
 type Game_DevidedParties = {
   parties: Game_DevidedParty[];
   currentIndex: number;
+};
+
+type ChangePartyParameter = {
+  autoFadeOut: boolean;
+  autoFadeIn: boolean;
 };
 
 declare interface Game_Party {
@@ -13,11 +32,11 @@ declare interface Game_Party {
   devidedParty(index: number): Game_DevidedParty | undefined;
   currentParty(): Game_DevidedParty | undefined;
   currentPartyIndex(): number | undefined;
-  changeToNextParty(): void;
-  changeToPreviousParty(): void;
+  changeToNextParty(param: ChangePartyParameter): void;
+  changeToPreviousParty(param: ChangePartyParameter): void;
   joinAllDevidedParties(): void;
   isDevided(): boolean;
-  onPartyChanged(): void;
+  onPartyChanged(param: ChangePartyParameter): void;
 }
 
 type Game_DevidedPartyPosition = {
@@ -36,6 +55,7 @@ declare interface Game_DevidedParty {
   setPosition(position: Game_DevidedPartyPosition): void;
   updatePosition(): void;
   addMember(actor: Game_Actor): void;
+  setMember(actor: Game_Actor, index: number): void;
   removeMember(actor: Game_Actor): void;
   includesActor(actor: Game_Actor): boolean;
   actor(index: number): Game_Actor;
@@ -47,8 +67,13 @@ declare interface Game_DevidedParty {
 }
 
 declare interface Scene_Map {
+  _changePartyProcess: ChangePartyProcess|undefined;
+
   updateCallChangeParty(): void;
+  updateChangePartyQueue(): void;
   isChangePartyEnabled(): boolean;
   isChangeToNextPartyCalled(): boolean;
   isChangeToPreviousPartyCalled(): boolean;
+
+  isChangePartyProcessBusy(): boolean;
 }
