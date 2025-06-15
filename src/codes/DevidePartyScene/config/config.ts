@@ -1,6 +1,6 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
-import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
-import {} from '../../../../modules/config/createParameter.js';
+import { PluginHistorySchema, PluginParameterSchema } from '../../../../modules/config/configSchema.js';
+import { createBooleanParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
@@ -11,6 +11,13 @@ const histories: PluginHistorySchema[] = [
   }
 ];
 
+const parameters: PluginParameterSchema[] = [
+  createBooleanParam("showHelpWindow", {
+    text: "ヘルプウィンドウを表示",
+    default: true,
+  }),
+];
+
 export const config = new ConfigDefinitionBuilder(
   "DevidePartyScene",
   2025,
@@ -18,7 +25,7 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
-  .withDraft(true)
+  .withParameters(parameters)
   .withBaseDependency({
     name: "DarkPlasma_ConcurrentParty",
     version: "1.0.0",
