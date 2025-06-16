@@ -2,6 +2,15 @@
 
 import { settings } from '../config/_build/DarkPlasma_SelectActorCharacterWindow_parameters';
 
+function Scene_SelectActorCharacterMixIn(sceneClass: Scene_Base) {
+  sceneClass.characterSize = function () {
+    return {
+      width: settings.characterWidth,
+      height: settings.characterHeight,
+    };
+  };
+}
+
 class Window_SelectActorCharacter extends Window_StatusBase {
   _pendingIndex: number;
   
@@ -165,6 +174,8 @@ class Window_SelectActorCharacter extends Window_StatusBase {
 
 type _Window_SelectActorCharacter = typeof Window_SelectActorCharacter;
 declare global {
+  function Scene_SelectActorCharacterMixIn(sceneClass: Scene_Base): void;
   var Window_SelectActorCharacter: _Window_SelectActorCharacter;
 }
+globalThis.Scene_SelectActorCharacterMixIn = Scene_SelectActorCharacterMixIn;
 globalThis.Window_SelectActorCharacter = Window_SelectActorCharacter;

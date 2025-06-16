@@ -2,9 +2,12 @@
 
 import { settings } from '../config/_build/DarkPlasma_DevidePartyScene_parameters';
 
+const WAITING_WINDOW_PADDING: number = 36;
+
 class Scene_DevideParty extends Scene_Base {
   _devidedParties: Game_DevidedParty[];
   _helpWindow: Window_Help | null = null;
+  _waitingMemberWindow: Window_DevidePartyWaitingMember;
   _cancelButton: Sprite_Button | null = null;
 
   public create(): void {
@@ -16,6 +19,8 @@ class Scene_DevideParty extends Scene_Base {
     /**
      * TODO: 待機メンバーと分割パーティウィンドウを作る
      */
+    this.createStatusWindow();
+    this.createWaitingMemberWindow();
   }
 
   createBackground() {
@@ -41,6 +46,19 @@ class Scene_DevideParty extends Scene_Base {
     this.addWindow(this._helpWindow);
   }
 
+  createStatusWindow() {
+    // TODO
+  }
+
+  createWaitingMemberWindow() {
+    this._waitingMemberWindow = new Window_DevidePartyWaitingMember(this.waitingMemberWindowRect());
+    this.addWindow(this._waitingMemberWindow);
+  }
+
+  createDevidePartyWindows() {
+
+  }
+
   helpWindowText() {
     return "";
   }
@@ -51,10 +69,52 @@ class Scene_DevideParty extends Scene_Base {
           ? Graphics.boxWidth -
           this.cancelButtonWidth() - 8
           : Graphics.boxWidth;
-        return new Rectangle(0, 0, width, this.calcWindowHeight(1, false));
+        return new Rectangle(0, 0, width, this.helpAreaHeight());
       } else {
         return new Rectangle(0, 0, 0, 0);
       }
+  }
+
+  helpAreaHeight() {
+    return this.calcWindowHeight(1, false);
+  }
+
+  statusWindowRect() {
+    return new Rectangle(
+      0,
+      this.helpAreaHeight(),
+      Graphics.boxWidth,
+      this.calcWindowHeight(4, false)
+    );
+  }
+
+  waitingMemberWindowRect() {
+    return new Rectangle(0, this.helpAreaHeight(), Graphics.boxWidth, this.memberWindowHeight());
+  }
+
+  memberWindowHeight(): number {
+    const characterSize = this.characterSize();
+      return characterSize.height > this.defaultCharacterSize().height
+        ? characterSize.height + WAITING_WINDOW_PADDING
+        : characterSize.height * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
+    }
+
+    
+  devidePartyWindowRect(index: number) {
+    return new Rectangle(
+      index * this.devidePartyWindowWidth(),
+      this.helpAreaHeight() + this.memberWindowHeight(),
+      Graphics.boxWidth,
+      Graphics.boxHeight
+    );
+  }
+
+  devidePartyWindowWidth() {
+    const characterSize = this.characterSize();
+    const characterSpacing = Window_SelectActorCharacter.prototype.spacing();
+    return characterSize.height > this.defaultCharacterSize().height
+      ? (characterSize.width + characterSpacing) * $gameParty.maxBattleMembers()
+      : (characterSize.width + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
   }
 
   commitDevidedPartiesAndExit() {
@@ -145,9 +205,17 @@ class Window_DevidePartyMember extends Window_SelectActorCharacter {
 }
 
 class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
+  _actors: Game_Actor[];
 
+  members() {
+    return this._actors;
+  }
 }
 
 class Window_DevidedParty extends Window_DevidePartyMember {
+  _actors: Game_Actor[];
 
+  members() {
+    return this._actors;
+  }
 }
