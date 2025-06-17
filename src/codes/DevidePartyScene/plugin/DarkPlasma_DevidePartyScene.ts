@@ -58,6 +58,7 @@ class Scene_DevideParty extends Scene_Base {
 
   createWaitingMemberWindow() {
     this._waitingMemberWindow = new Window_DevidePartyWaitingMember(this.waitingMemberWindowRect());
+    this._waitingMemberWindow.setCharacterSize(this.characterSize());
     /**
      * TODO: カーソル操作の定義
      */
@@ -67,7 +68,10 @@ class Scene_DevideParty extends Scene_Base {
   createDevidedPartyWindows() {
     this._devidedPartyWindows = [...Array($gameTemp.devidePartyCount()).keys()]
       .map(i => new Window_DevidedParty(this.devidedPartyWindowRect(i)));
-    this._devidedPartyWindows.forEach(w => this.addWindow(w));
+    this._devidedPartyWindows.forEach(w => {
+      w.setCharacterSize(this.characterSize());
+      this.addWindow(w);
+    });
   }
 
   helpWindowText() {
@@ -167,14 +171,16 @@ class Window_DevidePartyStatus extends Window_SkillStatus {
 }
 
 class Window_DevidePartyMember extends Window_SelectActorCharacter {
-  _activateAnotherWindow: () => void;
-
+  _characterSize: {
+    width: number;
+    height: number;
+  };
   _statusWindow: Window_DevidePartyStatus | null = null;
   _statusParamsWindow: Window_StatusParams | null = null;
   _equipWindow: Window_StatusEquip | null = null;
 
-  setActivateAnotherWindow(func: () => void) {
-    this._activateAnotherWindow = func;
+  setCharacterSize(size: {width: number, height: number}) {
+    this._characterSize = size;
   }
 
   setStatusWindow(statusWindow: Window_DevidePartyStatus) {
@@ -222,14 +228,49 @@ class Window_DevidePartyMember extends Window_SelectActorCharacter {
 
 class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
   _actors: Game_Actor[];
+  _devidedPartyWindows: Window_DevidedParty[];
+
+  setDevidedPartyWindows(windows: Window_DevidedParty[]) {
+    this._devidedPartyWindows = windows;
+  }
+
+  activationTargetWindow(): Window_DevidedParty {
+    const cursorX = this.x + this.itemRect(this.index()).x;
+    const targetWindowIndex = this._devidedPartyWindows.findIndex(devidedPartyWindow => devidedPartyWindow.x > cursorX) - 1;
+    return targetWindowIndex < 0 ? this._devidedPartyWindows[0] : this._devidedPartyWindows[targetWindowIndex];
+  }
+
+  activateDevidedPartyWindow() {
+    const target = this.activationTargetWindow();
+    this.deactivate();
+    target.activate();
+  }
+
+  maxCols() {
+    return Math.floor(this.innerWidth / (this._characterSize.width + this.spacing()));
+  }
 
   members() {
     return this._actors;
+  }
+
+  public cursorDown(wrap?: boolean | undefined): void {
+    if (this.index() >= this.maxCols()) {
+      this.activateDevidedPartyWindow();
+      this.playCursorSound();
+      this.updateInputData();
+    } else {
+      super.cursorDown(wrap);
+    }
   }
 }
 
 class Window_DevidedParty extends Window_DevidePartyMember {
   _actors: Game_Actor[];
+
+  /**
+   * TODO: カーソル操作を定義する
+   */
 
   members() {
     return this._actors;
