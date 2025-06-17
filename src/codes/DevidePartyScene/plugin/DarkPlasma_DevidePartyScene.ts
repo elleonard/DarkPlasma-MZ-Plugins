@@ -6,8 +6,13 @@ const WAITING_WINDOW_PADDING: number = 36;
 
 class Scene_DevideParty extends Scene_Base {
   _devidedParties: Game_DevidedParty[];
+
+  _backgroundSprite: Sprite;
+
   _helpWindow: Window_Help | null = null;
+  _statusWindow: Window_DevidePartyStatus;
   _waitingMemberWindow: Window_DevidePartyWaitingMember;
+  _devidedPartyWindows: Window_DevidedParty[];
   _cancelButton: Sprite_Button | null = null;
 
   public create(): void {
@@ -16,15 +21,15 @@ class Scene_DevideParty extends Scene_Base {
     this.createWindowLayer();
     this.createButtons();
     this.createHelpWindow();
-    /**
-     * TODO: 待機メンバーと分割パーティウィンドウを作る
-     */
     this.createStatusWindow();
     this.createWaitingMemberWindow();
+    this.createDevidedPartyWindows();
   }
 
   createBackground() {
-
+    this._backgroundSprite = new Sprite();
+    this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
+    this.addChild(this._backgroundSprite);
   }
 
   createButtons() {
@@ -47,16 +52,22 @@ class Scene_DevideParty extends Scene_Base {
   }
 
   createStatusWindow() {
-    // TODO
+    this._statusWindow = new Window_DevidePartyStatus(this.statusWindowRect());
+    this.addWindow(this._statusWindow);
   }
 
   createWaitingMemberWindow() {
     this._waitingMemberWindow = new Window_DevidePartyWaitingMember(this.waitingMemberWindowRect());
+    /**
+     * TODO: カーソル操作の定義
+     */
     this.addWindow(this._waitingMemberWindow);
   }
 
-  createDevidePartyWindows() {
-
+  createDevidedPartyWindows() {
+    this._devidedPartyWindows = [...Array($gameTemp.devidePartyCount()).keys()]
+      .map(i => new Window_DevidedParty(this.devidedPartyWindowRect(i)));
+    this._devidedPartyWindows.forEach(w => this.addWindow(w));
   }
 
   helpWindowText() {
@@ -64,15 +75,15 @@ class Scene_DevideParty extends Scene_Base {
   }
 
   helpWindowRect() {
-      if (settings.showHelpWindow) {
-        const width = ConfigManager.touchUI
-          ? Graphics.boxWidth -
-          this.cancelButtonWidth() - 8
-          : Graphics.boxWidth;
-        return new Rectangle(0, 0, width, this.helpAreaHeight());
-      } else {
-        return new Rectangle(0, 0, 0, 0);
-      }
+    if (settings.showHelpWindow) {
+      const width = ConfigManager.touchUI
+        ? Graphics.boxWidth -
+        this.cancelButtonWidth() - 8
+        : Graphics.boxWidth;
+      return new Rectangle(0, 0, width, this.helpAreaHeight());
+    } else {
+      return new Rectangle(0, 0, 0, 0);
+    }
   }
 
   helpAreaHeight() {
@@ -89,27 +100,32 @@ class Scene_DevideParty extends Scene_Base {
   }
 
   waitingMemberWindowRect() {
-    return new Rectangle(0, this.helpAreaHeight(), Graphics.boxWidth, this.memberWindowHeight());
+    return new Rectangle(
+      0,
+      this.helpAreaHeight() + this.statusWindowRect().height,
+      Graphics.boxWidth,
+      this.memberWindowHeight()
+    );
   }
 
   memberWindowHeight(): number {
     const characterSize = this.characterSize();
-      return characterSize.height > this.defaultCharacterSize().height
-        ? characterSize.height + WAITING_WINDOW_PADDING
-        : characterSize.height * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
-    }
+    return characterSize.height > this.defaultCharacterSize().height
+      ? characterSize.height + WAITING_WINDOW_PADDING
+      : characterSize.height * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
+  }
 
-    
-  devidePartyWindowRect(index: number) {
+
+  devidedPartyWindowRect(index: number) {
     return new Rectangle(
-      index * this.devidePartyWindowWidth(),
+      index * this.devidedPartyWindowWidth(),
       this.helpAreaHeight() + this.memberWindowHeight(),
       Graphics.boxWidth,
-      Graphics.boxHeight
+      this.memberWindowHeight()
     );
   }
 
-  devidePartyWindowWidth() {
+  devidedPartyWindowWidth() {
     const characterSize = this.characterSize();
     const characterSpacing = Window_SelectActorCharacter.prototype.spacing();
     return characterSize.height > this.defaultCharacterSize().height
