@@ -58,7 +58,7 @@ class Scene_DevideParty extends Scene_Base {
 
   createWaitingMemberWindow() {
     this._waitingMemberWindow = new Window_DevidePartyWaitingMember(this.waitingMemberWindowRect());
-    this._waitingMemberWindow.setCharacterSize(this.characterSize());
+    this._waitingMemberWindow.setCharacterSize(this.characterSize(), this.defaultCharacterSize());
     /**
      * TODO: カーソル操作の定義
      */
@@ -69,9 +69,11 @@ class Scene_DevideParty extends Scene_Base {
     this._devidedPartyWindows = [...Array($gameTemp.devidePartyCount()).keys()]
       .map(i => new Window_DevidedParty(this.devidedPartyWindowRect(i)));
     this._devidedPartyWindows.forEach(w => {
-      w.setCharacterSize(this.characterSize());
+      w.setCharacterSize(this.characterSize(), this.defaultCharacterSize());
+      w.setWaitingMemberWindow(this._waitingMemberWindow);
       this.addWindow(w);
     });
+    this._waitingMemberWindow.setDevidedPartyWindows(this._devidedPartyWindows);
   }
 
   helpWindowText() {
@@ -175,12 +177,17 @@ class Window_DevidePartyMember extends Window_SelectActorCharacter {
     width: number;
     height: number;
   };
+  _defaultCharacterSize: {
+    width: number;
+    height: number;
+  };
   _statusWindow: Window_DevidePartyStatus | null = null;
   _statusParamsWindow: Window_StatusParams | null = null;
   _equipWindow: Window_StatusEquip | null = null;
 
-  setCharacterSize(size: {width: number, height: number}) {
+  setCharacterSize(size: { width: number, height: number }, defaultSize: { width: number, height: number }) {
     this._characterSize = size;
+    this._defaultCharacterSize = defaultSize;
   }
 
   setStatusWindow(statusWindow: Window_DevidePartyStatus) {
@@ -197,6 +204,41 @@ class Window_DevidePartyMember extends Window_SelectActorCharacter {
 
   members(): Game_Actor[] {
     return [];
+  }
+
+  nearestIndexCandidates(x: number, y: number) {
+    return [...Array(this.maxItems()).keys()];
+  }
+  
+  nearestIndexTo(x: number, y: number) {
+    const candidates = this.nearestIndexCandidates(x, y).map(i => {
+      const rect = this.itemRect(i);
+      return {
+        index: i,
+        x: this.x + rect.x + Math.floor(rect.width/2),
+        y: this.y + rect.y + Math.floor(rect.height/2),
+      };
+    });
+    return candidates.reduce((result: {index: number, x: number, y: number}|undefined, current) => {
+      if (!result) {
+        return current;
+      }
+      if (Math.abs(result.x - x) + Math.abs(result.y - y) > Math.abs(current.x - x) + Math.abs(result.y - y)) {
+        return current;
+      }
+      return result;
+    }, undefined)!.index;
+  }
+
+  activationTargetWindow(): Window_DevidePartyMember {
+    return this;
+  }
+  
+  activateOtherWindow(target: Window_DevidePartyMember) {
+    this.deactivate();
+    target.activate();
+    const currentPoint = this.itemRect(this.index());
+    target.select(target.nearestIndexTo(currentPoint.x, currentPoint.y));
   }
 
   select(index: number) {
@@ -234,29 +276,33 @@ class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
     this._devidedPartyWindows = windows;
   }
 
-  activationTargetWindow(): Window_DevidedParty {
+  activationTargetWindow() {
     const cursorX = this.x + this.itemRect(this.index()).x;
     const targetWindowIndex = this._devidedPartyWindows.findIndex(devidedPartyWindow => devidedPartyWindow.x > cursorX) - 1;
     return targetWindowIndex < 0 ? this._devidedPartyWindows[0] : this._devidedPartyWindows[targetWindowIndex];
-  }
-
-  activateDevidedPartyWindow() {
-    const target = this.activationTargetWindow();
-    this.deactivate();
-    target.activate();
   }
 
   maxCols() {
     return Math.floor(this.innerWidth / (this._characterSize.width + this.spacing()));
   }
 
+  public maxItems(): number {
+    return this.maxCols() * 2;
+  }
+
   members() {
     return this._actors;
   }
 
+  nearestIndexCandidates(x: number, y: number): number[] {
+    return this.y + this.height < y
+      ? super.nearestIndexCandidates(x, y).filter(i => i >= this.maxCols())
+      : super.nearestIndexCandidates(x, y);
+  }
+
   public cursorDown(wrap?: boolean | undefined): void {
     if (this.index() >= this.maxCols()) {
-      this.activateDevidedPartyWindow();
+      this.activateOtherWindow(this.activationTargetWindow());
       this.playCursorSound();
       this.updateInputData();
     } else {
@@ -267,12 +313,46 @@ class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
 
 class Window_DevidedParty extends Window_DevidePartyMember {
   _actors: Game_Actor[];
+  _waitingMemberWindow: Window_DevidePartyWaitingMember;
+  _activationTargetWindow: Window_DevidePartyMember;
 
-  /**
-   * TODO: カーソル操作を定義する
-   */
+  setWaitingMemberWindow(waitingMemberWindow: Window_DevidePartyWaitingMember) {
+    this._waitingMemberWindow = waitingMemberWindow;
+  }
+
+  isAtTopRow() {
+    return this.index() < this.maxCols();
+  }
+
+  public maxCols(): number {
+    return this._characterSize.height > this._defaultCharacterSize.height
+      ? $gameParty.maxBattleMembers()
+      : Math.ceil($gameParty.maxBattleMembers() / 2);
+  }
+
+  public maxItems(): number {
+    return $gameParty.maxBattleMembers();
+  }
 
   members() {
     return this._actors;
+  }
+
+  public cursorUp(wrap?: boolean | undefined): void {
+    if (this.isAtTopRow()) {
+      this.activateOtherWindow(this._waitingMemberWindow);
+      this.playCursorSound();
+      this.updateInputData();
+    } else {
+      super.cursorUp(wrap);
+    }
+  }
+
+  public cursorLeft(wrap?: boolean | undefined): void {
+    // TODO: カーソル操作
+  }
+
+  public cursorRight(wrap?: boolean | undefined): void {
+    // TODO: カーソル操作
   }
 }
