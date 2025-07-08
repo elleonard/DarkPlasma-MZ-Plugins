@@ -3,6 +3,9 @@ DarkPlasma_TextLog:
   year: 2022
   license: MIT
   histories:
+    - date: 2025/07/08
+      version: 2.3.0
+      description: 'スクリプトを用いてマップからログシーンを開く手段を追加'
     - date: 2024/03/14
       version: 2.2.0
       description: 'パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更'
@@ -205,3 +208,6 @@ DarkPlasma_TextLog:
       メッセージ表示時に逐次処理される制御文字のみ無視することができます。
       \V \Sなど、メッセージ表示処理開始時に
       変換処理が施される制御文字を無視することはできません。
+
+      以下のスクリプトにより、マップからログを開くことができます。
+      $gameTemp.requestCallTextLogOnMap();

@@ -36,12 +36,17 @@ declare interface Game_Temp {
   _evacuatedMessageAndSubWindows: EvacuatedMessageAndSubWindows|null;
 
   _eventTextLog: Game_EventTextLog;
+  _callTextLogOnMap: boolean;
 
   setEvacuatedMessageAndSubWindows(windows: EvacuatedMessageAndSubWindows): void;
   evacuatedMessageAndSubWindows(): EvacuatedMessageAndSubWindows|null;
   clearEvacuatedMessageAndSubWindows(): void;
 
   eventTextLog(): Game_EventTextLog;
+
+  requestCallTextLogOnMap(): void;
+  clearCallTextLogOnMapRequest(): void;
+  isCallTextLogOnMapRequested(): boolean;
 }
 
 declare interface Game_Message {

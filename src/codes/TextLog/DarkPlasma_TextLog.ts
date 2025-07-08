@@ -66,6 +66,7 @@ function Game_Temp_TextLogMixIn(gameTemp: Game_Temp) {
     _initialize.call(this);
     this._evacuatedMessageAndSubWindows = null;
     this._eventTextLog = new Game_EventTextLog();
+    this._callTextLogOnMap = false;
   };
 
   gameTemp.evacuatedMessageAndSubWindows = function() {
@@ -82,6 +83,18 @@ function Game_Temp_TextLogMixIn(gameTemp: Game_Temp) {
 
   gameTemp.eventTextLog = function () {
     return this._eventTextLog;
+  };
+
+  gameTemp.requestCallTextLogOnMap = function () {
+    this._callTextLogOnMap = true;
+  };
+
+  gameTemp.clearCallTextLogOnMapRequest = function () {
+    this._callTextLogOnMap = false;
+  };
+
+  gameTemp.isCallTextLogOnMapRequested = function () {
+    return this._callTextLogOnMap;
   };
 }
 
@@ -359,6 +372,7 @@ function Scene_Map_TextLogMixIn(sceneMap: Scene_Map) {
     if (this.isTextLogEnabled()) {
       if (this.isTextLogCalled()) {
         this.textLogCalling = true;
+        $gameTemp.clearCallTextLogOnMapRequest();
       }
       if (this.textLogCalling && !$gamePlayer.isMoving()) {
         this.callTextLog();
@@ -373,7 +387,7 @@ function Scene_Map_TextLogMixIn(sceneMap: Scene_Map) {
   };
 
   sceneMap.isTextLogCalled = function () {
-    return settings.openLogKeys.some((key: string) => Input.isTriggered(key));
+    return settings.openLogKeys.some((key: string) => Input.isTriggered(key)) || $gameTemp.isCallTextLogOnMapRequested();
   };
 
   sceneMap.callTextLog = function () {
