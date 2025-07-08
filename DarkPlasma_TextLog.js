@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 2.2.0
+// DarkPlasma_TextLog 2.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/08 2.3.0 スクリプトを用いてマップからログシーンを開く手段を追加
  * 2024/03/14 2.2.0 パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更
  * 2023/12/23 2.1.1 ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正
  *            2.1.0 自動区切り線の挿入を区切り線の直後に行わないように変更
@@ -152,7 +153,7 @@
  * @type string
  *
  * @help
- * version: 2.2.0
+ * version: 2.3.0
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -163,6 +164,9 @@
  * メッセージ表示時に逐次処理される制御文字のみ無視することができます。
  * \V \Sなど、メッセージ表示処理開始時に
  * 変換処理が施される制御文字を無視することはできません。
+ *
+ * 以下のスクリプトにより、マップからログを開くことができます。
+ * $gameTemp.requestCallTextLogOnMap();
  */
 
 (() => {
@@ -267,6 +271,7 @@
       _initialize.call(this);
       this._evacuatedMessageAndSubWindows = null;
       this._eventTextLog = new Game_EventTextLog();
+      this._callTextLogOnMap = false;
     };
     gameTemp.evacuatedMessageAndSubWindows = function () {
       return this._evacuatedMessageAndSubWindows;
@@ -279,6 +284,15 @@
     };
     gameTemp.eventTextLog = function () {
       return this._eventTextLog;
+    };
+    gameTemp.requestCallTextLogOnMap = function () {
+      this._callTextLogOnMap = true;
+    };
+    gameTemp.clearCallTextLogOnMapRequest = function () {
+      this._callTextLogOnMap = false;
+    };
+    gameTemp.isCallTextLogOnMapRequested = function () {
+      return this._callTextLogOnMap;
     };
   }
   Game_Temp_TextLogMixIn(Game_Temp.prototype);
@@ -509,6 +523,7 @@
       if (this.isTextLogEnabled()) {
         if (this.isTextLogCalled()) {
           this.textLogCalling = true;
+          $gameTemp.clearCallTextLogOnMapRequest();
         }
         if (this.textLogCalling && !$gamePlayer.isMoving()) {
           this.callTextLog();
@@ -521,7 +536,7 @@
       return !settings.disableLogWindowSwitch || !$gameSwitches.value(settings.disableLogWindowSwitch);
     };
     sceneMap.isTextLogCalled = function () {
-      return settings.openLogKeys.some((key) => Input.isTriggered(key));
+      return settings.openLogKeys.some((key) => Input.isTriggered(key)) || $gameTemp.isCallTextLogOnMapRequested();
     };
     sceneMap.callTextLog = function () {
       if (settings.smoothBackFromLog) {
