@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
 
 declare interface Game_System {
   _medalRewardsCompletion: {[key: string]: boolean};

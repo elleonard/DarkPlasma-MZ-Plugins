@@ -1,8 +1,8 @@
 /// <reference path="./TinyMedal.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { command_gotoSceneMedal, command_processTinyMedal } from './_build/DarkPlasma_TinyMedal_commands';
-import { settings } from './_build/DarkPlasma_TinyMedal_parameters';
+import { pluginName } from '../../../common/pluginName';
+import { command_gotoSceneMedal, command_processTinyMedal } from '../config/_build/DarkPlasma_TinyMedal_commands';
+import { settings } from '../config/_build/DarkPlasma_TinyMedal_parameters';
 
 const ITEM_KIND = {
   ITEM: 1,
