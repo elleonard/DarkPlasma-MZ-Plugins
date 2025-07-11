@@ -1,9 +1,11 @@
-// DarkPlasma_TinyMedal 3.1.0
+// DarkPlasma_TinyMedal 3.1.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/11 3.1.1 設定値をtypescript移行
+ *                  報酬メッセージが初期設定のままだと正常に動作しない不具合を修正
  * 2023/05/15 3.1.0 typescript移行
  *                  報酬メッセージに交換に必要な枚数を含める機能追加
  * 2022/05/14 3.0.0 報酬獲得済みフラグのキーを変更（2.x以前とセーブデータ互換性がありません）
@@ -27,7 +29,6 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @param medalItem
- * @desc メダルアイテム
  * @text メダルアイテム
  * @type item
  * @default 1
@@ -37,37 +38,31 @@
  * @text メダル預かり数変数
  * @type variable
  * @default 1
- * @min 1
  *
  * @param medalUnit
- * @desc メダルカウントの単位
  * @text メダルの単位
  * @type string
  * @default 枚
  *
  * @param rewardItems
- * @desc 報酬アイテムの一覧
  * @text 報酬アイテム
  * @type struct<RewardItems>[]
  * @default []
  *
  * @param rewardWeapons
- * @desc 報酬武器の一覧
  * @text 報酬武器
  * @type struct<RewardWeapons>[]
  * @default []
  *
  * @param rewardArmors
- * @desc 報酬防具の一覧
  * @text 報酬防具
  * @type struct<RewardArmors>[]
  * @default []
  *
  * @param rewardMessages
- * @desc 報酬メッセージリスト
  * @text 報酬メッセージ
  * @type struct<RewardMessage>[]
- * @default ["{\"message\":\"メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n\",\"faceFile\":\"\",\"faceIndex\":\"0\"}"]
+ * @default ["{\"message\":\"メダルを${medalCount}個集めた。\\n「${itemName}」を手に入れた！\",\"faceFile\":\"\",\"faceIndex\":\"0\"}"]
  *
  * @param migrateV2ToV3
  * @desc 2.xからバージョンアップする際のセーブデータ変換をするかどうか。詳細はヘルプ
@@ -84,7 +79,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 3.1.0
+ * version: 3.1.1
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  *
  * 同じメダル数で同じアイテム・武器・防具の報酬を
@@ -123,62 +118,54 @@
  */
 /*~struct~RewardItems:
  * @param medalCount
- * @desc アイテムをもらうために必要なメダルの数
  * @text 必要メダル数
  * @type number
  * @default 1
  *
  * @param id
- * @desc もらえるアイテム
  * @text 報酬アイテム
  * @type item
- * @default 1
+ * @default 0
  */
 /*~struct~RewardWeapons:
  * @param medalCount
- * @desc 武器をもらうために必要なメダルの数
  * @text 必要メダル数
  * @type number
  * @default 1
  *
  * @param id
- * @desc もらえる武器
  * @text 報酬武器
  * @type weapon
- * @default 1
+ * @default 0
  */
 /*~struct~RewardArmors:
  * @param medalCount
- * @desc 防具をもらうために必要なメダルの数
  * @text 必要メダル数
  * @type number
  * @default 1
  *
  * @param id
- * @desc もらえる防具
  * @text 報酬防具
  * @type armor
- * @default 1
+ * @default 0
  */
 /*~struct~RewardMessage:
  * @param message
  * @desc 報酬をもらった際のメッセージ。特殊な書式はヘルプ参照
  * @text 報酬メッセージ
  * @type multiline_string
- * @default メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n
+ * @default メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！
  *
  * @param faceFile
- * @desc 報酬メッセージの顔グラファイル
  * @text 顔グラファイル
  * @type file
  * @dir img/faces
  *
  * @param faceIndex
- * @desc 報酬メッセージの顔グラ番号
  * @text 顔グラ番号
  * @type number
- * @default 0
  * @max 7
+ * @default 0
  */
 (() => {
   'use strict';
@@ -199,46 +186,59 @@
     medalItem: Number(pluginParameters.medalItem || 1),
     medalCountVariable: Number(pluginParameters.medalCountVariable || 1),
     medalUnit: String(pluginParameters.medalUnit || `枚`),
-    rewardItems: JSON.parse(pluginParameters.rewardItems || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          medalCount: Number(parsed.medalCount || 1),
-          id: Number(parsed.id || 1),
-        };
-      })(e || '{}');
-    }),
-    rewardWeapons: JSON.parse(pluginParameters.rewardWeapons || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          medalCount: Number(parsed.medalCount || 1),
-          id: Number(parsed.id || 1),
-        };
-      })(e || '{}');
-    }),
-    rewardArmors: JSON.parse(pluginParameters.rewardArmors || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          medalCount: Number(parsed.medalCount || 1),
-          id: Number(parsed.id || 1),
-        };
-      })(e || '{}');
-    }),
-    rewardMessages: JSON.parse(
-      pluginParameters.rewardMessages ||
-        '[{"message":"メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n","faceFile":"","faceIndex":"0"}]'
-    ).map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          message: String(parsed.message || `メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！\n`),
-          faceFile: String(parsed.faceFile || ``),
-          faceIndex: Number(parsed.faceIndex || 0),
-        };
-      })(e || '{}');
-    }),
+    rewardItems: pluginParameters.rewardItems
+      ? JSON.parse(pluginParameters.rewardItems).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  medalCount: Number(parsed.medalCount || 1),
+                  id: Number(parsed.id || 0),
+                };
+              })(e)
+            : { medalCount: 1, id: 0 };
+        })
+      : [],
+    rewardWeapons: pluginParameters.rewardWeapons
+      ? JSON.parse(pluginParameters.rewardWeapons).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  medalCount: Number(parsed.medalCount || 1),
+                  id: Number(parsed.id || 0),
+                };
+              })(e)
+            : { medalCount: 1, id: 0 };
+        })
+      : [],
+    rewardArmors: pluginParameters.rewardArmors
+      ? JSON.parse(pluginParameters.rewardArmors).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  medalCount: Number(parsed.medalCount || 1),
+                  id: Number(parsed.id || 0),
+                };
+              })(e)
+            : { medalCount: 1, id: 0 };
+        })
+      : [],
+    rewardMessages: pluginParameters.rewardMessages
+      ? JSON.parse(pluginParameters.rewardMessages).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  message: String(parsed.message || `メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！`),
+                  faceFile: String(parsed.faceFile || ``),
+                  faceIndex: Number(parsed.faceIndex || 0),
+                };
+              })(e)
+            : { message: 'メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！', faceFile: '', faceIndex: 0 };
+        })
+      : [{ message: 'メダルを${medalCount}個集めた。\n「${itemName}」を手に入れた！', faceFile: '', faceIndex: 0 }],
     migrateV2ToV3: String(pluginParameters.migrateV2ToV3 || true) === 'true',
   };
 
