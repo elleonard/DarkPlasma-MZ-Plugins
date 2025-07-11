@@ -1,9 +1,11 @@
-// DarkPlasma_TinyMedal 3.1.1
+// DarkPlasma_TinyMedal 3.1.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/12 3.1.2 報酬リスト表示を最初から必要メダル数昇順でソートしておくように修正
+ *                  報酬リストウィンドウの初期選択位置を指定
  * 2025/07/11 3.1.1 設定値をtypescript移行
  *                  報酬メッセージが初期設定のままだと正常に動作しない不具合を修正
  * 2023/05/15 3.1.0 typescript移行
@@ -79,7 +81,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 3.1.1
+ * version: 3.1.2
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  *
  * 同じメダル数で同じアイテム・武器・防具の報酬を
@@ -568,6 +570,9 @@
     commandShowRewards() {
       this._menuWindow.deselect();
       this._rewardsWindow.activate();
+      if (this._rewardsWindow.index() < 0 && this._rewardsWindow.maxItems() > 0) {
+        this._rewardsWindow.select(0);
+      }
     }
     onRewardsListCancel() {
       this._rewardsWindow.deselect();
@@ -658,6 +663,7 @@
     }
     makeItemList() {
       this._data = rewardItems;
+      this._data.sort((a, b) => a.medalCount - b.medalCount);
     }
     includes(item) {
       return true;
