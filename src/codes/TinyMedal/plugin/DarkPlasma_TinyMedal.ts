@@ -398,6 +398,9 @@ class Scene_TinyMedal extends Scene_Base {
   commandShowRewards() {
     this._menuWindow.deselect();
     this._rewardsWindow.activate();
+    if (this._rewardsWindow.index() < 0 && this._rewardsWindow.maxItems() > 0) {
+      this._rewardsWindow.select(0);
+    }
   }
 
   onRewardsListCancel() {
@@ -514,6 +517,7 @@ class Window_MedalRewardList extends Window_ItemListLikeMixIn<typeof Window_Sele
 
   makeItemList() {
     this._data = rewardItems;
+    this._data.sort((a, b) => a.medalCount - b.medalCount);
   }
 
   includes(item: RewardItem): boolean {

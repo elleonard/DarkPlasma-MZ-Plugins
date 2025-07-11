@@ -5,6 +5,14 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/12",
+    version: "3.1.2",
+    description: "報酬リスト表示を最初から必要メダル数昇順でソートしておくように修正",
+  },
+  {
+    description: "報酬リストウィンドウの初期選択位置を指定"
+  },
+  {
     date: "2025/07/11",
     version: "3.1.1",
     description: "設定値をtypescript移行",
