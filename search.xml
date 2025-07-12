@@ -4,11 +4,36 @@
   
     
     <entry>
+      <title>パーティ分割シーン</title>
+      <link href="/DarkPlasma-MZ-Plugins/2025/07/12/devide-party-scene/"/>
+      <url>/DarkPlasma-MZ-Plugins/2025/07/12/devide-party-scene/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>パーティ分割シーンを提供します。<br>パーティを2つまたは3つに分割できます。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/07/12/devide-party-scene/devide-party-scene.png" alt="使用例" title="使用例"></p><p>分割したパーティは、特定のキーやプラグインコマンドで切り替えることができます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DevidePartyScene.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="並行パーティシステム"><a href="#並行パーティシステム" class="headerlink" title="並行パーティシステム"></a>並行パーティシステム</h3><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ConcurrentParty.js">GitHub</a></li></ul><h3 id="アクターの歩行グラフィックを表示して選択するウィンドウ"><a href="#アクターの歩行グラフィックを表示して選択するウィンドウ" class="headerlink" title="アクターの歩行グラフィックを表示して選択するウィンドウ"></a>アクターの歩行グラフィックを表示して選択するウィンドウ</h3><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_SelectActorCharacterWindow.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> パーティ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ウィッシュリストの保存と表示</title>
       <link href="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/"/>
       <url>/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/</url>
       
-        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムをウィッシュリストに保存・表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/register.png" alt="使用例" title="使用例"></p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">アイテム融合ショップ</a>での使用例です。<br>特定のキーを押すことで、選択中のアイテムをウィッシュリストに登録したり、削除したりします。</p><p><img src="/DarkPlasma-MZ-Plugins/2022/01/26/always-active/png" alt="使用例" title="使用例"></p><p>登録したアイテムと素材一覧を確認することができます。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/notify.png" alt="使用例" title="使用例"></p><p><a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>と組み合わせて、素材が揃った時に通知を出すことができます。</p><h1 id="プラグインの構成"><a href="#プラグインの構成" class="headerlink" title="プラグインの構成"></a>プラグインの構成</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StoreWishList.js">DarkPlasma_StoreWishList.js</a></p><p>ウィッシュリストを保存・表示する仕組みのみ提供する基底プラグインです。<br>ウィッシュリスト登録については、各アイテム合成系プラグインに対応した拡張プラグインが必要となります。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_WishListForFusionItem.js">DarkPlasma_WishListForFusionItem.js</a><br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">DarkPlasma_FusionItem.js</a>に対応した拡張プラグインです。<br>アイテム融合ショップでウィッシュリスト登録・削除が可能になります。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_NotifyWishList.js">DarkPlasma_NotifyWishList.js</a><br><a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>が必要です。<br>ウィッシュリストに登録されたアイテムの素材が揃った時に通知を表示します。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StoreWishList.js">DarkPlasma_StoreWishList.js</a><br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_WishListForFusionItem.js">DarkPlasma_WishListForFusionItem.js</a> (<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">DarkPlasma_FusionItem.js</a>が必要です)<br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_NotifyWishList.js">DarkPlasma_NotifyWishList.js</a> (<a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>が必要です)</p><p>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>アイテムをウィッシュリストに保存・表示します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/register.png" alt="使用例" title="使用例"></p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">アイテム融合ショップ</a>での使用例です。<br>特定のキーを押すことで、選択中のアイテムをウィッシュリストに登録したり、削除したりします。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/list.png" alt="使用例" title="使用例"></p><p>登録したアイテムと素材一覧を確認することができます。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/02/20/wishlist/notify.png" alt="使用例" title="使用例"></p><p><a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>と組み合わせて、素材が揃った時に通知を出すことができます。</p><h1 id="プラグインの構成"><a href="#プラグインの構成" class="headerlink" title="プラグインの構成"></a>プラグインの構成</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StoreWishList.js">DarkPlasma_StoreWishList.js</a></p><p>ウィッシュリストを保存・表示する仕組みのみ提供する基底プラグインです。<br>ウィッシュリスト登録については、各アイテム合成系プラグインに対応した拡張プラグインが必要となります。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_WishListForFusionItem.js">DarkPlasma_WishListForFusionItem.js</a><br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">DarkPlasma_FusionItem.js</a>に対応した拡張プラグインです。<br>アイテム融合ショップでウィッシュリスト登録・削除が可能になります。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_NotifyWishList.js">DarkPlasma_NotifyWishList.js</a><br><a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>が必要です。<br>ウィッシュリストに登録されたアイテムの素材が揃った時に通知を表示します。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StoreWishList.js">DarkPlasma_StoreWishList.js</a><br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_WishListForFusionItem.js">DarkPlasma_WishListForFusionItem.js</a> (<a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FusionItem.js">DarkPlasma_FusionItem.js</a>が必要です)<br><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_NotifyWishList.js">DarkPlasma_NotifyWishList.js</a> (<a href="https://torigoya-plugin.rutan.dev/map/notifyMessage/">TorigoyaMZ_NotifyMessage.js</a>が必要です)</p><p>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
       
       
       <categories>
@@ -695,9 +720,9 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
@@ -857,11 +882,11 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> マップ </tag>
             
             <tag> キャラクター </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
@@ -886,11 +911,11 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> テキスト </tag>
             
             <tag> MV版あり </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
