@@ -1,9 +1,11 @@
-// DarkPlasma_ConcurrentParty 1.0.0
+// DarkPlasma_ConcurrentParty 1.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/12 1.1.0 分割したパーティをセーブできない不具合を修正
+ *                  切り替えプラグインコマンドに自動フェード設定を追加
  * 2025/06/07 1.0.0 最初のバージョン
  */
 
@@ -41,7 +43,7 @@
  * @default 0
  *
  * @param commonEvent
- * @desc パーティ切り替え時に実行するコモンイベントを指定します。
+ * @desc パーティ切り替え時に予約するコモンイベントを指定します。
  * @text 切り替え時コモンイベント
  * @type common_event
  * @default 0
@@ -58,10 +60,30 @@
  * @command nextParty
  * @text 次のパーティに切り替える
  * @desc 次のパーティへ操作を切り替えます。最後のパーティからは最初のパーティに切り替えます。
+ * @arg autoFadeOut
+ * @desc 切り替え前に自動でフェードアウトします。
+ * @text 自動フェードアウト
+ * @type boolean
+ * @default true
+ * @arg autoFadeIn
+ * @desc 切り替え後に自動フェードインします。
+ * @text 自動フェードイン
+ * @type boolean
+ * @default true
  *
  * @command previousParty
  * @text 前のパーティに切り替える
  * @desc 前のパーティへ操作を切り替えます。最初のパーティからは最後のパーティに切り替えます。
+ * @arg autoFadeOut
+ * @desc 切り替え前に自動でフェードアウトします。
+ * @text 自動フェードアウト
+ * @type boolean
+ * @default true
+ * @arg autoFadeIn
+ * @desc 切り替え後に自動フェードインします。
+ * @text 自動フェードイン
+ * @type boolean
+ * @default true
  *
  * @command joinAllMember
  * @text 全員合流する
@@ -119,7 +141,7 @@
  * @default 0
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
  *
  * プラグインコマンドでパーティを分割することができます。
@@ -205,6 +227,20 @@
     };
   }
 
+  function parseArgs_nextParty(args) {
+    return {
+      autoFadeOut: String(args.autoFadeOut || true) === 'true',
+      autoFadeIn: String(args.autoFadeIn || true) === 'true',
+    };
+  }
+
+  function parseArgs_previousParty(args) {
+    return {
+      autoFadeOut: String(args.autoFadeOut || true) === 'true',
+      autoFadeIn: String(args.autoFadeIn || true) === 'true',
+    };
+  }
+
   function parseArgs_leaderId(args) {
     return {
       variableId: Number(args.variableId || 0),
@@ -270,11 +306,11 @@
       });
     }
   });
-  PluginManager.registerCommand(pluginName, command_nextParty, function () {
-    $gameParty.changeToNextParty();
+  PluginManager.registerCommand(pluginName, command_nextParty, function (args) {
+    $gameParty.changeToNextParty(parseArgs_nextParty(args));
   });
-  PluginManager.registerCommand(pluginName, command_previousParty, function () {
-    $gameParty.changeToPreviousParty();
+  PluginManager.registerCommand(pluginName, command_previousParty, function (args) {
+    $gameParty.changeToPreviousParty(parseArgs_previousParty(args));
   });
   PluginManager.registerCommand(pluginName, command_joinAllMember, function () {
     $gameParty.joinAllDevidedParties();
@@ -309,6 +345,26 @@
       }
     }
   });
+  function Game_Temp_ConcurrentPartyMixIn(gameTemp) {
+    const _initialize = gameTemp.initialize;
+    gameTemp.initialize = function () {
+      _initialize.call(this);
+      this._changePartyQueue = [];
+    };
+    gameTemp.enqueueChangePartyProcess = function (process) {
+      this._changePartyQueue.push(process);
+    };
+    gameTemp.dequeueChangePartyProcess = function () {
+      return this._changePartyQueue.shift();
+    };
+  }
+  Game_Temp_ConcurrentPartyMixIn(Game_Temp.prototype);
+  function Game_Screen_ConcurrentPartyMixIn(gameScreen) {
+    gameScreen.isFadeBusy = function () {
+      return this._fadeInDuration > 0 || this._fadeOutDuration > 0;
+    };
+  }
+  Game_Screen_ConcurrentPartyMixIn(Game_Screen.prototype);
   function Game_Party_ConcurrentPartyMixIn(gameParty) {
     gameParty.devidePartyInto = function (devidedParties) {
       this._devidedParties = devidedParties;
@@ -329,31 +385,38 @@
     gameParty.currentPartyIndex = function () {
       return this._devidedParties ? this._devidedParties.currentIndex : undefined;
     };
-    gameParty.changeToNextParty = function () {
+    gameParty.changeToNextParty = function (param) {
       if (this._devidedParties) {
         this.currentParty()?.updatePosition();
         this._devidedParties.currentIndex =
           (this._devidedParties.currentIndex + 1) % this._devidedParties.parties.length;
-        this.onPartyChanged();
+        this.onPartyChanged(param);
       }
     };
-    gameParty.changeToPreviousParty = function () {
+    gameParty.changeToPreviousParty = function (param) {
       if (this._devidedParties) {
         this.currentParty()?.updatePosition();
         this._devidedParties.currentIndex =
           (this._devidedParties.currentIndex + this._devidedParties.parties.length - 1) %
           this._devidedParties.parties.length;
-        this.onPartyChanged();
+        this.onPartyChanged(param);
       }
     };
-    gameParty.onPartyChanged = function () {
-      this.currentParty()?.transferTo(0);
+    gameParty.onPartyChanged = function (param) {
+      if (param.autoFadeOut) {
+        $gameTemp.enqueueChangePartyProcess('fadeOut');
+      }
+      $gameTemp.enqueueChangePartyProcess('transfer');
       if (settings.commonEvent) {
-        $gameTemp.reserveCommonEvent(settings.commonEvent);
+        $gameTemp.enqueueChangePartyProcess('commonEvent');
+      }
+      if (param.autoFadeIn) {
+        $gameTemp.enqueueChangePartyProcess('fadeIn');
       }
     };
     gameParty.joinAllDevidedParties = function () {
       this._devidedParties = undefined;
+      $gamePlayer.refresh();
     };
     gameParty.isDevided = function () {
       return !!this.devidedParties();
@@ -416,6 +479,9 @@
     addMember(actor) {
       this._members.push(actor);
     }
+    setMember(actor, index) {
+      this._members[index] = actor;
+    }
     removeMember(actor) {
       this._members = this._members.filter((member) => member.actorId() !== actor.actorId());
     }
@@ -454,14 +520,41 @@
       if (!SceneManager.isSceneChanging()) {
         this.updateCallChangeParty();
       }
+      this.updateChangePartyQueue();
     };
     sceneMap.updateCallChangeParty = function () {
       if (this.isChangePartyEnabled()) {
         if (this.isChangeToNextPartyCalled()) {
-          $gameParty.changeToNextParty();
+          $gameParty.changeToNextParty({ autoFadeOut: true, autoFadeIn: true });
         } else if (this.isChangeToPreviousPartyCalled()) {
-          $gameParty.changeToPreviousParty();
+          $gameParty.changeToPreviousParty({ autoFadeOut: true, autoFadeIn: true });
         }
+      }
+    };
+    sceneMap.updateChangePartyQueue = function () {
+      if (this.isChangePartyProcessBusy()) {
+        return;
+      }
+      this._changePartyProcess = $gameTemp.dequeueChangePartyProcess();
+      switch (this._changePartyProcess) {
+        /**
+         * イベントコマンドのフェードイン・アウトから制御できるように、
+         * $gameScreenのフェード機構を用いる
+         */
+        case 'fadeOut':
+          $gameScreen.startFadeOut(this.fadeSpeed());
+          break;
+        case 'fadeIn':
+          $gameScreen.startFadeIn(this.fadeSpeed());
+          break;
+        case 'transfer':
+          $gameParty.currentParty()?.transferTo(2);
+          break;
+        case 'commonEvent':
+          if (settings.commonEvent) {
+            $gameTemp.reserveCommonEvent(settings.commonEvent);
+          }
+          break;
       }
     };
     sceneMap.isChangePartyEnabled = function () {
@@ -473,6 +566,19 @@
     sceneMap.isChangeToPreviousPartyCalled = function () {
       return Input.isTriggered(settings.previousPartyButton);
     };
+    sceneMap.isChangePartyProcessBusy = function () {
+      switch (this._changePartyProcess) {
+        case 'fadeOut':
+        case 'fadeIn':
+          return $gameScreen.isFadeBusy();
+        case 'transfer':
+          return $gamePlayer.isTransferring();
+        case 'commonEvent':
+          return $gameTemp.isCommonEventReserved() || $gameMap.isEventRunning();
+      }
+      return false;
+    };
   }
   Scene_Map_ConcurrentPartyMixIn(Scene_Map.prototype);
+  globalThis.Game_DevidedParty = Game_DevidedParty;
 })();
