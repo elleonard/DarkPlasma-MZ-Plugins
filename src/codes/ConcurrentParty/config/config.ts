@@ -1,9 +1,17 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema, PluginStruct } from '../../../../modules/config/configSchema.js';
-import { createCommand, createDatabaseArrayParam, createDatabaseParam, createLocationParam, createNumberParam, createSelectParam, createStruct, createStructArrayParam } from '../../../../modules/config/createParameter.js';
+import { createBooleanParam, createCommand, createDatabaseArrayParam, createDatabaseParam, createLocationParam, createNumberParam, createSelectParam, createStruct, createStructArrayParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/07/12",
+    version: "1.1.0",
+    description: "分割したパーティをセーブできない不具合を修正",
+  },
+  {
+    description: "切り替えプラグインコマンドに自動フェード設定を追加",
+  },
   {
     date: "2025/06/07",
     version: "1.0.0",
@@ -58,14 +66,29 @@ const commandDevideParty: PluginCommandSchema = createCommand("devideParty", {
   ],
 });
 
+const commandArgsChangeParty: PluginParameterSchema[] = [
+  createBooleanParam("autoFadeOut", {
+    text: "自動フェードアウト",
+    description: "切り替え前に自動でフェードアウトします。",
+    default: true,
+  }),
+  createBooleanParam("autoFadeIn", {
+    text: "自動フェードイン",
+    description: "切り替え後に自動フェードインします。",
+    default: true,
+  }),
+];
+
 const commandNextParty: PluginCommandSchema = createCommand("nextParty", {
   text: "次のパーティに切り替える",
   description: "次のパーティへ操作を切り替えます。最後のパーティからは最初のパーティに切り替えます。",
+  args: commandArgsChangeParty,
 });
 
 const commandPreviousParty: PluginCommandSchema = createCommand("previousParty", {
   text: "前のパーティに切り替える",
   description: "前のパーティへ操作を切り替えます。最初のパーティからは最後のパーティに切り替えます。",
+  args: commandArgsChangeParty,
 });
 
 const commandJoinAllMember: PluginCommandSchema = createCommand("joinAllMember", {
@@ -181,7 +204,7 @@ const parameters: PluginParameterSchema[] = [
   createDatabaseParam("commonEvent", {
     type: "common_event",
     text: "切り替え時コモンイベント",
-    description: "パーティ切り替え時に実行するコモンイベントを指定します。",
+    description: "パーティ切り替え時に予約するコモンイベントを指定します。",
   }),
 ];
 

@@ -1,5 +1,5 @@
 import { I18nText, PluginConfigSchema, PluginParameterArraySchema, PluginParameterSchema, PluginParameterStructSchema } from "../../modules/config/configSchema.js";
-import { createBooleanParam, createNumberParam, createSelectParam, createStringParam, createStructParam } from "../../modules/config/createParameter.js";
+import { createBooleanParam, createLocationParam, createNumberParam, createSelectParam, createStringParam, createStructParam } from "../../modules/config/createParameter.js";
 
 export function generateParser(config: PluginConfigSchema, parameter: PluginParameterSchema, objectName?: string): string {
   let parser = 'TODO';
@@ -120,6 +120,15 @@ function toSubParameter(config: PluginConfigSchema, parameter: PluginParameterAr
         text: "",
         options: convertOptions(parameter.options),
         default: "",
+      });
+    case 'location[]':
+      return createLocationParam("e", {
+        text: "",
+        default: {
+          mapId: 1,
+          x: 0,
+          y: 0,
+        },
       });
     case 'struct[]':
       return createStructParam("e", {

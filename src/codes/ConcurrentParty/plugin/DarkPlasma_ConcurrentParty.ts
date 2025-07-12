@@ -1,7 +1,7 @@
 /// <reference path="./ConcurrentParty.d.ts" />
 
 import { settings } from '../config/_build/DarkPlasma_ConcurrentParty_parameters';
-import { command_devideParty, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_leaderId, parseArgs_partyIndex, parseArgs_partyPosition } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
+import { command_devideParty, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_leaderId, parseArgs_nextParty, parseArgs_partyIndex, parseArgs_partyPosition, parseArgs_previousParty } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
 import { pluginName } from '../../../common/pluginName';
 
 PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
@@ -31,12 +31,12 @@ PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
   }
 });
 
-PluginManager.registerCommand(pluginName, command_nextParty, function () {
-  $gameParty.changeToNextParty();
+PluginManager.registerCommand(pluginName, command_nextParty, function (args) {
+  $gameParty.changeToNextParty(parseArgs_nextParty(args));
 });
 
-PluginManager.registerCommand(pluginName, command_previousParty, function () {
-  $gameParty.changeToPreviousParty();
+PluginManager.registerCommand(pluginName, command_previousParty, function (args) {
+  $gameParty.changeToPreviousParty(parseArgs_previousParty(args));
 });
 
 PluginManager.registerCommand(pluginName, command_joinAllMember, function () {
@@ -76,6 +76,32 @@ PluginManager.registerCommand(pluginName, command_partyPosition, function (args)
   }
 });
 
+function Game_Temp_ConcurrentPartyMixIn(gameTemp: Game_Temp) {
+  const _initialize = gameTemp.initialize;
+  gameTemp.initialize = function () {
+    _initialize.call(this);
+    this._changePartyQueue = [];
+  };
+
+  gameTemp.enqueueChangePartyProcess = function (process) {
+    this._changePartyQueue.push(process);
+  };
+
+  gameTemp.dequeueChangePartyProcess = function () {
+    return this._changePartyQueue.shift();
+  };
+}
+
+Game_Temp_ConcurrentPartyMixIn(Game_Temp.prototype);
+
+function Game_Screen_ConcurrentPartyMixIn(gameScreen: Game_Screen) {
+  gameScreen.isFadeBusy = function () {
+    return this._fadeInDuration > 0 || this._fadeOutDuration > 0;
+  };
+}
+
+Game_Screen_ConcurrentPartyMixIn(Game_Screen.prototype);
+
 function Game_Party_ConcurrentPartyMixIn(gameParty: Game_Party) {
   gameParty.devidePartyInto = function (devidedParties) {
     this._devidedParties = devidedParties;
@@ -105,31 +131,38 @@ function Game_Party_ConcurrentPartyMixIn(gameParty: Game_Party) {
       : undefined;
   };
 
-  gameParty.changeToNextParty = function () {
+  gameParty.changeToNextParty = function (param) {
     if (this._devidedParties) {
       this.currentParty()?.updatePosition();
       this._devidedParties.currentIndex = (this._devidedParties.currentIndex + 1) % this._devidedParties.parties.length;
-      this.onPartyChanged();
+      this.onPartyChanged(param);
     }
   };
 
-  gameParty.changeToPreviousParty = function () {
+  gameParty.changeToPreviousParty = function (param) {
     if (this._devidedParties) {
       this.currentParty()?.updatePosition();
       this._devidedParties.currentIndex = (this._devidedParties.currentIndex + this._devidedParties.parties.length - 1) % this._devidedParties.parties.length;
-      this.onPartyChanged();
+      this.onPartyChanged(param);
     }
   };
 
-  gameParty.onPartyChanged = function () {
-    this.currentParty()?.transferTo(0);
+  gameParty.onPartyChanged = function (param) {
+    if (param.autoFadeOut) {
+      $gameTemp.enqueueChangePartyProcess("fadeOut");
+    }
+    $gameTemp.enqueueChangePartyProcess("transfer");
     if (settings.commonEvent) {
-      $gameTemp.reserveCommonEvent(settings.commonEvent);
+      $gameTemp.enqueueChangePartyProcess("commonEvent");
+    }
+    if (param.autoFadeIn) {
+      $gameTemp.enqueueChangePartyProcess("fadeIn");
     }
   };
 
   gameParty.joinAllDevidedParties = function () {
     this._devidedParties = undefined;
+    $gamePlayer.refresh();
   };
 
   gameParty.isDevided = function () {
@@ -210,6 +243,10 @@ class Game_DevidedParty {
     this._members.push(actor);
   }
 
+  setMember(actor: Game_Actor, index: number) {
+    this._members[index] = actor;
+  }
+
   removeMember(actor: Game_Actor): void {
     this._members = this._members.filter(member => member.actorId() !== actor.actorId());
   }
@@ -255,15 +292,43 @@ function Scene_Map_ConcurrentPartyMixIn(sceneMap: Scene_Map) {
     if (!SceneManager.isSceneChanging()) {
       this.updateCallChangeParty();
     }
+    this.updateChangePartyQueue();
   };
 
   sceneMap.updateCallChangeParty = function () {
     if (this.isChangePartyEnabled()) {
       if (this.isChangeToNextPartyCalled()) {
-        $gameParty.changeToNextParty();
+        $gameParty.changeToNextParty({ autoFadeOut: true, autoFadeIn: true });
       } else if (this.isChangeToPreviousPartyCalled()) {
-        $gameParty.changeToPreviousParty();
+        $gameParty.changeToPreviousParty({ autoFadeOut: true, autoFadeIn: true });
       }
+    }
+  };
+
+  sceneMap.updateChangePartyQueue = function () {
+    if (this.isChangePartyProcessBusy()) {
+      return;
+    }
+    this._changePartyProcess = $gameTemp.dequeueChangePartyProcess();
+    switch (this._changePartyProcess) {
+      /**
+       * イベントコマンドのフェードイン・アウトから制御できるように、
+       * $gameScreenのフェード機構を用いる
+       */
+      case "fadeOut":
+        $gameScreen.startFadeOut(this.fadeSpeed());
+        break;
+      case "fadeIn":
+        $gameScreen.startFadeIn(this.fadeSpeed());
+        break;
+      case "transfer":
+        $gameParty.currentParty()?.transferTo(2);
+        break;
+      case "commonEvent":
+        if (settings.commonEvent) {
+          $gameTemp.reserveCommonEvent(settings.commonEvent);
+        }
+        break;
     }
   };
 
@@ -278,6 +343,25 @@ function Scene_Map_ConcurrentPartyMixIn(sceneMap: Scene_Map) {
   sceneMap.isChangeToPreviousPartyCalled = function () {
     return Input.isTriggered(settings.previousPartyButton);
   };
+
+  sceneMap.isChangePartyProcessBusy = function () {
+    switch (this._changePartyProcess) {
+      case "fadeOut":
+      case "fadeIn":
+        return $gameScreen.isFadeBusy();
+      case "transfer":
+        return $gamePlayer.isTransferring();
+      case "commonEvent":
+        return $gameTemp.isCommonEventReserved() || $gameMap.isEventRunning();
+    }
+    return false;
+  };
 }
 
 Scene_Map_ConcurrentPartyMixIn(Scene_Map.prototype);
+
+type _Game_DevidedParty = typeof Game_DevidedParty;
+declare global {
+  var Game_DevidedParty: _Game_DevidedParty;
+}
+globalThis.Game_DevidedParty = Game_DevidedParty;
