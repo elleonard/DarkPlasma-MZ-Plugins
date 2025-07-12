@@ -1,11 +1,18 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema } from '../../../../modules/config/configSchema.js';
-import { createBooleanParam, createCommand, createLocationArrayParam, createLocationParam, createNumberParam } from '../../../../modules/config/createParameter.js';
+import { createBooleanParam, createCommand, createLocationArrayParam, createLocationParam, createMultilineStringParam, createNumberParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/07/12",
+    version: "1.1.0",
+    description: "ヘルプテキスト設定を追加",
+  },
+  {
+    description: "背景をぼかす",
+  },
+  {
     version: "1.0.0",
     description: "公開",
   }
@@ -32,6 +39,10 @@ const parameters: PluginParameterSchema[] = [
   createBooleanParam("showHelpWindow", {
     text: "ヘルプウィンドウを表示",
     default: true,
+  }),
+  createMultilineStringParam("helpText", {
+    text: "ヘルプ",
+    description: "ヘルプウィンドウに表示するテキストを設定します。",
   }),
 ];
 

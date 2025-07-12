@@ -79,6 +79,7 @@ class Scene_DevideParty extends Scene_Base {
   createBackground() {
     this._backgroundSprite = new Sprite();
     this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
+    this._backgroundSprite.filters = [new PIXI.filters.BlurFilter()];
     this.addChild(this._backgroundSprite);
   }
 
@@ -140,7 +141,7 @@ class Scene_DevideParty extends Scene_Base {
   }
 
   helpWindowText() {
-    return "";
+    return settings.helpText;
   }
 
   helpWindowRect() {
