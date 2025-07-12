@@ -1,10 +1,12 @@
-// DarkPlasma_DevidePartyScene 1.0.0
+// DarkPlasma_DevidePartyScene 1.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2025/07/12 1.0.0 公開
+ * 2025/07/12 1.1.0 ヘルプテキスト設定を追加
+ *                  背景をぼかす
+ *            1.0.0 公開
  */
 
 /*:
@@ -24,6 +26,11 @@
  * @type boolean
  * @default true
  *
+ * @param helpText
+ * @desc ヘルプウィンドウに表示するテキストを設定します。
+ * @text ヘルプ
+ * @type multiline_string
+ *
  * @command open
  * @text パーティ分割シーンを開く
  * @arg count
@@ -39,7 +46,7 @@
  * @type location[]
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * パーティを分割するシーンを提供します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -62,6 +69,7 @@
 
   const settings = {
     showHelpWindow: String(pluginParameters.showHelpWindow || true) === 'true',
+    helpText: String(pluginParameters.helpText || ``),
   };
 
   function parseArgs_open(args) {
@@ -145,6 +153,7 @@
     createBackground() {
       this._backgroundSprite = new Sprite();
       this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
+      this._backgroundSprite.filters = [new PIXI.filters.BlurFilter()];
       this.addChild(this._backgroundSprite);
     }
     createButtons() {
@@ -201,7 +210,7 @@
       this._waitingMemberWindow.select(0);
     }
     helpWindowText() {
-      return '';
+      return settings.helpText;
     }
     helpWindowRect() {
       if (settings.showHelpWindow) {
