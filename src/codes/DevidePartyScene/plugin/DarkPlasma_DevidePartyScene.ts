@@ -180,7 +180,7 @@ class Scene_DevideParty extends Scene_Base {
 
   memberWindowHeight(): number {
     const characterSize = this.characterSize();
-    return characterSize.height > this.defaultCharacterSize().height
+    return this.useTallCharacter()
       ? characterSize.height + WAITING_WINDOW_PADDING
       : characterSize.height * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
   }
@@ -197,7 +197,7 @@ class Scene_DevideParty extends Scene_Base {
   devidedPartyWindowWidth() {
     const characterSize = this.characterSize();
     const characterSpacing = Window_SelectActorCharacter.prototype.spacing();
-    return characterSize.height > this.defaultCharacterSize().height
+    return this.useTallCharacter()
       ? (characterSize.width + characterSpacing) * $gameParty.maxBattleMembers()
       : (characterSize.width + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
   }
@@ -237,18 +237,8 @@ class Scene_DevideParty extends Scene_Base {
        */
       const actor1 = this._pendingWindow.pendingActor();
       const actor2 = currentWindow.currentActor();
-      if (actor1 && !actor2) {
-        this._pendingWindow.party().removeMember(actor1);
-        currentWindow.party().addMember(actor1);
-      }
-      if (actor2 && !actor1) {
-        currentWindow.party().removeMember(actor2);
-        this._pendingWindow.party().addMember(actor2);
-      }
-      if (actor1 && actor2) {
-        currentWindow.party().setMember(actor1, currentWindow.index());
-        this._pendingWindow.party().setMember(actor2, this._pendingWindow.pendingIndex());
-      }
+      currentWindow.party().setMember(actor1, currentWindow.index());
+      this._pendingWindow.party().setMember(actor2, this._pendingWindow.pendingIndex());
       this._pendingWindow.setPendingIndex(-1);
       this._pendingWindow.refresh();
       currentWindow.refresh();
@@ -322,7 +312,7 @@ class Window_DevidePartyMember extends Window_SelectActorCharacter {
     this._equipWindow = equipWindow;
   }
 
-  members(): Game_Actor[] {
+  members(): (Game_Actor|undefined)[] {
     return [];
   }
 
@@ -414,11 +404,11 @@ class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
   }
 
   public maxItems(): number {
-    return this.maxCols() * 2;
+    return this.useTallCharacter() ? this.maxCols() : this.maxCols() * 2;
   }
 
   members() {
-    return this._party?.allMembers() || [];
+    return this._party?.allMembersWithSpace() || [];
   }
 
   party() {
@@ -426,11 +416,16 @@ class Window_DevidePartyWaitingMember extends Window_DevidePartyMember {
   }
 
   nearestIndexCandidates(x: number, y: number): number[] {
-    return super.nearestIndexCandidates(x, y).filter(i => i >= this.maxCols())
+    return super.nearestIndexCandidates(x, y)
+      .filter(i => this.useTallCharacter() || i >= this.maxCols())
+  }
+
+  isAtBottomRow() {
+    return this.useTallCharacter() || this.index() >= this.maxCols();
   }
 
   public cursorDown(wrap?: boolean | undefined): void {
-    if (this.index() >= this.maxCols()) {
+    if (this.isAtBottomRow()) {
       this.activateOtherWindow(this.activationTargetWindow());
       this.playCursorSound();
       this.updateInputData();
@@ -475,7 +470,7 @@ class Window_DevidedParty extends Window_DevidePartyMember {
   }
 
   public maxCols(): number {
-    return this.characterSize().height > this.defaultCharacterSize().height
+    return this.useTallCharacter()
       ? $gameParty.maxBattleMembers()
       : Math.ceil($gameParty.maxBattleMembers() / 2);
   }
@@ -485,7 +480,7 @@ class Window_DevidedParty extends Window_DevidePartyMember {
   }
 
   members() {
-    return this._party?.allMembers() || [];
+    return this._party?.allMembersWithSpace() || [];
   }
 
   party() {

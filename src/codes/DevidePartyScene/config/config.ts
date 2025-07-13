@@ -5,6 +5,14 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/13",
+    version: "1.1.1",
+    description: "キャラグラが大きい場合の表示を調整",
+  },
+  {
+    description: "空欄との移動表現を変更",
+  },
+  {
     date: "2025/07/12",
     version: "1.1.0",
     description: "ヘルプテキスト設定を追加",
@@ -57,11 +65,11 @@ export const config = new ConfigDefinitionBuilder(
   .withCommand(commandOpen)
   .withBaseDependency({
     name: "DarkPlasma_ConcurrentParty",
-    version: "1.1.0",
+    version: "1.2.0",
   })
   .withBaseDependency({
     name: "DarkPlasma_SelectActorCharacterWindow",
-    version: "1.0.0",
+    version: "1.1.0",
     order: 'after',
   })
   .withHelp(dedent`パーティを分割するシーンを提供します。`)

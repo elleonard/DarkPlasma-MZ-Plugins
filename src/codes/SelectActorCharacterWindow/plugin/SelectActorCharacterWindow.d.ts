@@ -10,6 +10,7 @@ declare interface Scene_Base {
     width: number;
     height: number;
   };
+  useTallCharacter(): boolean;
 }
 
 declare interface Window_SelectActorCharacter extends Window_StatusBase {
@@ -18,7 +19,7 @@ declare interface Window_SelectActorCharacter extends Window_StatusBase {
   currentActor(): Game_Actor | undefined;
   pendingActor(): Game_Actor | undefined;
   actor(index: number): Game_Actor | undefined;
-  members(): Game_Actor[];
+  members(): (Game_Actor|undefined)[];
   pendingIndex(): number;
   spacing(): number;
   characterSize(): {
@@ -29,6 +30,7 @@ declare interface Window_SelectActorCharacter extends Window_StatusBase {
     width: number;
     height: number;
   };
+  useTallCharacter(): boolean;
 }
 
 function Scene_SelectActorCharacterMixIn(sceneClass: Scene_Base): void;

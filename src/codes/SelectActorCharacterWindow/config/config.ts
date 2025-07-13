@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/13",
+    version: "1.1.0",
+    description: "背の高いキャラグラを利用しているかどうかのインターフェースを追加",
+  },
+  {
     date: "2025/07/12",
     version: "1.0.0",
     description: "公開",

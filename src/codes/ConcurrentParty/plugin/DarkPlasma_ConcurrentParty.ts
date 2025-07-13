@@ -48,7 +48,7 @@ PluginManager.registerCommand(pluginName, command_leaderId, function (args) {
   if ($gameParty.isDevided()) {
     const party = $gameParty.devidedParty(parsedArgs.partyIndex);
     if (party) {
-      $gameVariables.setValue(parsedArgs.variableId, party.leader().actorId());
+      $gameVariables.setValue(parsedArgs.variableId, party.leader()?.actorId() || 0);
     }
   }
 });
@@ -207,7 +207,7 @@ function Game_Party_ConcurrentPartyMixIn(gameParty: Game_Party) {
 Game_Party_ConcurrentPartyMixIn(Game_Party.prototype);
 
 class Game_DevidedParty {
-  _members: Game_Actor[];
+  _members: (Game_Actor|undefined)[];
   _position: Game_DevidedPartyPosition;
 
   constructor() {
@@ -243,27 +243,31 @@ class Game_DevidedParty {
     this._members.push(actor);
   }
 
-  setMember(actor: Game_Actor, index: number) {
+  setMember(actor: Game_Actor|undefined, index: number) {
     this._members[index] = actor;
   }
 
   removeMember(actor: Game_Actor): void {
-    this._members = this._members.filter(member => member.actorId() !== actor.actorId());
+    this._members = this._members.filter(member => member?.actorId() !== actor.actorId());
   }
 
   includesActor(actor: Game_Actor): boolean {
-    return this._members.some(member => member.actorId() === actor.actorId());
+    return this._members.some(member => member?.actorId() === actor.actorId());
   }
 
-  actor(index: number): Game_Actor {
+  actor(index: number): Game_Actor|undefined {
     return this._members[index];
   }
 
-  leader(): Game_Actor {
-    return this.actor(0);
+  leader(): Game_Actor|undefined {
+    return this._members.find(actor => actor);
   }
 
   allMembers(): Game_Actor[] {
+    return this._members.filter((actor): actor is Game_Actor => !!actor);
+  }
+
+  allMembersWithSpace(): (Game_Actor|undefined)[] {
     return this._members;
   }
 

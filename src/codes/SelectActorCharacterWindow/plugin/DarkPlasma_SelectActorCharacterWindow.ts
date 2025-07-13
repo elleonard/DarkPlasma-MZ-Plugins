@@ -16,6 +16,10 @@ function Scene_SelectActorCharacterMixIn(sceneClass: Scene_Base) {
       height: 48,
     };
   };
+
+  sceneClass.useTallCharacter = function () {
+    return this.characterSize().height > this.defaultCharacterSize().height;
+  };
 }
 
 class Window_SelectActorCharacter extends Window_StatusBase {
@@ -67,7 +71,7 @@ class Window_SelectActorCharacter extends Window_StatusBase {
     return this.members()[index];
   }
 
-  members(): Game_Actor[] {
+  members(): (Game_Actor|undefined)[] {
     return [];
   }
 
@@ -91,6 +95,10 @@ class Window_SelectActorCharacter extends Window_StatusBase {
       width: 48,
       height: 48,
     };
+  }
+
+  useTallCharacter() {
+    return this.characterSize().height > this.defaultCharacterSize().height;
   }
 
   /**

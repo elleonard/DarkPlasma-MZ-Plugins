@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/13",
+    version: "1.2.0",
+    description: "分割したパーティの空欄表現を変更",
+  },
+  {
     date: "2025/07/12",
     version: "1.1.0",
     description: "分割したパーティをセーブできない不具合を修正",

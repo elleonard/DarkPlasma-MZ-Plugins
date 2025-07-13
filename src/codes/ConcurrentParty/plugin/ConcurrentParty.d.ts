@@ -47,7 +47,7 @@ type Game_DevidedPartyPosition = {
 };
 
 declare interface Game_DevidedParty {
-  _members: Game_Actor[];
+  _members: (Game_Actor|undefined)[];
   _position: Game_DevidedPartyPosition;
 
   readonly position: Game_DevidedPartyPosition;
@@ -55,12 +55,13 @@ declare interface Game_DevidedParty {
   setPosition(position: Game_DevidedPartyPosition): void;
   updatePosition(): void;
   addMember(actor: Game_Actor): void;
-  setMember(actor: Game_Actor, index: number): void;
+  setMember(actor: Game_Actor|undefined, index: number): void;
   removeMember(actor: Game_Actor): void;
   includesActor(actor: Game_Actor): boolean;
-  actor(index: number): Game_Actor;
-  leader(): Game_Actor;
+  actor(index: number): Game_Actor|undefined;
+  leader(): Game_Actor|undefined;
   allMembers(): Game_Actor[];
+  allMembersWithSpace(): (Game_Actor|undefined)[];
   transferTo(fadeType: number): void;
   swapOrder(index1: number, index2: number): void;
   isValid(): boolean;
