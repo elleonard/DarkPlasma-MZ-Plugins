@@ -1,9 +1,10 @@
-// DarkPlasma_SelectActorCharacterWindow 1.0.0
+// DarkPlasma_SelectActorCharacterWindow 1.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/13 1.1.0 背の高いキャラグラを利用しているかどうかのインターフェースを追加
  * 2025/07/12 1.0.0 公開
  */
 
@@ -32,7 +33,7 @@
  * @default true
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  *
  */
 
@@ -65,6 +66,9 @@
         width: 48,
         height: 48,
       };
+    };
+    sceneClass.useTallCharacter = function () {
+      return this.characterSize().height > this.defaultCharacterSize().height;
     };
   }
   class Window_SelectActorCharacter extends Window_StatusBase {
@@ -125,6 +129,9 @@
         width: 48,
         height: 48,
       };
+    }
+    useTallCharacter() {
+      return this.characterSize().height > this.defaultCharacterSize().height;
     }
     /**
      * カーソル矩形のXオフセット

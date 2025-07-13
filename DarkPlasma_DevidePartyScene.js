@@ -1,9 +1,11 @@
-// DarkPlasma_DevidePartyScene 1.1.0
+// DarkPlasma_DevidePartyScene 1.1.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/13 1.1.1 キャラグラが大きい場合の表示を調整
+ *                  空欄との移動表現を変更
  * 2025/07/12 1.1.0 ヘルプテキスト設定を追加
  *                  背景をぼかす
  *            1.0.0 公開
@@ -46,12 +48,12 @@
  * @type location[]
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * パーティを分割するシーンを提供します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_ConcurrentParty version:1.1.0
- * DarkPlasma_SelectActorCharacterWindow version:1.0.0
+ * DarkPlasma_ConcurrentParty version:1.2.0
+ * DarkPlasma_SelectActorCharacterWindow version:1.1.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_SelectActorCharacterWindow
  */
@@ -236,7 +238,7 @@
     }
     memberWindowHeight() {
       const characterSize = this.characterSize();
-      return characterSize.height > this.defaultCharacterSize().height
+      return this.useTallCharacter()
         ? characterSize.height + WAITING_WINDOW_PADDING
         : characterSize.height * 2 + Math.floor((WAITING_WINDOW_PADDING * 4) / 3);
     }
@@ -251,7 +253,7 @@
     devidedPartyWindowWidth() {
       const characterSize = this.characterSize();
       const characterSpacing = Window_SelectActorCharacter.prototype.spacing();
-      return characterSize.height > this.defaultCharacterSize().height
+      return this.useTallCharacter()
         ? (characterSize.width + characterSpacing) * $gameParty.maxBattleMembers()
         : (characterSize.width + characterSpacing) * Math.floor(($gameParty.maxBattleMembers() + 1) / 2) + 32;
     }
@@ -288,18 +290,8 @@
          */
         const actor1 = this._pendingWindow.pendingActor();
         const actor2 = currentWindow.currentActor();
-        if (actor1 && !actor2) {
-          this._pendingWindow.party().removeMember(actor1);
-          currentWindow.party().addMember(actor1);
-        }
-        if (actor2 && !actor1) {
-          currentWindow.party().removeMember(actor2);
-          this._pendingWindow.party().addMember(actor2);
-        }
-        if (actor1 && actor2) {
-          currentWindow.party().setMember(actor1, currentWindow.index());
-          this._pendingWindow.party().setMember(actor2, this._pendingWindow.pendingIndex());
-        }
+        currentWindow.party().setMember(actor1, currentWindow.index());
+        this._pendingWindow.party().setMember(actor2, this._pendingWindow.pendingIndex());
         this._pendingWindow.setPendingIndex(-1);
         this._pendingWindow.refresh();
         currentWindow.refresh();
@@ -443,19 +435,22 @@
       return Math.floor(this.innerWidth / (this.characterSize().width + this.spacing()));
     }
     maxItems() {
-      return this.maxCols() * 2;
+      return this.useTallCharacter() ? this.maxCols() : this.maxCols() * 2;
     }
     members() {
-      return this._party?.allMembers() || [];
+      return this._party?.allMembersWithSpace() || [];
     }
     party() {
       return this._party;
     }
     nearestIndexCandidates(x, y) {
-      return super.nearestIndexCandidates(x, y).filter((i) => i >= this.maxCols());
+      return super.nearestIndexCandidates(x, y).filter((i) => this.useTallCharacter() || i >= this.maxCols());
+    }
+    isAtBottomRow() {
+      return this.useTallCharacter() || this.index() >= this.maxCols();
     }
     cursorDown(wrap) {
-      if (this.index() >= this.maxCols()) {
+      if (this.isAtBottomRow()) {
         this.activateOtherWindow(this.activationTargetWindow());
         this.playCursorSound();
         this.updateInputData();
@@ -487,15 +482,13 @@
       return this.index() % this.maxCols() === this.maxCols() - 1;
     }
     maxCols() {
-      return this.characterSize().height > this.defaultCharacterSize().height
-        ? $gameParty.maxBattleMembers()
-        : Math.ceil($gameParty.maxBattleMembers() / 2);
+      return this.useTallCharacter() ? $gameParty.maxBattleMembers() : Math.ceil($gameParty.maxBattleMembers() / 2);
     }
     maxItems() {
       return $gameParty.maxBattleMembers();
     }
     members() {
-      return this._party?.allMembers() || [];
+      return this._party?.allMembersWithSpace() || [];
     }
     party() {
       return this._party;

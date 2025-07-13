@@ -1,9 +1,10 @@
-// DarkPlasma_ConcurrentParty 1.1.0
+// DarkPlasma_ConcurrentParty 1.2.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/13 1.2.0 分割したパーティの空欄表現を変更
  * 2025/07/12 1.1.0 分割したパーティをセーブできない不具合を修正
  *                  切り替えプラグインコマンドに自動フェード設定を追加
  * 2025/06/07 1.0.0 最初のバージョン
@@ -141,7 +142,7 @@
  * @default 0
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
  *
  * プラグインコマンドでパーティを分割することができます。
@@ -320,7 +321,7 @@
     if ($gameParty.isDevided()) {
       const party = $gameParty.devidedParty(parsedArgs.partyIndex);
       if (party) {
-        $gameVariables.setValue(parsedArgs.variableId, party.leader().actorId());
+        $gameVariables.setValue(parsedArgs.variableId, party.leader()?.actorId() || 0);
       }
     }
   });
@@ -483,18 +484,21 @@
       this._members[index] = actor;
     }
     removeMember(actor) {
-      this._members = this._members.filter((member) => member.actorId() !== actor.actorId());
+      this._members = this._members.filter((member) => member?.actorId() !== actor.actorId());
     }
     includesActor(actor) {
-      return this._members.some((member) => member.actorId() === actor.actorId());
+      return this._members.some((member) => member?.actorId() === actor.actorId());
     }
     actor(index) {
       return this._members[index];
     }
     leader() {
-      return this.actor(0);
+      return this._members.find((actor) => actor);
     }
     allMembers() {
+      return this._members.filter((actor) => !!actor);
+    }
+    allMembersWithSpace() {
       return this._members;
     }
     transferTo(fadeType) {
