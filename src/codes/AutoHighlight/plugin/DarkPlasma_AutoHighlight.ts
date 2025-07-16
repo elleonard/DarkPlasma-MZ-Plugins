@@ -3,6 +3,10 @@
 import { settings } from '../config/_build/DarkPlasma_AutoHighlight_parameters';
 import { ColorManagerMixIn } from '../../../common/manager/ColorManagerMixIn';
 
+function regExpEscape(text: string) {
+  return text.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 ColorManagerMixIn(ColorManager);
 
 class HighlightWords {
@@ -19,7 +23,7 @@ class HighlightWords {
   }
 
   getRegExp(): RegExp {
-    return new RegExp(`(${this.sortedWords().join('|')})`, 'gi');
+    return new RegExp(`(${this.sortedWords().map(word => regExpEscape(word)).join('|')})`, 'gi');
   }
 
   /**

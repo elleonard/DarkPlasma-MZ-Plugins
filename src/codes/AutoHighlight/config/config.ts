@@ -4,6 +4,11 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/16",
+    version: "2.0.2",
+    description: "正規表現における特殊文字を含む語句をハイライトしようとするとエラーで停止する不具合を修正",
+  },
+  {
     date: "2024/01/15",
     version: "2.0.1",
     description: "ビルド方式を変更 (configをTypeScript化)",
