@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 2.0.1
+// DarkPlasma_AutoHighlight 2.0.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/16 2.0.2 正規表現における特殊文字を含む語句をハイライトしようとするとエラーで停止する不具合を修正
  * 2024/01/15 2.0.1 ビルド方式を変更 (configをTypeScript化)
  * 2023/06/02 2.0.0 色設定をMZ1.6.0形式に変更
  *                  ベースプラグインを追加
@@ -35,7 +36,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 2.0.1
+ * version: 2.0.2
  * 指定した語句を指定した色でハイライトします。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -124,6 +125,9 @@
     };
   }
 
+  function regExpEscape(text) {
+    return text.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
   ColorManagerMixIn(ColorManager);
   class HighlightWords {
     constructor() {
@@ -133,7 +137,12 @@
       this._needsRefreshCache = false;
     }
     getRegExp() {
-      return new RegExp(`(${this.sortedWords().join('|')})`, 'gi');
+      return new RegExp(
+        `(${this.sortedWords()
+          .map((word) => regExpEscape(word))
+          .join('|')})`,
+        'gi',
+      );
     }
     /**
      * 長さ順にソートしたハイライト語句一覧
