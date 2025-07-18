@@ -5,6 +5,20 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/18",
+    version: "3.2.0",
+    description: "報酬一覧シーンに預けたメダル総数を表示する",
+  },
+  {
+    description: "預けたメダル, 所持メダルラベル設定を追加",
+  },
+  {
+    description: "背景マップをぼかす",
+  },
+  {
+    description: "報酬リストから戻った際にヘルプウィンドウの内容をクリアする",
+  },
+  {
     date: "2025/07/12",
     version: "3.1.2",
     description: "報酬リスト表示を最初から必要メダル数昇順でソートしておくように修正",
@@ -144,6 +158,14 @@ const parameters: PluginParameterSchema[] = [
   createStringParam("medalUnit", {
     text: "メダルの単位",
     default: "枚",
+  }),
+  createStringParam("numMedalLabel", {
+    text: "所持メダルラベル",
+    default: "所持メダル",
+  }),
+  createStringParam("totalMedalLabel", {
+    text: "預けたメダルラベル",
+    default: "預けたメダル",
   }),
   createStructArrayParam("rewardItems", {
     struct: structRewardItems,

@@ -317,48 +317,33 @@ function Game_Interpreter_TinyMedalMixIn(gameInterpreter: Game_Interpreter) {
 
 Game_Interpreter_TinyMedalMixIn(Game_Interpreter.prototype);
 
-class Scene_TinyMedal extends Scene_Base {
-  _rewardsAutoGained: boolean;
-  _backgroundSprite: Sprite;
-  _helpWindow: Window_Help;
+class Scene_TinyMedal extends Scene_MenuBase {
   _menuWindow: Window_MedalMenu;
   _rewardsWindow: Window_MedalRewardList;
-  _countWindow: Window_MedalCount;
-
-  initialize() {
-    Scene_Base.prototype.initialize.call(this);
-    this._rewardsAutoGained = false;
-  }
+  _totalMedalWindow: Window_TotalMedal;
+  _countWindow: Window_MedalItem;
 
   create() {
-    Scene_Base.prototype.create.call(this);
-    this.createBackground();
-    if (!this._rewardsAutoGained) {
-      this.createWindowLayer();
-      this.createMedalWindow();
-    }
-  }
-
-  createBackground() {
-    this._backgroundSprite = new Sprite();
-    this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
-    this.addChild(this._backgroundSprite);
+    super.create();
+    this.createHelpWindow();
+    this.createMedalWindow();
   }
 
   createMedalWindow() {
-    this._helpWindow = new Window_Help(this.helpWindowRect());
     this._menuWindow = new Window_MedalMenu(this.medalMenuWindowRect());
     this._menuWindow.setHandler('pushMedal', this.commandPushMedal.bind(this));
     this._menuWindow.setHandler('showRewards', this.commandShowRewards.bind(this));
     this._menuWindow.setHandler('cancel', this.popScene.bind(this));
+    this._menuWindow.setHelpWindow(this._helpWindow!);
     this._rewardsWindow = new Window_MedalRewardList(this.medalRewardListWindowRect());
     this._rewardsWindow.setHandler('cancel', this.onRewardsListCancel.bind(this));
-    this._rewardsWindow.setHelpWindow(this._helpWindow);
-    this._countWindow = new Window_MedalCount(this.medalCountWindowRect());
-    this.addChild(this._helpWindow);
+    this._rewardsWindow.setHelpWindow(this._helpWindow!);
+    this._countWindow = new Window_MedalItem(this.medalCountWindowRect());
+    this._totalMedalWindow = new Window_TotalMedal(this.totalMedalWindowRect());
     this.addChild(this._menuWindow);
     this.addChild(this._rewardsWindow);
     this.addChild(this._countWindow);
+    this.addChild(this._totalMedalWindow);
   }
 
   helpWindowRect() {
@@ -366,18 +351,23 @@ class Scene_TinyMedal extends Scene_Base {
   }
 
   medalMenuWindowRect() {
-    return new Rectangle(0, this._helpWindow.height, 240, this.calcWindowHeight(3, true));
+    return new Rectangle(0, this.helpWindowRect().height, 240, this.calcWindowHeight(3, true));
   }
 
   medalRewardListWindowRect() {
     const x = this._menuWindow.width;
-    const y = this._helpWindow.height;
+    const y = this.helpWindowRect().height;
     return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
   }
 
   medalCountWindowRect() {
     const height = this.calcWindowHeight(1, true);
     return new Rectangle(0, Graphics.boxHeight - height, 240, height);
+  }
+
+  totalMedalWindowRect() {
+    const rect = this.medalCountWindowRect();
+    return new Rectangle(rect.x, rect.y - rect.height, rect.width, rect.height);
   }
 
   /**
@@ -475,22 +465,38 @@ function Window_ItemListLikeMixIn<TWindow extends Constructor, TItem>(windowClas
     }
 
     numberWidth(): number {
-      return this.textWidth("000");
+      return this.textWidth(`${this.maxNumberText()}`);
     }
 
     needsNumber(): boolean {
       return false;
     }
 
+    colonWidth(width: number): number {
+      return width - this.numberWidth();
+    }
+
     drawItemNumber(item: TItem, x: number, y: number, width: number) {
       if (this.needsNumber()) {
-        this.drawText(":", x, y, width - this.textWidth("00"), "right");
-        this.drawText(`${this.number(item)}`, x, y, width, "right");
+        this.drawText(":", x, y, this.colonWidth(width), "right");
+        this.drawText(this.numberText(item), x, y, width, "right");
       }
+    }
+    
+    maxNumber(): number {
+      return 99;
     }
 
     number(item: TItem): number {
       return 0;
+    }
+
+    maxNumberText() {
+      return `${this.maxNumber()}`;
+    }
+
+    numberText(item: TItem): string {
+      return `${this.number(item)}`;
     }
 
     refresh() {
@@ -542,16 +548,64 @@ class Window_MedalRewardList extends Window_ItemListLikeMixIn<typeof Window_Sele
 }
 
 class Window_MedalCount extends Window_Gold {
+  currencyUnit() {
+    return settings.medalUnit;
+  }
+
+  drawLabel(label: string, x: number, y: number, width: number) {
+    this.changeTextColor(ColorManager.systemColor());
+    this.drawText(label, x, y, width);
+    this.resetTextColor();
+  };
+
+  label() {
+    return "";
+  }
+
+  currencyValueWidth() {
+    return this.textWidth(`${this.maxValue()} ${this.currencyUnit()}`);
+  }
+
+  maxValue() {
+    return rewardItems
+      .reduce(
+        (result, item) => result > item.medalCount ? result : item.medalCount,
+        $gameParty.maxItems($dataItems[settings.medalItem])
+      );
+  }
+  
+  public refresh(): void {
+    const rect = this.itemLineRect(0);
+    this.contents.clear();
+    this.drawCurrencyValue(this.value(), this.currencyUnit(), rect.x, rect.y, rect.width);
+    this.drawLabel(this.label(), rect.x, rect.y, rect.width - this.currencyValueWidth());
+  }
+}
+
+class Window_MedalItem extends Window_MedalCount {
   value() {
     return $gameParty.numMedalItems();
   }
 
-  currencyUnit() {
-    return settings.medalUnit;
+  label(): string {
+    return settings.numMedalLabel;
   }
 }
 
+class Window_TotalMedal extends Window_MedalCount {
+  value() {
+    return $gameVariables.value(settings.medalCountVariable);
+  }
+
+  label(): string {
+    return settings.totalMedalLabel;
+  }
+}
+
+type _Window_MedalRewardList = typeof Window_MedalRewardList;
 declare global {
   var Data_TinyMedal_RewardItem: typeof RewardItem;
+  var Window_MedalRewardList: _Window_MedalRewardList;
 }
 globalThis.Data_TinyMedal_RewardItem = RewardItem;
+globalThis.Window_MedalRewardList = Window_MedalRewardList;
