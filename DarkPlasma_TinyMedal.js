@@ -1,9 +1,13 @@
-// DarkPlasma_TinyMedal 3.1.2
+// DarkPlasma_TinyMedal 3.2.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/18 3.2.0 報酬一覧シーンに預けたメダル総数を表示する
+ *                  預けたメダル, 所持メダルラベル設定を追加
+ *                  背景マップをぼかす
+ *                  報酬リストから戻った際にヘルプウィンドウの内容をクリアする
  * 2025/07/12 3.1.2 報酬リスト表示を最初から必要メダル数昇順でソートしておくように修正
  *                  報酬リストウィンドウの初期選択位置を指定
  * 2025/07/11 3.1.1 設定値をtypescript移行
@@ -46,6 +50,16 @@
  * @type string
  * @default 枚
  *
+ * @param numMedalLabel
+ * @text 所持メダルラベル
+ * @type string
+ * @default 所持メダル
+ *
+ * @param totalMedalLabel
+ * @text 預けたメダルラベル
+ * @type string
+ * @default 預けたメダル
+ *
  * @param rewardItems
  * @text 報酬アイテム
  * @type struct<RewardItems>[]
@@ -81,7 +95,7 @@
  * @desc ちいさなメダルシーンに移行せずにメダルを渡す処理だけします。
  *
  * @help
- * version: 3.1.2
+ * version: 3.2.0
  * DQシリーズのちいさなメダルシステム（累計式）を実現します。
  *
  * 同じメダル数で同じアイテム・武器・防具の報酬を
@@ -188,6 +202,8 @@
     medalItem: Number(pluginParameters.medalItem || 1),
     medalCountVariable: Number(pluginParameters.medalCountVariable || 1),
     medalUnit: String(pluginParameters.medalUnit || `枚`),
+    numMedalLabel: String(pluginParameters.numMedalLabel || `所持メダル`),
+    totalMedalLabel: String(pluginParameters.totalMedalLabel || `預けたメダル`),
     rewardItems: pluginParameters.rewardItems
       ? JSON.parse(pluginParameters.rewardItems).map((e) => {
           return e
@@ -506,53 +522,46 @@
     };
   }
   Game_Interpreter_TinyMedalMixIn(Game_Interpreter.prototype);
-  class Scene_TinyMedal extends Scene_Base {
-    initialize() {
-      Scene_Base.prototype.initialize.call(this);
-      this._rewardsAutoGained = false;
-    }
+  class Scene_TinyMedal extends Scene_MenuBase {
     create() {
-      Scene_Base.prototype.create.call(this);
-      this.createBackground();
-      if (!this._rewardsAutoGained) {
-        this.createWindowLayer();
-        this.createMedalWindow();
-      }
-    }
-    createBackground() {
-      this._backgroundSprite = new Sprite();
-      this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
-      this.addChild(this._backgroundSprite);
+      super.create();
+      this.createHelpWindow();
+      this.createMedalWindow();
     }
     createMedalWindow() {
-      this._helpWindow = new Window_Help(this.helpWindowRect());
       this._menuWindow = new Window_MedalMenu(this.medalMenuWindowRect());
       this._menuWindow.setHandler('pushMedal', this.commandPushMedal.bind(this));
       this._menuWindow.setHandler('showRewards', this.commandShowRewards.bind(this));
       this._menuWindow.setHandler('cancel', this.popScene.bind(this));
+      this._menuWindow.setHelpWindow(this._helpWindow);
       this._rewardsWindow = new Window_MedalRewardList(this.medalRewardListWindowRect());
       this._rewardsWindow.setHandler('cancel', this.onRewardsListCancel.bind(this));
       this._rewardsWindow.setHelpWindow(this._helpWindow);
-      this._countWindow = new Window_MedalCount(this.medalCountWindowRect());
-      this.addChild(this._helpWindow);
+      this._countWindow = new Window_MedalItem(this.medalCountWindowRect());
+      this._totalMedalWindow = new Window_TotalMedal(this.totalMedalWindowRect());
       this.addChild(this._menuWindow);
       this.addChild(this._rewardsWindow);
       this.addChild(this._countWindow);
+      this.addChild(this._totalMedalWindow);
     }
     helpWindowRect() {
       return new Rectangle(0, 0, Graphics.boxWidth, this.calcWindowHeight(2, false));
     }
     medalMenuWindowRect() {
-      return new Rectangle(0, this._helpWindow.height, 240, this.calcWindowHeight(3, true));
+      return new Rectangle(0, this.helpWindowRect().height, 240, this.calcWindowHeight(3, true));
     }
     medalRewardListWindowRect() {
       const x = this._menuWindow.width;
-      const y = this._helpWindow.height;
+      const y = this.helpWindowRect().height;
       return new Rectangle(x, y, Graphics.boxWidth - x, Graphics.boxHeight - y);
     }
     medalCountWindowRect() {
       const height = this.calcWindowHeight(1, true);
       return new Rectangle(0, Graphics.boxHeight - height, 240, height);
+    }
+    totalMedalWindowRect() {
+      const rect = this.medalCountWindowRect();
+      return new Rectangle(rect.x, rect.y - rect.height, rect.width, rect.height);
     }
     /**
      * メダルを預かってもらう
@@ -629,19 +638,31 @@
         return null;
       }
       numberWidth() {
-        return this.textWidth('000');
+        return this.textWidth(`${this.maxNumberText()}`);
       }
       needsNumber() {
         return false;
       }
+      colonWidth(width) {
+        return width - this.numberWidth();
+      }
       drawItemNumber(item, x, y, width) {
         if (this.needsNumber()) {
-          this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-          this.drawText(`${this.number(item)}`, x, y, width, 'right');
+          this.drawText(':', x, y, this.colonWidth(width), 'right');
+          this.drawText(this.numberText(item), x, y, width, 'right');
         }
+      }
+      maxNumber() {
+        return 99;
       }
       number(item) {
         return 0;
+      }
+      maxNumberText() {
+        return `${this.maxNumber()}`;
+      }
+      numberText(item) {
+        return `${this.number(item)}`;
       }
       refresh() {
         this.makeItemList();
@@ -682,12 +703,49 @@
     }
   }
   class Window_MedalCount extends Window_Gold {
-    value() {
-      return $gameParty.numMedalItems();
-    }
     currencyUnit() {
       return settings.medalUnit;
     }
+    drawLabel(label, x, y, width) {
+      this.changeTextColor(ColorManager.systemColor());
+      this.drawText(label, x, y, width);
+      this.resetTextColor();
+    }
+    label() {
+      return '';
+    }
+    currencyValueWidth() {
+      return this.textWidth(`${this.maxValue()} ${this.currencyUnit()}`);
+    }
+    maxValue() {
+      return rewardItems.reduce(
+        (result, item) => (result > item.medalCount ? result : item.medalCount),
+        $gameParty.maxItems($dataItems[settings.medalItem]),
+      );
+    }
+    refresh() {
+      const rect = this.itemLineRect(0);
+      this.contents.clear();
+      this.drawCurrencyValue(this.value(), this.currencyUnit(), rect.x, rect.y, rect.width);
+      this.drawLabel(this.label(), rect.x, rect.y, rect.width - this.currencyValueWidth());
+    }
+  }
+  class Window_MedalItem extends Window_MedalCount {
+    value() {
+      return $gameParty.numMedalItems();
+    }
+    label() {
+      return settings.numMedalLabel;
+    }
+  }
+  class Window_TotalMedal extends Window_MedalCount {
+    value() {
+      return $gameVariables.value(settings.medalCountVariable);
+    }
+    label() {
+      return settings.totalMedalLabel;
+    }
   }
   globalThis.Data_TinyMedal_RewardItem = RewardItem;
+  globalThis.Window_MedalRewardList = Window_MedalRewardList;
 })();
