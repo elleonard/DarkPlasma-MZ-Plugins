@@ -4,6 +4,8 @@
 declare namespace DataManager {
   function parseAddSParamTraits(meta: string): MZ.Trait[];
   function parseAddSParamTrait(line: string): MZ.Trait;
+  function sparamKeyToSParamId(key: string): number;
+  function sparamIdToAddSparamDataId(paramId: number): number;
 }
 
 declare interface Game_BattlerBase {

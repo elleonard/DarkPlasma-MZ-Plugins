@@ -1,9 +1,16 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
-import { createBooleanParam, createNumberParam, createStruct, createStructParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/07/21",
+    version: "2.0.0",
+    description: "限界値設定をDarkPlasma_LimitSParamに分離",
+  },
+  {
+    description: "特殊能力値追加プラグイン用にインターフェース追加",
+  },
   {
     date: "2024/12/19",
     version: "1.2.0",
@@ -31,85 +38,6 @@ const histories: PluginHistorySchema[] = [
   }
 ];
 
-const structLimitValue = createStruct("LimitValue", [
-  createBooleanParam("enableUpperLimit", {
-    text: "上限値を有効にする",
-    description: "ONにすると上限値設定が有効になります。OFFにすると上限値なしとなります。",
-    default: false,
-  }),
-  createNumberParam("upperLimit", {
-    text: "上限値",
-  }),
-  createBooleanParam("enableLowerLimit", {
-    text: "下限値を有効にする",
-    description: "ONにすると下限値設定が有効になります。OFFにすると下限値なしとなります。",
-    default: false,
-  }),
-  createNumberParam("lowerLimit", {
-    text: "下限値",
-  }),
-]);
-
-const structStatusLimit = createStruct("StatusLimit", [
-  {
-    param: "tgr",
-    name: "狙われ率",
-  },
-  {
-    param: "grd",
-    name: "防御効果率",
-  },
-  {
-    param: "rec",
-    name: "回復効果率",
-  },
-  {
-    param: "pha",
-    name: "薬の知識",
-  },
-  {
-    param: "mcr",
-    name: "MP消費率",
-  },
-  {
-    param: "tcr",
-    name: "TPチャージ率",
-  },
-  {
-    param: "pdr",
-    name: "物理ダメージ率",
-  },
-  {
-    param: "mdr",
-    name: "魔法ダメージ率",
-  },
-  {
-    param: "fdr",
-    name: "床ダメージ率",
-  },
-  {
-    param: "exr",
-    name: "経験値獲得率",
-  },
-].map(x => createStructParam(x.param, {
-  struct: structLimitValue,
-  text: x.name,
-  default: {
-    enableUpperLimit: false,
-    upperLimit: 999999,
-    enableLowerLimit: true,
-    lowerLimit: 0,
-  },
-})));
-
-const parameters = [
-  createStructParam("statusLimit", {
-    struct: structStatusLimit,
-    text: "限界値",
-    description: "各ステータスの限界値を設定します。",
-  }),
-];
-
 export const config = new ConfigDefinitionBuilder(
   "AddSParamTrait",
   2024,
@@ -117,9 +45,6 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
-  .withStructure(structLimitValue)
-  .withStructure(structStatusLimit)
-  .withParameters(parameters)
   .withBaseDependency({
     name: "DarkPlasma_AllocateUniqueTraitDataId",
     version: "1.0.0",
@@ -128,6 +53,9 @@ export const config = new ConfigDefinitionBuilder(
   .withOrderAfterDependency({
     name: "DarkPlasma_ParameterText",
     version: "1.0.5",
+  })
+  .withOrderBeforeDependency({
+    name: "DarkPlasma_LimitSParam",
   })
   .withHelp(dedent`アクター、職業、装備、敵キャラ、ステートのメモ欄に指定の記述を行うことで
     特殊能力値を加算する特徴を追加します。
