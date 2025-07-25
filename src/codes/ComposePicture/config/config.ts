@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/07/26",
+    version: "1.1.3",
+    description: "合成する画像の表示位置・拡大率の更新処理を通常のピクチャと分離",
+  },
+  {
     date: "2025/02/02",
     version: "1.1.2",
     description: "ベース画像ロード完了時に合成する画像が1フレーム遅れて表示されることがある不具合を修正",

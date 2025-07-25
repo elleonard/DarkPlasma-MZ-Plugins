@@ -155,7 +155,7 @@ function Sprite_Picture_ComposePictureMixIn(spritePicture: Sprite_Picture) {
   spritePicture.updateCompose = function () {
     if (this.mustBeComposed()) {
       this.composePicture(this.picture()!.additionalPictures().map(gamePicture => {
-        const sprite = new Sprite_Picture(gamePicture.pictureId());
+        const sprite = new Sprite_AdditionalPicture(gamePicture.pictureId());
         sprite.update();
         return sprite;
       }));
@@ -180,6 +180,24 @@ function Sprite_Picture_ComposePictureMixIn(spritePicture: Sprite_Picture) {
 }
 
 Sprite_Picture_ComposePictureMixIn(Sprite_Picture.prototype);
+
+class Sprite_AdditionalPicture extends Sprite_Picture {
+  public updatePosition(): void {
+    const picture = this.picture();
+    if (picture) {
+      this.x = Math.round(picture.x());
+      this.y = Math.round(picture.y());
+    }
+  }
+
+  public updateScale(): void {
+    const picture = this.picture();
+    if (picture) {
+      this.scale.x = picture.scaleX() / 100;
+      this.scale.y = picture.scaleY() / 100;
+    }
+  }
+}
 
 type _Game_AdditionalPicture = typeof Game_AdditionalPicture;
 declare global {
