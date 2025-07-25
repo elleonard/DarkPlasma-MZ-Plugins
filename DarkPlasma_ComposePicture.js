@@ -1,9 +1,10 @@
-// DarkPlasma_ComposePicture 1.1.2
+// DarkPlasma_ComposePicture 1.1.3
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/07/26 1.1.3 合成する画像の表示位置・拡大率の更新処理を通常のピクチャと分離
  * 2025/02/02 1.1.2 ベース画像ロード完了時に合成する画像が1フレーム遅れて表示されることがある不具合を修正
  * 2025/02/02 1.1.1 合成する画像のオフセット設定が想定と異なる不具合を修正
  * 2024/04/13 1.1.0 画像ファイル名に制御文字を使用可能にする
@@ -40,7 +41,7 @@
  * @default []
  *
  * @help
- * version: 1.1.2
+ * version: 1.1.3
  * 画像を合成して1枚のピクチャとして扱うプラグインコマンドを提供します。
  *
  * 本プラグインはセーブデータにピクチャの合成情報を追加します。
@@ -276,7 +277,7 @@
           this.picture()
             .additionalPictures()
             .map((gamePicture) => {
-              const sprite = new Sprite_Picture(gamePicture.pictureId());
+              const sprite = new Sprite_AdditionalPicture(gamePicture.pictureId());
               sprite.update();
               return sprite;
             }),
@@ -299,5 +300,21 @@
     };
   }
   Sprite_Picture_ComposePictureMixIn(Sprite_Picture.prototype);
+  class Sprite_AdditionalPicture extends Sprite_Picture {
+    updatePosition() {
+      const picture = this.picture();
+      if (picture) {
+        this.x = Math.round(picture.x());
+        this.y = Math.round(picture.y());
+      }
+    }
+    updateScale() {
+      const picture = this.picture();
+      if (picture) {
+        this.scale.x = picture.scaleX() / 100;
+        this.scale.y = picture.scaleY() / 100;
+      }
+    }
+  }
   globalThis.Game_AdditionalPicture = Game_AdditionalPicture;
 })();
