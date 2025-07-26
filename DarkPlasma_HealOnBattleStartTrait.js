@@ -15,6 +15,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_AllocateUniqueTraitId
+ * @orderAfter DarkPlasma_AllocateUniqueTraitId
+ *
  * @help
  * version: 1.0.0
  * 戦闘開始時に回復する特徴を設定できます。
@@ -29,6 +32,11 @@
  * 戦闘開始時にTPをx％回復する
  *
  * これらの特徴を複数所持する場合、効果値は加算されます。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_AllocateUniqueTraitId version:1.0.2
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_AllocateUniqueTraitId
  */
 
 (() => {
