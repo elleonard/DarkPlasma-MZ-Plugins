@@ -18,6 +18,11 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
+  .withBaseDependency({
+    name: "DarkPlasma_AllocateUniqueTraitId",
+    version: "1.0.2",
+    order: 'after',
+  })
   .withHelp(dedent`戦闘開始時に回復する特徴を設定できます。
     
     <healHpOnBattleStart:x>
