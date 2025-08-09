@@ -1,9 +1,10 @@
-// DarkPlasma_ConcurrentParty 1.2.0
+// DarkPlasma_ConcurrentParty 1.3.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/09 1.3.0 パーティ分割状態を取得するプラグインコマンドを追加
  * 2025/07/13 1.2.0 分割したパーティの空欄表現を変更
  * 2025/07/12 1.1.0 分割したパーティをセーブできない不具合を修正
  *                  切り替えプラグインコマンドに自動フェード設定を追加
@@ -141,8 +142,17 @@
  * @type number
  * @default 0
  *
+ * @command isPartyDevided
+ * @text パーティ分割状態を取得する
+ * @desc 指定したスイッチにパーティの分割状態を取得します。
+ * @arg switchId
+ * @desc パーティ分割状態なら指定スイッチをONにします。
+ * @text スイッチ
+ * @type switch
+ * @default 0
+ *
  * @help
- * version: 1.2.0
+ * version: 1.3.0
  * パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
  *
  * プラグインコマンドでパーティを分割することができます。
@@ -265,6 +275,12 @@
     };
   }
 
+  function parseArgs_isPartyDevided(args) {
+    return {
+      switchId: Number(args.switchId || 0),
+    };
+  }
+
   const command_devideParty = 'devideParty';
 
   const command_nextParty = 'nextParty';
@@ -278,6 +294,8 @@
   const command_partyIndex = 'partyIndex';
 
   const command_partyPosition = 'partyPosition';
+
+  const command_isPartyDevided = 'isPartyDevided';
 
   PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
     if ($gameParty.isDevided()) {
@@ -345,6 +363,10 @@
         $gameVariables.setValue(parsedArgs.directionVariableId, party.position.direction);
       }
     }
+  });
+  PluginManager.registerCommand(pluginName, command_isPartyDevided, function (args) {
+    const paresdArgs = parseArgs_isPartyDevided(args);
+    $gameSwitches.setValue(paresdArgs.switchId, $gameParty.isDevided());
   });
   function Game_Temp_ConcurrentPartyMixIn(gameTemp) {
     const _initialize = gameTemp.initialize;
