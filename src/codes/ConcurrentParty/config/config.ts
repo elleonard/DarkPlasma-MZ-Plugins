@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/08/09",
+    version: "1.3.0",
+    description: "パーティ分割状態を取得するプラグインコマンドを追加",
+  },
+  {
     date: "2025/07/13",
     version: "1.2.0",
     description: "分割したパーティの空欄表現を変更",
@@ -159,6 +164,18 @@ const commandPartyPosition: PluginCommandSchema = createCommand("partyPosition",
   ],
 });
 
+const commandIsPartyDevided: PluginCommandSchema = createCommand("isPartyDevided", {
+  text: "パーティ分割状態を取得する",
+  description: "指定したスイッチにパーティの分割状態を取得します。",
+  args: [
+    createDatabaseParam("switchId", {
+      type: 'switch',
+      text: "スイッチ",
+      description: "パーティ分割状態なら指定スイッチをONにします。",
+    }),
+  ],
+});
+
 const parameters: PluginParameterSchema[] = [
   createSelectParam("nextPartyButton", {
     text: "次へ切り替えボタン",
@@ -230,6 +247,7 @@ export const config = new ConfigDefinitionBuilder(
     commandLeaderId,
     commandPartyIndex,
     commandPartyPosition,
+    commandIsPartyDevided,
   ])
   .withHelp(dedent`パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
     

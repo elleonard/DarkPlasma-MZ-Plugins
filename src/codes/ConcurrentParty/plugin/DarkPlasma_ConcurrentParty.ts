@@ -1,7 +1,7 @@
 /// <reference path="./ConcurrentParty.d.ts" />
 
 import { settings } from '../config/_build/DarkPlasma_ConcurrentParty_parameters';
-import { command_devideParty, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_leaderId, parseArgs_nextParty, parseArgs_partyIndex, parseArgs_partyPosition, parseArgs_previousParty } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
+import { command_devideParty, command_isPartyDevided, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_isPartyDevided, parseArgs_leaderId, parseArgs_nextParty, parseArgs_partyIndex, parseArgs_partyPosition, parseArgs_previousParty } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
 import { pluginName } from '../../../common/pluginName';
 
 PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
@@ -74,6 +74,11 @@ PluginManager.registerCommand(pluginName, command_partyPosition, function (args)
       $gameVariables.setValue(parsedArgs.directionVariableId, party.position.direction);
     }
   }
+});
+
+PluginManager.registerCommand(pluginName, command_isPartyDevided, function (args) {
+  const paresdArgs = parseArgs_isPartyDevided(args);
+  $gameSwitches.setValue(paresdArgs.switchId, $gameParty.isDevided());
 });
 
 function Game_Temp_ConcurrentPartyMixIn(gameTemp: Game_Temp) {
