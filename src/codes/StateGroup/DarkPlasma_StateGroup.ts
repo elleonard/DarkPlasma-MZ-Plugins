@@ -228,7 +228,7 @@ function Game_Battler_StateGroupMixIn(gameBattler: Game_Battler) {
     /**
      * 優先度の低い同グループステートにかかっている場合は上書き
      */
-    const lowerPriorityStateIds = this.lowerPriorityStateIds(stateId);
+    const lowerPriorityStateIds = this.lowerOrEqualPriorityStateIds(stateId);
     lowerPriorityStateIds.forEach((lowerPriorityStateId) => this.eraseState(lowerPriorityStateId));
     /**
      * グループ上書き設定
@@ -265,7 +265,7 @@ function Game_Battler_StateGroupMixIn(gameBattler: Game_Battler) {
    * @param {number} stateId
    * @return {number[]}
    */
-  gameBattler.lowerPriorityStateIds = function (this: Game_Battler, stateId: number): number[] {
+  gameBattler.lowerOrEqualPriorityStateIds = function (this: Game_Battler, stateId: number): number[] {
     return StateGroupManager.groupListByState(stateId)
       .map((group) => {
         return group.lowerPriorityStateIds(stateId).filter((id) => this.states().some((state) => state.id === id));

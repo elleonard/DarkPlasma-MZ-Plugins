@@ -4,6 +4,6 @@
 type StateGroupSetting = { name: string; states: number[] };
 
 declare interface Game_Battler {
-  lowerPriorityStateIds(stateId: number): number[];
+  lowerOrEqualPriorityStateIds(stateId: number): number[];
   isHigherOrEqualPriorityStateAffected(stateId: number): boolean;
 }
