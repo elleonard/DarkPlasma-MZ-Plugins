@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>使用効果 指定グループに属するステート解除</title>
+      <link href="/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/"/>
+      <url>/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>指定グループに属するステートを全て解除する使用効果を実現します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/esna.png" alt="設定例" title="設定例"></p><p>「バステ」グループに属するすべてのステートを解除します。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/state-group-2.png" alt="設定例2" title="StateGroup2"></p><p>「バステ」グループに所属するステートの設定。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RemoveStateGroupEffect.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h1 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h1><h2 id="ステートをグルーピングする"><a href="#ステートをグルーピングする" class="headerlink" title="ステートをグルーピングする"></a>ステートをグルーピングする</h2><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateGroup2.js">GitHub</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ステート </tag>
+            
+            <tag> アイテム </tag>
+            
+            <tag> スキル </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>パーティ分割シーン</title>
       <link href="/DarkPlasma-MZ-Plugins/2025/07/12/devide-party-scene/"/>
       <url>/DarkPlasma-MZ-Plugins/2025/07/12/devide-party-scene/</url>
@@ -720,9 +749,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> イベント </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -882,11 +911,11 @@
       
         <tags>
             
+            <tag> イベント </tag>
+            
             <tag> マップ </tag>
             
             <tag> キャラクター </tag>
-            
-            <tag> イベント </tag>
             
         </tags>
       
@@ -911,11 +940,11 @@
       
         <tags>
             
+            <tag> イベント </tag>
+            
             <tag> テキスト </tag>
             
             <tag> MV版あり </tag>
-            
-            <tag> イベント </tag>
             
         </tags>
       
