@@ -1,9 +1,10 @@
-// DarkPlasma_StateGroup 1.2.1
+// DarkPlasma_StateGroup 1.2.2
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/11 1.2.2 非推奨化
  * 2025/05/18 1.2.1 プラグインパラメータでグループ設定を行うと起動時にエラーで停止する不具合を修正
  * 2022/10/15 1.2.0 DarkPlasma_StateBuffOnBattleStartにおけるグループに対する優位の挙動を定義
  * 2022/10/10 1.1.1 typescript移行
@@ -30,8 +31,16 @@
  * @type struct<StateGroup>[]
  * @default []
  *
+
+ * @deprecated
+
+ *
  * @help
- * version: 1.2.1
+ * version: 1.2.2
+ * 本プラグインは利用を非推奨とします。
+ * 本プラグインの機能はDarkPlasma_PriorityStateGroupに引き継いでいます。
+ * そちらを利用するようにしてください。
+ *
  * ステートをグルーピングします。
  * 同じグループに属するステートは重ねがけできません。
  *
@@ -313,7 +322,7 @@
       /**
        * 優先度の低い同グループステートにかかっている場合は上書き
        */
-      const lowerPriorityStateIds = this.lowerPriorityStateIds(stateId);
+      const lowerPriorityStateIds = this.lowerOrEqualPriorityStateIds(stateId);
       lowerPriorityStateIds.forEach((lowerPriorityStateId) => this.eraseState(lowerPriorityStateId));
       /**
        * グループ上書き設定
@@ -349,7 +358,7 @@
      * @param {number} stateId
      * @return {number[]}
      */
-    gameBattler.lowerPriorityStateIds = function (stateId) {
+    gameBattler.lowerOrEqualPriorityStateIds = function (stateId) {
       return StateGroupManager.groupListByState(stateId)
         .map((group) => {
           return group.lowerPriorityStateIds(stateId).filter((id) => this.states().some((state) => state.id === id));
