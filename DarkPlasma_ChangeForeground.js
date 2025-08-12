@@ -21,6 +21,7 @@
  * @text 近景画像を切り替える
  * @desc 近景画像を切り替えます。
  * @arg file
+ * @desc 視差ゼロの画像を指定する場合はファイル名を文字列で直接入力してください。
  * @text ファイル
  * @type file
  * @dir img/paralaxes
