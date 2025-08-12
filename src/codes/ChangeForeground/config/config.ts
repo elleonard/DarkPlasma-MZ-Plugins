@@ -17,6 +17,7 @@ const commandChangeForeground = createCommand("ChangeForeground", {
   args: [
     createFileParam("file", {
       text: "ファイル",
+      description: "視差ゼロの画像を指定する場合はファイル名を文字列で直接入力してください。",
       dir: "img/paralaxes",
     }),
     createBooleanParam("loopX", {
