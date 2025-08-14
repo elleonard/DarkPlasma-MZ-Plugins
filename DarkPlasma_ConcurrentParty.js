@@ -1,9 +1,10 @@
-// DarkPlasma_ConcurrentParty 1.3.0
+// DarkPlasma_ConcurrentParty 1.4.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/14 1.4.0 イベントをパーティとして表示するプラグインコマンドを追加
  * 2025/08/09 1.3.0 パーティ分割状態を取得するプラグインコマンドを追加
  * 2025/07/13 1.2.0 分割したパーティの空欄表現を変更
  * 2025/07/12 1.1.0 分割したパーティをセーブできない不具合を修正
@@ -151,8 +152,21 @@
  * @type switch
  * @default 0
  *
+ * @command displayEventAsParty
+ * @text イベントをパーティとして表示する
+ * @desc 指定パーティが同一マップに存在する場合、指定イベントをその座標に移動します。
+ * @arg eventName
+ * @desc パーティの座標に移動したいイベントの名前を指定します。同名イベントが複数あるってもその中のひとつだけ移動します。
+ * @text イベント名
+ * @type string
+ * @arg partyIndex
+ * @desc パーティのインデックスを指定します。
+ * @text パーティインデックス
+ * @type number
+ * @default 0
+ *
  * @help
- * version: 1.3.0
+ * version: 1.4.0
  * パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
  *
  * プラグインコマンドでパーティを分割することができます。
@@ -281,6 +295,13 @@
     };
   }
 
+  function parseArgs_displayEventAsParty(args) {
+    return {
+      eventName: String(args.eventName || ``),
+      partyIndex: Number(args.partyIndex || 0),
+    };
+  }
+
   const command_devideParty = 'devideParty';
 
   const command_nextParty = 'nextParty';
@@ -296,6 +317,8 @@
   const command_partyPosition = 'partyPosition';
 
   const command_isPartyDevided = 'isPartyDevided';
+
+  const command_displayEventAsParty = 'displayEventAsParty';
 
   PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
     if ($gameParty.isDevided()) {
@@ -367,6 +390,17 @@
   PluginManager.registerCommand(pluginName, command_isPartyDevided, function (args) {
     const paresdArgs = parseArgs_isPartyDevided(args);
     $gameSwitches.setValue(paresdArgs.switchId, $gameParty.isDevided());
+  });
+  PluginManager.registerCommand(pluginName, command_displayEventAsParty, function (args) {
+    const parsedArgs = parseArgs_displayEventAsParty(args);
+    if ($gameParty.isDevided()) {
+      const party = $gameParty.devidedParty(parsedArgs.partyIndex);
+      if (party?.position.mapId === $gameMap.mapId()) {
+        const event = $gameMap.events().find((e) => e.event().name === parsedArgs.eventName);
+        event?.locate(party.position.x, party.position.y);
+        event?.setDirection(party.position.direction);
+      }
+    }
   });
   function Game_Temp_ConcurrentPartyMixIn(gameTemp) {
     const _initialize = gameTemp.initialize;
