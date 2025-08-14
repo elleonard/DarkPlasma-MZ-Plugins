@@ -1,7 +1,7 @@
 /// <reference path="./ConcurrentParty.d.ts" />
 
 import { settings } from '../config/_build/DarkPlasma_ConcurrentParty_parameters';
-import { command_devideParty, command_isPartyDevided, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_isPartyDevided, parseArgs_leaderId, parseArgs_nextParty, parseArgs_partyIndex, parseArgs_partyPosition, parseArgs_previousParty } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
+import { command_devideParty, command_displayEventAsParty, command_isPartyDevided, command_joinAllMember, command_leaderId, command_nextParty, command_partyIndex, command_partyPosition, command_previousParty, parseArgs_devideParty, parseArgs_displayEventAsParty, parseArgs_isPartyDevided, parseArgs_leaderId, parseArgs_nextParty, parseArgs_partyIndex, parseArgs_partyPosition, parseArgs_previousParty } from '../config/_build/DarkPlasma_ConcurrentParty_commands';
 import { pluginName } from '../../../common/pluginName';
 
 PluginManager.registerCommand(pluginName, command_devideParty, function (args) {
@@ -79,6 +79,18 @@ PluginManager.registerCommand(pluginName, command_partyPosition, function (args)
 PluginManager.registerCommand(pluginName, command_isPartyDevided, function (args) {
   const paresdArgs = parseArgs_isPartyDevided(args);
   $gameSwitches.setValue(paresdArgs.switchId, $gameParty.isDevided());
+});
+
+PluginManager.registerCommand(pluginName, command_displayEventAsParty, function (args) {
+  const parsedArgs = parseArgs_displayEventAsParty(args);
+  if ($gameParty.isDevided()) {
+    const party = $gameParty.devidedParty(parsedArgs.partyIndex);
+    if (party?.position.mapId === $gameMap.mapId()) {
+      const event = $gameMap.events().find(e => e.event().name === parsedArgs.eventName);
+      event?.locate(party.position.x, party.position.y);
+      event?.setDirection(party.position.direction);
+    }
+  }
 });
 
 function Game_Temp_ConcurrentPartyMixIn(gameTemp: Game_Temp) {

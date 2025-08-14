@@ -1,9 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema, PluginStruct } from '../../../../modules/config/configSchema.js';
-import { createBooleanParam, createCommand, createDatabaseArrayParam, createDatabaseParam, createLocationParam, createNumberParam, createSelectParam, createStruct, createStructArrayParam } from '../../../../modules/config/createParameter.js';
+import { createBooleanParam, createCommand, createDatabaseArrayParam, createDatabaseParam, createLocationParam, createNumberParam, createSelectParam, createStringParam, createStruct, createStructArrayParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/08/14",
+    version: "1.4.0",
+    description: "イベントをパーティとして表示するプラグインコマンドを追加"
+  },
   {
     date: "2025/08/09",
     version: "1.3.0",
@@ -176,6 +181,21 @@ const commandIsPartyDevided: PluginCommandSchema = createCommand("isPartyDevided
   ],
 });
 
+const commandDisplayEventAsParty: PluginCommandSchema = createCommand("displayEventAsParty", {
+  text: "イベントをパーティとして表示する",
+  description: "指定パーティが同一マップに存在する場合、指定イベントをその座標に移動します。",
+  args: [
+    createStringParam("eventName", {
+      text: "イベント名",
+      description: "パーティの座標に移動したいイベントの名前を指定します。同名イベントが複数あるってもその中のひとつだけ移動します。",
+    }),
+    createNumberParam("partyIndex", {
+      text: "パーティインデックス",
+      description: "パーティのインデックスを指定します。",
+    }),
+  ],
+});
+
 const parameters: PluginParameterSchema[] = [
   createSelectParam("nextPartyButton", {
     text: "次へ切り替えボタン",
@@ -248,6 +268,7 @@ export const config = new ConfigDefinitionBuilder(
     commandPartyIndex,
     commandPartyPosition,
     commandIsPartyDevided,
+    commandDisplayEventAsParty,
   ])
   .withHelp(dedent`パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
     
