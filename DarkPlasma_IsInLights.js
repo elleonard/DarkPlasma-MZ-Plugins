@@ -1,9 +1,10 @@
-// DarkPlasma_IsInLights 1.0.0
+// DarkPlasma_IsInLights 2.0.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/15 2.0.0 DarkPlasma_DarkMap 3.0.0に対応
  * 2024/02/23 1.0.0 公開
  */
 
@@ -43,12 +44,12 @@
  * @default 0
  *
  * @help
- * version: 1.0.0
+ * version: 2.0.0
  * 暗いマップにおいて明かりの中にいるかどうか判定し、
  * 結果をスイッチに反映するプラグインコマンドを提供します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_DarkMap version:2.2.0
+ * DarkPlasma_DarkMap version:3.0.0
  */
 
 (() => {
@@ -96,7 +97,7 @@
     };
     gameCharacterBase.lightCovers = function (x, y) {
       return (
-        this.hasLight() && $gameMap.crowFlyDistance(this.x, x, this.y, y) * $gameMap.tileWidth() < this.lightRadius()
+        this.isLightOn() && $gameMap.crowFlyDistance(this.x, x, this.y, y) * $gameMap.tileWidth() < this.lightRadius()
       );
     };
   }
