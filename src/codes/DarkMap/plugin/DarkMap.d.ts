@@ -14,10 +14,41 @@ declare interface Game_Map {
   lightEvents(): Game_Event[];
 }
 
+type Game_CharacterLight = {
+  isOn: boolean;
+  radius: number;
+  color?: string;
+};
+
 declare interface Game_CharacterBase {
-  hasLight(): boolean;
+  _light: Game_CharacterLight;
+
+  initializeLight(): void;
+
+  isLightOn(): boolean;
+  turnOnLight(): void;
+  turnOffLight(): void;
+
   lightRadius(): number;
-  lightColor(): string|null;
+  setLightRadius(radius: number): void;
+
+  lightColor(): string;
+  setLightColor(color?: string): void;
+
+  onLightChange(): void;
+}
+
+declare interface Game_Event {
+  mustSaveLight(): boolean;
+}
+
+declare interface Game_System {
+  _eventLights: {[key: string]: Game_CharacterLight};
+
+  eventLights(): {[key: string]: Game_CharacterLight};
+  storeEventLight(mapId: number, eventId: number, light: Game_CharacterLight): void;
+  fetchEventLight(mapId: number, eventId: number): Game_CharacterLight|undefined;
+  eventLightKey(mapId: number, eventId: number): string;
 }
 
 declare interface Bitmap {
