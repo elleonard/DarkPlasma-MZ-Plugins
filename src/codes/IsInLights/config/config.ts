@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
 import { createCommand, createDatabaseParam, createNumberParam, createSelectParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/08/15",
+    version: "2.0.0",
+    description: "DarkPlasma_DarkMap 3.0.0に対応",
+  },
   {
     date: "2024/02/23",
     version: "1.0.0",
@@ -59,7 +65,7 @@ export const config = new ConfigDefinitionBuilder(
   .withCommands(commands)
   .withBaseDependency({
     name: "DarkPlasma_DarkMap",
-    version: "2.2.0",
+    version: "3.0.0",
   })
   .withHelp(dedent`暗いマップにおいて明かりの中にいるかどうか判定し、
   結果をスイッチに反映するプラグインコマンドを提供します。`)

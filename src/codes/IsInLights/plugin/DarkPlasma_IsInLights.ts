@@ -34,7 +34,7 @@ function Game_CharacterBase_IsInLightsMixIn(gameCharacterBase: Game_CharacterBas
   };
 
   gameCharacterBase.lightCovers = function (x, y) {
-    return this.hasLight() && $gameMap.crowFlyDistance(this.x, x, this.y, y) * $gameMap.tileWidth() < this.lightRadius();
+    return this.isLightOn() && $gameMap.crowFlyDistance(this.x, x, this.y, y) * $gameMap.tileWidth() < this.lightRadius();
   };
 }
 
