@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 3.0.0
+// DarkPlasma_DarkMap 3.1.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/16 3.1.0 マップ内、マップ内外全ての明かりをリセットするプラグインコマンドの追加
  * 2025/08/15 3.0.0 明かりを点ける, 消すプラグインコマンドの追加
  *                  明かり判定インターフェースに破壊的変更
  * 2024/02/23 2.2.0 プレイヤー、イベント以外にも対応できるようにインターフェースを追加
@@ -102,8 +103,16 @@
  * @type number
  * @default 0
  *
+ * @command resetLightInMap
+ * @text マップ内の明かりをリセットする
+ * @desc マップ内の明かりを初期状態に戻します。
+ *
+ * @command resetAllLight
+ * @text 全ての明かりをリセットする
+ * @desc マップ内外の全ての明かりをリセットします。
+ *
  * @help
- * version: 3.0.0
+ * version: 3.1.0
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -215,6 +224,10 @@
 
   const command_turnOffLight = 'turnOffLight';
 
+  const command_resetLightInMap = 'resetLightInMap';
+
+  const command_resetAllLight = 'resetAllLight';
+
   function darkColor() {
     return `#${(
       (1 << 24) +
@@ -268,6 +281,13 @@
       }
     })();
     target?.turnOffLight();
+  });
+  PluginManager.registerCommand(pluginName, command_resetLightInMap, function () {
+    $gameMap.events().forEach((event) => event.initializeLight());
+  });
+  PluginManager.registerCommand(pluginName, command_resetAllLight, function () {
+    $gameMap.events().forEach((event) => event.initializeLight());
+    $gameSystem.initializeEventLights();
   });
   function Bitmap_DarkMapMixIn(bitmap) {
     bitmap.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
@@ -351,15 +371,23 @@
     const _initialize = gameEvent.initialize;
     gameEvent.initialize = function (mapId, eventId) {
       _initialize.call(this, mapId, eventId);
-      this.initializeLight();
+      this.restoreLight();
+    };
+    gameEvent.restoreLight = function () {
+      const savedLight = $gameSystem.fetchEventLight(this._mapId, this.eventId());
+      if (savedLight) {
+        this._light = savedLight;
+      } else {
+        this.initializeLight();
+      }
     };
     gameEvent.initializeLight = function () {
-      const savedLight = $gameSystem.fetchEventLight(this._mapId, this.eventId());
-      this._light = savedLight || {
+      this._light = {
         isOn: !!this.event()?.meta.light,
         radius: Number(this.event()?.meta.lightRadius || defaultLightRadius()),
         color: String(this.event()?.meta.lightColor || defaultLightColor()),
       };
+      this.onLightChange();
     };
     gameEvent.onLightChange = function () {
       if (this.mustSaveLight()) {
@@ -372,9 +400,17 @@
   }
   Game_Event_DarkMapMixIn(Game_Event.prototype);
   function Game_System_DarkMapMixIn(gameSystem) {
+    const _initialize = gameSystem.initialize;
+    gameSystem.initialize = function () {
+      _initialize.call(this);
+      this.initializeEventLights();
+    };
+    gameSystem.initializeEventLights = function () {
+      this._eventLights = {};
+    };
     gameSystem.eventLights = function () {
       if (!this._eventLights) {
-        this._eventLights = {};
+        this.initializeEventLights();
       }
       return this._eventLights;
     };
