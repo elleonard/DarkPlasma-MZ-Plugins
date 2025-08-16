@@ -39,12 +39,14 @@ declare interface Game_CharacterBase {
 }
 
 declare interface Game_Event {
+  restoreLight(): void;
   mustSaveLight(): boolean;
 }
 
 declare interface Game_System {
   _eventLights: {[key: string]: Game_CharacterLight};
 
+  initializeEventLights(): void;
   eventLights(): {[key: string]: Game_CharacterLight};
   storeEventLight(mapId: number, eventId: number, light: Game_CharacterLight): void;
   fetchEventLight(mapId: number, eventId: number): Game_CharacterLight|undefined;

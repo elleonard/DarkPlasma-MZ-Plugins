@@ -1,7 +1,7 @@
 /// <reference path="./DarkMap.d.ts" />
 import { isMapMetaDataAvailable } from '../../../common/mapMetaData';
 import { settings } from '../config/_build/DarkPlasma_DarkMap_parameters';
-import { command_turnOffLight, command_turnOnLight, parseArgs_turnOffLight, parseArgs_turnOnLight } from '../config/_build/DarkPlasma_DarkMap_commands';
+import { command_resetAllLight, command_resetLightInMap, command_turnOffLight, command_turnOnLight, parseArgs_turnOffLight, parseArgs_turnOnLight } from '../config/_build/DarkPlasma_DarkMap_commands';
 import { pluginName } from '../../../common/pluginName';
 
 function darkColor() {
@@ -67,6 +67,15 @@ PluginManager.registerCommand(pluginName, command_turnOffLight, function (this: 
   })();
 
   target?.turnOffLight();
+});
+
+PluginManager.registerCommand(pluginName, command_resetLightInMap, function () {
+  $gameMap.events().forEach(event => event.initializeLight());
+});
+
+PluginManager.registerCommand(pluginName, command_resetAllLight, function () {
+  $gameMap.events().forEach(event => event.initializeLight());
+  $gameSystem.initializeEventLights();
 });
 
 function Bitmap_DarkMapMixIn(bitmap: Bitmap) {
@@ -167,16 +176,25 @@ function Game_Event_DarkMapMixIn(gameEvent: Game_Event) {
   const _initialize = gameEvent.initialize;
   gameEvent.initialize = function (mapId, eventId) {
     _initialize.call(this, mapId, eventId);
-    this.initializeLight();
+    this.restoreLight();
+  };
+
+  gameEvent.restoreLight = function () {
+    const savedLight = $gameSystem.fetchEventLight(this._mapId, this.eventId());
+    if (savedLight) {
+      this._light = savedLight;
+    } else {
+      this.initializeLight();
+    }
   };
 
   gameEvent.initializeLight = function () {
-    const savedLight = $gameSystem.fetchEventLight(this._mapId, this.eventId());
-    this._light = savedLight || {
+    this._light = {
       isOn: !!this.event()?.meta.light,
       radius: Number(this.event()?.meta.lightRadius || defaultLightRadius()),
       color: String(this.event()?.meta.lightColor || defaultLightColor()),
     };
+    this.onLightChange();
   };
 
   gameEvent.onLightChange = function () {
@@ -193,9 +211,19 @@ function Game_Event_DarkMapMixIn(gameEvent: Game_Event) {
 Game_Event_DarkMapMixIn(Game_Event.prototype);
 
 function Game_System_DarkMapMixIn(gameSystem: Game_System) {
+  const _initialize = gameSystem.initialize;
+  gameSystem.initialize = function () {
+    _initialize.call(this);
+    this.initializeEventLights();
+  };
+
+  gameSystem.initializeEventLights = function () {
+    this._eventLights = {};
+  };
+
   gameSystem.eventLights = function () {
     if (!this._eventLights) {
-      this._eventLights = {};
+      this.initializeEventLights();
     }
     return this._eventLights;
   };

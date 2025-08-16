@@ -102,11 +102,26 @@ const commandTurnOffLight: PluginCommandSchema = createCommand("turnOffLight", {
   ],
 });
 
+const commandResetLightInMap: PluginCommandSchema = createCommand("resetLightInMap", {
+  text: "マップ内の明かりをリセットする",
+  description: "マップ内の明かりを初期状態に戻します。",
+});
+
+const commandResetAllLight: PluginCommandSchema = createCommand("resetAllLight", {
+  text: "全ての明かりをリセットする",
+  description: "マップ内外の全ての明かりをリセットします。",
+});
+
 export const config: PluginConfigSchema = {
   name: "DarkPlasma_DarkMap",
   year: 2021,
   license: "MIT",
   histories: [
+    {
+      date: "2025/08/16",
+      version: "3.1.0",
+      description: "マップ内、マップ内外全ての明かりをリセットするプラグインコマンドの追加",
+    },
     {
       date: "2025/08/15",
       version: "3.0.0",
@@ -196,6 +211,8 @@ export const config: PluginConfigSchema = {
   commands: [
     commandTurnOnLight,
     commandTurnOffLight,
+    commandResetLightInMap,
+    commandResetAllLight,
   ],
   structures: [
     structRGBColor,
