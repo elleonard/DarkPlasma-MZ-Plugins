@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>装備絞り込み機能</title>
+      <link href="/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/"/>
+      <url>/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>装備画面で装備選択をする際に、特徴によって絞り込みできるようになります。<br>大量の装備を使い分けるゲームにオススメです。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/filter-equip1.png" alt="使用例1" title="使用例 絞り込みなしの状態"></p><p>絞り込みなしの状態です。<br>装備選択で特定のキーを押すと、絞り込みウィンドウが開きます。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/filter-equip2.png" alt="使用例2" title="使用例 属性有効度の特徴のみに絞り込み"></p><p>属性有効度の特徴を持つ装備のみに絞り込みました。<br>特徴の名前はプラグインパラメータで指定できます。</p><p><img src="/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/filter-equip3.png" alt="使用例3" title="使用例 特殊能力値の特徴のみに絞り込み"></p><p>特殊能力値の特徴を持つ装備のみに絞り込みました。<br>特殊能力値の表記については、特殊能力値、追加能力値表記テキスト設定プラグインで設定できます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FilterEquip.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="特殊能力値、追加能力値表記テキスト設定"><a href="#特殊能力値、追加能力値表記テキスト設定" class="headerlink" title="特殊能力値、追加能力値表記テキスト設定"></a>特殊能力値、追加能力値表記テキスト設定</h3><p>特殊能力値、追加能力値のテキスト表記を設定するプラグインです。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ParameterText.js">GitHub</a></p><h3 id="ウィンドウのハンドラにカスタムキーを追加する"><a href="#ウィンドウのハンドラにカスタムキーを追加する" class="headerlink" title="ウィンドウのハンドラにカスタムキーを追加する"></a>ウィンドウのハンドラにカスタムキーを追加する</h3><p>絞り込みウィンドウを開く操作のために必要です。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_CustomKeyHandler.js">GitHub</a></p><h3 id="独自の特徴IDを確保する"><a href="#独自の特徴IDを確保する" class="headerlink" title="独自の特徴IDを確保する"></a>独自の特徴IDを確保する</h3><p>独自特徴の名前を表示するために必要です。</p><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js">GitHub</a></p><h1 id="関連プラグイン"><a href="#関連プラグイン" class="headerlink" title="関連プラグイン"></a>関連プラグイン</h1><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FilterEquip_RecentlyGained.js">最近入手した装備を絞り込む</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 装備 </tag>
+            
+            <tag> 特徴 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>使用効果 指定グループに属するステート解除</title>
       <link href="/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/"/>
       <url>/DarkPlasma-MZ-Plugins/2025/08/11/remove-state-group-effect/</url>
@@ -207,9 +234,9 @@
       
         <tags>
             
-            <tag> 装備 </tag>
-            
             <tag> テキスト </tag>
+            
+            <tag> 装備 </tag>
             
         </tags>
       
@@ -1077,6 +1104,8 @@
       
         <tags>
             
+            <tag> MV版あり </tag>
+            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -1084,8 +1113,6 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
-            
-            <tag> MV版あり </tag>
             
             <tag> 特徴 </tag>
             
@@ -1143,9 +1170,9 @@
       
         <tags>
             
-            <tag> ステート </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> ステート </tag>
             
             <tag> 戦闘 </tag>
             
@@ -1301,9 +1328,9 @@
       
         <tags>
             
-            <tag> 装備 </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> 装備 </tag>
             
         </tags>
       
