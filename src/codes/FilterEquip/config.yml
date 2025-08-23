@@ -3,6 +3,9 @@ DarkPlasma_FilterEquip:
   year: 2021
   license: MIT
   histories:
+    - date: 2025/08/23
+      version: 1.5.1
+      description: '不要な依存の記述を削除'
     - date: 2025/01/31
       version: 1.5.0
       description: '同名の特徴をマージする'
@@ -244,14 +247,14 @@ DarkPlasma_FilterEquip:
         version: 1.3.0
       - name: DarkPlasma_AllocateUniqueTraitId
         version: 1.0.0
-      - name: DarkPlasma_AllocateUniqueTraitDataId
-        version: 1.0.0
     orderAfter:
       - name: DarkPlasma_CustomKeyHandler
     orderBefore:
       - name: DarkPlasma_PartyAbilityTraitExtension
         version: 1.1.0
       - name: DarkPlasma_FilterEquip_RecentlyGained
+        version: 1.0.0
+      - name: DarkPlasma_AllocateUniqueTraitDataId
         version: 1.0.0
   help:
     ja: |
