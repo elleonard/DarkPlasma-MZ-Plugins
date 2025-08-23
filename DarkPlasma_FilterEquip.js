@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.5.0
+// DarkPlasma_FilterEquip 1.5.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/23 1.5.1 不要な依存の記述を削除
  * 2025/01/31 1.5.0 同名の特徴をマージする
  * 2024/11/04 1.4.0 同名の特徴データをマージする
  * 2024/03/02 1.3.0 特殊フラグのフラグ名を表示
@@ -31,10 +32,10 @@
  * @base DarkPlasma_ParameterText
  * @base DarkPlasma_CustomKeyHandler
  * @base DarkPlasma_AllocateUniqueTraitId
- * @base DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_CustomKeyHandler
  * @orderBefore DarkPlasma_PartyAbilityTraitExtension
  * @orderBefore DarkPlasma_FilterEquip_RecentlyGained
+ * @orderBefore DarkPlasma_AllocateUniqueTraitDataId
  *
  * @param traitName
  * @desc 絞り込み画面で表示する特殊能力値の特徴名を設定します。
@@ -58,7 +59,7 @@
  * @default shift
  *
  * @help
- * version: 1.5.0
+ * version: 1.5.1
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -97,12 +98,12 @@
  * DarkPlasma_ParameterText version:1.0.4
  * DarkPlasma_CustomKeyHandler version:1.3.0
  * DarkPlasma_AllocateUniqueTraitId version:1.0.0
- * DarkPlasma_AllocateUniqueTraitDataId version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
  * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
+ * DarkPlasma_AllocateUniqueTraitDataId version:1.0.0
  */
 /*~struct~TraitName:
  * @param elementRate
