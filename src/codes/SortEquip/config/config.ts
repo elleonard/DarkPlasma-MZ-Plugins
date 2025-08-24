@@ -5,6 +5,14 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/08/25",
+    version: "1.0.1",
+    description: "装備が増殖してしまう不具合を修正",
+  },
+  {
+    description: "最上部以外の整列対象一覧が正しく生成できない不具合を修正",
+  },
+  {
     date: "2025/08/24",
     version: "1.0.0",
     description: "最初のバージョン",

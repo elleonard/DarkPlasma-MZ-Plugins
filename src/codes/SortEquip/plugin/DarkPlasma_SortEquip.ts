@@ -21,7 +21,7 @@ function Game_Actor_SortEquipMixIn(gameActor: Game_Actor) {
   gameActor.forceClearEquipments = function () {
     [...Array(this.equipSlots().length).keys()]
       .filter(i => this.isEquipChangeOk(i))
-      .forEach(i => this.changeEquip(i, null));
+      .forEach(i => this.forceChangeEquip(i, null));
   };
 }
 
@@ -67,6 +67,7 @@ function Scene_Equip_SortEquipMixIn(sceneEquip: Scene_Equip) {
 
   sceneEquip.onSortOpen = function () {
     this._itemWindow.deactivate();
+    this._itemWindow.createSortCache();
     this._sortWindow.setValidSortParamTypes(this._itemWindow.validSortParamTypes());
     this._sortWindow.show();
     this._sortWindow.activate();
@@ -117,6 +118,9 @@ function Window_EquipItem_EquipSortMixIn(windowEquipItem: Window_EquipItem) {
   };
 
   windowEquipItem.createSortCache = function () {
+    if (this._validSortParamTypes?.has(this.sortParamCacheKey())) {
+      return;
+    }
     this._data.forEach(item => {
       if (item) {
         const cache = this.calculateSortParameters(item as MZ.Weapon|MZ.Armor);

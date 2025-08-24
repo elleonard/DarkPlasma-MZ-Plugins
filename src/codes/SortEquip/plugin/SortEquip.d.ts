@@ -39,7 +39,7 @@ declare interface Window_ItemList {
 declare interface Window_EquipItem {
   _sort: string|null;
 
-  _validSortParamTypes: Map<string, string[]>;
+  _validSortParamTypes?: Map<string, string[]>;
 
   /**
    * ソート用パラメータのキャッシュ
