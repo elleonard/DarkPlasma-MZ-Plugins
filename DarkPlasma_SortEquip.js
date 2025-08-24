@@ -1,9 +1,11 @@
-// DarkPlasma_SortEquip 1.0.0
+// DarkPlasma_SortEquip 1.0.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/25 1.0.1 装備が増殖してしまう不具合を修正
+ *                  最上部以外の整列対象一覧が正しく生成できない不具合を修正
  * 2025/08/24 1.0.0 最初のバージョン
  */
 
@@ -35,7 +37,7 @@
  * @default shift
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 装備画面で装備を選択する際に、
  * プレイヤーが特定の操作を行うことで装備を整列することができます。
  *
@@ -92,7 +94,7 @@
     gameActor.forceClearEquipments = function () {
       [...Array(this.equipSlots().length).keys()]
         .filter((i) => this.isEquipChangeOk(i))
-        .forEach((i) => this.changeEquip(i, null));
+        .forEach((i) => this.forceChangeEquip(i, null));
     };
   }
   Game_Actor_SortEquipMixIn(Game_Actor.prototype);
@@ -126,6 +128,7 @@
     };
     sceneEquip.onSortOpen = function () {
       this._itemWindow.deactivate();
+      this._itemWindow.createSortCache();
       this._sortWindow.setValidSortParamTypes(this._itemWindow.validSortParamTypes());
       this._sortWindow.show();
       this._sortWindow.activate();
@@ -167,6 +170,9 @@
       }
     };
     windowEquipItem.createSortCache = function () {
+      if (this._validSortParamTypes?.has(this.sortParamCacheKey())) {
+        return;
+      }
       this._data.forEach((item) => {
         if (item) {
           const cache = this.calculateSortParameters(item);
