@@ -1,9 +1,10 @@
-// DarkPlasma_SortEquip 1.0.1
+// DarkPlasma_SortEquip 1.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/08/30 1.1.0 ソートモード中判定用のインターフェース追加
  * 2025/08/25 1.0.1 装備が増殖してしまう不具合を修正
  *                  最上部以外の整列対象一覧が正しく生成できない不具合を修正
  * 2025/08/24 1.0.0 最初のバージョン
@@ -37,7 +38,7 @@
  * @default shift
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * 装備画面で装備を選択する際に、
  * プレイヤーが特定の操作を行うことで装備を整列することができます。
  *
@@ -144,6 +145,9 @@
       this._sortWindow.deactivate();
       this._sortWindow.hide();
       this._itemWindow.activate();
+    };
+    sceneEquip.isSortMode = function () {
+      return this._sortWindow?.active;
     };
   }
   Scene_Equip_SortEquipMixIn(Scene_Equip.prototype);
