@@ -86,6 +86,10 @@ function Scene_Equip_SortEquipMixIn(sceneEquip: Scene_Equip) {
     this._sortWindow.hide();
     this._itemWindow.activate();
   };
+
+  sceneEquip.isSortMode = function () {
+    return this._sortWindow?.active;
+  };
 }
 
 Scene_Equip_SortEquipMixIn(Scene_Equip.prototype);

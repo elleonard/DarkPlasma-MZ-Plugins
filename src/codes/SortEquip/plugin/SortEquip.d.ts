@@ -21,6 +21,8 @@ declare interface Scene_Equip {
   onSortOpen(): void;
   onSortOk(): void;
   onSortCancel(): void;
+
+  isSortMode(): boolean;
 }
 
 type SortParam = {

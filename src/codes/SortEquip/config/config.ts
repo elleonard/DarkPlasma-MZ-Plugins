@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/08/30",
+    version: "1.1.0",
+    description: "ソートモード中判定用のインターフェース追加",
+  },
+  {
     date: "2025/08/25",
     version: "1.0.1",
     description: "装備が増殖してしまう不具合を修正",
