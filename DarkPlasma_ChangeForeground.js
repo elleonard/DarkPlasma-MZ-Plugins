@@ -1,10 +1,61 @@
-// DarkPlasma_ChangeForeground 1.0.0
+// DarkPlasma_ChangeForeground 1.0.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/09/15 1.0.1 英語翻訳を追加 (Add English translation)
  * 2025/08/12 1.0.0 最初のバージョン
+ */
+
+/*:en
+ * @plugindesc Change the foreground image.
+ * @author DarkPlasma
+ * @license MIT
+ *
+ * @target MZ
+ * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base Foreground
+ *
+ * @command ChangeForeground
+ * @text Change foreground
+ * @desc Change the foreground image.
+ * @arg file
+ * @desc If the name starts '!', you must enter the file name as string.
+ * @text file
+ * @type file
+ * @dir img/paralaxes
+ * @arg loopX
+ * @text loop X
+ * @type boolean
+ * @default false
+ * @arg loopY
+ * @text loop Y
+ * @type boolean
+ * @default false
+ * @arg scrollSpeedX
+ * @desc If loop X is false, this value is ignored.
+ * @text X scroll speed
+ * @type number
+ * @default 0
+ * @arg scrollSpeedY
+ * @desc If loop Y is false, this value is ignored.
+ * @text Y scroll speed
+ * @type number
+ * @default 0
+ *
+ * @command ClearForeground
+ * @text Clear foreground
+ * @desc Clear foreground.
+ *
+ * @help
+ * version: 1.0.1
+ * This plugin provide the plugin command
+ * that change the foreground image set by Foreground.js.
+ *
+ * This plugin requires the following plugin:
+ * Foreground version:1.1.0
  */
 
 /*:
@@ -49,7 +100,7 @@
  * @desc 設定された近景画像を消去します。
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 準公式プラグインForeground.jsで設定された近景画像を
  * プラグインコマンドで切り替えます。
  *
