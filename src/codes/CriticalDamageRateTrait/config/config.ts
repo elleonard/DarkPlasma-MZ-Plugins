@@ -1,8 +1,14 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
-import { createNumberParam } from '../../../../modules/config/createParameter.js';
+import { PluginHistorySchema, PluginStruct } from '../../../../modules/config/configSchema.js';
+import { createNumberParam, createStringParam, createStruct, createStructParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
-const histories = [
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/09/15",
+    version: "1.1.0",
+    description: "装備絞り込み用の特徴名設定を追加",
+  },
   {
     date: "2024/02/20",
     version: "1.0.0",
@@ -10,13 +16,29 @@ const histories = [
   }
 ];
 
+const structNamesForFilter: PluginStruct = createStruct("NamesForFilter", [
+  createStringParam("traitName", {
+    text: "特徴名",
+    default: "追加能力値",
+  }),
+  createStringParam("effectName", {
+    text: "効果名",
+    default: "会心ダメージ率",
+  }),
+]);
+
 const parameters = [
   createNumberParam("defaultCriticalDamageRate", {
     text: "デフォルト会心ダメージ率",
     description: "会心ダメージ率の初期値を設定します。",
     min: 0,
     default: 300,
-  })
+  }),
+  createStructParam("namesForFilter", {
+    struct: structNamesForFilter,
+    text: "フィルタ用特徴名",
+    description: "装備絞り込みの際に使用する特徴名を設定します。",
+  }),
 ];
 
 export const config = new ConfigDefinitionBuilder(
@@ -26,6 +48,7 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
+  .withStructure(structNamesForFilter)
   .withParameters(parameters)
   .withBaseDependency({
     name: "DarkPlasma_AllocateUniqueTraitId",
@@ -33,6 +56,9 @@ export const config = new ConfigDefinitionBuilder(
   })
   .withOrderAfterDependency({
     name: "DarkPlasma_AllocateUniqueTraitId",
+  })
+  .withOrderAfterDependency({
+    name: "DarkPlasma_FilterEquip",
   })
   .withHelp(dedent`会心ダメージ率の特徴を設定できます。
   
