@@ -25,6 +25,8 @@ git switch -c <branch>
 Any `<branch>` name is Ok.
 For example `translate-order-id-alias_en` .
 
+Note that, when translate plugin, you MUST commit one plugin in one PR.
+
 ### Add translation to config.
 
 Please see [Translation Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/53).
