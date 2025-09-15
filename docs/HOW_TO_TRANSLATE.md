@@ -29,11 +29,11 @@ For example `translate-order-id-alias_en` .
 
 Please see [Translation Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/53).
 
-For `config.ts`, please see [config.ts Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/55).
+For `config.ts`, please see [config.ts Example](https://github.com/elleonard/DarkPlasma-MZ-Plugins/pull/62).
 
 ### Build the plugin and see the translated plugin on RMMZ.
 
-To build plugin, it needs to install NodeJS (v16 or later), Yarn (v1.22.18 or later).
+To build plugin, it needs to install NodeJS (v20), Yarn (v4.7.0 or later).
 
 ```bash
 yarn install

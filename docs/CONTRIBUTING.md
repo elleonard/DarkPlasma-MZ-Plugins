@@ -5,6 +5,8 @@
 
 [In English](CONTRIBUTING.en.md)
 
+プラグインを翻訳する場合は [How to translate plugin](HOW_TO_TRANSLATE.md) をお読みください.
+
 # Pull Request Process
 
 1. Pull Request が出されたら、メンテナ（elleonard, DarkPlasma）が内容と動作を確認します。
