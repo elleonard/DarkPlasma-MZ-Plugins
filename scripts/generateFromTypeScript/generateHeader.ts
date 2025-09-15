@@ -116,7 +116,8 @@ function generateHeaderMain(config: PluginConfigSchema) {
             .concat(generateHelp(
               typeof config.help === "string" ? config.help : config.help[language],
               pluginVersion(config),
-              config.dependencies
+              config.dependencies,
+              language
             ))
             .concat([' */'])
             .join('\n'),
@@ -145,14 +146,19 @@ function generatePluginMetaText(config: PluginConfigSchema, language: PluginLoca
   return result.join('\n');
 }
 
-function generateHelp(help: string, version: string, dependencies: PluginDependenciesSchema) {
+function generateHelp(
+  help: string,
+  version: string,
+  dependencies: PluginDependenciesSchema,
+  language: PluginLocateSchema
+) {
   const dependencyLines = (<T extends { [key: string]: unknown }>(obj: T): (keyof T)[] => {
     return Object.keys(dependencies);
   })(dependencies).map((key) => {
     if (dependencies[key].length === 0) {
       return [];
     }
-    const result = [dependencyText(key)];
+    const result = [dependencyText(key, language)];
     dependencies[key]
       .map((plugin) => `${plugin.name}${key === "base" && plugin.version ? ` version:${plugin.version}` : ''}`)
       .forEach((line) => result.push(line));
@@ -167,14 +173,33 @@ function generateHelp(help: string, version: string, dependencies: PluginDepende
 /**
  * TODO: 各言語への翻訳
  */
-function dependencyText(key: "base" | "orderAfter" | "orderBefore"): string {
-  switch (key) {
-    case 'base':
-      return '本プラグインの利用には下記プラグインを必要とします。';
-    case 'orderAfter':
-      return '下記プラグインと共に利用する場合、それよりも下に追加してください。';
-    case 'orderBefore':
-      return '下記プラグインと共に利用する場合、それよりも上に追加してください。';
+function dependencyText(
+  key: "base" | "orderAfter" | "orderBefore",
+  language: PluginLocateSchema
+): string {
+  switch (language) {
+    case 'ja':
+    switch (key) {
+      case 'base':
+        return '本プラグインの利用には下記プラグインを必要とします。';
+      case 'orderAfter':
+        return '下記プラグインと共に利用する場合、それよりも下に追加してください。';
+      case 'orderBefore':
+        return '下記プラグインと共に利用する場合、それよりも上に追加してください。';
+    }
+    case 'en':
+      switch (key) {
+        case 'base':
+          return 'This plugin requires the following plugin:';
+        case 'orderAfter':
+          return 'If you use this plugin with the followings, you must order this plugin after them.';
+        case 'orderBefore':
+          return 'If you use this plugin with the followings, you must order this plugin before them.';
+      }
+    case 'ko':
+      return 'TODO';
+    case 'zh':
+      return 'TODO';
   }
 }
 
