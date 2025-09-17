@@ -534,6 +534,11 @@ class Window_FormationMember extends Window_StatusBase {
     return $gameParty.allMembers()[this.index()];
   }
 
+  public isCurrentItemEnabled(): boolean {
+    const actor = this.actor();
+    return !actor || actor.isFormationChangeOk();
+  }
+
   members(): Game_Actor[] {
     return [];
   }

@@ -3,6 +3,9 @@ DarkPlasma_Formation:
   year: 2020
   license: MIT
   histories:
+    - date: 2025/09/17
+      version: 4.1.0
+      description: 'アクターの並び替え禁止フラグを参照するように変更'
     - date: 2024/11/24
       version: 4.0.2
       description: 'マウスオーバーで切り替える判定を並び替え時以外はしないように変更'
