@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>戦闘中一定回数のみ使えるスキル/アイテム</title>
+      <link href="/DarkPlasma-MZ-Plugins/2025/09/17/usable-count-in-battle/"/>
+      <url>/DarkPlasma-MZ-Plugins/2025/09/17/usable-count-in-battle/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>戦闘中に一定回数のみ使えるスキル&#x2F;アイテムを実現します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2025/09/17/usable-count-in-battle/example.png" alt="使用例" title="使用例"></p><p>このスキルは戦闘中に一度だけ使用できます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_UsableCountInBattle.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MV版あり </tag>
+            
+            <tag> アイテム </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>装備絞り込み機能</title>
       <link href="/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/"/>
       <url>/DarkPlasma-MZ-Plugins/2025/08/23/filter-equip/</url>
@@ -234,9 +261,9 @@
       
         <tags>
             
-            <tag> テキスト </tag>
-            
             <tag> 装備 </tag>
+            
+            <tag> テキスト </tag>
             
         </tags>
       
@@ -527,9 +554,9 @@
       
         <tags>
             
-            <tag> 特徴 </tag>
-            
             <tag> アイテム </tag>
+            
+            <tag> 特徴 </tag>
             
         </tags>
       
@@ -1104,8 +1131,6 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -1113,6 +1138,8 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> 特徴 </tag>
             
@@ -1170,9 +1197,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> ステート </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> 戦闘 </tag>
             
@@ -1328,9 +1355,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> 装備 </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
