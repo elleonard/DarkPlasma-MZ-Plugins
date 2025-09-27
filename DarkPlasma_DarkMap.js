@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 3.1.0
+// DarkPlasma_DarkMap 3.1.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/09/27 3.1.1 明かりを点けるプラグインコマンドで広さと色が適用されない不具合を修正
  * 2025/08/16 3.1.0 マップ内、マップ内外全ての明かりをリセットするプラグインコマンドの追加
  * 2025/08/15 3.0.0 明かりを点ける, 消すプラグインコマンドの追加
  *                  明かり判定インターフェースに破壊的変更
@@ -112,7 +113,7 @@
  * @desc マップ内外の全ての明かりをリセットします。
  *
  * @help
- * version: 3.1.0
+ * version: 3.1.1
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -265,6 +266,8 @@
       }
     })();
     target?.turnOnLight();
+    target?.setLightRadius(parsedArgs.lightRadius);
+    target?.setLightColor(convertColor(parsedArgs.lightColor));
   });
   PluginManager.registerCommand(pluginName, command_turnOffLight, function (args) {
     const parsedArgs = parseArgs_turnOffLight(args);
