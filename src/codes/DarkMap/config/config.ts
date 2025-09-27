@@ -118,6 +118,11 @@ export const config: PluginConfigSchema = {
   license: "MIT",
   histories: [
     {
+      date: "2025/09/27",
+      version: "3.1.1",
+      description: "明かりを点けるプラグインコマンドで広さと色が適用されない不具合を修正",
+    },
+    {
       date: "2025/08/16",
       version: "3.1.0",
       description: "マップ内、マップ内外全ての明かりをリセットするプラグインコマンドの追加",

@@ -48,6 +48,8 @@ PluginManager.registerCommand(pluginName, command_turnOnLight, function (this: G
     }
   })();
   target?.turnOnLight();
+  target?.setLightRadius(parsedArgs.lightRadius);
+  target?.setLightColor(convertColor(parsedArgs.lightColor));
 });
 
 PluginManager.registerCommand(pluginName, command_turnOffLight, function (this: Game_Interpreter, args) {
