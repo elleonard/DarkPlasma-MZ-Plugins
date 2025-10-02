@@ -32,6 +32,7 @@ config.projectDirs
           const distDir = dir === 'codes' || dir === 'excludes'
             ? path.join(projectDir, 'js', 'plugins')
             : path.join(projectDir, 'js', 'plugins', dir);
+          fs.mkdirSync(distDir, { recursive: true });
           const copy = (from) => {
             const pluginName = path.basename(from);
             const to = path.join(distDir, pluginName);
@@ -48,6 +49,7 @@ config.projectDirs
           const distDir = dir === 'codes' || dir === 'excludes'
             ? path.join(projectDir, 'js', 'plugins')
             : path.join(projectDir, 'js', 'plugins', dir);
+          fs.mkdirSync(distDir, { recursive: true });
           fs.glob(srcPlugins, (err, matches) => {
             if (err) {
               throw err;
