@@ -1,9 +1,17 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
-import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema } from '../../../../modules/config/configSchema.js';
-import { createBooleanParam, createCommand, createLocationArrayParam, createLocationParam, createMultilineStringParam, createNumberParam } from '../../../../modules/config/createParameter.js';
+import { PluginCommandSchema, PluginHistorySchema, PluginParameterSchema, PluginStruct } from '../../../../modules/config/configSchema.js';
+import { createBooleanParam, createCommand, createLocationArrayParam, createLocationParam, createMultilineStringParam, createNumberParam, createSelectParam, createStruct, createStructArrayParam, createStructParam } from '../../../../modules/config/createParameter.js';
 import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
+  {
+    date: "2025/10/11",
+    version: "2.0.0",
+    description: "パーティの初期位置設定を変更 (Breaking Change)",
+  },
+  {
+    description: "パーティメンバーの数が足りない場合に分割シーンを開けないように変更",
+  },
   {
     date: "2025/07/13",
     version: "1.1.1",
@@ -26,6 +34,36 @@ const histories: PluginHistorySchema[] = [
   }
 ];
 
+const structParty: PluginStruct = createStruct("Party", [
+  createLocationParam("location", {
+    text: "初期位置",
+      description: "パーティの初期位置を指定します。",
+  }),
+  createSelectParam("direction", {
+    text: "初期向き",
+    description: "分割したパーティの初期向きを設定します。",
+    options: [
+      {
+        name: "上",
+        value: 8,
+      },
+      {
+        name: "下",
+        value: 2,
+      },
+      {
+        name: "左",
+        value: 4
+      },
+      {
+        name: "右",
+        value: 6,
+      },
+    ],
+    default: 2,
+  }),
+]);
+
 const commandOpen: PluginCommandSchema = createCommand("open", {
   text: "パーティ分割シーンを開く",
   args: [
@@ -36,9 +74,9 @@ const commandOpen: PluginCommandSchema = createCommand("open", {
       max: 3,
       default: 2,
     }),
-    createLocationArrayParam("locations", {
-      text: "初期位置一覧",
-      description: "パーティごとの初期位置一覧を指定します。",
+    createStructArrayParam("parties", {
+      struct: structParty,
+      text: "パーティ情報",
     }),
   ],
 });
@@ -61,6 +99,7 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
+  .withStructure(structParty)
   .withParameters(parameters)
   .withCommand(commandOpen)
   .withBaseDependency({

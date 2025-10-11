@@ -8,10 +8,14 @@ const WAITING_WINDOW_PADDING: number = 36;
 
 PluginManager.registerCommand(pluginName, command_open, function (args) {
   const parsedArgs = parseArgs_open(args);
-  const locations: Game_DevidedPartyPosition[] = parsedArgs.locations.map(l => {
+  if (parsedArgs.count > $gameParty.size()) {
+    SoundManager.playBuzzer();
+    return;
+  }
+  const locations: Game_DevidedPartyPosition[] = parsedArgs.parties.map(p => {
     return {
-      ...l,
-      direction: 2,
+      ...p.location,
+      direction: p.direction,
     };
   });
   $gameTemp.setDevidePartyInfo(parsedArgs.count, locations);
