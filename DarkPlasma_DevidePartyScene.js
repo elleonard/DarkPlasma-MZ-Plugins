@@ -1,9 +1,11 @@
-// DarkPlasma_DevidePartyScene 1.1.1
+// DarkPlasma_DevidePartyScene 2.0.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/10/11 2.0.0 パーティの初期位置設定を変更 (Breaking Change)
+ *                  パーティメンバーの数が足りない場合に分割シーンを開けないように変更
  * 2025/07/13 1.1.1 キャラグラが大きい場合の表示を調整
  *                  空欄との移動表現を変更
  * 2025/07/12 1.1.0 ヘルプテキスト設定を追加
@@ -42,13 +44,13 @@
  * @max 3
  * @min 2
  * @default 2
- * @arg locations
- * @desc パーティごとの初期位置一覧を指定します。
- * @text 初期位置一覧
- * @type location[]
+ * @arg parties
+ * @text パーティ情報
+ * @type struct<Party>[]
+ * @default []
  *
  * @help
- * version: 1.1.1
+ * version: 2.0.0
  * パーティを分割するシーンを提供します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -57,7 +59,26 @@
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_SelectActorCharacterWindow
  */
-
+/*~struct~Party:
+ * @param location
+ * @desc パーティの初期位置を指定します。
+ * @text 初期位置
+ * @type location
+ *
+ * @param direction
+ * @desc 分割したパーティの初期向きを設定します。
+ * @text 初期向き
+ * @type select
+ * @option 上
+ * @value 8
+ * @option 下
+ * @value 2
+ * @option 左
+ * @value 4
+ * @option 右
+ * @value 6
+ * @default 2
+ */
 (() => {
   'use strict';
 
@@ -77,16 +98,24 @@
   function parseArgs_open(args) {
     return {
       count: Number(args.count || 2),
-      locations: args.locations
-        ? JSON.parse(args.locations).map((e) => {
-            return (() => {
-              const location = JSON.parse(e);
-              return {
-                mapId: Number(location.mapId),
-                x: Number(location.x),
-                y: Number(location.y),
-              };
-            })();
+      parties: args.parties
+        ? JSON.parse(args.parties).map((e) => {
+            return e
+              ? ((parameter) => {
+                  const parsed = JSON.parse(parameter);
+                  return {
+                    location: (() => {
+                      const location = JSON.parse(parsed.location);
+                      return {
+                        mapId: Number(location.mapId),
+                        x: Number(location.x),
+                        y: Number(location.y),
+                      };
+                    })(),
+                    direction: Number(parsed.direction || 2),
+                  };
+                })(e)
+              : { location: { mapId: 1, x: 0, y: 0 }, direction: 2 };
           })
         : [],
     };
@@ -97,10 +126,14 @@
   const WAITING_WINDOW_PADDING = 36;
   PluginManager.registerCommand(pluginName, command_open, function (args) {
     const parsedArgs = parseArgs_open(args);
-    const locations = parsedArgs.locations.map((l) => {
+    if (parsedArgs.count > $gameParty.size()) {
+      SoundManager.playBuzzer();
+      return;
+    }
+    const locations = parsedArgs.parties.map((p) => {
       return {
-        ...l,
-        direction: 2,
+        ...p.location,
+        direction: p.direction,
       };
     });
     $gameTemp.setDevidePartyInfo(parsedArgs.count, locations);
