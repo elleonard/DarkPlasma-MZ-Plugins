@@ -360,6 +360,13 @@ function Scene_Battle_FormationMixIn(sceneBattle: Scene_Battle) {
       this.returnCancelButton();
     }
   };
+
+  const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
+  sceneBattle.isAnyInputWindowActive = function () {
+    return _isAnyInputWindowActive.call(this)
+      || this._formationBattleMemberWindow.active
+      || this._formationWaitingMemberWindow.active;
+  };
 }
 
 Scene_Battle_FormationMixIn(Scene_Battle.prototype);
