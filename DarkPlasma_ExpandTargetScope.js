@@ -1,9 +1,10 @@
-// DarkPlasma_ExpandTargetScope 1.5.0
+// DarkPlasma_ExpandTargetScope 1.5.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/10/20 1.5.1 全体選択時、マウスオーバーで単体選択になってしまう不具合を修正
  * 2025/04/12 1.5.0 MP消費関連の競合対策
  *                  対象全体化によるMP消費倍率インターフェース追加
  * 2023/01/17 1.4.2 味方向けの全体化倍率が有効でない不具合を修正
@@ -70,7 +71,7 @@
  * @default false
  *
  * @help
- * version: 1.5.0
+ * version: 1.5.1
  * 対象が単体のスキルやアイテムのメモ欄に以下のように記述することで、
  * 戦闘中に対象を全体化できるようになります。
  * <canExpandScope>
@@ -434,6 +435,18 @@
       }
       SoundManager.playCursor();
       this.refreshCursor();
+    };
+    const _processTouch = windowClass.processTouch;
+    windowClass.processTouch = function () {
+      if (this._cursorFixed || this._cursorAll) {
+        if (this.isOpenAndActive()) {
+          if ($gameTemp.touchTarget() && $gameTemp.touchState() === 'click') {
+            this.processOk();
+          }
+        }
+        return;
+      }
+      _processTouch.call(this);
     };
     /**
      * deactivateされてしまうため
