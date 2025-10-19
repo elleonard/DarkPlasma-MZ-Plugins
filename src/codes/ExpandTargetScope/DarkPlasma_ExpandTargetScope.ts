@@ -392,6 +392,19 @@ function Window_BattleTarget_ExpandTargetScopeMixIn(windowClass: Window_BattleAc
     this.refreshCursor();
   };
 
+  const _processTouch = windowClass.processTouch;
+  windowClass.processTouch = function () {
+    if (this._cursorFixed || this._cursorAll) {
+      if (this.isOpenAndActive()) {
+        if ($gameTemp.touchTarget() && $gameTemp.touchState() === "click") {
+          this.processOk();
+        }
+      }
+      return;
+    }
+    _processTouch.call(this);
+  };
+
   /**
    * deactivateされてしまうため
    */
