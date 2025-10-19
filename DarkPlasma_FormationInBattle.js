@@ -1,9 +1,10 @@
-// DarkPlasma_FormationInBattle 3.0.0
+// DarkPlasma_FormationInBattle 3.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/10/19 3.0.1 TPB(ウェイト)で並び替えを開いても時間が止まらない不具合を修正
  * 2024/10/17 3.0.0 DarkPlasma_Formation 4.0.0対応
  * 2024/03/07 2.1.2 DarkPlasma_Formationとの順序関係を明記
  * 2023/08/06 2.1.1 特定条件下でカーソルの合っていないアクターが選択されてしまう不具合を修正
@@ -63,7 +64,7 @@
  * @default true
  *
  * @help
- * version: 3.0.0
+ * version: 3.0.1
  * 戦闘シーンで並び替えできるようになります。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
@@ -397,6 +398,14 @@
          */
         this.returnCancelButton();
       }
+    };
+    const _isAnyInputWindowActive = sceneBattle.isAnyInputWindowActive;
+    sceneBattle.isAnyInputWindowActive = function () {
+      return (
+        _isAnyInputWindowActive.call(this) ||
+        this._formationBattleMemberWindow.active ||
+        this._formationWaitingMemberWindow.active
+      );
     };
   }
   Scene_Battle_FormationMixIn(Scene_Battle.prototype);
