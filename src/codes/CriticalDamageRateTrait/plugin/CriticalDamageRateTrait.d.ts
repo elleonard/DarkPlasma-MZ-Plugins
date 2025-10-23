@@ -4,4 +4,9 @@
 
 declare interface Game_BattlerBase {
   criticalDamageRate(): number;
+  defaultCriticalDamageRate(): number;
+}
+
+declare namespace Game_BattlerBase {
+  var TRAIT_CRITICAL_DAMAGE_RATE: number;
 }

@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/10/23",
+    version: "1.2.0",
+    description: "特徴ID変数、デフォルト会心ダメージ率インターフェースを追加",
+  },
+  {
     date: "2025/09/15",
     version: "1.1.0",
     description: "装備絞り込み用の特徴名設定を追加",

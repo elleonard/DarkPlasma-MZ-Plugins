@@ -24,11 +24,17 @@ DataManager_CriticalDamageRateTraitMixIn(DataManager);
 
 function Game_BattlerBase_CriticalDamageRateTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   gameBattlerBase.criticalDamageRate = function () {
-    return (settings.defaultCriticalDamageRate + this.traitsSumAll(criticalDamageRateTrait.id))/100;
+    return this.defaultCriticalDamageRate() + this.traitsSumAll(criticalDamageRateTrait.id)/100;
+  };
+
+  gameBattlerBase.defaultCriticalDamageRate = function () {
+    return settings.defaultCriticalDamageRate / 100;
   };
 }
 
 Game_BattlerBase_CriticalDamageRateTraitMixIn(Game_BattlerBase.prototype);
+
+Game_BattlerBase.TRAIT_CRITICAL_DAMAGE_RATE = criticalDamageRateTrait.id;
 
 function Game_Action_CriticalDamageRateTraitMixIn(gameAction: Game_Action) {
   gameAction.applyCritical = function (damage) {
