@@ -1,9 +1,10 @@
-// DarkPlasma_CriticalDamageRateTrait 1.1.0
+// DarkPlasma_CriticalDamageRateTrait 1.2.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/10/23 1.2.0 特徴ID変数、デフォルト会心ダメージ率インターフェースを追加
  * 2025/09/15 1.1.0 装備絞り込み用の特徴名設定を追加
  * 2024/02/20 1.0.0 公開
  */
@@ -33,7 +34,7 @@
  * @default {"traitName":"追加能力値","effectName":"会心ダメージ率"}
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 会心ダメージ率の特徴を設定できます。
  *
  * アクター、職業、スキル、武器、防具、敵キャラ、ステートのメモ欄に
@@ -103,10 +104,14 @@
   DataManager_CriticalDamageRateTraitMixIn(DataManager);
   function Game_BattlerBase_CriticalDamageRateTraitMixIn(gameBattlerBase) {
     gameBattlerBase.criticalDamageRate = function () {
-      return (settings.defaultCriticalDamageRate + this.traitsSumAll(criticalDamageRateTrait.id)) / 100;
+      return this.defaultCriticalDamageRate() + this.traitsSumAll(criticalDamageRateTrait.id) / 100;
+    };
+    gameBattlerBase.defaultCriticalDamageRate = function () {
+      return settings.defaultCriticalDamageRate / 100;
     };
   }
   Game_BattlerBase_CriticalDamageRateTraitMixIn(Game_BattlerBase.prototype);
+  Game_BattlerBase.TRAIT_CRITICAL_DAMAGE_RATE = criticalDamageRateTrait.id;
   function Game_Action_CriticalDamageRateTraitMixIn(gameAction) {
     gameAction.applyCritical = function (damage) {
       return damage * this.subject().criticalDamageRate();
