@@ -1,9 +1,10 @@
-// DarkPlasma_DarkMap 3.1.1
+// DarkPlasma_DarkMap 4.0.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/11/02 4.0.0 円形グラデーション描画機能を別プラグインに分離
  * 2025/09/27 3.1.1 明かりを点けるプラグインコマンドで広さと色が適用されない不具合を修正
  * 2025/08/16 3.1.0 マップ内、マップ内外全ての明かりをリセットするプラグインコマンドの追加
  * 2025/08/15 3.0.0 明かりを点ける, 消すプラグインコマンドの追加
@@ -25,6 +26,8 @@
  *
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
+ *
+ * @base DarkPlasma_FillGradientCircle
  *
  * @param darknessColor
  * @text 暗闇の色
@@ -113,7 +116,7 @@
  * @desc マップ内外の全ての明かりをリセットします。
  *
  * @help
- * version: 3.1.1
+ * version: 4.0.0
  * 暗いマップと、プレイヤーやイベントの周囲を照らす明かりを提供します。
  *
  * マップのメモ欄:
@@ -131,6 +134,9 @@
  * - 明かりの色
  * - 明かりの広さ
  *
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_FillGradientCircle version:1.0.0
  */
 /*~struct~Color:
  * @param red
@@ -229,18 +235,11 @@
 
   const command_resetAllLight = 'resetAllLight';
 
-  function darkColor() {
-    return `#${(
-      (1 << 24) +
-      (settings.darknessColor.red << 16) +
-      (settings.darknessColor.green << 8) +
-      settings.darknessColor.blue
-    )
-      .toString(16)
-      .slice(1)}`;
-  }
   function convertColor(color) {
     return `#${((1 << 24) + (color.red << 16) + (color.green << 8) + color.blue).toString(16).slice(1)}`;
+  }
+  function darkColor() {
+    return convertColor(settings.darknessColor);
   }
   function defaultLightColor() {
     return convertColor(settings.lightColor);
@@ -292,23 +291,6 @@
     $gameMap.events().forEach((event) => event.initializeLight());
     $gameSystem.initializeEventLights();
   });
-  function Bitmap_DarkMapMixIn(bitmap) {
-    bitmap.fillGradientCircle = function (centerX, centerY, radius, lightColor) {
-      const context = this._context;
-      const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-      gradient.addColorStop(0, lightColor);
-      gradient.addColorStop(1, darkColor());
-      context.save();
-      context.globalCompositeOperation = 'lighter';
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      context.fill();
-      context.restore();
-      this._baseTexture.update();
-    };
-  }
-  Bitmap_DarkMapMixIn(Bitmap.prototype);
   function Game_Map_DarkMapMixIn(gameMap) {
     gameMap.isDark = function () {
       return isMapMetaDataAvailable() && !!$dataMap.meta.dark;
@@ -478,10 +460,17 @@
             $gamePlayer.screenY(),
             $gamePlayer.lightRadius(),
             $gamePlayer.lightColor(),
+            darkColor(),
           );
         }
         $gameMap.lightEvents().forEach((event) => {
-          this._bitmap.fillGradientCircle(event.screenX(), event.screenY(), event.lightRadius(), event.lightColor());
+          this._bitmap.fillGradientCircle(
+            event.screenX(),
+            event.screenY(),
+            event.lightRadius(),
+            event.lightColor(),
+            darkColor(),
+          );
         });
       }
     }
