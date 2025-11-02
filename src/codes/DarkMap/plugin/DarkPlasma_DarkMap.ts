@@ -4,21 +4,14 @@ import { settings } from '../config/_build/DarkPlasma_DarkMap_parameters';
 import { command_resetAllLight, command_resetLightInMap, command_turnOffLight, command_turnOnLight, parseArgs_turnOffLight, parseArgs_turnOnLight } from '../config/_build/DarkPlasma_DarkMap_commands';
 import { pluginName } from '../../../common/pluginName';
 
-function darkColor() {
-  return `#${(
-    (1 << 24) +
-    (settings.darknessColor.red << 16) +
-    (settings.darknessColor.green << 8) +
-    settings.darknessColor.blue
-  )
-    .toString(16)
-    .slice(1)}`;
-}
-
 function convertColor(color: {red: number, green: number, blue: number}): string {
 return `#${((1 << 24) + (color.red << 16) + (color.green << 8) + color.blue)
     .toString(16)
     .slice(1)}`;
+}
+
+function darkColor() {
+  return convertColor(settings.darknessColor);
 }
 
 function defaultLightColor() {
@@ -79,25 +72,6 @@ PluginManager.registerCommand(pluginName, command_resetAllLight, function () {
   $gameMap.events().forEach(event => event.initializeLight());
   $gameSystem.initializeEventLights();
 });
-
-function Bitmap_DarkMapMixIn(bitmap: Bitmap) {
-  bitmap.fillGradientCircle = function (this: Bitmap, centerX: number, centerY: number, radius: number, lightColor: string) {
-    const context = this._context;
-    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-    gradient.addColorStop(0, lightColor);
-    gradient.addColorStop(1, darkColor());
-    context.save();
-    context.globalCompositeOperation = 'lighter';
-    context.fillStyle = gradient;
-    context.beginPath();
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    context.fill();
-    context.restore();
-    this._baseTexture.update();
-  };
-}
-
-Bitmap_DarkMapMixIn(Bitmap.prototype);
 
 function Game_Map_DarkMapMixIn(gameMap: Game_Map) {
   gameMap.isDark = function () {
@@ -306,7 +280,8 @@ class DarknessLayer extends PIXI.Container {
           $gamePlayer.screenX(),
           $gamePlayer.screenY(),
           $gamePlayer.lightRadius(),
-          $gamePlayer.lightColor()
+          $gamePlayer.lightColor(),
+          darkColor()
         );
       }
       $gameMap.lightEvents().forEach((event) => {
@@ -314,7 +289,8 @@ class DarknessLayer extends PIXI.Container {
           event.screenX(),
           event.screenY(),
           event.lightRadius(),
-          event.lightColor()
+          event.lightColor(),
+          darkColor()
         );
       });
     }

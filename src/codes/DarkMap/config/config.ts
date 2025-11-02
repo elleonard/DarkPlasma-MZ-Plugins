@@ -118,6 +118,11 @@ export const config: PluginConfigSchema = {
   license: "MIT",
   histories: [
     {
+      date: "2025/11/02",
+      version: "4.0.0",
+      description: "円形グラデーション描画機能を別プラグインに分離",
+    },
+    {
       date: "2025/09/27",
       version: "3.1.1",
       description: "明かりを点けるプラグインコマンドで広さと色が適用されない不具合を修正",
@@ -223,7 +228,12 @@ export const config: PluginConfigSchema = {
     structRGBColor,
   ],
   dependencies: {
-    base: [],
+    base: [
+      {
+        name: "DarkPlasma_FillGradientCircle",
+        version: "1.0.0",
+      },
+    ],
     orderAfter: [],
     orderBefore: [],
   },

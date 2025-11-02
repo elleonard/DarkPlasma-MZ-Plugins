@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../FillGradientCircle/plugin/FillGradientCircle.d.ts" />
 
 declare class DarknessLayer extends PIXI.Container {
   _width: number;
@@ -51,10 +52,6 @@ declare interface Game_System {
   storeEventLight(mapId: number, eventId: number, light: Game_CharacterLight): void;
   fetchEventLight(mapId: number, eventId: number): Game_CharacterLight|undefined;
   eventLightKey(mapId: number, eventId: number): string;
-}
-
-declare interface Bitmap {
-  fillGradientCircle(centerX: number, centerY: number, radius: number, lightColor: string): void;
 }
 
 declare interface Spriteset_Map {
