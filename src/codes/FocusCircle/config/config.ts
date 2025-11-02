@@ -6,6 +6,14 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/11/02",
+    version: "2.0.0",
+    description: "フォーカス時に専用のメッセージウィンドウを前面に出す",
+  },
+  {
+    description: "楕円系に変更",
+  },
+  {
+    date: "2025/11/02",
     version: "1.0.0",
     description: "最初のバージョン",
   }
@@ -13,7 +21,7 @@ const histories: PluginHistorySchema[] = [
 
 const commandFocusOn: PluginCommandSchema = createCommand("FocusOn", {
   text: "フォーカスする",
-  description: "指定した座標と半径で、円形にフォーカスします。",
+  description: "指定した座標と半径で、楕円形にフォーカスします。",
   args: [
     createNumberParam("id", {
       text: "フォーカスID",
@@ -24,8 +32,11 @@ const commandFocusOn: PluginCommandSchema = createCommand("FocusOn", {
     createNumberParam("y", {
       text: "Y座標",
     }),
-    createNumberParam("radius", {
-      text: "半径",
+    createNumberParam("radiusX", {
+      text: "半径X",
+    }),
+    createNumberParam("radiusY", {
+      text: "半径Y",
     }),
   ],
 });
@@ -53,8 +64,11 @@ const commandMoveFocus: PluginCommandSchema = createCommand("MoveFocus", {
     createNumberParam("y", {
       text: "移動先Y座標",
     }),
-    createNumberParam("radius", {
-      text: "半径",
+    createNumberParam("radiusX", {
+      text: "半径X",
+    }),
+    createNumberParam("radiusY", {
+      text: "半径Y",
     }),
   ],
 });
@@ -74,7 +88,7 @@ const parameters: PluginParameterSchema[] = [
 export const config = new ConfigDefinitionBuilder(
   "FocusCircle",
   2025,
-  "円形フォーカス効果"
+  "楕円形フォーカス効果"
 )
   .withHistories(histories)
   .withLicense("MIT")
@@ -85,12 +99,8 @@ export const config = new ConfigDefinitionBuilder(
     commandClearAllFocus,
   ])
   .withParameters(parameters)
-  .withBaseDependency({
-    name: "DarkPlasma_FillGradientCircle",
-    version: "1.0.0",
-  })
-  .withHelp(dedent`円形フォーカス効果を実現します。
+  .withHelp(dedent`楕円形フォーカス効果を実現します。
     
-    画面上の特定の円形エリアのみフォーカスします。
+    画面上の特定の楕円形エリアにフォーカスします。
     フォーカスの状態はセーブデータに含まれません。`)
   .build();

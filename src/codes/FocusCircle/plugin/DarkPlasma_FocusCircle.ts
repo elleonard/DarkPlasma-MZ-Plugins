@@ -10,6 +10,34 @@ function convertColor(color: { red: number, green: number, blue: number }): stri
     .slice(1)}`;
 }
 
+function Bitmap_FocusCircleMixIn(bitmap: Bitmap) {
+  bitmap.fillGradientEllipse = function (
+    this: Bitmap,
+    centerX: number,
+    centerY: number,
+    radiusX: number,
+    radiusY: number,
+    rotation: number,
+    insideColor: string,
+    outsideColor: string
+  ) {
+    const context = this._context;
+    const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.max(radiusX, radiusY));
+    gradient.addColorStop(0, insideColor);
+    gradient.addColorStop(1, outsideColor);
+    context.save();
+    context.globalCompositeOperation = 'lighter';
+    context.fillStyle = gradient;
+    context.beginPath();
+    context.ellipse(centerX, centerY, radiusX, radiusY, rotation, 0, 2 * Math.PI);
+    context.fill();
+    context.restore();
+    this._baseTexture.update();
+  };
+}
+
+Bitmap_FocusCircleMixIn(Bitmap.prototype);
+
 PluginManager.registerCommand(pluginName, command_FocusOn, function (args) {
   const parsedArgs = parseArgs_FocusOn(args);
   $gameTemp.focusOn(parsedArgs);
@@ -22,7 +50,7 @@ PluginManager.registerCommand(pluginName, command_FocusOff, function (args) {
 
 PluginManager.registerCommand(pluginName, command_MoveFocus, function (args) {
   const parsedArgs = parseArgs_MoveFocus(args);
-  $gameTemp.moveFocus(parsedArgs.id, parsedArgs.x, parsedArgs.y, parsedArgs.radius);
+  $gameTemp.moveFocus(parsedArgs);
 });
 
 PluginManager.registerCommand(pluginName, command_ClearAllFocus, function () {
@@ -93,15 +121,16 @@ function Game_Temp_FocusCircleMixIn(gameTemp: Game_Temp) {
     this._needsFocusRefresh = true;
   };
 
-  gameTemp.moveFocus = function (focusId, x, y, radius) {
+  gameTemp.moveFocus = function (focus) {
     this._focusList
-      .filter(focus => focus.id === focusId)
-      .forEach(focus => {
-        focus.x = x;
-        focus.y = y;
-        focus.radius = radius;
+      .filter(f => f.id === focus.id)
+      .forEach(f => {
+        f.x = focus.x;
+        f.y = focus.y;
+        f.radiusX = focus.radiusX;
+        f.radiusY = focus.radiusY;
       });
-
+    this._needsFocusRefresh = true;
   };
 
   gameTemp.clearAllFocus = function () {
@@ -115,33 +144,95 @@ Game_Temp_FocusCircleMixIn(Game_Temp.prototype);
 function Scene_Base_FocusCircleMixIn(sceneBase: Scene_Base) {
   sceneBase.createFocusCircleLayer = function () {
     this._focusCircleLayer = new FocusCircleLayer();
-    this.addChild(this._focusCircleLayer);
+    if (this._messageWindowLayer) {
+      this.addChild(this._focusCircleLayer);
+      this.createFocusMessageWindowLayer(this._messageWindowLayer.x, this._messageWindowLayer.y);
+    } else if (this._windowLayer && this._messageWindow) {
+      this.addChild(this._focusCircleLayer);
+      this.createFocusMessageWindowLayer(this._windowLayer.x, this._windowLayer.y);
+    } else {
+      this.addChild(this._focusCircleLayer);
+    }
+  };
+
+  sceneBase.createFocusMessageWindowLayer = function (x, y) {
+    this._focusMessageWindowLayer = new WindowLayer();
+    this._focusMessageWindowLayer.x = x;
+    this._focusMessageWindowLayer.y = y;
+    const messageWindow = new Window_FocusMessage(this.messageWindowRect());
+    const nameBoxWindow = new Window_NameBox();
+    messageWindow.setGoldWindow(this._goldWindow);
+    messageWindow.setNameBoxWindow(nameBoxWindow);
+    messageWindow.setChoiceListWindow(this._choiceListWindow);
+    messageWindow.setNumberInputWindow(this._numberInputWindow);
+    messageWindow.setEventItemWindow(this._eventItemWindow);
+    nameBoxWindow.setMessageWindow(messageWindow);
+    this._focusMessageWindowLayer.addChild(messageWindow);
+    this._focusMessageWindowLayer.addChild(nameBoxWindow);
+    this.addChild(this._focusMessageWindowLayer);
+    Window_Message_FocusCircleMixIn(this._messageWindow);
   };
 }
 
 Scene_Base_FocusCircleMixIn(Scene_Base.prototype);
 
-class FocusCircleLayer extends PIXI.Container {
+function Window_Message_FocusCircleMixIn(windowMessage: Window_Message) {
+  const _canStart = windowMessage.canStart;
+  windowMessage.canStart = function () {
+    return _canStart.call(this) && !$gameTemp.isFocusMode();
+  };
+
+  const _updateInput = windowMessage.updateInput;
+  windowMessage.updateInput = function () {
+    if ($gameTemp.isFocusMode()) {
+      return true;
+    }
+    return _updateInput.call(this);
+  };
+
+  const _doesContinues = windowMessage.doesContinue;
+  windowMessage.doesContinue = function () {
+    return _doesContinues.call(this) && !$gameTemp.isFocusMode();
+  };
+}
+
+class Window_FocusMessage extends Window_Message {
+  public canStart(): boolean {
+    return super.canStart() && $gameTemp.isFocusMode();
+  }
+
+  public update(): void {
+    if (!$gameTemp.isFocusMode()) {
+      this.close();
+    }
+    super.update();
+  }
+
+  public updateInput(): boolean {
+    if (!$gameTemp.isFocusMode()) {
+      return true;
+    }
+    return super.updateInput();
+  }
+
+  public doesContinue(): boolean {
+    return super.doesContinue() && $gameTemp.isFocusMode();
+  }
+}
+
+class FocusCircleLayer extends Sprite {
   _width: number;
   _height: number;
-  _bitmap: Bitmap;
 
   constructor() {
     super();
     this._width = Graphics.width;
     this._height = Graphics.height;
-    this._bitmap = new Bitmap(this._width, this._height);
-    this.createSprite();
-  }
-
-  createSprite() {
-    const sprite = new Sprite(null);
-    sprite.bitmap = this._bitmap;
-    sprite.opacity = settings.opacity;
-    sprite.blendMode = 2;
-    sprite.x = 0;
-    sprite.y = 0;
-    this.addChild(sprite);
+    this.bitmap = new Bitmap(this._width, this._height);
+    this.opacity = settings.opacity;
+    this.blendMode = 2;
+    this.x = 0;
+    this.y = 0;
   }
 
   update() {
@@ -152,14 +243,16 @@ class FocusCircleLayer extends PIXI.Container {
   }
 
   refresh() {
-    this._bitmap.clear();
+    this.bitmap?.clear();
     if ($gameTemp.isFocusMode()) {
-      this._bitmap.fillRect(0, 0, this._width, this._height, ColorManager.focusOutsideColor());
+      this.bitmap?.fillRect(0, 0, this._width, this._height, ColorManager.focusOutsideColor());
       $gameTemp.focusList().forEach(focus => {
-        this._bitmap.fillGradientCircle(
+        this.bitmap?.fillGradientEllipse(
           focus.x,
           focus.y,
-          focus.radius,
+          focus.radiusX,
+          focus.radiusY,
+          0,
           ColorManager.focusInsideColor(),
           ColorManager.focusOutsideColor()
         );
