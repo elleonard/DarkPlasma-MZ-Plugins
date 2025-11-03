@@ -1,9 +1,10 @@
-// DarkPlasma_FocusCircle 2.0.0
+// DarkPlasma_FocusCircle 2.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/11/03 2.1.0 専用メッセージウィンドウをシーン内変数に追加
  * 2025/11/02 2.0.0 フォーカス時に専用のメッセージウィンドウを前面に出す
  *                  楕円系に変更
  * 2025/11/02 1.0.0 最初のバージョン
@@ -83,7 +84,7 @@
  * @desc 全てのフォーカスを削除します。
  *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * 楕円形フォーカス効果を実現します。
  *
  * 画面上の特定の楕円形エリアにフォーカスします。
@@ -260,15 +261,16 @@
       this._focusMessageWindowLayer = new WindowLayer();
       this._focusMessageWindowLayer.x = x;
       this._focusMessageWindowLayer.y = y;
-      const messageWindow = new Window_FocusMessage(this.messageWindowRect());
+      const focusMessageWindow = new Window_FocusMessage(this.messageWindowRect());
+      this._focusMessageWindow = focusMessageWindow;
       const nameBoxWindow = new Window_NameBox();
-      messageWindow.setGoldWindow(this._goldWindow);
-      messageWindow.setNameBoxWindow(nameBoxWindow);
-      messageWindow.setChoiceListWindow(this._choiceListWindow);
-      messageWindow.setNumberInputWindow(this._numberInputWindow);
-      messageWindow.setEventItemWindow(this._eventItemWindow);
-      nameBoxWindow.setMessageWindow(messageWindow);
-      this._focusMessageWindowLayer.addChild(messageWindow);
+      focusMessageWindow.setGoldWindow(this._goldWindow);
+      focusMessageWindow.setNameBoxWindow(nameBoxWindow);
+      focusMessageWindow.setChoiceListWindow(this._choiceListWindow);
+      focusMessageWindow.setNumberInputWindow(this._numberInputWindow);
+      focusMessageWindow.setEventItemWindow(this._eventItemWindow);
+      nameBoxWindow.setMessageWindow(focusMessageWindow);
+      this._focusMessageWindowLayer.addChild(focusMessageWindow);
       this._focusMessageWindowLayer.addChild(nameBoxWindow);
       this.addChild(this._focusMessageWindowLayer);
       Window_Message_FocusCircleMixIn(this._messageWindow);
