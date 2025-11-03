@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/11/03",
+    version: "2.1.0",
+    description: "専用メッセージウィンドウをシーン内変数に追加",
+  },
+  {
     date: "2025/11/02",
     version: "2.0.0",
     description: "フォーカス時に専用のメッセージウィンドウを前面に出す",

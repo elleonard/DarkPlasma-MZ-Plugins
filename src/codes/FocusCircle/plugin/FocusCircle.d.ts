@@ -43,7 +43,10 @@ declare interface Game_Temp {
 declare interface Scene_Base {
   _focusCircleLayer: Sprite;
   _focusMessageWindowLayer: WindowLayer;
+  _focusMessageWindow: Window_FocusMessage;
 
   createFocusCircleLayer(): void;
   createFocusMessageWindowLayer(x: number, y: number): void;
 }
+
+declare interface Window_FocusMessage extends Window_Message {}
