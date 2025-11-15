@@ -20,34 +20,30 @@ PluginManager.registerCommand(pluginName, command_fadeOutFall, function () {
 
 class FallImageStatus {
   _startRequested: boolean;
+  _startOptions?: Game_FallImagesStartOption[];
   _requestedImageId: number;
   _stopRequested: boolean;
   _fadeOutRequested: boolean;
   _isFalling: boolean;
 
-  /**
-   * @param {boolean} startRequested 開始リクエストされているか
-   * @param {number} requestedImageId リクエストされている画像ID
-   * @param {boolean} stopRequested 停止リクエストされているか
-   * @param {boolean} fadeOutRequested フェードアウトリクエストされているか
-   * @param {boolean} isFalling 降っている最中か
-   */
   constructor(
     startRequested: boolean,
     requestedImageId: number,
     stopRequested: boolean,
     fadeOutRequested: boolean,
-    isFalling: boolean
+    isFalling: boolean,
+    startOptions?: Game_FallImagesStartOption[]
   ) {
     this._startRequested = startRequested;
     this._requestedImageId = requestedImageId;
     this._stopRequested = stopRequested;
     this._fadeOutRequested = fadeOutRequested;
     this._isFalling = isFalling;
+    this._startOptions = startOptions;
   }
 
   static newInstance(): FallImageStatus {
-    return new FallImageStatus(false, 0, false, false, false);
+    return new FallImageStatus(false, 0, false, false, false, []);
   }
 
   toSave(): FallImageStatusSaveObject {
@@ -57,6 +53,7 @@ class FallImageStatus {
       stopRequested: this.stopRequested,
       fadeOutRequested: this.fadeOutRequested,
       isFalling: this.isFalling,
+      startOptions: this.startOptions || [],
     };
   }
 
@@ -66,7 +63,8 @@ class FallImageStatus {
       saveObject.requestedImageId,
       saveObject.stopRequested,
       saveObject.fadeOutRequested,
-      saveObject.isFalling
+      saveObject.isFalling,
+      saveObject.startOptions
     );
   }
 
@@ -90,14 +88,23 @@ class FallImageStatus {
     return this._isFalling;
   }
 
+  get startOptions() {
+    return this._startOptions;
+  }
+
+  startWithOverride(): boolean {
+    return this._startOptions?.includes("override") || false;
+  }
+
   requestedImageSetting() {
     return settings.images.find((image) => image.id === this._requestedImageId);
   }
 
-  requestStart(fallSettingId: number) {
+  requestStart(fallSettingId: number, options?: Game_FallImagesStartOption[]) {
     this._startRequested = true;
     this._requestedImageId = fallSettingId;
     this._isFalling = true;
+    this._startOptions = options;
   }
 
   requestStop() {
@@ -112,6 +119,7 @@ class FallImageStatus {
 
   clearStartRequest() {
     this._startRequested = false;
+    this._startOptions = [];
   }
 
   clearStopRequest() {
@@ -152,6 +160,28 @@ function Game_System_FallImageMixIn(gameSystem: Game_System) {
 }
 
 Game_System_FallImageMixIn(Game_System.prototype);
+
+function Game_Map_FallImageMixIn(gameMap: Game_Map) {
+  gameMap.autoFallImageId = function () {
+    const metaTag = $dataMap?.meta.autoFallImage;
+    return metaTag ? Number(metaTag) : undefined;
+  };
+
+  const _setup = gameMap.setup;
+  gameMap.setup = function (mapId) {
+    _setup.call(this, mapId);
+    const afterAutoFall = this.autoFallImageId();
+    if (afterAutoFall) {
+      fallImageStatus?.requestStart(afterAutoFall, ["override"]);
+      this._autoFallingImage = true;
+    } else if (this._autoFallingImage) {
+      fallImageStatus?.requestStop();
+      this._autoFallingImage = false;
+    }
+  };
+}
+
+Game_Map_FallImageMixIn(Game_Map.prototype);
 
 class Sprite_Falling extends Sprite {
   _fallSetting: FallImages_FallImage|undefined;
@@ -287,6 +317,9 @@ function Spriteset_Map_FallImagesMixIn(spritesetMap: Spriteset_Map) {
   
   spritesetMap.updateFallImage = function () {
     if (fallImageStatus?.startRequested) {
+      if (fallImageStatus.startWithOverride()) {
+        this.destroyFallImages();
+      }
       this.createFallImage();
     } else if (fallImageStatus?.stopRequested) {
       this.destroyFallImages();

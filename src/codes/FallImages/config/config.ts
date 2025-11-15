@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2025/11/15",
+    version: "1.1.0",
+    description: "自動で降らせるマップメモタグを追加",
+  },
+  {
     version: "1.0.6",
     description: "configをTypeScript移行",
   },
@@ -53,7 +57,7 @@ const structFallImage = createStruct("FallImage", [
   createFileParam("file", {
     text: "画像ファイル",
     description: "降らせるための画像ファイルを指定します。",
-    dir: "img/",
+    dir: "/",
   }),
   createNumberParam("rows", {
     text: "画像の行数",
@@ -150,6 +154,11 @@ export const config = new ConfigDefinitionBuilder(
 
       プラグインパラメータにIDと画像ファイルを設定し、
       プラグインコマンドでそのIDを指定してください。
+
+      マップのメモ欄に以下のように記述することで
+      そのマップに入った際にIDnの設定で自動で降らせはじめ、
+      出た際に自動で止めるようにできます。
+      <autoFallImage: n>
 
       本プラグインはセーブデータを拡張します。
       画像を降らせるための状態をセーブします。
