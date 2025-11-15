@@ -22,27 +22,27 @@ const histories: PluginHistorySchema[] = [
     description: '画像が降っていない状態で画像を消すコマンドを実行するとエラーになる不具合を修正',
   },
   {
-    date: "'2021/07/05'",
+    date: "2021/07/05",
     version: "1.0.4",
     description: 'MZ 1.3.2に対応',
   },
   {
-    date: "'2021/06/22'",
+    date: "2021/06/22",
     version: "1.0.3",
     description: 'サブフォルダからの読み込みに対応',
   },
   {
-    date: "'2020/12/16'",
+    date: "2020/12/16",
     version: "1.0.2",
     description: 'ゲーム終了時に正しく状態を初期化しない不具合を修正',
   },
   {
-    date: "'2020/10/25'",
+    date: "2020/10/25",
     version: "1.0.1",
     description: 'ヘルプ追記',
   },
   {
-    date: "'2020/10/24'",
+    date: "2020/10/24",
     version: "1.0.0",
     description: '公開',
   },
