@@ -1,16 +1,18 @@
-// DarkPlasma_FallImages 1.0.5
-// Copyright (c) 2020 DarkPlasma
+// DarkPlasma_FallImages 1.1.0
+// Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/11/15 1.1.0 自動で降らせるマップメモタグを追加
+ *            1.0.6 configをTypeScript移行
  * 2024/02/08 1.0.5 TypeScript移行
  *                  画像が降っていない状態で画像を消すコマンドを実行するとエラーになる不具合を修正
- * 2021/07/05 1.0.4 MZ 1.3.2に対応
- * 2021/06/22 1.0.3 サブフォルダからの読み込みに対応
- * 2020/12/16 1.0.2 ゲーム終了時に正しく状態を初期化しない不具合を修正
- * 2020/10/25 1.0.1 ヘルプ追記
- * 2020/10/24 1.0.0 公開
+ * '2021/07/05' 1.0.4 MZ 1.3.2に対応
+ * '2021/06/22' 1.0.3 サブフォルダからの読み込みに対応
+ * '2020/12/16' 1.0.2 ゲーム終了時に正しく状態を初期化しない不具合を修正
+ * '2020/10/25' 1.0.1 ヘルプ追記
+ * '2020/10/24' 1.0.0 公開
  */
 
 /*:
@@ -31,9 +33,10 @@
  * @text 画像を降らせる
  * @desc 画像を画面内に降らせます。
  * @arg id
- * @text 降らせる画像設定ID
  * @desc 降らせる画像設定のIDです。
+ * @text 降らせる画像設定ID
  * @type number
+ * @default 0
  *
  * @command stopFall
  * @text 画像を消す
@@ -44,14 +47,20 @@
  * @desc 振らせている画像をフェードアウトさせ、止ませます。
  *
  * @help
- * version: 1.0.5
+ * version: 1.1.0
  * 何らかの画像を降らせる画面演出を提供します。
  *
  * プラグインパラメータにIDと画像ファイルを設定し、
  * プラグインコマンドでそのIDを指定してください。
  *
+ * マップのメモ欄に以下のように記述することで
+ * そのマップに入った際にIDnの設定で自動で降らせはじめ、
+ * 出た際に自動で止めるようにできます。
+ * <autoFallImage: n>
+ *
  * 本プラグインはセーブデータを拡張します。
  * 画像を降らせるための状態をセーブします。
+ *
  */
 /*~struct~FallImage:
  * @param id
@@ -64,6 +73,7 @@
  * @desc 降らせるための画像ファイルを指定します。
  * @text 画像ファイル
  * @type file
+ * @dir /
  *
  * @param rows
  * @desc 降らせる画像の行数を指定します。
@@ -87,8 +97,8 @@
  * @desc 降る過程で揺れる頻度を指定します。最大10で、多いほど頻繁に揺れます。
  * @text 揺れ頻度
  * @type number
- * @default 7
  * @max 10
+ * @default 7
  *
  * @param minimumLifeTime
  * @desc 1枚を降らせ続ける最短の時間（フレーム単位）を指定します。
@@ -138,24 +148,40 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    images: JSON.parse(pluginParameters.images || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          id: Number(parsed.id || 1),
-          file: String(parsed.file || ``),
-          rows: Number(parsed.rows || 5),
-          cols: Number(parsed.cols || 18),
-          count: Number(parsed.count || 40),
-          waveringFrequency: Number(parsed.waveringFrequency || 7),
-          minimumLifeTime: Number(parsed.minimumLifeTime || 150),
-          lifeTimeRange: Number(parsed.lifeTimeRange || 500),
-          animationSpeed: Number(parsed.animationSpeed || 2),
-          moveSpeedX: Number(parsed.moveSpeedX || 4),
-          moveSpeedY: Number(parsed.moveSpeedY || 6),
-        };
-      })(e || '{}');
-    }),
+    images: pluginParameters.images
+      ? JSON.parse(pluginParameters.images).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  id: Number(parsed.id || 1),
+                  file: String(parsed.file || ``),
+                  rows: Number(parsed.rows || 5),
+                  cols: Number(parsed.cols || 18),
+                  count: Number(parsed.count || 40),
+                  waveringFrequency: Number(parsed.waveringFrequency || 7),
+                  minimumLifeTime: Number(parsed.minimumLifeTime || 150),
+                  lifeTimeRange: Number(parsed.lifeTimeRange || 500),
+                  animationSpeed: Number(parsed.animationSpeed || 2),
+                  moveSpeedX: Number(parsed.moveSpeedX || 4),
+                  moveSpeedY: Number(parsed.moveSpeedY || 6),
+                };
+              })(e)
+            : {
+                id: 1,
+                file: '',
+                rows: 5,
+                cols: 18,
+                count: 40,
+                waveringFrequency: 7,
+                minimumLifeTime: 150,
+                lifeTimeRange: 500,
+                animationSpeed: 2,
+                moveSpeedX: 4,
+                moveSpeedY: 6,
+              };
+        })
+      : [],
   };
 
   const START_Y_OFFSET = -100;
@@ -169,22 +195,16 @@
     fallImageStatus?.requestFadeOut();
   });
   class FallImageStatus {
-    /**
-     * @param {boolean} startRequested 開始リクエストされているか
-     * @param {number} requestedImageId リクエストされている画像ID
-     * @param {boolean} stopRequested 停止リクエストされているか
-     * @param {boolean} fadeOutRequested フェードアウトリクエストされているか
-     * @param {boolean} isFalling 降っている最中か
-     */
-    constructor(startRequested, requestedImageId, stopRequested, fadeOutRequested, isFalling) {
+    constructor(startRequested, requestedImageId, stopRequested, fadeOutRequested, isFalling, startOptions) {
       this._startRequested = startRequested;
       this._requestedImageId = requestedImageId;
       this._stopRequested = stopRequested;
       this._fadeOutRequested = fadeOutRequested;
       this._isFalling = isFalling;
+      this._startOptions = startOptions;
     }
     static newInstance() {
-      return new FallImageStatus(false, 0, false, false, false);
+      return new FallImageStatus(false, 0, false, false, false, []);
     }
     toSave() {
       return {
@@ -193,6 +213,7 @@
         stopRequested: this.stopRequested,
         fadeOutRequested: this.fadeOutRequested,
         isFalling: this.isFalling,
+        startOptions: this.startOptions || [],
       };
     }
     static fromSave(saveObject) {
@@ -202,6 +223,7 @@
         saveObject.stopRequested,
         saveObject.fadeOutRequested,
         saveObject.isFalling,
+        saveObject.startOptions,
       );
     }
     get startRequested() {
@@ -219,13 +241,20 @@
     get isFalling() {
       return this._isFalling;
     }
+    get startOptions() {
+      return this._startOptions;
+    }
+    startWithOverride() {
+      return this._startOptions?.includes('override') || false;
+    }
     requestedImageSetting() {
       return settings.images.find((image) => image.id === this._requestedImageId);
     }
-    requestStart(fallSettingId) {
+    requestStart(fallSettingId, options) {
       this._startRequested = true;
       this._requestedImageId = fallSettingId;
       this._isFalling = true;
+      this._startOptions = options;
     }
     requestStop() {
       this._stopRequested = true;
@@ -237,6 +266,7 @@
     }
     clearStartRequest() {
       this._startRequested = false;
+      this._startOptions = [];
     }
     clearStopRequest() {
       this._stopRequested = false;
@@ -270,6 +300,25 @@
     };
   }
   Game_System_FallImageMixIn(Game_System.prototype);
+  function Game_Map_FallImageMixIn(gameMap) {
+    gameMap.autoFallImageId = function () {
+      const metaTag = $dataMap?.meta.autoFallImage;
+      return metaTag ? Number(metaTag) : undefined;
+    };
+    const _setup = gameMap.setup;
+    gameMap.setup = function (mapId) {
+      _setup.call(this, mapId);
+      const afterAutoFall = this.autoFallImageId();
+      if (afterAutoFall) {
+        fallImageStatus?.requestStart(afterAutoFall, ['override']);
+        this._autoFallingImage = true;
+      } else if (this._autoFallingImage) {
+        fallImageStatus?.requestStop();
+        this._autoFallingImage = false;
+      }
+    };
+  }
+  Game_Map_FallImageMixIn(Game_Map.prototype);
   class Sprite_Falling extends Sprite {
     initialize(fallSettingId) {
       super.initialize();
@@ -381,6 +430,9 @@
     };
     spritesetMap.updateFallImage = function () {
       if (fallImageStatus?.startRequested) {
+        if (fallImageStatus.startWithOverride()) {
+          this.destroyFallImages();
+        }
         this.createFallImage();
       } else if (fallImageStatus?.stopRequested) {
         this.destroyFallImages();
