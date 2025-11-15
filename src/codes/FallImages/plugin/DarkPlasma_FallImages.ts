@@ -1,8 +1,8 @@
 /// <reference path="./FallImages.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { command_fadeOutFall, command_startFall, command_stopFall } from './_build/DarkPlasma_FallImages_commands';
-import { FallImages_FallImage, settings } from './_build/DarkPlasma_FallImages_parameters';
+import { pluginName } from '../../../common/pluginName';
+import { command_fadeOutFall, command_startFall, command_stopFall } from '../config/_build/DarkPlasma_FallImages_commands';
+import { FallImages_FallImage, settings } from '../config/_build/DarkPlasma_FallImages_parameters';
 
 const START_Y_OFFSET = -100;
 
