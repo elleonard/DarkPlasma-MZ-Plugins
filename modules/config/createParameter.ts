@@ -1,4 +1,4 @@
-import { DatabaseType, I18nText, PluginCommandSchema, PluginParameterBooleanArraySchema, PluginParameterBooleanSchema, PluginParameterColorArraySchema, PluginParameterColorSchema, PluginParameterDatabaseArraySchema, PluginParameterDatabaseSchema, PluginParameterDummySchema, PluginParameterFileArraySchema, PluginParameterFileSchema, PluginParameterIconArraySchema, PluginParameterIconSchema, PluginParameterLocationArraySchema, PluginParameterLocationSchema, PluginParameterMapSchema, PluginParameterMultilineStringArraySchema, PluginParameterMultilineStringSchema, PluginParameterNumberArraySchema, PluginParameterNumberSchema, PluginParameterSchema, PluginParameterSelectArraySchema, PluginParameterSelectSchema, PluginParameterStringArraySchema, PluginParameterStringSchema, PluginParameterStructArraySchema, PluginParameterStructSchema, PluginStruct, StructDefaultValueType } from "./configSchema.js";
+import { DatabaseType, I18nText, PlugiNparameterMapArraySchema, PluginCommandSchema, PluginParameterBooleanArraySchema, PluginParameterBooleanSchema, PluginParameterColorArraySchema, PluginParameterColorSchema, PluginParameterDatabaseArraySchema, PluginParameterDatabaseSchema, PluginParameterDummySchema, PluginParameterFileArraySchema, PluginParameterFileSchema, PluginParameterIconArraySchema, PluginParameterIconSchema, PluginParameterLocationArraySchema, PluginParameterLocationSchema, PluginParameterMapSchema, PluginParameterMultilineStringArraySchema, PluginParameterMultilineStringSchema, PluginParameterNumberArraySchema, PluginParameterNumberSchema, PluginParameterSchema, PluginParameterSelectArraySchema, PluginParameterSelectSchema, PluginParameterStringArraySchema, PluginParameterStringSchema, PluginParameterStructArraySchema, PluginParameterStructSchema, PluginStruct, StructDefaultValueType } from "./configSchema.js";
 
 export function createStruct<T extends string, U extends PluginParameterSchema[]>(
   name: T,
@@ -415,6 +415,25 @@ export function createMapParam<T extends string>(
     parent: props.parent,
   };
 }
+
+export function createMapArrayParam<T extends string>(
+  name: T,
+  props: {
+    text: string | I18nText;
+    description?: string | I18nText;
+    default?: number[];
+    parent?: string;
+  },
+): PlugiNparameterMapArraySchema & { param: T } {
+  return {
+    param: name,
+    type: 'map[]',
+    text: props.text,
+    description: props.description,
+    default: props.default || [],
+    parent: props.parent,
+  };
+};
 
 export function createLocationParam<T extends string>(
   name: T,

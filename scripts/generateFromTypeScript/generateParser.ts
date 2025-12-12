@@ -112,6 +112,7 @@ function toSubParameter(config: PluginConfigSchema, parameter: PluginParameterAr
     case 'troop[]':
     case 'variable[]':
     case 'weapon[]':
+    case 'map[]':
       return createNumberParam("e", { text: "" });
     case 'boolean[]':
       return createBooleanParam("e", { text: "", default: false });
