@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.4.0
+// DarkPlasma_EnemyBook 5.5.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2025/12/22 5.5.0 ステータスウィンドウをSelectableに変更
  * 2024/10/28 5.4.0 セーブデータに含むクラス名の命名を見直し
  * 2024/09/24 5.3.2 プラグインコマンドの引数が設定できない不具合を修正
  * 2024/02/04 5.3.1 目次生成をリフレッシュごとに行うよう修正
@@ -202,7 +203,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.4.0
+ * version: 5.5.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -220,10 +221,10 @@
  * You can control order of enemies with DarkPlasma_OrderIdAlias.
  * You can open enemy book in battle with DarkPlasma_EnemyBookInBattle.
  *
- * 本プラグインの利用には下記プラグインを必要とします。
+ * This plugin requires the following plugin:
  * DarkPlasma_CustomKeyHandler version:1.2.1
  * DarkPlasma_SystemTypeIcon version:1.0.0
- * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * If you use this plugin with the followings, you must order this plugin after them.
  * DarkPlasma_CustomKeyHandler
  */
 /*~struct~DebuffStatusThresholdEn:
@@ -403,7 +404,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.4.0
+ * version: 5.5.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1085,7 +1086,7 @@
   /**
    * 図鑑ステータスウィンドウ
    */
-  class Window_EnemyBookStatus extends Window_Base {
+  class Window_EnemyBookStatus extends Window_Selectable {
     initialize(rect) {
       super.initialize(rect);
       this._enemy = null;
