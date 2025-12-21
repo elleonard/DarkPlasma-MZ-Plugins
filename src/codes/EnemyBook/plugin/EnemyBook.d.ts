@@ -110,7 +110,7 @@ declare interface Window_EnemyBookIndex extends Window_Selectable {
   currentEnemy(): MZ.Enemy|undefined;
 }
 
-declare interface Window_EnemyBookStatus extends Window_Base {
+declare interface Window_EnemyBookStatus extends Window_Selectable {
   _enemy: MZ.Enemy|null;
   _enemySprite: Sprite;
   _weakLines: number;

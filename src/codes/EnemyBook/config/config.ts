@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2025/12/22",
+    version: "5.5.0",
+    description: "ステータスウィンドウをSelectableに変更",
+  },
+  {
     date: "2024/10/28",
     version: "5.4.0",
     description: "セーブデータに含むクラス名の命名を見直し",

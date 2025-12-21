@@ -517,7 +517,7 @@ Window_EnemyBookIndex.lastIndex = 0;
 /**
  * 図鑑ステータスウィンドウ
  */
-class Window_EnemyBookStatus extends Window_Base {
+class Window_EnemyBookStatus extends Window_Selectable {
   _enemy: MZ.Enemy|null;
   _enemySprite: Sprite;
 
