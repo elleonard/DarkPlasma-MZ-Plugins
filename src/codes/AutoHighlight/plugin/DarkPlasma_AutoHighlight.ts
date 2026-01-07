@@ -120,15 +120,27 @@ function Scene_Boot_AutoHighlightMixIn(sceneBoot: Scene_Boot) {
         }
       });
       highlightGroup.skills.forEach((skillId) => {
-        const skillName = $dataSkills[skillId].name;
+        const skillName = $dataSkills[skillId]?.name;
         if (skillName) {
           highlightWords.add(new HighlightWord(skillName, highlightGroup.color));
         }
       });
       highlightGroup.items.forEach((itemId) => {
-        const itemName = $dataItems[itemId].name;
+        const itemName = $dataItems[itemId]?.name;
         if (itemName) {
           highlightWords.add(new HighlightWord(itemName, highlightGroup.color));
+        }
+      });
+      highlightGroup.weapons.forEach((weaponId) => {
+        const name = $dataWeapons[weaponId]?.name;
+        if (name) {
+          highlightWords.add(new HighlightWord(name, highlightGroup.color));
+        }
+      });
+      highlightGroup.armors.forEach((armorId) => {
+        const name = $dataArmors[armorId]?.name;
+        if (name) {
+          highlightWords.add(new HighlightWord(name, highlightGroup.color));
         }
       });
     });

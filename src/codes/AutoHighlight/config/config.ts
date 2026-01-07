@@ -4,6 +4,11 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/01/08",
+    version: "2.1.0",
+    description: "ハイライトグループ設定に武器・防具を追加",
+  },
+  {
     date: "2025/07/16",
     version: "2.0.2",
     description: "正規表現における特殊文字を含む語句をハイライトしようとするとエラーで停止する不具合を修正",
@@ -74,6 +79,22 @@ const structHighlightGroup = createStruct(
         type: "item",
         text: "アイテム",
         description: "名前をハイライトしたいアイテムを指定します。",
+      }
+    ),
+    createDatabaseArrayParam(
+      "weapons",
+      {
+        type: "weapon",
+        text: "武器",
+        description: "名前をハイライトしたい武器を指定します。",
+      }
+    ),
+    createDatabaseArrayParam(
+      "armors",
+      {
+        type: "armor",
+        text: "防具",
+        description: "名前をハイライトしたい防具を指定します。",
       }
     ),
   ]
