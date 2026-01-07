@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/01/08",
+    version: "5.6.0",
+    description: "ドロップアイテム描画インターフェース追加",
+  },
+  {
     date: "2025/12/22",
     version: "5.5.0",
     description: "ステータスウィンドウをSelectableに変更",

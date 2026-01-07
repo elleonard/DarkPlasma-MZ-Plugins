@@ -121,6 +121,7 @@ declare interface Window_EnemyBookStatus extends Window_Selectable {
   drawStatus(x: number, y: number): void;
   drawExpAndGold(x: number, y: number): void;
   drawDropItems(x: number, y: number): void;
+  drawDropItem(x: number, y: number, rewardsWidth: number, dropItem: MZ.Enemy.DropItem, index: number): void;
   drawWeakElementsAndStates(x: number, y: number): void;
   drawResistElementsAndStates(x: number, y: number): void;
   drawNoEffectElementsAndStates(x: number, y: number, width: number): void;

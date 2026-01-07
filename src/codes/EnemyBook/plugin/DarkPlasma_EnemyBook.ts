@@ -6,7 +6,7 @@ import { settings } from './../config/_build/DarkPlasma_EnemyBook_parameters';
 import { Window_LabelAndValueTexts } from '../../../common/window/labelAndValueTextsWindow';
 import { orderIdSort } from '../../../common/orderIdSort';
 
-const STATUS_NAMES: ('mhp'|'mmp'|'atk'|'def'|'mat'|'mdf'|'agi'|'luk')[] = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
+const STATUS_NAMES: ('mhp' | 'mmp' | 'atk' | 'def' | 'mat' | 'mdf' | 'agi' | 'luk')[] = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
 
 const PLUGIN_COMMAND_NAME = {
   OPEN: 'open enemyBook',
@@ -59,11 +59,11 @@ PluginManager.registerCommand(pluginName, PLUGIN_COMMAND_NAME.CLEAR, function ()
 });
 
 class Game_EnemyBook {
-  _pages: (Game_EnemyBookPage|null)[];
+  _pages: (Game_EnemyBookPage | null)[];
   /**
    * @param {Game_EnemyBookPage[]} pages ページ一覧
    */
-  constructor(pages: (Game_EnemyBookPage|null)[]) {
+  constructor(pages: (Game_EnemyBookPage | null)[]) {
     this._pages = pages;
   }
 
@@ -76,9 +76,9 @@ class Game_EnemyBook {
       $dataEnemies.map((enemy) => {
         return isRegisterableEnemy(enemy)
           ? new Game_EnemyBookPage(
-              false,
-              enemy.dropItems.map((_) => false)
-            )
+            false,
+            enemy.dropItems.map((_) => false)
+          )
           : null;
       })
     );
@@ -94,9 +94,9 @@ class Game_EnemyBook {
         $dataEnemies.slice(this._pages.length).map((enemy) => {
           return isRegisterableEnemy(enemy)
             ? new Game_EnemyBookPage(
-                false,
-                enemy.dropItems.map((_) => false)
-              )
+              false,
+              enemy.dropItems.map((_) => false)
+            )
             : null;
         })
       );
@@ -112,10 +112,10 @@ class Game_EnemyBook {
       .filter((enemy) => isRegisterableEnemy(enemy) && this._pages[enemy.id] === null)
       .forEach(
         (enemy) =>
-          (this._pages[enemy.id] = new Game_EnemyBookPage(
-            false,
-            enemy.dropItems.map((_) => false)
-          ))
+        (this._pages[enemy.id] = new Game_EnemyBookPage(
+          false,
+          enemy.dropItems.map((_) => false)
+        ))
       );
   }
 
@@ -267,7 +267,7 @@ class Game_EnemyBookPage {
  * 敵図鑑情報
  * Game_Systemからのみ直接アクセスされる
  */
-let enemyBook: Game_EnemyBook|null = null;
+let enemyBook: Game_EnemyBook | null = null;
 
 function enemyBookInstance(): Game_EnemyBook {
   if (!enemyBook) {
@@ -494,7 +494,7 @@ class Window_EnemyBookIndex extends Window_Selectable {
       : ColorManager.textColor(settings.highlightColor);
   }
 
-  processOk() {}
+  processOk() { }
 
   processCancel() {
     super.processCancel();
@@ -502,11 +502,11 @@ class Window_EnemyBookIndex extends Window_Selectable {
     Window_EnemyBookIndex.lastIndex = this.index();
   }
 
-  enemy(index: number): MZ.Enemy|undefined {
+  enemy(index: number): MZ.Enemy | undefined {
     return this._list[index];
   }
 
-  currentEnemy(): MZ.Enemy|undefined {
+  currentEnemy(): MZ.Enemy | undefined {
     return this.enemy(this.index());
   }
 }
@@ -518,7 +518,7 @@ Window_EnemyBookIndex.lastIndex = 0;
  * 図鑑ステータスウィンドウ
  */
 class Window_EnemyBookStatus extends Window_Selectable {
-  _enemy: MZ.Enemy|null;
+  _enemy: MZ.Enemy | null;
   _enemySprite: Sprite;
 
   _weakLines: number;
@@ -696,29 +696,34 @@ class Window_EnemyBookStatus extends Window_Selectable {
   drawDropItems(x: number, y: number, rewardsWidth: number): void {
     const enemy = this._enemy!;
     const lineHeight = this.lineHeight();
-    const displayDropRate = settings.displayDropRate;
-    enemy.dropItems.forEach((dropItems, index) => {
-      if (dropItems.kind > 0) {
-        const dropRateWidth = this.textWidth('0000000');
-        if ($gameSystem.isInEnemyBookDrop(enemy, index)) {
-          const item = Game_Enemy.prototype.itemObject(dropItems.kind, dropItems.dataId);
-          this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-          this.drawDropRate(dropItems.denominator, x, y, rewardsWidth);
-        } else {
-          this.changePaintOpacity(!settings.grayOutUnknown);
-          if (settings.maskUnknownDropItem) {
-            this.resetTextColor();
-            this.drawText(settings.unknownData, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-          } else {
-            const item = Game_Enemy.prototype.itemObject(dropItems.kind, dropItems.dataId);
-            this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-          }
-          this.drawDropRate(dropItems.denominator, x, y, rewardsWidth);
-          this.changePaintOpacity(true);
-        }
+    enemy.dropItems.forEach((dropItem, index) => {
+      if (dropItem.kind > 0) {
+        this.drawDropItem(x, y, rewardsWidth, dropItem, index);
         y += lineHeight;
       }
     });
+  }
+
+  drawDropItem(x: number, y: number, rewardsWidth: number, dropItem: MZ.Enemy.DropItem, index: number) {
+    const enemy = this._enemy!;
+    const displayDropRate = settings.displayDropRate;
+    const dropRateWidth = this.textWidth('0000000');
+    if ($gameSystem.isInEnemyBookDrop(enemy, index)) {
+      const item = Game_Enemy.prototype.itemObject(dropItem.kind, dropItem.dataId);
+      this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+      this.drawDropRate(dropItem.denominator, x, y, rewardsWidth);
+    } else {
+      this.changePaintOpacity(!settings.grayOutUnknown);
+      if (settings.maskUnknownDropItem) {
+        this.resetTextColor();
+        this.drawText(settings.unknownData, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+      } else {
+        const item = Game_Enemy.prototype.itemObject(dropItem.kind, dropItem.dataId);
+        this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+      }
+      this.drawDropRate(dropItem.denominator, x, y, rewardsWidth);
+      this.changePaintOpacity(true);
+    }
   }
 
   /**
@@ -958,7 +963,7 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
     enemyBook = Game_EnemyBook.initialBook();
     this._enemyBook = enemyBookInstance();
   };
-  
+
   const _Game_System_onAfterLoad = gameSystem.onAfterLoad;
   gameSystem.onAfterLoad = function () {
     _Game_System_onAfterLoad.call(this);
@@ -972,39 +977,39 @@ function Game_System_EnemyBookMixIn(gameSystem: Game_System) {
       this._enemyBook = enemyBookInstance();
     }
   };
-  
+
   gameSystem.addToEnemyBook = function (enemyId) {
     enemyBookInstance().register(enemyId);
   };
-  
+
   gameSystem.addDropItemToEnemyBook = function (enemyId, dropIndex) {
     enemyBookInstance().registerDropItem(enemyId, dropIndex);
   };
-  
+
   gameSystem.removeFromEnemyBook = function (enemyId) {
     enemyBookInstance().unregister(enemyId);
   };
-  
+
   gameSystem.completeEnemyBook = function () {
     enemyBookInstance().complete();
   };
-  
+
   gameSystem.clearEnemyBook = function () {
     enemyBookInstance().clear();
   };
-  
+
   gameSystem.isInEnemyBook = function (enemy) {
     return enemyBookInstance().isRegistered(enemy);
   };
-  
+
   gameSystem.isInEnemyBookDrop = function (enemy, dropIndex) {
     return enemyBookInstance().isDropItemRegistered(enemy, dropIndex);
   };
-  
+
   gameSystem.percentCompleteEnemy = function () {
     return enemyBookInstance().percentRegisteredEnemy();
   };
-  
+
   gameSystem.percentCompleteDrop = function () {
     return enemyBookInstance().percentRegisteredDropItem();
   };
@@ -1032,22 +1037,22 @@ function Game_Enemy_EnemyBookMixIn(gameEnemy: Game_Enemy) {
     _appear.call(this);
     $gameSystem.addToEnemyBook(this._enemyId);
   };
-  
+
   const _transform = gameEnemy.transform;
   gameEnemy.transform = function (enemyId) {
     _transform.call(this, enemyId);
     $gameSystem.addToEnemyBook(enemyId);
   };
-  
+
   gameEnemy.dropItemLots = function (dropItem) {
     return dropItem.kind > 0 && Math.random() * dropItem.denominator < this.dropItemRate();
   };
-  
+
   /**
    * ドロップアイテムリスト生成メソッド 上書き
    */
   gameEnemy.makeDropItems = function () {
-    return this.enemy().dropItems.reduce((accumlator: (MZ.Item|MZ.Weapon|MZ.Armor)[], dropItem, index) => {
+    return this.enemy().dropItems.reduce((accumlator: (MZ.Item | MZ.Weapon | MZ.Armor)[], dropItem, index) => {
       const dropItemObject = this.itemObject(dropItem.kind, dropItem.dataId);
       if (dropItemObject && this.dropItemLots(dropItem)) {
         $gameSystem.addDropItemToEnemyBook(this.enemy().id, index);
