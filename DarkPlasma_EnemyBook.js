@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.5.0
+// DarkPlasma_EnemyBook 5.6.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/01/08 5.6.0 ドロップアイテム描画インターフェース追加
  * 2025/12/22 5.5.0 ステータスウィンドウをSelectableに変更
  * 2024/10/28 5.4.0 セーブデータに含むクラス名の命名を見直し
  * 2024/09/24 5.3.2 プラグインコマンドの引数が設定できない不具合を修正
@@ -203,7 +204,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.5.0
+ * version: 5.6.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -404,7 +405,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.5.0
+ * version: 5.6.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1238,29 +1239,33 @@
     drawDropItems(x, y, rewardsWidth) {
       const enemy = this._enemy;
       const lineHeight = this.lineHeight();
-      const displayDropRate = settings.displayDropRate;
-      enemy.dropItems.forEach((dropItems, index) => {
-        if (dropItems.kind > 0) {
-          const dropRateWidth = this.textWidth('0000000');
-          if ($gameSystem.isInEnemyBookDrop(enemy, index)) {
-            const item = Game_Enemy.prototype.itemObject(dropItems.kind, dropItems.dataId);
-            this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-            this.drawDropRate(dropItems.denominator, x, y, rewardsWidth);
-          } else {
-            this.changePaintOpacity(!settings.grayOutUnknown);
-            if (settings.maskUnknownDropItem) {
-              this.resetTextColor();
-              this.drawText(settings.unknownData, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-            } else {
-              const item = Game_Enemy.prototype.itemObject(dropItems.kind, dropItems.dataId);
-              this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
-            }
-            this.drawDropRate(dropItems.denominator, x, y, rewardsWidth);
-            this.changePaintOpacity(true);
-          }
+      enemy.dropItems.forEach((dropItem, index) => {
+        if (dropItem.kind > 0) {
+          this.drawDropItem(x, y, rewardsWidth, dropItem, index);
           y += lineHeight;
         }
       });
+    }
+    drawDropItem(x, y, rewardsWidth, dropItem, index) {
+      const enemy = this._enemy;
+      const displayDropRate = settings.displayDropRate;
+      const dropRateWidth = this.textWidth('0000000');
+      if ($gameSystem.isInEnemyBookDrop(enemy, index)) {
+        const item = Game_Enemy.prototype.itemObject(dropItem.kind, dropItem.dataId);
+        this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+        this.drawDropRate(dropItem.denominator, x, y, rewardsWidth);
+      } else {
+        this.changePaintOpacity(!settings.grayOutUnknown);
+        if (settings.maskUnknownDropItem) {
+          this.resetTextColor();
+          this.drawText(settings.unknownData, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+        } else {
+          const item = Game_Enemy.prototype.itemObject(dropItem.kind, dropItem.dataId);
+          this.drawItemName(item, x, y, displayDropRate ? rewardsWidth - dropRateWidth : rewardsWidth);
+        }
+        this.drawDropRate(dropItem.denominator, x, y, rewardsWidth);
+        this.changePaintOpacity(true);
+      }
     }
     /**
      * ドロップ率を描画する

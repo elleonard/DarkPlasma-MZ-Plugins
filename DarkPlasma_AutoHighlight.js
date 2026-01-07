@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 2.0.2
+// DarkPlasma_AutoHighlight 2.1.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/01/08 2.1.0 ハイライトグループ設定に武器・防具を追加
  * 2025/07/16 2.0.2 正規表現における特殊文字を含む語句をハイライトしようとするとエラーで停止する不具合を修正
  * 2024/01/15 2.0.1 ビルド方式を変更 (configをTypeScript化)
  * 2023/06/02 2.0.0 色設定をMZ1.6.0形式に変更
@@ -36,7 +37,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 2.0.2
+ * version: 2.1.0
  * 指定した語句を指定した色でハイライトします。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
@@ -70,6 +71,18 @@
  * @desc 名前をハイライトしたいアイテムを指定します。
  * @text アイテム
  * @type item[]
+ * @default []
+ *
+ * @param weapons
+ * @desc 名前をハイライトしたい武器を指定します。
+ * @text 武器
+ * @type weapon[]
+ * @default []
+ *
+ * @param armors
+ * @desc 名前をハイライトしたい防具を指定します。
+ * @text 防具
+ * @type armor[]
  * @default []
  */
 (() => {
@@ -107,9 +120,19 @@
                         return Number(e || 0);
                       })
                     : [],
+                  weapons: parsed.weapons
+                    ? JSON.parse(parsed.weapons).map((e) => {
+                        return Number(e || 0);
+                      })
+                    : [],
+                  armors: parsed.armors
+                    ? JSON.parse(parsed.armors).map((e) => {
+                        return Number(e || 0);
+                      })
+                    : [],
                 };
               })(e)
-            : { title: '', color: 0, texts: [], skills: [], items: [] };
+            : { title: '', color: 0, texts: [], skills: [], items: [], weapons: [], armors: [] };
         })
       : [],
     targetWindows: pluginParameters.targetWindows
@@ -226,15 +249,27 @@
           }
         });
         highlightGroup.skills.forEach((skillId) => {
-          const skillName = $dataSkills[skillId].name;
+          const skillName = $dataSkills[skillId]?.name;
           if (skillName) {
             highlightWords.add(new HighlightWord(skillName, highlightGroup.color));
           }
         });
         highlightGroup.items.forEach((itemId) => {
-          const itemName = $dataItems[itemId].name;
+          const itemName = $dataItems[itemId]?.name;
           if (itemName) {
             highlightWords.add(new HighlightWord(itemName, highlightGroup.color));
+          }
+        });
+        highlightGroup.weapons.forEach((weaponId) => {
+          const name = $dataWeapons[weaponId]?.name;
+          if (name) {
+            highlightWords.add(new HighlightWord(name, highlightGroup.color));
+          }
+        });
+        highlightGroup.armors.forEach((armorId) => {
+          const name = $dataArmors[armorId]?.name;
+          if (name) {
+            highlightWords.add(new HighlightWord(name, highlightGroup.color));
           }
         });
       });
