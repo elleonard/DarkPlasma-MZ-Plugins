@@ -135,6 +135,15 @@ function Game_Party_FormationInBattleMixIn(gameParty: Game_Party) {
 
 Game_Party_FormationInBattleMixIn(Game_Party.prototype);
 
+function Game_Battler_FormationInBattleMixIn(gameBattler: Game_Battler) {
+  const _canInput = gameBattler.canInput;
+  gameBattler.canInput = function () {
+    return _canInput.call(this) && this.isActor() && this.isBattleMember();
+  };
+}
+
+Game_Battler_FormationInBattleMixIn(Game_Battler.prototype);
+
 function Game_Map_FormationInBattleMixIn(gameMap: Game_Map) {
   gameMap.isFormationInBattleEnabled = function () {
     return !isMapMetaDataAvailable() || !$dataMap?.meta.disableFormationInBattle;
@@ -143,9 +152,6 @@ function Game_Map_FormationInBattleMixIn(gameMap: Game_Map) {
 
 Game_Map_FormationInBattleMixIn(Game_Map.prototype);
 
-/**
- * @param {Scene_Battle.prototype} sceneBattle
- */
 function Scene_Battle_FormationMixIn(sceneBattle: Scene_Battle) {
   const baseClass = Scene_FormationMixIn(Scene_Base).prototype;
 
