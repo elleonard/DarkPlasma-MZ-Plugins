@@ -1,10 +1,9 @@
-// DarkPlasma_FormationInBattle 3.0.2
+// DarkPlasma_FormationInBattle 3.0.1
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/01/10 3.0.2 後衛に下がっているメンバーのコマンド入力を禁止
  * 2025/10/19 3.0.1 TPB(ウェイト)で並び替えを開いても時間が止まらない不具合を修正
  * 2024/10/17 3.0.0 DarkPlasma_Formation 4.0.0対応
  * 2024/03/07 2.1.2 DarkPlasma_Formationとの順序関係を明記
@@ -65,7 +64,7 @@
  * @default true
  *
  * @help
- * version: 3.0.2
+ * version: 3.0.1
  * 戦闘シーンで並び替えできるようになります。
  *
  * マップのメモ欄に<disableFormationInBattle>と記述することで、
@@ -218,13 +217,6 @@
     };
   }
   Game_Party_FormationInBattleMixIn(Game_Party.prototype);
-  function Game_Battler_FormationInBattleMixIn(gameBattler) {
-    const _canInput = gameBattler.canInput;
-    gameBattler.canInput = function () {
-      return _canInput.call(this) && this.isActor() && this.isBattleMember();
-    };
-  }
-  Game_Battler_FormationInBattleMixIn(Game_Battler.prototype);
   function Game_Map_FormationInBattleMixIn(gameMap) {
     gameMap.isFormationInBattleEnabled = function () {
       return !isMapMetaDataAvailable() || !$dataMap?.meta.disableFormationInBattle;
