@@ -3,9 +3,6 @@ DarkPlasma_FormationInBattle:
   year: 2020
   license: MIT
   histories:
-    - date: 2026/01/10
-      version: 3.0.2
-      description: '後衛に下がっているメンバーのコマンド入力を禁止'
     - date: 2025/10/19
       version: 3.0.1
       description: 'TPB(ウェイト)で並び替えを開いても時間が止まらない不具合を修正'
