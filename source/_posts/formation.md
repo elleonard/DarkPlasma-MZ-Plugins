@@ -24,7 +24,11 @@ thumbnail: formation.png
 - メニュー拡張系のプラグインを利用して `Scene_Formation` を呼び出すよう設定する
 - [メニューの並び替えでシーンを呼び出す](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInMenu.js)プラグインを利用する
 
-また、戦闘中に並び替えシーンを開くためには[戦闘中に並び替えを行う](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInBattle.js)プラグインが必要です。
+## 戦闘中に並び替えしたい
+
+戦闘中に並び替えUIを開くためには[戦闘中に並び替えを行う](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInBattle.js)プラグインが必要です。
+[NRP_CountTimeBattle.js](https://newrpg.seesaa.net/article/472859369.html)など、戦闘の流れを変更するようなプラグインを使うと、控えに下げたアクターのコマンド入力が開いてしまうことがあります。
+[控えメンバーの行動入力を禁止する](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ForbidWaitingMemberInput.js)プラグインを使うことで対策できる場合があります。
 
 ## 紹介動画
 
@@ -39,3 +43,4 @@ thumbnail: formation.png
 
 - [メニューの並び替えでシーンを呼び出す](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInMenu.js)
 - [戦闘中に並び替えを行う](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_FormationInBattle.js)
+- [控えメンバーの行動入力を禁止する](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ForbidWaitingMemberInput.js)
