@@ -1,9 +1,10 @@
-// DarkPlasma_RandomTroop 1.1.0
-// Copyright (c) 2023 DarkPlasma
+// DarkPlasma_RandomTroop 1.1.1
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/02/17 1.1.1 configをTypeScript移行
  * 2024/12/19 1.1.0 種別による敵キャラデータ一覧取得インターフェース追加
  * 2023/10/24 1.0.2 ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正
  *            1.0.1 DarkPlasma_EnemyBookとの依存関係を明記
@@ -36,12 +37,13 @@
  * @text ランダム構成設定
  * @desc 敵グループバトルイベントの1ページ目で使用すると、遭遇時にグループ構成をランダムに決定します。
  * @arg troop
- * @text 抽選枠設定
  * @desc 任意の数の抽選枠を設定します。
+ * @text 抽選枠設定
  * @type struct<RandomTroopEnemy>[]
+ * @default []
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -85,8 +87,8 @@
  * @desc この抽選枠が出現する確率を指定します。
  * @text 抽選確率（％）
  * @type number
- * @default 100
  * @max 100
+ * @default 100
  */
 (() => {
   'use strict';
@@ -101,19 +103,25 @@
 
   function parseArgs_randomTroop(args) {
     return {
-      troop: JSON.parse(args.troop || '[]').map((e) => {
-        return ((parameter) => {
-          const parsed = JSON.parse(parameter);
-          return {
-            name: String(parsed.name || ``),
-            enemyIds: JSON.parse(parsed.enemyIds || '[]').map((e) => {
-              return Number(e || 0);
-            }),
-            tag: String(parsed.tag || ``),
-            rate: Number(parsed.rate || 100),
-          };
-        })(e || '{}');
-      }),
+      troop: args.troop
+        ? JSON.parse(args.troop).map((e) => {
+            return e
+              ? ((parameter) => {
+                  const parsed = JSON.parse(parameter);
+                  return {
+                    name: String(parsed.name || ``),
+                    enemyIds: parsed.enemyIds
+                      ? JSON.parse(parsed.enemyIds).map((e) => {
+                          return Number(e || 0);
+                        })
+                      : [],
+                    tag: String(parsed.tag || ``),
+                    rate: Number(parsed.rate || 100),
+                  };
+                })(e)
+              : { name: '', enemyIds: [], tag: '', rate: 100 };
+          })
+        : [],
     };
   }
 
