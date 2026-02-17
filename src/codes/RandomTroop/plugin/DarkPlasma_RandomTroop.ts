@@ -1,10 +1,10 @@
 /// <reference path="./RandomTroop.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { isEnemy } from '../../common/data/isEnemy';
-import type { CommandArgs_RandomTroop_randomTroop } from './_build/DarkPlasma_RandomTroop_commands';
-import { command_randomTroop, parseArgs_randomTroop } from "./_build/DarkPlasma_RandomTroop_commands";
-import { settings } from './_build/DarkPlasma_RandomTroop_parameters';
+import { pluginName } from '../../../common/pluginName';
+import { isEnemy } from '../../../common/data/isEnemy';
+import type { CommandArgs_RandomTroop_randomTroop } from '../config/_build/DarkPlasma_RandomTroop_commands';
+import { command_randomTroop, parseArgs_randomTroop } from "../config/_build/DarkPlasma_RandomTroop_commands";
+import { settings } from '../config/_build/DarkPlasma_RandomTroop_parameters';
 
 const PLUGIN_COMMAND_CODE = 357;
 
