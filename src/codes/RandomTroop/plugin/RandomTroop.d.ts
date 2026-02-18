@@ -16,6 +16,8 @@ declare interface Game_Troop {
   processRandomTroop(): void;
   randomTroopCommand(): MZ.EventCommand|undefined;
   isRandomTroop(): boolean;
+  randomTroopCandidateEnemyIds(enemyIds: number[], tag: string, spotId: number): number[];
+  randomTroopAdditionalFilter(enemyId: number, index: number): boolean;
 }
 
 declare interface Game_Enemy {

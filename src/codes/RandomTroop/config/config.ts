@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/02/18",
+    version: "1.2.0",
+    description: "抽選枠の追加フィルタ用拡張インターフェースを追加",
+  },
+  {
     date: "2026/02/17",
     version: "1.1.1",
     description: "configをTypeScript移行",
@@ -49,6 +54,10 @@ const parameters: PluginParameterSchema[] = [
   }),
 ];
 
+/**
+ * 互換性のために名前は維持するが、命名は良くない。
+ * 本来は抽選枠設定なので、RandomTroopSpotなどとすべき
+ */
 const structRandomTroopEnemy: PluginStruct = createStruct("RandomTroopEnemy", [
   createStringParam("name", {
     text: "抽選枠名(省略可)",

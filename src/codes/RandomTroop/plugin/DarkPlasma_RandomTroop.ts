@@ -57,12 +57,13 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
     if (randomTroopCommand) {
       const args: CommandArgs_RandomTroop_randomTroop = parseArgs_randomTroop(randomTroopCommand.parameters[3]);
       args.troop
-        .filter(enemy => enemy.rate > Math.randomInt(100))
-        .forEach(enemy => {
-          const candidates = enemy.enemyIds.concat(
-            DataManager.enemiesWithTag(enemy.tag).map(data => data.id)
-          );
-          this._enemies.push(new Game_Enemy(candidates[Math.randomInt(candidates.length)], 0, 0));
+        .map((spot, spotId) => {
+          spot.enemyIds = this.randomTroopCandidateEnemyIds(spot.enemyIds, spot.tag, spotId);
+          return spot;
+        })
+        .filter(spot => spot.rate > Math.randomInt(100))
+        .forEach(spot => {
+          this._enemies.push(new Game_Enemy(spot.enemyIds[Math.randomInt(spot.enemyIds.length)], 0, 0));
         });
       this.makeUniqueNames();
     }
@@ -80,6 +81,22 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
       this._isRandomTroop = this.randomTroopCommand() !== undefined;
     }
     return this._isRandomTroop;
+  };
+
+  /**
+   * その抽選枠で選ばれる可能性のある敵キャラID一覧を返す
+   */
+  gameTroop.randomTroopCandidateEnemyIds = function (enemyIds, tag, spotId) {
+    return enemyIds.concat(
+      DataManager.enemiesWithTag(tag).map(data => data.id)
+    ).filter(enemyId => this.randomTroopAdditionalFilter(enemyId, spotId));
+  };
+
+  /**
+   * 抽選対象に対して追加でフィルタをかけたい場合の拡張用インターフェース
+   */
+  gameTroop.randomTroopAdditionalFilter = function (enemyId, index) {
+    return true;
   };
 }
 
