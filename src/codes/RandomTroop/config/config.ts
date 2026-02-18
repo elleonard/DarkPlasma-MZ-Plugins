@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/02/18",
+    version: "1.3.0",
+    description: "敵キャラY座標オフセット設定を追加",
+  },
+  {
     version: "1.2.1",
     description: "変数の命名を修正",
   },
@@ -50,6 +54,11 @@ const parameters: PluginParameterSchema[] = [
       en: "If sum of enemy image width is larger than this value, set enemy position front and back.",
     },
     default: 816,
+  }),
+  createNumberParam("offsetY", {
+    text: "敵キャラY座標オフセット",
+    description: "敵キャラを全体的に上下に動かします。増やすほど下に移動します。",
+    min: -1000,
   }),
   createStringParam("enemyTypeTag", {
     text: "敵種別タグ",

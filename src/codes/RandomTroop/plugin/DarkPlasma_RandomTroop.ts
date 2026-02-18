@@ -152,7 +152,7 @@ function Spriteset_Battle_RandomTroopMixIn(spritesetBattle: Spriteset_Battle) {
         (Graphics.boxWidth * (index % enemyPerLine)) / (enemyPerLine * 1.2) +
           (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line)
       );
-      let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine));
+      let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + settings.offsetY;
       sprite.setHome(x, y);
       if (maxx === 0 || minx === Infinity) {
         maxx = x;
