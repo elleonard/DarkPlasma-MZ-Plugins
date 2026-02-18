@@ -1,10 +1,11 @@
-// DarkPlasma_RandomTroop 1.2.1
+// DarkPlasma_RandomTroop 1.3.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/02/18 1.2.1 変数の命名を修正
+ * 2026/02/18 1.3.0 敵キャラY座標オフセット設定を追加
+ *            1.2.1 変数の命名を修正
  *            1.2.0 抽選枠の追加フィルタ用拡張インターフェースを追加
  * 2026/02/17 1.1.1 configをTypeScript移行
  * 2024/12/19 1.1.0 種別による敵キャラデータ一覧取得インターフェース追加
@@ -29,6 +30,13 @@
  * @type number
  * @default 816
  *
+ * @param offsetY
+ * @desc 敵キャラを全体的に上下に動かします。増やすほど下に移動します。
+ * @text 敵キャラY座標オフセット
+ * @type number
+ * @min -1000
+ * @default 0
+ *
  * @param enemyTypeTag
  * @desc 敵種別を判定するためのメモタグ名を指定します。
  * @text 敵種別タグ
@@ -45,7 +53,7 @@
  * @default []
  *
  * @help
- * version: 1.2.1
+ * version: 1.3.0
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -135,6 +143,7 @@
 
   const settings = {
     autoPositionWidth: Number(pluginParameters.autoPositionWidth || 816),
+    offsetY: Number(pluginParameters.offsetY || 0),
     enemyTypeTag: String(pluginParameters.enemyTypeTag || `enemyType`),
   };
 
@@ -266,7 +275,7 @@
           (Graphics.boxWidth * (index % enemyPerLine)) / (enemyPerLine * 1.2) +
             (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line),
         );
-        let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine));
+        let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + settings.offsetY;
         sprite.setHome(x, y);
         if (maxx === 0 || minx === Infinity) {
           maxx = x;
