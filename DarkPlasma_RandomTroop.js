@@ -1,9 +1,10 @@
-// DarkPlasma_RandomTroop 1.1.1
+// DarkPlasma_RandomTroop 1.2.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/02/18 1.2.0 抽選枠の追加フィルタ用拡張インターフェースを追加
  * 2026/02/17 1.1.1 configをTypeScript移行
  * 2024/12/19 1.1.0 種別による敵キャラデータ一覧取得インターフェース追加
  * 2023/10/24 1.0.2 ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正
@@ -43,7 +44,7 @@
  * @default []
  *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -181,10 +182,13 @@
       if (randomTroopCommand) {
         const args = parseArgs_randomTroop(randomTroopCommand.parameters[3]);
         args.troop
-          .filter((enemy) => enemy.rate > Math.randomInt(100))
-          .forEach((enemy) => {
-            const candidates = enemy.enemyIds.concat(DataManager.enemiesWithTag(enemy.tag).map((data) => data.id));
-            this._enemies.push(new Game_Enemy(candidates[Math.randomInt(candidates.length)], 0, 0));
+          .map((spot, spotId) => {
+            spot.enemyIds = this.randomTroopCandidateEnemyIds(spot.enemyIds, spot.tag, spotId);
+            return spot;
+          })
+          .filter((spot) => spot.rate > Math.randomInt(100))
+          .forEach((spot) => {
+            this._enemies.push(new Game_Enemy(spot.enemyIds[Math.randomInt(spot.enemyIds.length)], 0, 0));
           });
         this.makeUniqueNames();
       }
@@ -199,6 +203,20 @@
         this._isRandomTroop = this.randomTroopCommand() !== undefined;
       }
       return this._isRandomTroop;
+    };
+    /**
+     * その抽選枠で選ばれる可能性のある敵キャラID一覧を返す
+     */
+    gameTroop.randomTroopCandidateEnemyIds = function (enemyIds, tag, spotId) {
+      return enemyIds
+        .concat(DataManager.enemiesWithTag(tag).map((data) => data.id))
+        .filter((enemyId) => this.randomTroopAdditionalFilter(enemyId, spotId));
+    };
+    /**
+     * 抽選対象に対して追加でフィルタをかけたい場合の拡張用インターフェース
+     */
+    gameTroop.randomTroopAdditionalFilter = function (enemyId, index) {
+      return true;
     };
   }
   Game_Troop_RandomTroopMixIn(Game_Troop.prototype);
