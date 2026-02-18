@@ -1,10 +1,11 @@
-// DarkPlasma_RandomTroop 1.2.0
+// DarkPlasma_RandomTroop 1.2.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/02/18 1.2.0 抽選枠の追加フィルタ用拡張インターフェースを追加
+ * 2026/02/18 1.2.1 変数の命名を修正
+ *            1.2.0 抽選枠の追加フィルタ用拡張インターフェースを追加
  * 2026/02/17 1.1.1 configをTypeScript移行
  * 2024/12/19 1.1.0 種別による敵キャラデータ一覧取得インターフェース追加
  * 2023/10/24 1.0.2 ランダム出現フラグのキャッシュが戦闘ごとにクリアされない不具合を修正
@@ -44,7 +45,7 @@
  * @default []
  *
  * @help
- * version: 1.2.0
+ * version: 1.2.1
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -215,7 +216,7 @@
     /**
      * 抽選対象に対して追加でフィルタをかけたい場合の拡張用インターフェース
      */
-    gameTroop.randomTroopAdditionalFilter = function (enemyId, index) {
+    gameTroop.randomTroopAdditionalFilter = function (enemyId, spotId) {
       return true;
     };
   }
