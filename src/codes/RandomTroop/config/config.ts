@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/02/18",
+    version: "1.2.1",
+    description: "変数の命名を修正",
+  },
+  {
     version: "1.2.0",
     description: "抽選枠の追加フィルタ用拡張インターフェースを追加",
   },

@@ -95,7 +95,7 @@ function Game_Troop_RandomTroopMixIn(gameTroop: Game_Troop) {
   /**
    * 抽選対象に対して追加でフィルタをかけたい場合の拡張用インターフェース
    */
-  gameTroop.randomTroopAdditionalFilter = function (enemyId, index) {
+  gameTroop.randomTroopAdditionalFilter = function (enemyId, spotId) {
     return true;
   };
 }
