@@ -9,6 +9,7 @@ src/common/**/*.js
 src/excludes/
 src/excludeCommon/
 src/.gitignore
+src/.gitattributes
 release/
 stage/
 
