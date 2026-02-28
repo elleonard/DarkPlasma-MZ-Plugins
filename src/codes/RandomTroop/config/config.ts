@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/02/28",
+    version: "1.4.0",
+    description: "メモ欄に敵キャラ個別のY座標オフセット設定追加",
+  },
+  {
     date: "2026/02/18",
     version: "1.3.0",
     description: "敵キャラY座標オフセット設定を追加",
@@ -136,5 +141,9 @@ export const config = new ConfigDefinitionBuilder(
       <enemyType:スライム族LV1>
 
       種別はカンマ区切りで複数指定することも可能です。
-      <enemyType:スライム族LV1,スライム族LV2>`)
+      <enemyType:スライム族LV1,スライム族LV2>
+      
+      敵キャラのメモ欄で、自動配置のY座標オフセットを設定できます。
+      <randomTroopOffsetY: n>
+      nが大きいほど下に移動します。`)
   .build();

@@ -32,6 +32,7 @@ declare interface Spriteset_Battle {
 
 declare interface Sprite_Enemy {
   shiftXLeft(shiftX: number): void;
+  randomTroopOffsetY(): number;
   feedbackPositionToEnemy(): void;
   repositionForSideView(lineCount: number, positionCellIndex: number): void;
 }

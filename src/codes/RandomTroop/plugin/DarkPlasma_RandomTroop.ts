@@ -152,7 +152,7 @@ function Spriteset_Battle_RandomTroopMixIn(spritesetBattle: Spriteset_Battle) {
         (Graphics.boxWidth * (index % enemyPerLine)) / (enemyPerLine * 1.2) +
           (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line)
       );
-      let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + settings.offsetY;
+      let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + sprite.randomTroopOffsetY();
       sprite.setHome(x, y);
       if (maxx === 0 || minx === Infinity) {
         maxx = x;
@@ -214,6 +214,10 @@ function Sprite_Enemy_RandomTroopMixIn(spriteEnemy: Sprite_Enemy) {
   spriteEnemy.shiftXLeft = function (shiftX) {
     this._homeX -= shiftX;
     this.updatePosition();
+  };
+
+  spriteEnemy.randomTroopOffsetY = function () {
+    return settings.offsetY + Number(this._enemy?.enemy().meta.randomTroopOffsetY || 0);
   };
 
   spriteEnemy.feedbackPositionToEnemy = function () {
