@@ -1,9 +1,10 @@
-// DarkPlasma_RandomTroop 1.3.0
+// DarkPlasma_RandomTroop 1.4.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/02/28 1.4.0 メモ欄に敵キャラ個別のY座標オフセット設定追加
  * 2026/02/18 1.3.0 敵キャラY座標オフセット設定を追加
  *            1.2.1 変数の命名を修正
  *            1.2.0 抽選枠の追加フィルタ用拡張インターフェースを追加
@@ -53,7 +54,7 @@
  * @default []
  *
  * @help
- * version: 1.3.0
+ * version: 1.4.0
  * 敵グループのバトルイベント設定
  * 1ページ目でプラグインコマンドを設定することにより、
  * 設定内容に応じて遭遇時に敵グループの構成をランダムに決定します。
@@ -72,6 +73,10 @@
  *
  * 種別はカンマ区切りで複数指定することも可能です。
  * <enemyType:スライム族LV1,スライム族LV2>
+ *
+ * 敵キャラのメモ欄で、自動配置のY座標オフセットを設定できます。
+ * <randomTroopOffsetY: n>
+ * nが大きいほど下に移動します。
  *
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
  * DarkPlasma_EnemyBook
@@ -275,7 +280,7 @@
           (Graphics.boxWidth * (index % enemyPerLine)) / (enemyPerLine * 1.2) +
             (Graphics.boxWidth * currentEnemyLine) / (enemyPerLine * 1.2 * line),
         );
-        let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + settings.offsetY;
+        let y = base_y - depth - Math.ceil(depth * Math.pow(0.7, currentEnemyLine)) + sprite.randomTroopOffsetY();
         sprite.setHome(x, y);
         if (maxx === 0 || minx === Infinity) {
           maxx = x;
@@ -333,6 +338,9 @@
     spriteEnemy.shiftXLeft = function (shiftX) {
       this._homeX -= shiftX;
       this.updatePosition();
+    };
+    spriteEnemy.randomTroopOffsetY = function () {
+      return settings.offsetY + Number(this._enemy?.enemy().meta.randomTroopOffsetY || 0);
     };
     spriteEnemy.feedbackPositionToEnemy = function () {
       if (this._enemy) {
