@@ -1,6 +1,6 @@
 /// <reference path="./Scene_MessageMixIn.d.ts" />
 
-import { settings } from "./_build/DarkPlasma_Scene_MessageMixIn_parameters";
+import { settings } from "../config/_build/DarkPlasma_Scene_MessageMixIn_parameters";
 
 function Scene_MessageMixIn(sceneClass: Scene_Base) {
   const _create = sceneClass.create;
@@ -115,9 +115,11 @@ function Window_Selectable_MessageMixIn(windowClass: Window_Selectable) {
      * 表示が終了したらアクティブに戻す
      */
     if (!this.isAssociatedWithMessageWindow()) {
-      if ($gameMessage.isBusy() && this.active) {
-        this.deactivate();
-        this._deactivatedByMessage = true;
+      if ($gameMessage.isBusy()) {
+        if (this.active) {
+          this.deactivate();
+          this._deactivatedByMessage = true;
+        }
       } else if (this._deactivatedByMessage) {
         this.activate();
         this._deactivatedByMessage = false;
