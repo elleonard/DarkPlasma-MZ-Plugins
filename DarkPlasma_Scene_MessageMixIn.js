@@ -1,9 +1,11 @@
-// DarkPlasma_Scene_MessageMixIn 1.0.3
-// Copyright (c) 2023 DarkPlasma
+// DarkPlasma_Scene_MessageMixIn 1.0.4
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/03/04 1.0.4 メッセージ表示中に不必要に高い負荷がかかる不具合を修正
+ *                  configをTypeScript移行
  * 2025/02/23 1.0.3 ショップシーンに表示するとお金ウィンドウが複製されて位置がズレる不具合を修正
  * 2023/09/21 1.0.2 TextLogと併用するとログウィンドウを閉じることができない不具合を修正
  * 2023/01/18 1.0.1 すでにお金ウィンドウがあるシーンにはお金ウィンドウを再定義しない
@@ -25,7 +27,8 @@
  * @default []
  *
  * @help
- * version: 1.0.3
+ * version: 1.0.4
+ *
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
  * $gameMessage.add などでメッセージを追加した際に、
@@ -44,9 +47,11 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    scenes: JSON.parse(pluginParameters.scenes || '[]').map((e) => {
-      return String(e || ``);
-    }),
+    scenes: pluginParameters.scenes
+      ? JSON.parse(pluginParameters.scenes).map((e) => {
+          return String(e || ``);
+        })
+      : [],
   };
 
   function Scene_MessageMixIn(sceneClass) {
@@ -145,9 +150,11 @@
        * 表示が終了したらアクティブに戻す
        */
       if (!this.isAssociatedWithMessageWindow()) {
-        if ($gameMessage.isBusy() && this.active) {
-          this.deactivate();
-          this._deactivatedByMessage = true;
+        if ($gameMessage.isBusy()) {
+          if (this.active) {
+            this.deactivate();
+            this._deactivatedByMessage = true;
+          }
         } else if (this._deactivatedByMessage) {
           this.activate();
           this._deactivatedByMessage = false;
