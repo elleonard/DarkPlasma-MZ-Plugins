@@ -60,18 +60,20 @@ function Window_CustomKeyHandlerMixIn(key: string, windowClass: Window_Selectabl
 
   windowClass.playCustomKeySound = function (key) {
     const se = this.customKeySound(key);
-    if (!se) {
-      this.playCursorSound();
-    } else {
+    if (se) {
       AudioManager.playStaticSe(se);
     }
   };
 
   if (!windowClass.customKeySound) {
     windowClass.customKeySound = function (key) {
-      return undefined;
+      return this.defaultCustomKeySound();
     };
   }
+
+  windowClass.defaultCustomKeySound = function () {
+    return $dataSystem.sounds[0];
+  };
 }
 
 globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;

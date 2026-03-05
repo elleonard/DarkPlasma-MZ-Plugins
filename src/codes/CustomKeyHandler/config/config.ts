@@ -1,0 +1,74 @@
+import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
+import { } from '../../../../modules/config/createParameter.js';
+import { dedent } from '@qnighy/dedent';
+
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2026/03/05",
+    version: "2.0.0",
+    description: "configをTypeScript移行",
+  },
+  {
+    description: "customKeySoundのデフォルト戻り値変更",
+  },
+  {
+    date: '2023/05/09',
+    version: '1.3.0',
+    description: '操作SEの設定を追加',
+  },
+  {
+    date: '2022/09/10',
+    version: '1.2.2',
+    description: 'isCustomKeyEnabledを初回のみ定義するよう修正',
+  },
+  {
+    date: '2022/08/21',
+    version: '1.2.1',
+    description: 'typescript移行',
+  },
+  {
+    date: '2022/08/16',
+    version: '1.2.0',
+    description: 'キー有効チェックの仕組みを追加',
+  },
+  {
+    date: '2022/01/07',
+    version: '1.1.0',
+    description: 'ハンドラ名をキー名とは別に設定可能にする',
+  },
+  {
+    date: '2021/10/10',
+    version: '1.0.0',
+    description: '最初のバージョン',
+  },
+];
+
+export const config = new ConfigDefinitionBuilder(
+  "CustomKeyHandler",
+  2021,
+  "ウィンドウのハンドラにカスタムキーを追加する"
+)
+  .withHistories(histories)
+  .withLicense("MIT")
+  .withHelp(dedent`shiftなどを押した際のハンドラを追加できるようにします。
+
+      本プラグインは単体では機能しません。
+      本プラグインを必要とする別のプラグインと一緒に利用してください。
+
+      以下、プラグイン開発者向け
+      (例) shiftキーハンドラをすべての選択可能ウィンドウにハンドラ名hogeで追加する:
+      Window_CustomKeyHandlerMixIn("shift", Window_Selectable.prototype, "hoge");
+      ハンドラ名は省略するとキー名と同じになります。
+      このウィンドウに対して、 window.setHandler("hoge", method) などとして
+      ハンドラを追加することで、shiftキーでその操作を行わせることができます。
+
+      キーの有効状態をチェックしたい場合、
+      対象ウィンドウクラスの isCustomKeyEnabled メソッドをフックし、
+      keyが"hoge"の際に評価する条件式を記述してください。
+
+      操作SEを変更したい場合、
+      対象ウィンドウクラスの customKeySound メソッドを定義し、
+      MZ.AudioFile型のオブジェクトを返してください。
+      falsyな値を返すと何も再生しません。`)
+  .build();

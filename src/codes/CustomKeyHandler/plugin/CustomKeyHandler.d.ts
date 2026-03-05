@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
 
 declare interface CustomKeyMethod {
   _isTriggered: () => boolean;
@@ -11,4 +11,5 @@ declare interface Window_Selectable {
   isCustomKeyEnabled(key: string): boolean;
   playCustomKeySound(key: string): void;
   customKeySound(key: string): MZ.AudioFile|undefined;
+  defaultCustomKeySound(): MZ.AudioFile|undefined;
 }
