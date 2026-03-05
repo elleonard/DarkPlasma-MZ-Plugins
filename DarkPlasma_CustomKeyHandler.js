@@ -1,15 +1,17 @@
-// DarkPlasma_CustomKeyHandler 1.3.0
+// DarkPlasma_CustomKeyHandler 2.0.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/03/05 2.0.0 configをTypeScript移行
+ *                  customKeySoundのデフォルト戻り値変更
  * 2023/05/09 1.3.0 操作SEの設定を追加
  * 2022/09/10 1.2.2 isCustomKeyEnabledを初回のみ定義するよう修正
  * 2022/08/21 1.2.1 typescript移行
  * 2022/08/16 1.2.0 キー有効チェックの仕組みを追加
  * 2022/01/07 1.1.0 ハンドラ名をキー名とは別に設定可能にする
- * 2021/10/10 1.0.0 初版
+ * 2021/10/10 1.0.0 最初のバージョン
  */
 
 /*:
@@ -21,7 +23,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.3.0
+ * version: 2.0.0
  * shiftなどを押した際のハンドラを追加できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -41,6 +43,7 @@
  * 操作SEを変更したい場合、
  * 対象ウィンドウクラスの customKeySound メソッドを定義し、
  * MZ.AudioFile型のオブジェクトを返してください。
+ * falsyな値を返すと何も再生しません。
  */
 
 (() => {
@@ -89,22 +92,23 @@
           self.updateInputData();
           self.callHandler(handlerName || key);
         },
-        (self) => self.isCustomKeyEnabled(key)
-      )
+        (self) => self.isCustomKeyEnabled(key),
+      ),
     );
     windowClass.playCustomKeySound = function (key) {
       const se = this.customKeySound(key);
-      if (!se) {
-        this.playCursorSound();
-      } else {
+      if (se) {
         AudioManager.playStaticSe(se);
       }
     };
     if (!windowClass.customKeySound) {
       windowClass.customKeySound = function (key) {
-        return undefined;
+        return this.defaultCustomKeySound();
       };
     }
+    windowClass.defaultCustomKeySound = function () {
+      return $dataSystem.sounds[0];
+    };
   }
   globalThis.Window_CustomKeyHandlerMixIn = Window_CustomKeyHandlerMixIn;
 })();
