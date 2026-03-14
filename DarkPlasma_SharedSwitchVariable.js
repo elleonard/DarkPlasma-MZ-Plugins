@@ -1,9 +1,11 @@
-// DarkPlasma_SharedSwitchVariable 1.0.4
-// Copyright (c) 2021 DarkPlasma
+// DarkPlasma_SharedSwitchVariable 2.0.0
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/03/15 2.0.0 共有セーブデータの基礎実装をSharedSaveInfoに移行
+ *                  共有セーブに保存するプラグインコマンドを非推奨化
  * 2024/03/16 1.0.4 イベントテストが起動できない不具合を修正
  * 2024/03/12 1.0.3 TypeScript移行
  *                  TemplateEvent.jsがあるとゲームが起動しない不具合を修正
@@ -20,6 +22,9 @@
  * @target MZ
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
+ * @base DarkPlasma_SharedSaveInfo
+ * @orderAfter DarkPlasma_SharedSaveInfo
+ *
  * @param switchRangeList
  * @desc 共有セーブに保存するスイッチの範囲リストを指定します。
  * @text スイッチ範囲リスト
@@ -33,15 +38,23 @@
  * @default []
  *
  * @command saveSharedInfo
- * @text 共有セーブに保存する
- * @desc 共有セーブデータにスイッチ・変数を保存します。
+ * @text (非推奨)共有セーブに保存する
+ * @desc 本コマンドは次バージョンで廃止します。詳細はヘルプを参照してください。
  *
  * @help
- * version: 1.0.4
+ * version: 2.0.0
  * 全てのセーブデータで共有するスイッチ・変数を指定します。
  * 指定したスイッチ・変数の値は共有セーブデータ(save/shared.rmmzsave)に保存します。
  *
  * プラグインコマンドで共有セーブデータを更新できます。
+ *
+ * 共有セーブに保存するプラグインコマンドは次のバージョンアップで廃止するため、非推奨です。
+ * DarkPlasma_SharedSaveInfoのプラグインコマンドをご利用ください。
+ *
+ * 本プラグインの利用には下記プラグインを必要とします。
+ * DarkPlasma_SharedSaveInfo version:1.0.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_SharedSaveInfo
  */
 /*~struct~SwitchRange:
  * @param from
@@ -81,83 +94,59 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    switchRangeList: JSON.parse(pluginParameters.switchRangeList || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          from: Number(parsed.from || 1),
-          to: Number(parsed.to || 1),
-        };
-      })(e || '{}');
-    }),
-    variableRangeList: JSON.parse(pluginParameters.variableRangeList || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          from: Number(parsed.from || 1),
-          to: Number(parsed.to || 1),
-        };
-      })(e || '{}');
-    }),
+    switchRangeList: pluginParameters.switchRangeList
+      ? JSON.parse(pluginParameters.switchRangeList).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  from: Number(parsed.from || 1),
+                  to: Number(parsed.to || 1),
+                };
+              })(e)
+            : { from: 1, to: 1 };
+        })
+      : [],
+    variableRangeList: pluginParameters.variableRangeList
+      ? JSON.parse(pluginParameters.variableRangeList).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  from: Number(parsed.from || 1),
+                  to: Number(parsed.to || 1),
+                };
+              })(e)
+            : { from: 1, to: 1 };
+        })
+      : [],
   };
 
-  PluginManager.registerCommand(pluginName, 'saveSharedInfo', function () {
+  const command_saveSharedInfo = 'saveSharedInfo';
+
+  PluginManager.registerCommand(pluginName, command_saveSharedInfo, function () {
     DataManager.saveSharedInfo();
   });
   function DataManager_SharedSwitchVariableMixIn(dataManager) {
-    const _setupEventTest = dataManager.setupEventTest;
-    dataManager.setupEventTest = function () {
-      _setupEventTest.call(this);
-      this.loadSharedInfo();
+    const _onLoadSharedInfo = dataManager.onLoadSharedInfo;
+    dataManager.onLoadSharedInfo = function (sharedInfo) {
+      const sharedSwitches = sharedInfo.switches || [];
+      sharedSwitches.forEach((sharedSwitch) => {
+        $gameSwitches.setValue(sharedSwitch.id, sharedSwitch.value);
+      });
+      const sharedVariables = sharedInfo.variables || [];
+      sharedVariables.forEach((sharedVariable) => {
+        $gameVariables.setValue(sharedVariable.id, sharedVariable.value);
+      });
+      return _onLoadSharedInfo.call(this, sharedInfo);
     };
-    const _extractSaveContents = dataManager.extractSaveContents;
-    dataManager.extractSaveContents = function (contents) {
-      _extractSaveContents.call(this, contents);
-      this.loadSharedInfo();
-    };
-    dataManager.isSharedInfoLoaded = function () {
-      return this._isSharedInfoLoaded;
-    };
-    dataManager.loadSharedInfo = function () {
-      this._isSharedInfoLoaded = false;
-      StorageManager.loadObject('shared')
-        .then((sharedInfo) => {
-          const sharedSwitches = sharedInfo.switches || [];
-          sharedSwitches.forEach((sharedSwitch) => {
-            $gameSwitches.setValue(sharedSwitch.id, sharedSwitch.value);
-          });
-          const sharedVariables = sharedInfo.variables || [];
-          sharedVariables.forEach((sharedVariable) => {
-            $gameVariables.setValue(sharedVariable.id, sharedVariable.value);
-          });
-          this._isSharedInfoLoaded = true;
-          return 0;
-        })
-        .catch(() => {
-          /**
-           * セーブデータが存在しなかった場合にもロード完了扱いにする
-           */
-          this._isSharedInfoLoaded = true;
-        });
-    };
+    const _makeSharedInfo = dataManager.makeSharedInfo;
     dataManager.makeSharedInfo = function () {
       return {
+        ..._makeSharedInfo.call(this),
         switches: this.sharedSaveSwitches(),
         variables: this.sharedSaveVariables(),
       };
-    };
-    const _saveGame = dataManager.saveGame;
-    dataManager.saveGame = function (savefileId) {
-      this.saveSharedInfo();
-      return _saveGame.call(this, savefileId);
-    };
-    dataManager.saveSharedInfo = function () {
-      StorageManager.saveObject('shared', this.makeSharedInfo());
-    };
-    const _setupNewGame = dataManager.setupNewGame;
-    dataManager.setupNewGame = function () {
-      _setupNewGame.call(this);
-      this.loadSharedInfo();
     };
     dataManager.sharedSaveSwitches = function () {
       return settings.switchRangeList
@@ -185,13 +174,6 @@
     };
   }
   DataManager_SharedSwitchVariableMixIn(DataManager);
-  function Scene_Map_SharedSwitchVariableMixIn(sceneMap) {
-    const _isReady = sceneMap.isReady;
-    sceneMap.isReady = function () {
-      return _isReady.call(this) && DataManager.isSharedInfoLoaded();
-    };
-  }
-  Scene_Map_SharedSwitchVariableMixIn(Scene_Map.prototype);
   /**
    * 指定した数値から開始する連番の配列を返す
    * @param {number} length 数値
