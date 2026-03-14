@@ -1,5 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../Scene_MessageMixIn/Scene_MessageMixIn.d.ts" />
+/// <reference path="../../Scene_MessageMixIn/plugin/Scene_MessageMixIn.d.ts" />
 
 declare namespace ColorManager {
   function focusInsideColor(): string;
