@@ -2,8 +2,12 @@
 
 function Game_Map_CleanUpDeletedEventMixIn(gameMap: Game_Map) {
   gameMap.cleanUpDeletedEvents = function () {
-    this._events = this._events.filter(event => !event || !!event.event());
-  };
+    const events: Game_Event[] = [];
+    this._events.filter(event => event && event.event()).forEach(event => {
+      events[event.eventId()] = event;
+    });
+    this._events = events;
+  }
 }
 
 Game_Map_CleanUpDeletedEventMixIn(Game_Map.prototype);
