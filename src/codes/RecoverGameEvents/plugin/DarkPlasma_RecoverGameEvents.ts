@@ -1,7 +1,7 @@
-/// <reference path="./CleanUpDeletedEvents.d.ts" />
+/// <reference path="./RecoverGameEvents.d.ts" />
 
 function Game_Map_CleanUpDeletedEventMixIn(gameMap: Game_Map) {
-  gameMap.cleanUpDeletedEvents = function () {
+  gameMap.recoverEvents = function () {
     const events: Game_Event[] = [];
     this._events.filter(event => event && event.event()).forEach(event => {
       events[event.eventId()] = event;
@@ -16,7 +16,7 @@ function Scene_Map_CleanUpDeletedEventsMixIn(sceneMap: Scene_Map) {
   const _onMapLoaded = sceneMap.onMapLoaded;
   sceneMap.onMapLoaded = function () {
     _onMapLoaded.call(this);
-    $gameMap.cleanUpDeletedEvents();
+    $gameMap.recoverEvents();
   };
 }
 
