@@ -24,5 +24,5 @@ export const config = new ConfigDefinitionBuilder(
   .withLicense("MIT")
   .withHelp(dedent`ゲームのバージョンアップによって削除されたイベントも、
     セーブデータ内には残ってしまいます。
-    本プラグインは、その残ってしまったセーブデータを除去し、意図しないエラーを防ぎます。`)
+    本プラグインは、セーブデータに残ってしまったゴミイベントを除去し、意図しないエラーを防ぎます。`)
   .build();
