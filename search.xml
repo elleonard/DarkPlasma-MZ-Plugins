@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>セーブデータのイベント配列を復元する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2026/03/21/recover-game-events/"/>
+      <url>/DarkPlasma-MZ-Plugins/2026/03/21/recover-game-events/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>本プラグインは、何らかの手違いによって、バージョンIDの更新なしにイベントが削除されたり、イベント配列のキーが変更されることによるセーブデータ互換性の問題に対処するプラグインです。<br>通常のプロジェクトでは必要ないプラグインです。必要な状況に陥った場合のみ導入を検討してください。</p><h2 id="セーブデータ互換性の問題"><a href="#セーブデータ互換性の問題" class="headerlink" title="セーブデータ互換性の問題"></a>セーブデータ互換性の問題</h2><p>RPGツクールMZのセーブデータには、セーブしたマップ内に配置されているイベントの状態も含まれます。<br>イベントの状態は、イベントIDをキーとした配列が期待される形式ですが、この形式が崩れると、イベントに関する挙動が全体的に壊れたり、ロードした直後にエラーで停止してしまいます。</p><p>この形式が崩れる原因は以下が考えられます。</p><ul><li>System.jsonのバージョンIDの更新なしにマップ上のイベントを削除したり、イベントIDを変更した</li><li>何か配列の形式を破壊するプラグインを導入した</li></ul><p>公式のMZエディタは保存時にバージョンIDを自動更新するため、前者は通常のユースケースでは発生しません。(発生したとしても、その後バージョンIDを更新することで解決できます)<br>明確に後者であるとわかっている場合に、解決案のひとつとして本プラグインの利用を検討してください。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_RecoverGameEvents.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> イベント </tag>
+            
+            <tag> セーブデータ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>戦闘中一定回数のみ使えるスキル/アイテム</title>
       <link href="/DarkPlasma-MZ-Plugins/2025/09/17/usable-count-in-battle/"/>
       <url>/DarkPlasma-MZ-Plugins/2025/09/17/usable-count-in-battle/</url>
