@@ -4,6 +4,11 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/03/31",
+    version: "2.2.0",
+    description: "ハイライトグループ設定に敵キャラを追加",
+  },
+  {
     date: "2026/01/08",
     version: "2.1.0",
     description: "ハイライトグループ設定に武器・防具を追加",
@@ -95,6 +100,14 @@ const structHighlightGroup = createStruct(
         type: "armor",
         text: "防具",
         description: "名前をハイライトしたい防具を指定します。",
+      }
+    ),
+    createDatabaseArrayParam(
+      "enemies",
+      {
+        type: "enemy",
+        text: "敵キャラ",
+        description: "名前をハイライトしたい敵キャラを指定します。",
       }
     ),
   ]

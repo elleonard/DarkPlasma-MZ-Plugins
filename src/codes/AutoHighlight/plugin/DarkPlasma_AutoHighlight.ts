@@ -143,6 +143,12 @@ function Scene_Boot_AutoHighlightMixIn(sceneBoot: Scene_Boot) {
           highlightWords.add(new HighlightWord(name, highlightGroup.color));
         }
       });
+      highlightGroup.enemies.forEach(enemyId => {
+        const name = $dataEnemies[enemyId]?.name;
+        if (name) {
+          highlightWords.add(new HighlightWord(name, highlightGroup.color));
+        }
+      });
     });
   };
 }
