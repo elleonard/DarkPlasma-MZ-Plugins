@@ -28,7 +28,7 @@ export class Window_DetailText extends Window_Scrollable {
   }
 
   drawDetail(detail: string) {
-    this.drawTextEx(detail, 0, this.baseLineY());
+    this.drawTextEx(detail, 0, this.baseLineY(), this.innerWidth);
   }
 
   baseLineY() {
