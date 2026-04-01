@@ -18,5 +18,5 @@ export const config = new ConfigDefinitionBuilder(
 )
   .withHistories(histories)
   .withLicense("MIT")
-  .withHelp(dedent`戦闘背景を画面の大きさに合わせて拡大・縮小します。`)
+  .withHelp(dedent`戦闘背景を画面の大きさに合わせて拡大します。`)
   .build();
