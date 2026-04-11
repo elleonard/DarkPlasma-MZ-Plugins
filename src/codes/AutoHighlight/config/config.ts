@@ -4,6 +4,11 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/04/11",
+    version: "2.3.0",
+    description: "選択ウィンドウなどに対応",
+  },
+  {
     date: "2026/03/31",
     version: "2.2.0",
     description: "ハイライトグループ設定に敵キャラを追加",
@@ -144,5 +149,9 @@ export const config = new ConfigDefinitionBuilder(
     name: "DarkPlasma_SetColorByCode",
     version: "1.0.0",
   })
-  .withHelp(`指定した語句を指定した色でハイライトします。`)
+  .withHelp(`指定した語句を指定した色でハイライトします。
+    
+    テキストの描画方式により、ハイライトの方法が異なります。
+    drawText方式: 完全一致
+    drawTextEx方式: 部分一致`)
   .build();

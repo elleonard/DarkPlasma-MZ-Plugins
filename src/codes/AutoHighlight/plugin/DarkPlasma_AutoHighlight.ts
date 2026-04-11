@@ -60,19 +60,17 @@ class HighlightWords {
   }
 
   /**
-   * ハイライト色を返す
-   * @param {string} word ハイライトする語句
-   * @return {string|number}
+   * ハイライト色の文字列表現を返す
    */
-  findColorByWord(word: string): string | number {
-    if (!this._colors) {
+  findColorByWord(word: string): string | undefined {
+    if (!this._colors || this._needsRefreshCache) {
       this.refreshCache();
     }
     return this._colors[word];
   }
 
   /**
-   * テキスト内の指定語句をハイライトして返す
+   * テキスト内の指定語句をハイライトして返す (drawTextEx用)
    * @param {string} text ハイライト対象テキスト
    * @return {string}
    */
@@ -167,6 +165,21 @@ function Window_AutoHighlightMixIn(windowClass: Window_Base) {
 
   windowClass.isHighlightWindow = function () {
     return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
+  };
+
+  const _drawText = windowClass.drawText;
+  windowClass.drawText = function (text, x, y, maxWidth, align) {
+    if (this.isHighlightWindow()) {
+      const autoHighlightColor = highlightWords.findColorByWord(text);
+      if (autoHighlightColor !== undefined) {
+        const originalTextColor = this.contents.textColor;
+        this.changeTextColor(autoHighlightColor);
+        _drawText.call(this, text, x, y, maxWidth, align);
+        this.changeTextColor(originalTextColor);
+        return;
+      }
+    }
+    _drawText.call(this, text, x, y, maxWidth, align);
   };
 }
 
