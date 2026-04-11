@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 2.2.0
+// DarkPlasma_AutoHighlight 2.3.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/04/11 2.3.0 選択ウィンドウなどに対応
  * 2026/03/31 2.2.0 ハイライトグループ設定に敵キャラを追加
  * 2026/01/08 2.1.0 ハイライトグループ設定に武器・防具を追加
  * 2025/07/16 2.0.2 正規表現における特殊文字を含む語句をハイライトしようとするとエラーで停止する不具合を修正
@@ -38,8 +39,12 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 2.2.0
+ * version: 2.3.0
  * 指定した語句を指定した色でハイライトします。
+ *
+ *     テキストの描画方式により、ハイライトの方法が異なります。
+ *     drawText方式: 完全一致
+ *     drawTextEx方式: 部分一致
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_SetColorByCode version:1.0.0
@@ -210,18 +215,16 @@
       this._needsRefreshCache = false;
     }
     /**
-     * ハイライト色を返す
-     * @param {string} word ハイライトする語句
-     * @return {string|number}
+     * ハイライト色の文字列表現を返す
      */
     findColorByWord(word) {
-      if (!this._colors) {
+      if (!this._colors || this._needsRefreshCache) {
         this.refreshCache();
       }
       return this._colors[word];
     }
     /**
-     * テキスト内の指定語句をハイライトして返す
+     * テキスト内の指定語句をハイライトして返す (drawTextEx用)
      * @param {string} text ハイライト対象テキスト
      * @return {string}
      */
@@ -305,6 +308,20 @@
     };
     windowClass.isHighlightWindow = function () {
       return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
+    };
+    const _drawText = windowClass.drawText;
+    windowClass.drawText = function (text, x, y, maxWidth, align) {
+      if (this.isHighlightWindow()) {
+        const autoHighlightColor = highlightWords.findColorByWord(text);
+        if (autoHighlightColor !== undefined) {
+          const originalTextColor = this.contents.textColor;
+          this.changeTextColor(autoHighlightColor);
+          _drawText.call(this, text, x, y, maxWidth, align);
+          this.changeTextColor(originalTextColor);
+          return;
+        }
+      }
+      _drawText.call(this, text, x, y, maxWidth, align);
     };
   }
   Window_AutoHighlightMixIn(Window_Base.prototype);
