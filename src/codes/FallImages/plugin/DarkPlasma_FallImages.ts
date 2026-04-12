@@ -1,6 +1,7 @@
 /// <reference path="./FallImages.d.ts" />
 
 import { pluginName } from '../../../common/pluginName';
+import { isMapMetaDataAvailable } from '../../../common/mapMetaData';
 import { command_fadeOutFall, command_startFall, command_stopFall } from '../config/_build/DarkPlasma_FallImages_commands';
 import { FallImages_FallImage, settings } from '../config/_build/DarkPlasma_FallImages_parameters';
 
@@ -163,8 +164,9 @@ Game_System_FallImageMixIn(Game_System.prototype);
 
 function Game_Map_FallImageMixIn(gameMap: Game_Map) {
   gameMap.autoFallImageId = function () {
-    const metaTag = $dataMap?.meta.autoFallImage;
-    return metaTag ? Number(metaTag) : undefined;
+    return isMapMetaDataAvailable()
+      ? Number($dataMap!.meta.autoFallImage)
+      : undefined;
   };
 
   const _setup = gameMap.setup;

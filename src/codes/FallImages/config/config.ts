@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/04/13",
+    version: "1.1.1",
+    description: "イベントテストでエラーが発生する不具合を修正",
+  },
+  {
     date: "2025/11/15",
     version: "1.1.0",
     description: "自動で降らせるマップメモタグを追加",
