@@ -1,9 +1,10 @@
-// DarkPlasma_FallImages 1.1.0
+// DarkPlasma_FallImages 1.1.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/04/13 1.1.1 イベントテストでエラーが発生する不具合を修正
  * 2025/11/15 1.1.0 自動で降らせるマップメモタグを追加
  *            1.0.6 configをTypeScript移行
  * 2024/02/08 1.0.5 TypeScript移行
@@ -47,7 +48,7 @@
  * @desc 振らせている画像をフェードアウトさせ、止ませます。
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 何らかの画像を降らせる画面演出を提供します。
  *
  * プラグインパラメータにIDと画像ファイルを設定し、
@@ -136,6 +137,14 @@
   const pluginName = document.currentScript.src.replace(/^.*\/(.*).js$/, function () {
     return arguments[1];
   });
+
+  /**
+   * マップのメタデータを取得できるか
+   * @return {boolean}
+   */
+  function isMapMetaDataAvailable() {
+    return $dataMap && $dataMap.meta;
+  }
 
   const command_startFall = 'startFall';
 
@@ -302,8 +311,7 @@
   Game_System_FallImageMixIn(Game_System.prototype);
   function Game_Map_FallImageMixIn(gameMap) {
     gameMap.autoFallImageId = function () {
-      const metaTag = $dataMap?.meta.autoFallImage;
-      return metaTag ? Number(metaTag) : undefined;
+      return isMapMetaDataAvailable() ? Number($dataMap.meta.autoFallImage) : undefined;
     };
     const _setup = gameMap.setup;
     gameMap.setup = function (mapId) {
