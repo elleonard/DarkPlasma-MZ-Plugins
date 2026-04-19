@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/04/20",
+    version: "1.0.1",
+    description: "全回復すると指定ステートの歩数情報が消えてしまう不具合を修正",
+  },
+  {
     date: "2026/01/18",
     version: "1.0.0",
     description: "最初のバージョン",
