@@ -7,7 +7,7 @@
  * 2022/11/06 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc パーティの先頭（リーダー）を変更する
  * @author DarkPlasma
  * @license MIT
