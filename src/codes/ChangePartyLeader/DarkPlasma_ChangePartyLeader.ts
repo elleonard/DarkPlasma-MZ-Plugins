@@ -9,7 +9,7 @@ PluginManager.registerCommand(pluginName, command_changeLeader, function(this: G
   if (!actor || actor.index() === 0) {
     return;
   }
-  this._leaderActorIdBeforeChange = $gameParty.leader().actorId();
+  this._leaderActorIdBeforeChange = $gameParty.leader()!.actorId();
   $gameParty.swapOrder(0, actor.index());
 });
 
