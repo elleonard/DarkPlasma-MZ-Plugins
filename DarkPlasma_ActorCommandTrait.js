@@ -1,10 +1,11 @@
-// DarkPlasma_ActorCommandTrait 1.0.1
+// DarkPlasma_ActorCommandTrait 1.1.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/04/28 1.0.1 設定をtypescript移行
+ * 2026/04/28 1.1.0 アクターごとに異なる特徴にする機能を追加
+ *            1.0.1 設定をtypescript移行
  * 2023/09/17 1.0.0 最初のバージョン
  */
 
@@ -20,20 +21,44 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * アクターコマンドを変更する特徴を提供します。
  *
- * その特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
+ * この特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
  * 以下のように記述してください。
- * この特徴が複数設定されている場合、
- * 優先度の最も大きいものが使用されます。
- * 優先度を省略すると、優先度0として扱われます。
  * <actorCommand:
  *   priority:優先度
+ *   actorId:アクターID
  *   コマンド定義
  *   コマンド定義
  *   ...
  * >
+ *
+ * この特徴を複数追加したい場合は以下のように記述してください。
+ * <actorCommand:
+ *   {
+ *     priority:優先度
+ *     actorId:アクターID
+ *     コマンド定義
+ *     コマンド定義
+ *     ...
+ *   },
+ *   {
+ *     priority:優先度
+ *     actorId:アクターID
+ *     コマンド定義
+ *     コマンド定義
+ *     ...
+ *   }
+ * >
+ *
+ * 優先度
+ * この特徴が複数設定されている場合、
+ * 優先度の最も大きいものが使用されます。
+ * 優先度を省略すると、優先度0として扱われます。
+ *
+ * アクターID
+ * 指定したアクターIDのみに有効な特徴になります。
  *
  * コマンド定義の書き方
  * attack
@@ -65,6 +90,23 @@
  *   skill/36
  * >
  *
+ * 記述例3: (アクターごとに異なるコマンドにする)
+ * <actorCommand:
+ *   {
+ *     actorId:1
+ *     skill/8
+ *     skill/9
+ *     item
+ *   },
+ *   {
+ *     actorId:2
+ *     skill/6
+ *     skill/8
+ *     skill/9
+ *     item
+ *   }
+ * >
+ *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_AllocateUniqueTraitId version:1.0.1
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
@@ -83,10 +125,11 @@
   }
 
   class Data_ActorCommandTrait {
-    constructor(id, priority, commands) {
+    constructor(id, priority, commands, actorId) {
       this._id = id;
       this._priority = priority;
       this._commands = commands;
+      this._actorId = actorId;
     }
     static fromMeta(meta) {
       const lines = meta
@@ -94,8 +137,9 @@
         .map((line) => line.trim())
         .filter((line) => !!line);
       const priority = Number(lines.find((line) => line.startsWith('priority:'))?.split(':')[1] || 0);
+      const actorId = Number(lines.find((line) => line.startsWith('actorId:'))?.split(':')[1] || 0) || undefined;
       const commands = lines
-        .filter((line) => !line.startsWith('priority:'))
+        .filter((line) => !line.startsWith('priority:') && !line.startsWith('actorId:'))
         .map((line) => {
           const splitted = line.split('/');
           const symbol = splitted[0];
@@ -104,7 +148,7 @@
           }
           return Data_ActorCommand.fromSymbolAndDataId(symbol, splitted[1] ? Number(splitted[1]) : undefined);
         });
-      const result = new Data_ActorCommandTrait(autoIncrementId, priority, commands);
+      const result = new Data_ActorCommandTrait(autoIncrementId, priority, commands, actorId);
       $dataActorCommandTraits[autoIncrementId++] = result;
       return result;
     }
@@ -116,6 +160,9 @@
     }
     get commands() {
       return this._commands;
+    }
+    get actorId() {
+      return this._actorId;
     }
   }
   class Data_ActorCommand {
@@ -167,11 +214,14 @@
     dataManager.extractMetadata = function (data) {
       _extractMetadata.call(this, data);
       if (hasTraits(data) && data.meta.actorCommand) {
-        const trait = Data_ActorCommandTrait.fromMeta(String(data.meta.actorCommand));
-        data.traits.push({
-          code: actorCommandTraitId.id,
-          dataId: trait.id,
-          value: 0,
+        const actorCommandBlocks = String(data.meta.actorCommand).split(',');
+        actorCommandBlocks.forEach((block) => {
+          const trait = Data_ActorCommandTrait.fromMeta(block.replaceAll(/\{/g, '').replaceAll(/\}/g, ''));
+          data.traits.push({
+            code: actorCommandTraitId.id,
+            dataId: trait.id,
+            value: 0,
+          });
         });
       }
     };
@@ -196,7 +246,10 @@
     const _makeCommandList = windowClass.makeCommandList;
     windowClass.makeCommandList = function () {
       if (this._actor) {
-        const traits = this._actor.traits(actorCommandTraitId.id).map((trait) => $dataActorCommandTraits[trait.dataId]);
+        const traits = this._actor
+          .traits(actorCommandTraitId.id)
+          .map((trait) => $dataActorCommandTraits[trait.dataId])
+          .filter((trait) => !trait.actorId || trait.actorId === this._actor?.actorId());
         const trait = traits.length > 0 ? traits.reduce((a, b) => (a.priority > b.priority ? a : b)) : undefined;
         if (trait) {
           trait.commands.forEach((command) => {
