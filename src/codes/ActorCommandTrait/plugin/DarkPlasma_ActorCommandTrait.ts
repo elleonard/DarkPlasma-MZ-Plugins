@@ -3,17 +3,24 @@
 import { pluginName } from '../../../common/pluginName';
 import { hasTraits } from '../../../common/data/hasTraits';
 
-type ActorCommandSymbol = "attack"|"skill"|"guard"|"item";
+type ActorCommandSymbol = "attack" | "skill" | "guard" | "item";
 
 class Data_ActorCommandTrait {
   _id: number;
   _priority: number;
+  _actorId?: number;
   _commands: Data_ActorCommand[];
 
-  constructor(id: number, priority: number, commands: Data_ActorCommand[]) {
+  constructor(
+    id: number,
+    priority: number,
+    commands: Data_ActorCommand[],
+    actorId?: number
+  ) {
     this._id = id;
     this._priority = priority;
     this._commands = commands;
+    this._actorId = actorId;
   }
 
   static fromMeta(meta: string) {
@@ -21,7 +28,8 @@ class Data_ActorCommandTrait {
       .map(line => line.trim())
       .filter(line => !!line);
     const priority = Number(lines.find(line => line.startsWith('priority:'))?.split(':')[1] || 0);
-    const commands = lines.filter(line => !line.startsWith('priority:'))
+    const actorId = Number(lines.find(line => line.startsWith("actorId:"))?.split(':')[1] || 0) || undefined;
+    const commands = lines.filter(line => !line.startsWith('priority:') && !line.startsWith('actorId:'))
       .map(line => {
         const splitted = line.split('/');
         const symbol = splitted[0];
@@ -34,7 +42,8 @@ class Data_ActorCommandTrait {
     const result = new Data_ActorCommandTrait(
       autoIncrementId,
       priority,
-      commands
+      commands,
+      actorId
     );
     $dataActorCommandTraits[autoIncrementId++] = result;
     return result;
@@ -50,6 +59,10 @@ class Data_ActorCommandTrait {
 
   get commands() {
     return this._commands;
+  }
+
+  get actorId() {
+    return this._actorId;
   }
 }
 
@@ -98,7 +111,7 @@ class Data_ActorCommand {
 
 let autoIncrementId = 0;
 const $dataActorCommandTraits: Data_ActorCommandTrait[] = [];
-const $dataActorCommands: {[key: string]: Data_ActorCommand} = {
+const $dataActorCommands: { [key: string]: Data_ActorCommand } = {
   attack: new Data_ActorCommand("attack"),
   skill: new Data_ActorCommand("skill"),
   guard: new Data_ActorCommand("guard"),
@@ -112,11 +125,16 @@ function DataManager_ActorCommandTraitMixIn(dataManager: typeof DataManager) {
   dataManager.extractMetadata = function (data) {
     _extractMetadata.call(this, data);
     if (hasTraits(data) && data.meta.actorCommand) {
-      const trait = Data_ActorCommandTrait.fromMeta(String(data.meta.actorCommand));
-      data.traits.push({
-        code: actorCommandTraitId.id,
-        dataId: trait.id,
-        value: 0,
+      const actorCommandBlocks = String(data.meta.actorCommand).split(",");
+      actorCommandBlocks.forEach(block => {
+        const trait = Data_ActorCommandTrait.fromMeta(
+          block.replaceAll(/\{/g, "").replaceAll(/\}/g, "")
+        );
+        data.traits.push({
+          code: actorCommandTraitId.id,
+          dataId: trait.id,
+          value: 0,
+        });
       });
     }
   };
@@ -148,7 +166,8 @@ function Window_ActorCommand_ActorCommandTraitMixIn(windowClass: Window_ActorCom
     if (this._actor) {
       const traits = this._actor
         .traits(actorCommandTraitId.id)
-        .map(trait => $dataActorCommandTraits[trait.dataId]);
+        .map(trait => $dataActorCommandTraits[trait.dataId])
+        .filter(trait => !trait.actorId || trait.actorId === this._actor?.actorId());
       const trait = traits.length > 0
         ? traits.reduce((a, b) => a.priority > b.priority ? a : b)
         : undefined;

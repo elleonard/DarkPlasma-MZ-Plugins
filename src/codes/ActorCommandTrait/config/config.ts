@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/04/28",
+    version: "1.1.0",
+    description: "アクターごとに異なる特徴にする機能を追加",
+  },
+  {
     version: "1.0.1",
     description: "設定をtypescript移行",
   },
@@ -30,17 +34,41 @@ export const config = new ConfigDefinitionBuilder(
   })
   .withHelp(dedent`アクターコマンドを変更する特徴を提供します。
 
-      その特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
+      この特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
       以下のように記述してください。
-      この特徴が複数設定されている場合、
-      優先度の最も大きいものが使用されます。
-      優先度を省略すると、優先度0として扱われます。
       <actorCommand:
         priority:優先度
+        actorId:アクターID
         コマンド定義
         コマンド定義
         ...
       >
+
+      この特徴を複数追加したい場合は以下のように記述してください。
+      <actorCommand:
+        {
+          priority:優先度
+          actorId:アクターID
+          コマンド定義
+          コマンド定義
+          ...
+        },
+        {
+          priority:優先度
+          actorId:アクターID
+          コマンド定義
+          コマンド定義
+          ...
+        }
+      >
+
+      優先度
+      この特徴が複数設定されている場合、
+      優先度の最も大きいものが使用されます。
+      優先度を省略すると、優先度0として扱われます。
+
+      アクターID
+      指定したアクターIDのみに有効な特徴になります。
 
       コマンド定義の書き方
       attack
@@ -70,5 +98,22 @@ export const config = new ConfigDefinitionBuilder(
         priority:1
         skill/35
         skill/36
+      >
+        
+      記述例3: (アクターごとに異なるコマンドにする)
+      <actorCommand:
+        {
+          actorId:1
+          skill/8
+          skill/9
+          item
+        },
+        {
+          actorId:2
+          skill/6
+          skill/8
+          skill/9
+          item
+        }
       >`)
   .build();
