@@ -1,7 +1,7 @@
 /// <reference path="./ActorCommandTrait.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { hasTraits } from '../../common/data/hasTraits';
+import { pluginName } from '../../../common/pluginName';
+import { hasTraits } from '../../../common/data/hasTraits';
 
 type ActorCommandSymbol = "attack"|"skill"|"guard"|"item";
 

@@ -1,29 +1,34 @@
-DarkPlasma_ActorCommandTrait:
-  name: DarkPlasma_ActorCommandTrait
-  year: 2023
-  license: MIT
-  histories:
-    - date: 2023/09/17
-      version: 1.0.0
-      description: '公開'
+import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
+import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
+import {} from '../../../../modules/config/createParameter.js';
+import { dedent } from '@qnighy/dedent';
 
-  locates:
-    - ja
-  plugindesc:
-    ja: 'アクターコマンドを変更する特徴'
-  parameters: []
-  commands: []
-  structures:
-  dependencies:
-    base:
-      - name: DarkPlasma_AllocateUniqueTraitId
-        version: 1.0.1
-    orderAfter:
-      - name: DarkPlasma_AllocateUniqueTraitId
-    orderBefore: []
-  help:
-    ja: |
-      アクターコマンドを変更する特徴を提供します。
+const histories: PluginHistorySchema[] = [
+  {
+    date: "2026/04/28",
+    version: "1.0.1",
+    description: "設定をtypescript移行",
+  },
+  {
+    date: "2023/09/17",
+    version: "1.0.0",
+    description: "最初のバージョン",
+  }
+];
+
+export const config = new ConfigDefinitionBuilder(
+  "ActorCommandTrait",
+  2026,
+  "アクターコマンドを変更する特徴"
+)
+  .withHistories(histories)
+  .withLicense("MIT")
+  .withBaseDependency({
+    name: "DarkPlasma_AllocateUniqueTraitId",
+    version: "1.0.1",
+    order: 'after',
+  })
+  .withHelp(dedent`アクターコマンドを変更する特徴を提供します。
 
       その特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
       以下のように記述してください。
@@ -65,4 +70,5 @@ DarkPlasma_ActorCommandTrait:
         priority:1
         skill/35
         skill/36
-      >
+      >`)
+  .build();
