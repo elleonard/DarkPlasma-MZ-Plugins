@@ -1,10 +1,11 @@
-// DarkPlasma_ActorCommandTrait 1.0.0
-// Copyright (c) 2023 DarkPlasma
+// DarkPlasma_ActorCommandTrait 1.0.1
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/09/17 1.0.0 公開
+ * 2026/04/28 1.0.1 設定をtypescript移行
+ * 2023/09/17 1.0.0 最初のバージョン
  */
 
 /*:
@@ -19,7 +20,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * アクターコマンドを変更する特徴を提供します。
  *
  * その特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
@@ -217,7 +218,7 @@
                   command.displayName(),
                   command.symbol,
                   this._actor?.canUse(command.skill()),
-                  command.skill()
+                  command.skill(),
                 );
                 break;
             }
