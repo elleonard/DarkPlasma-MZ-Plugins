@@ -1,9 +1,10 @@
-// DarkPlasma_ActorCommandTrait 1.1.0
+// DarkPlasma_ActorCommandTrait 1.1.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/01 1.1.1 スキル使用が複数ある場合、コマンド記憶の挙動がおかしくなる不具合を修正
  * 2026/04/28 1.1.0 アクターごとに異なる特徴にする機能を追加
  *            1.0.1 設定をtypescript移行
  * 2023/09/17 1.0.0 最初のバージョン
@@ -21,7 +22,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueTraitId
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * アクターコマンドを変更する特徴を提供します。
  *
  * この特徴を追加したいデータ(ステートやアクターなど)のメモ欄に
@@ -280,6 +281,19 @@
         }
       }
       _makeCommandList.call(this);
+    };
+    const _selectLast = windowClass.selectLast;
+    windowClass.selectLast = function () {
+      _selectLast.call(this);
+      if (this._actor && ConfigManager.commandRemember) {
+        const symbol = this._actor.lastCommandSymbol();
+        if (symbol === 'useSkill') {
+          const skill = this._actor.lastBattleSkill();
+          if (skill) {
+            this.selectExt(skill);
+          }
+        }
+      }
     };
   }
   Window_ActorCommand_ActorCommandTraitMixIn(Window_ActorCommand.prototype);
