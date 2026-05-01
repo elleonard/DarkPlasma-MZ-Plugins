@@ -1,20 +1,30 @@
-import { settings } from './_build/DarkPlasma_ItemCommandCooldown_parameters';
+/// <reference path="./ItemCommandCooldown.d.ts" />
+
+import { settings } from '../config/_build/DarkPlasma_ItemCommandCooldown_parameters';
+
+function ColorManager_ItemCommandCooldownMixIn(colorManager: typeof ColorManager) {
+  colorManager.itemCooldownColor = function () {
+    return typeof settings.display.color === "string"
+      ? settings.display.color
+      : this.textColor(settings.display.color);
+  };
+}
+
+ColorManager_ItemCommandCooldownMixIn(ColorManager);
 
 class ItemCommandCooldownTurns {
+  _turns: {[actorId: number]: number};
+
   initialize() {
     this._turns = {};
     $gameParty.allMembers().forEach((actor) => (this._turns[actor.actorId()] = 0));
   }
 
-  setup(actor) {
+  setup(actor: Game_Actor) {
     this._turns[actor.actorId()] = actor.initialItemCommandCooldownTurn();
   }
 
-  /**
-   * @param {number} actorId
-   * @return {number}
-   */
-  cooldownTurn(actorId) {
+  cooldownTurn(actorId: number): number {
     if (!this._turns[actorId]) {
       this._turns[actorId] = 0;
     }
@@ -33,10 +43,7 @@ class ItemCommandCooldownTurns {
 
 const itemCommandCooldownTurns = new ItemCommandCooldownTurns();
 
-/**
- * @param {BattleManager} battleManager
- */
-function BattleManager_ItemCommandCooldownMixIn(battleManager) {
+function BattleManager_ItemCommandCooldownMixIn(battleManager: typeof BattleManager) {
   const _startBattle = battleManager.startBattle;
   battleManager.startBattle = function () {
     _startBattle.call(this);
@@ -52,10 +59,7 @@ function BattleManager_ItemCommandCooldownMixIn(battleManager) {
 
 BattleManager_ItemCommandCooldownMixIn(BattleManager);
 
-/**
- * @param {Game_Battler.prototype} gameBattler
- */
-function Game_Battler_ItemCommandCooldownMixIn(gameBattler) {
+function Game_Battler_ItemCommandCooldownMixIn(gameBattler: Game_Battler) {
   const _useItem = gameBattler.useItem;
   gameBattler.useItem = function (item) {
     _useItem.call(this, item);
@@ -69,10 +73,7 @@ function Game_Battler_ItemCommandCooldownMixIn(gameBattler) {
 
 Game_Battler_ItemCommandCooldownMixIn(Game_Battler.prototype);
 
-/**
- * @param {Game_Actor.prototype} gameActor
- */
-function Game_Actor_ItemCommandCooldownMixIn(gameActor) {
+function Game_Actor_ItemCommandCooldownMixIn(gameActor: Game_Actor) {
   gameActor.setupItemCooldownTurn = function () {
     itemCommandCooldownTurns.setup(this);
   };
@@ -88,6 +89,9 @@ function Game_Actor_ItemCommandCooldownMixIn(gameActor) {
     return settings.defaultCooldownTurn + this.itemCommandCooldownTurnPlus() + 1;
   };
 
+  /**
+   * TODO: AllocateUniqueTraitIdを使う
+   */
   gameActor.itemCommandCooldownTurnPlus = function () {
     return this.traitObjects()
       .filter((object) => !!object.meta.itemCommandCooldownTurnPlus)
@@ -105,25 +109,29 @@ function Game_Actor_ItemCommandCooldownMixIn(gameActor) {
 
 Game_Actor_ItemCommandCooldownMixIn(Game_Actor.prototype);
 
-/**
- * @param {Window_ActorCommand.prototype} windowClass
- */
-function Window_ActorCommand_ItemCommandCooldownMixIn(windowClass) {
+function Window_ActorCommand_ItemCommandCooldownMixIn(windowClass: Window_ActorCommand) {
   const _addItemCommand = windowClass.addItemCommand;
   windowClass.addItemCommand = function () {
     _addItemCommand.call(this);
     const itemCommand = this._list.find((command) => command.symbol === 'item');
     if (itemCommand) {
-      itemCommand.enabled = this._actor.canItemCommand();
+      itemCommand.enabled = this._actor?.canItemCommand() || false;
     }
   };
 
   const _drawItem = windowClass.drawItem;
   windowClass.drawItem = function (index) {
-    if (settings.display.enabled && this._actor.isInItemCommandCooldown() && this.commandSymbol(index) === 'item') {
+    if (
+      settings.display.enabled
+      && this._actor
+      && this._actor.isInItemCommandCooldown()
+      && this.commandSymbol(index) === 'item'
+    ) {
       const rect = this.itemLineRect(index);
       const align = this.itemTextAlign();
-      const cooldownText = settings.display.format.replace(/\{turn\}/gi, this._actor.itemCommandCooldownTurn());
+      const cooldownText = settings.display.format.replace(
+        /\{turn\}/gi, `${this._actor.itemCommandCooldownTurn()}`
+      );
       /**
        * 中央寄せでいい感じにクールタイムの色だけ変えるため、詰め用文字列を作る
        */
@@ -138,7 +146,7 @@ function Window_ActorCommand_ItemCommandCooldownMixIn(windowClass) {
         rect.width,
         align
       );
-      this.changeTextColor(ColorManager.textColor(settings.display.color));
+      this.changeTextColor(ColorManager.itemCooldownColor());
       this.drawText(
         `${this.paddingText(commandWidth, this.commandName(index).length)} ${cooldownText}`,
         rect.x,
@@ -151,11 +159,6 @@ function Window_ActorCommand_ItemCommandCooldownMixIn(windowClass) {
     }
   };
 
-  /**
-   * @param {number} width
-   * @param {number} minLength
-   * @return {string}
-   */
   windowClass.paddingText = function (width, minLength) {
     let result = ''.padStart(minLength, ' ');
     while (this.textWidth(result) < width) {
