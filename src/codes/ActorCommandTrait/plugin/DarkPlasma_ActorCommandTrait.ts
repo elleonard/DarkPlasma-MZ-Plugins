@@ -201,6 +201,20 @@ function Window_ActorCommand_ActorCommandTraitMixIn(windowClass: Window_ActorCom
     }
     _makeCommandList.call(this);
   };
+
+  const _selectLast = windowClass.selectLast;
+  windowClass.selectLast = function () {
+    _selectLast.call(this);
+    if (this._actor && ConfigManager.commandRemember) {
+      const symbol = this._actor.lastCommandSymbol();
+      if (symbol === "useSkill") {
+        const skill = this._actor.lastBattleSkill();
+        if (skill) {
+          this.selectExt(skill);
+        }
+      }
+    }
+  };
 }
 
 Window_ActorCommand_ActorCommandTraitMixIn(Window_ActorCommand.prototype);

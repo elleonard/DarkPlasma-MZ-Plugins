@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/05/01",
+    version: "1.1.1",
+    description: "スキル使用が複数ある場合、コマンド記憶の挙動がおかしくなる不具合を修正",
+  },
+  {
     date: "2026/04/28",
     version: "1.1.0",
     description: "アクターごとに異なる特徴にする機能を追加",
