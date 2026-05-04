@@ -1,16 +1,17 @@
-// DarkPlasma_SetColorByCode 1.0.2
-// Copyright (c) 2023 DarkPlasma
+// DarkPlasma_SetColorByCode 1.1.0
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/04 1.1.0 pink, whiteなどの文字列表現に対応
  * 2023/09/21 1.0.2 TextLogと併用するとエラーになる不具合を修正
  * 2023/06/29 1.0.1 色変更以外の制御文字を握り潰してしまう不具合を修正
  * 2023/06/02 1.0.0 公開
  */
 
 /*:
- * @plugindesc 制御文字による色指定を#から始まるカラーコードで行う
+ * @plugindesc 制御文字による色指定を文字列で行う
  * @author DarkPlasma
  * @license MIT
  *
@@ -18,11 +19,13 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.2
- * 制御文字\Cによる色指定を、#から始まるカラーコードで行えるようにします。
+ * version: 1.1.0
+ * 制御文字\Cによる色指定を、文字列で行えるようにします。
  *
  * 例: \C[#adff2f]
  * 黄緑色になります。
+ * \C[pink]
+ * ピンク色になります。
  */
 
 (() => {
@@ -49,10 +52,10 @@
     windowClass.processEscapeCharacter = function (code, textState) {
       if (code === 'C') {
         const color = this.obtainEscapeParamText(textState)[0];
-        if (color.startsWith('#')) {
-          this.changeTextColor(color);
-        } else {
+        if (Number.isFinite(Number(color))) {
           this.processColorChange(Number(color));
+        } else {
+          this.changeTextColor(color);
         }
       } else {
         _processEscapeCharacter.call(this, code, textState);
