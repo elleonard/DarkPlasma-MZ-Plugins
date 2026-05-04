@@ -77,7 +77,7 @@
                 skillId: columns.find((c) => c.type === 'skillId')?.value || 1,
                 weight: columns.find((c) => c.type === 'weight')?.value || 1,
               };
-            })
+            }),
         );
         data.effects.push({
           code: randomSkillEffect.code,
@@ -105,7 +105,7 @@
          */
         const totalWeight = $dataRandomSkillEffects[effect.dataId].skills.reduce(
           (result, skill) => result + skill.weight,
-          0
+          0,
         );
         let w = Math.randomInt(totalWeight);
         const skill = $dataRandomSkillEffects[effect.dataId].skills.find((skill) => {

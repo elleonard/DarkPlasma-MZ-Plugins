@@ -1,9 +1,10 @@
-// DarkPlasma_AllocateUniqueTraitDataId 1.1.0
+// DarkPlasma_AllocateUniqueTraitDataId 1.1.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/04 1.1.1 ヘルプの古い記述を修正
  * 2024/11/04 1.1.0 特徴データ名のDBロード後評価に対応
  * 2024/11/04 1.0.0 公開
  */
@@ -25,7 +26,7 @@
  * @default {"debuffRate":"8","param":"8","xparam":"10","sparam":"10","slotType":"2","specialFlag":"4","partyAbility":"6"}
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 独自の特徴データIDを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
@@ -36,14 +37,14 @@
  *
  * uniqueTraitDataIdCache.allocate
  *   : (pluginName: string, traitId: number, localId: number, name: string|(() => string)) => UniqueTraitDataId
- *   プラグインで独自の特殊フラグIDを確保します。
+ *   プラグインで独自の特徴データIDを確保します。
  *   名前をデータベースロード後に評価する関数にすることもできます。
  *
- * UniqueSpecialFlagId.prototype.id: number
- *   確保した特殊フラグID
+ * UniqueTraitDataId.prototype.id: number
+ *   確保した特徴データID
  *
- * UniqueSpecialFlagId.prototype.name: string
- *   確保した特殊フラグIDの名前
+ * UniqueTraitDataId.prototype.name: string
+ *   確保した特徴データIDの名前
  *
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_FilterEquip

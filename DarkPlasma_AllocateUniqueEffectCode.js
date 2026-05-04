@@ -1,14 +1,16 @@
-// DarkPlasma_AllocateUniqueEffectCode 1.0.1
-// Copyright (c) 2022 DarkPlasma
+// DarkPlasma_AllocateUniqueEffectCode 1.0.2
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/04 1.0.2 configをtypescript移行
+ *                  ヘルプの記述を修正
  * 2022/09/11 1.0.1 typescript移行
  * 2022/07/17 1.0.0 公開
  */
 
-/*:ja
+/*:
  * @plugindesc 独自の効果コードを確保する
  * @author DarkPlasma
  * @license MIT
@@ -23,8 +25,8 @@
  * @default 51
  *
  * @help
- * version: 1.0.1
- * 特徴の効果コードを確保し、利用できるようにします。
+ * version: 1.0.2
+ * 独自の効果コードを確保し、利用できるようにします。
  *
  * 本プラグインは単体では機能しません。
  * 本プラグインを必要とする別のプラグインと一緒に利用してください。
