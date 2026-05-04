@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>回復・即死を反転する特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2026/05/04/undead-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2026/05/04/undead-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>各種回復や即死を反転する特徴特殊フラグを提供します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2023/09/17/actor-command-trait/.png" alt="設定例" title="設定例"></p><p>HP,MPの回復と吸収を受ける際に回復とダメージが反転し、戦闘不能を直接付加される場合に全回復する鎧です。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_UndeadTrait.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 特徴 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>セーブデータのイベント配列を復元する</title>
       <link href="/DarkPlasma-MZ-Plugins/2026/03/21/recover-game-events/"/>
       <url>/DarkPlasma-MZ-Plugins/2026/03/21/recover-game-events/</url>
