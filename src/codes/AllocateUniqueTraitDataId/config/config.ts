@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/05/04",
+    version: "1.1.1",
+    description: "ヘルプの古い記述を修正",
+  },
+  {
     date: "2024/11/04",
     version: "1.1.0",
     description: "特徴データ名のDBロード後評価に対応",
@@ -100,12 +105,12 @@ export const config = new ConfigDefinitionBuilder(
 
   uniqueTraitDataIdCache.allocate
     : (pluginName: string, traitId: number, localId: number, name: string|(() => string)) => UniqueTraitDataId
-    プラグインで独自の特殊フラグIDを確保します。
+    プラグインで独自の特徴データIDを確保します。
     名前をデータベースロード後に評価する関数にすることもできます。
 
-  UniqueSpecialFlagId.prototype.id: number
-    確保した特殊フラグID
+  UniqueTraitDataId.prototype.id: number
+    確保した特徴データID
 
-  UniqueSpecialFlagId.prototype.name: string
-    確保した特殊フラグIDの名前`)
+  UniqueTraitDataId.prototype.name: string
+    確保した特徴データIDの名前`)
   .build();

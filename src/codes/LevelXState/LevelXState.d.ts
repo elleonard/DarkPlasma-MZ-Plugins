@@ -1,5 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../AllocateUniqueEffectCode/AllocateUniqueEffectCode.d.ts" />
+/// <reference path="../AllocateUniqueEffectCode/plugin/AllocateUniqueEffectCode.d.ts" />
 
 declare interface Game_Battler {
   /**
