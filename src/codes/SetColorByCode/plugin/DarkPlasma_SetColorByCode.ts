@@ -1,6 +1,6 @@
 /// <reference path="./SetColorByCode.d.ts" />
 
-import { Window_ObtainEscapeParamTextMixIn } from '../../common/window/obtainEscapeParamText';
+import { Window_ObtainEscapeParamTextMixIn } from '../../../common/window/obtainEscapeParamText';
 
 Window_ObtainEscapeParamTextMixIn(Window_Base.prototype);
 
@@ -9,10 +9,10 @@ function Window_SetColorByCodeMixIn(windowClass: Window_Base) {
   windowClass.processEscapeCharacter = function (code, textState) {
     if (code === "C") {
       const color = this.obtainEscapeParamText(textState)[0];
-      if (color.startsWith("#")) {
-        this.changeTextColor(color);
-      } else {
+      if (Number.isFinite(Number(color))) {
         this.processColorChange(Number(color));
+      } else {
+        this.changeTextColor(color);
       }
     } else {
       _processEscapeCharacter.call(this, code, textState);
