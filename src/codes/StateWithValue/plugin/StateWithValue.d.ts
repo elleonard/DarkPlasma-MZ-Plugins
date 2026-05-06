@@ -14,6 +14,7 @@ declare interface Game_BattlerBase {
   setStateValue(stateId: number, valueType: string, value: number): void;
   addStateValue(stateId: number, valueType: string, value: number): void;
   stateValue(stateId: number, valueType: string): number;
+  totalStateValue(valueType: string): number;
 
   stateValuesForEvacuate(stateIds: number[]): {[stateId: number]: StateValue}|undefined;
 }

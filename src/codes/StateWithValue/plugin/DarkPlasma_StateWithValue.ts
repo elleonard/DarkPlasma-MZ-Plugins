@@ -46,6 +46,10 @@ function Game_BattlerBase_StateWithValueMixIn(gameBattlerBase: Game_BattlerBase)
     return this._stateValues?.[stateId]?.[valueType] || 0;
   };
 
+  gameBattlerBase.totalStateValue = function (valueType) {
+    return this.states().reduce((value, state) => value + this.stateValue(state.id, valueType), 0);
+  };
+
   gameBattlerBase.stateValuesForEvacuate = function (stateIds) {
     const result: {[stateId: number]: StateValue} = {};
     stateIds.forEach(stateId => {

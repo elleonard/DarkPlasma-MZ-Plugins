@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/05/06",
+    version: "1.1.0",
+    description: "特定種別の値合計を取得するインターフェースを追加",
+  },
+  {
     version: "1.0.0",
     description: "最初のバージョン",
   }
