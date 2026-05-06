@@ -1,10 +1,11 @@
-// DarkPlasma_StateWithValue 1.0.0
+// DarkPlasma_StateWithValue 1.1.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/05/06 1.0.0 最初のバージョン
+ * 2026/05/06 1.1.0 特定種別の値合計を取得するインターフェースを追加
+ *            1.0.0 最初のバージョン
  */
 
 /*:
@@ -18,7 +19,7 @@
  * @orderAfter DarkPlasma_EvacuateStateAndMeta
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * ステートに値を持たせる機能を提供します。
  * 本プラグインは単体では動作しません。
  * 本プラグインの機能は拡張プラグインから利用されます。
@@ -67,6 +68,9 @@
     };
     gameBattlerBase.stateValue = function (stateId, valueType) {
       return this._stateValues?.[stateId]?.[valueType] || 0;
+    };
+    gameBattlerBase.totalStateValue = function (valueType) {
+      return this.states().reduce((value, state) => value + this.stateValue(state.id, valueType), 0);
     };
     gameBattlerBase.stateValuesForEvacuate = function (stateIds) {
       const result = {};
