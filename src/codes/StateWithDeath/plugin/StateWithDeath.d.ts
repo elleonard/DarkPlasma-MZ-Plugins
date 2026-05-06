@@ -2,6 +2,5 @@
 /// <reference path="../../EvacuateStateAndMeta/plugin/EvacuateStateAndMeta.d.ts" />
 
 declare interface Game_BattlerBase {
-  stateIdsIgnoreRecoverAll(): number[];
-  stateTurnsForIgnoreRecoverAll(): {[stateId: number]: number};
+  continueStateIdsAfterDeath(): number[];
 }

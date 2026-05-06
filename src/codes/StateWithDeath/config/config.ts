@@ -10,29 +10,38 @@ const histories: PluginHistorySchema[] = [
     description: "ステート情報の退避を別プラグインに分離",
   },
   {
-    date: "2026/04/20",
-    version: "1.0.1",
-    description: "全回復すると指定ステートの歩数情報が消えてしまう不具合を修正",
+    description: "戦闘不能を挟むとステート解除までの歩数情報が消えてしまう不具合を修正",
   },
   {
-    date: "2026/01/18",
+    date: "2023/11/18",
+    version: "1.1.0",
+    description: 'TypeScript移行',
+  },
+  {
+    description: '戦闘不能後も継続するステート一覧を取得するインターフェース追加',
+  },
+  {
+    date: "2022/05/29",
+    version: "1.0.1",
+    description: '戦闘時にエラーになる不具合を修正',
+  },
+  {
     version: "1.0.0",
-    description: "最初のバージョン",
-  }
+    description: '公開',
+  },
 ];
 
 const parameters: PluginParameterSchema[] = [
-  createDatabaseArrayParam("states", {
+  createDatabaseArrayParam("statesWithDeath", {
     type: 'state',
-    text: "ステート",
-    description: "指定したステートは全回復で解除されません。",
+    text: "消えないステート",
   }),
 ];
 
 export const config = new ConfigDefinitionBuilder(
-  "StateIgnoreRecoverAll",
+  "StateWithDeath",
   2026,
-  "全回復で解除されないステート"
+  "戦闘不能になっても消えないステート"
 )
   .withHistories(histories)
   .withLicense("MIT")
@@ -42,5 +51,5 @@ export const config = new ConfigDefinitionBuilder(
     version: "1.0.0",
     order: 'after',
   })
-  .withHelp(dedent`イベントコマンド「全回復」で解除されないステートを実現します。`)
+  .withHelp(dedent`指定したステートは戦闘不能になっても解除されません。`)
   .build();
