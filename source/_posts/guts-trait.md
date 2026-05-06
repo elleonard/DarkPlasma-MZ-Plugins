@@ -35,6 +35,10 @@ thumbnail: setting.png
 
 ## 前提プラグイン
 
+### 独自の特徴IDを確保する
+
+- [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_AllocateUniqueTraitId.js)
+
 ### 値付きステート
 
 - [GitHub](https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateWithValue.js)
