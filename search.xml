@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>食いしばり特徴</title>
+      <link href="/DarkPlasma-MZ-Plugins/2026/05/06/guts-trait/"/>
+      <url>/DarkPlasma-MZ-Plugins/2026/05/06/guts-trait/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>食いしばり特徴を持つバトラーは、戦闘中にHPが0になる際に戦闘不能になる代わりにHPを1にし、食いしばり回数を1消費します。</p><p>食いしばり回数は以下のタイミングで特徴に応じて獲得します。</p><ul><li>戦闘開始時(装備などですでに得ていた特徴)</li><li>ステート付加(ステートの特徴)</li></ul><p>ステートの持つ食いしばり回数は個別に管理されます。<br>残り回数の少ないステートの持つ回数を優先して消費します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2026/05/06/guts-trait/setting.png" alt="設定例" title="設定例"></p><p>このステートが付加されているバトラーのHPが0になる際に、戦闘不能にならずHPを1にします。<br>ステートに設定された食いしばり回数は1のため、消費されて0になり、ステートが解除されます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_GutsTrait.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="値付きステート"><a href="#値付きステート" class="headerlink" title="値付きステート"></a>値付きステート</h3><ul><li><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_StateWithValue.js">GitHub</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 特徴 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>回復・即死を反転する特徴</title>
       <link href="/DarkPlasma-MZ-Plugins/2026/05/04/undead-trait/"/>
       <url>/DarkPlasma-MZ-Plugins/2026/05/04/undead-trait/</url>
@@ -313,9 +338,9 @@
       
         <tags>
             
-            <tag> 装備 </tag>
-            
             <tag> テキスト </tag>
+            
+            <tag> 装備 </tag>
             
         </tags>
       
@@ -961,9 +986,9 @@
       
         <tags>
             
-            <tag> システム </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> システム </tag>
             
             <tag> セーブデータ </tag>
             
@@ -1127,9 +1152,9 @@
       
         <tags>
             
-            <tag> システム </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> システム </tag>
             
             <tag> セーブデータ </tag>
             
@@ -1183,6 +1208,8 @@
       
         <tags>
             
+            <tag> MV版あり </tag>
+            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -1190,8 +1217,6 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
-            
-            <tag> MV版あり </tag>
             
             <tag> 特徴 </tag>
             
@@ -1249,9 +1274,9 @@
       
         <tags>
             
-            <tag> ステート </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> ステート </tag>
             
             <tag> 戦闘 </tag>
             
@@ -1407,9 +1432,9 @@
       
         <tags>
             
-            <tag> 装備 </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> 装備 </tag>
             
         </tags>
       
@@ -1517,9 +1542,9 @@
             
             <tag> ステート </tag>
             
-            <tag> パーティ </tag>
-            
             <tag> 特徴 </tag>
+            
+            <tag> パーティ </tag>
             
         </tags>
       
