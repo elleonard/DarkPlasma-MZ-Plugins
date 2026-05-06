@@ -1,10 +1,11 @@
-// DarkPlasma_GutsTrait 1.0.0
+// DarkPlasma_GutsTrait 1.0.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/05/06 1.0.0 最初のバージョン
+ * 2026/05/06 1.0.1 ステートが解除されても食いしばり回数が残り続ける不具合を修正
+ *            1.0.0 最初のバージョン
  */
 
 /*:
@@ -19,7 +20,7 @@
  * @base DarkPlasma_StateWithValue
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 特徴「食いしばり」を提供します。
  *
  * 食いしばり特徴を持つバトラーは、戦闘中にHPが0になる際に
@@ -88,23 +89,30 @@
       }
     };
     gameBattlerBase.initializeGuts = function () {
-      this._gutsCount = this.traitsSum(gutsTrait.id, 0);
+      this._gutsCount = this.initialGutsCountWithoutState();
+    };
+    gameBattlerBase.initialGutsCountWithoutState = function () {
+      return this.traitsSum(gutsTrait.id, 0) - this.totalStateValue('guts');
     };
     gameBattlerBase.gutsCount = function () {
-      return this._gutsCount || 0;
+      return (this._gutsCount || 0) + this.totalStateValue('guts');
     };
     gameBattlerBase.addGutsCount = function (count) {
-      this._gutsCount = this.gutsCount() + count;
+      if (!this._gutsCount) {
+        this._gutsCount = this.initialGutsCountWithoutState();
+      }
+      this._gutsCount += count;
     };
     gameBattlerBase.decreaseGuts = function () {
-      if (this._gutsCount) {
-        this._gutsCount--;
+      if (this.gutsCount() > 0) {
         const minimumGutsCountState = this.minimumGutsCountState();
         if (minimumGutsCountState) {
           this.addStateValue(minimumGutsCountState.id, 'guts', -1);
           if (this.stateValue(minimumGutsCountState.id, 'guts') === 0) {
             this.onGutsZero(minimumGutsCountState.id);
           }
+        } else if (this._gutsCount) {
+          this._gutsCount--;
         }
       }
     };
@@ -114,7 +122,6 @@
       _addNewState.call(this, stateId);
       const gutsCount = Number($dataStates[stateId].meta.guts || 0);
       if (gutsCount) {
-        this.addGutsCount(gutsCount);
         this.addStateValue(stateId, 'guts', gutsCount);
       }
     };
