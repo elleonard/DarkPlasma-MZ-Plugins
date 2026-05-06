@@ -16,6 +16,7 @@ declare interface Game_BattlerBase {
   _gutsCount?: number;
 
   initializeGuts(): void;
+  initialGutsCountWithoutState(): number;
   gutsCount(): number;
   addGutsCount(count: number): void;
   decreaseGuts(): void;

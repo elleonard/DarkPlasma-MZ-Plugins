@@ -38,26 +38,34 @@ function Game_BattlerBase_GutsTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   };
 
   gameBattlerBase.initializeGuts = function () {
-    this._gutsCount = this.traitsSum(gutsTrait.id, 0);
+    this._gutsCount = this.initialGutsCountWithoutState();
+  };
+
+  gameBattlerBase.initialGutsCountWithoutState = function () {
+    return this.traitsSum(gutsTrait.id, 0) - this.totalStateValue("guts");
   };
 
   gameBattlerBase.gutsCount = function () {
-    return this._gutsCount || 0;
+    return (this._gutsCount || 0) + this.totalStateValue("guts");
   };
 
   gameBattlerBase.addGutsCount = function (count) {
-    this._gutsCount = this.gutsCount() + count;
+    if (!this._gutsCount) {
+      this._gutsCount = this.initialGutsCountWithoutState();
+    }
+    this._gutsCount += count;
   };
 
   gameBattlerBase.decreaseGuts = function () {
-    if (this._gutsCount) {
-      this._gutsCount--;
+    if (this.gutsCount() > 0) {
       const minimumGutsCountState = this.minimumGutsCountState();
       if (minimumGutsCountState) {
         this.addStateValue(minimumGutsCountState.id, "guts", -1);
         if (this.stateValue(minimumGutsCountState.id, "guts") === 0) {
           this.onGutsZero(minimumGutsCountState.id);
         }
+      } else if (this._gutsCount) {
+        this._gutsCount--;
       }
     }
   };
@@ -69,7 +77,6 @@ function Game_BattlerBase_GutsTraitMixIn(gameBattlerBase: Game_BattlerBase) {
     _addNewState.call(this, stateId);
     const gutsCount = Number($dataStates[stateId].meta.guts || 0);
     if (gutsCount) {
-      this.addGutsCount(gutsCount);
       this.addStateValue(stateId, "guts", gutsCount);
     }
   };
