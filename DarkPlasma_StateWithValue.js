@@ -1,9 +1,10 @@
-// DarkPlasma_StateWithValue 1.1.0
+// DarkPlasma_StateWithValue 1.2.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/07 1.2.0 バトラーの状態に応じた最大・最小値をサポートするようにインターフェース拡張
  * 2026/05/06 1.1.0 特定種別の値合計を取得するインターフェースを追加
  *            1.0.0 最初のバージョン
  */
@@ -19,7 +20,7 @@
  * @orderAfter DarkPlasma_EvacuateStateAndMeta
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * ステートに値を持たせる機能を提供します。
  * 本プラグインは単体では動作しません。
  * 本プラグインの機能は拡張プラグインから利用されます。
@@ -32,10 +33,10 @@
   'use strict';
 
   function DataManager_StateWithValueMixIn(dataManager) {
-    dataManager.maxStateValue = function (stateId, valueType) {
+    dataManager.maxStateValue = function (stateId, valueType, battler) {
       return Infinity;
     };
-    dataManager.minStateValue = function (stateId, valueType) {
+    dataManager.minStateValue = function (stateId, valueType, battler) {
       return 0;
     };
   }
@@ -59,8 +60,8 @@
         this._stateValues[stateId] = {};
       }
       this._stateValues[stateId][valueType] = value.clamp(
-        DataManager.minStateValue(stateId, valueType),
-        DataManager.maxStateValue(stateId, valueType),
+        DataManager.minStateValue(stateId, valueType, this),
+        DataManager.maxStateValue(stateId, valueType, this),
       );
     };
     gameBattlerBase.addStateValue = function (stateId, valueType, value) {
