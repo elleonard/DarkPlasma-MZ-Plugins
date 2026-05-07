@@ -1,11 +1,11 @@
 /// <reference path="./StateWithValue.d.ts" />
 
 function DataManager_StateWithValueMixIn(dataManager: typeof DataManager) {
-  dataManager.maxStateValue = function (stateId, valueType) {
+  dataManager.maxStateValue = function (stateId, valueType, battler) {
     return Infinity;
   };
 
-  dataManager.minStateValue = function (stateId, valueType) {
+  dataManager.minStateValue = function (stateId, valueType, battler) {
     return 0;
   };
 }
@@ -33,8 +33,8 @@ function Game_BattlerBase_StateWithValueMixIn(gameBattlerBase: Game_BattlerBase)
       this._stateValues[stateId] = {};
     }
     this._stateValues[stateId][valueType] = value.clamp(
-      DataManager.minStateValue(stateId, valueType),
-      DataManager.maxStateValue(stateId, valueType)
+      DataManager.minStateValue(stateId, valueType, this),
+      DataManager.maxStateValue(stateId, valueType, this)
     );
   };
 

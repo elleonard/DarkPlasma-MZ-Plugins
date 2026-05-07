@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/05/07",
+    version: "1.2.0",
+    description: "バトラーの状態に応じた最大・最小値をサポートするようにインターフェース拡張",
+  },
+  {
     date: "2026/05/06",
     version: "1.1.0",
     description: "特定種別の値合計を取得するインターフェースを追加",

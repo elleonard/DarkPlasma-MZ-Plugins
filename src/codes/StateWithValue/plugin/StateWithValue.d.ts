@@ -4,8 +4,8 @@
 type StateValue = {[valueType: string]: value};
 
 declare namespace DataManager {
-  function maxStateValue(stateId: number, valueType: string): number;
-  function minStateValue(stateId: number, valueType: string): number;
+  function maxStateValue(stateId: number, valueType: string, battler: Game_BattlerBase): number;
+  function minStateValue(stateId: number, valueType: string, battler: Game_BattlerBase): number;
 }
 
 declare interface Game_BattlerBase {
