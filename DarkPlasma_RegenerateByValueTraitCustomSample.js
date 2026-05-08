@@ -63,7 +63,7 @@
       if (customId === CUSTOM_ID) {
         return this.traitsWithId(DataManager.hpRegenerationValueTraitId(), customId).reduce(
           (result, _) => result + $gameVariables.value(settings.variableId),
-          0
+          0,
         );
       }
       return _hpRegenerationValue.call(this, customId);
