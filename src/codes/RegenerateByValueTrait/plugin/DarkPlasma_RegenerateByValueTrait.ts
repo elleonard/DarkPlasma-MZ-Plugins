@@ -1,7 +1,7 @@
 /// <reference path="./RegenerateByValueTrait.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
-import { hasTraits } from '../../common/data/hasTraits';
+import { pluginName } from '../../../common/pluginName';
+import { hasTraits } from '../../../common/data/hasTraits';
 
 const localTraitId = 1;
 const hpRegenerationValueTraitId = uniqueTraitIdCache.allocate(pluginName, localTraitId, "HP再生値");
