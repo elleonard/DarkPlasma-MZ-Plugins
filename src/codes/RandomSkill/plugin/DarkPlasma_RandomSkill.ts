@@ -100,10 +100,23 @@ function Game_Action_RandomSkillMixIn(gameAction: Game_Action) {
         skill.skillId,
         skill.targetType === "same" && (target.isActor() || target.isEnemy()) ? target.index() : -1
       );
+      this.subject().currentAction().setTriggerAction(this);
       this.makeSuccess(target);
     } else {
       _applyItemEffect.call(this, target, effect);
     }
+  };
+
+  gameAction.setTriggerAction = function (action) {
+    this._triggerAction = action;
+  };
+
+  gameAction.triggerAction = function () {
+    return this._triggerAction;
+  };
+
+  gameAction.hasRandomSkillEffect = function () {
+    return this.item()?.effects.some(effect => effect.code === randomSkillEffect.code) || false;
   };
 }
 

@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/05/09",
+    version: "1.2.0",
+    description: "トリガーとなった行動、ランダム発動効果を持つかどうかを取得するインターフェースを追加",
+  },
+  {
     version: "1.1.0",
     description: "スキル対象を引き継ぐ設定に対応",
   },
