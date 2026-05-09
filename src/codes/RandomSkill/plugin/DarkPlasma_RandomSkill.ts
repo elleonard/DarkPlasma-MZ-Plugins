@@ -1,12 +1,15 @@
 /// <reference path="./RandomSkill.d.ts" />
 
-import { pluginName } from '../../common/pluginName';
+import { pluginName } from '../../../common/pluginName';
 
 const randomSkillEffect = uniqueEffectCodeCache.allocate(pluginName, 0);
+
+type RandomSkillTargetType = "same" | "random";
 
 type RandomSkillSetting = {
   skillId: number;
   weight: number;
+  targetType: RandomSkillTargetType;
 };
 
 type Data_RandomSkillEffect = {
@@ -19,8 +22,8 @@ const $dataRandomSkillEffects: Data_RandomSkillEffect[] = [];
 function registerRandomSkillEffect(skills: RandomSkillSetting[]) {
   const dataId = $dataRandomSkillEffects.length;
   $dataRandomSkillEffects.push({
-    dataId: dataId,
-    skills: skills,
+    dataId,
+    skills,
   });
   return dataId;
 }
@@ -30,20 +33,35 @@ function DataManager_RandomSkillMixIn(dataManager: typeof DataManager) {
   dataManager.extractMetadata = function (data) {
     _extractMetadata.call(this, data);
     if ("effects" in data && data.meta.randomSkill) {
-      const dataId = registerRandomSkillEffect(String(data.meta.randomSkill).split('\n')
-        .filter(line => /skillId:[ ]?[0-9]+/.test(line)).map(line => {
-          const columns = line.split(',')
-            .map((column): { type: "skillId"|"weight", value: number } => {
-              return {
-                type: column.trim().startsWith("skillId") ? "skillId" : "weight",
-                value: Number(column.split(':')[1].trim() || '1'),
+      const dataId = registerRandomSkillEffect(
+        String(data.meta.randomSkill).split('\n')
+          .filter(line => /skillId:[ ]?[0-9]+/.test(line))
+          .map(line => {
+            const result: RandomSkillSetting = {
+              skillId: 1,
+              weight: 1,
+              targetType: "random",
+            };
+            line.split(',').forEach(column => {
+              const type: "skillId" | "weight" | "target" = (() => {
+                const c = column.trim();
+                if (c.startsWith("skillId")) {
+                  return "skillId";
+                } else if (c.startsWith("weight")) {
+                  return "weight";
+                } else if (c.startsWith("target")) {
+                  return "target";
+                }
+                throw Error(`不正なトークン ${c}`);
+              })();
+              if (type === "target") {
+                result.targetType = column.split(':')[1].trim() === "same" ? "same" : "random";
+              } else {
+                result[type] = Number(column.split(':')[1].trim() || '1');
               }
             });
-          return {
-            skillId: columns.find(c => c.type === "skillId")?.value || 1,
-            weight: columns.find(c => c.type === "weight")?.value || 1,
-          };
-        }));
+            return result;
+          }));
       data.effects.push({
         code: randomSkillEffect.code,
         dataId: dataId,
@@ -78,7 +96,10 @@ function Game_Action_RandomSkillMixIn(gameAction: Game_Action) {
         w -= skill.weight;
         return w < 0;
       })!;
-      this.subject().forceAction(skill.skillId, -1);
+      this.subject().forceAction(
+        skill.skillId,
+        skill.targetType === "same" && (target.isActor() || target.isEnemy()) ? target.index() : -1
+      );
       this.makeSuccess(target);
     } else {
       _applyItemEffect.call(this, target, effect);
