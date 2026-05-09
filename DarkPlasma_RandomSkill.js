@@ -1,10 +1,11 @@
-// DarkPlasma_RandomSkill 1.1.0
+// DarkPlasma_RandomSkill 1.2.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/05/09 1.1.0 スキル対象を引き継ぐ設定に対応
+ * 2026/05/09 1.2.0 トリガーとなった行動、ランダム発動効果を持つかどうかを取得するインターフェースを追加
+ *            1.1.0 スキル対象を引き継ぐ設定に対応
  * 2023/11/25 1.0.0 公開
  */
 
@@ -20,7 +21,7 @@
  * @orderAfter DarkPlasma_AllocateUniqueEffectCode
  *
  * @help
- * version: 1.1.0
+ * version: 1.2.0
  * 使用するとランダムで指定したスキルのうち
  * どれか一つを発動する使用効果を実現します。
  *
@@ -139,10 +140,20 @@
           skill.skillId,
           skill.targetType === 'same' && (target.isActor() || target.isEnemy()) ? target.index() : -1,
         );
+        this.subject().currentAction().setTriggerAction(this);
         this.makeSuccess(target);
       } else {
         _applyItemEffect.call(this, target, effect);
       }
+    };
+    gameAction.setTriggerAction = function (action) {
+      this._triggerAction = action;
+    };
+    gameAction.triggerAction = function () {
+      return this._triggerAction;
+    };
+    gameAction.hasRandomSkillEffect = function () {
+      return this.item()?.effects.some((effect) => effect.code === randomSkillEffect.code) || false;
     };
   }
   Game_Action_RandomSkillMixIn(Game_Action.prototype);
