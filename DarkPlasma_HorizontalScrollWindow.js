@@ -1,13 +1,14 @@
-// DarkPlasma_HorizontalScrollWindow 1.0.0
-// Copyright (c) 2022 DarkPlasma
+// DarkPlasma_HorizontalScrollWindow 1.1.0
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/11/15 1.0.0 公開
+ * 2026/05/17 1.1.0 表示行数の変更に対応
+ * 2022/11/15 1.0.0 最初のバージョン
  */
 
-/*:ja
+/*:
  * @plugindesc 横方向にスクロールするウィンドウ
  * @author DarkPlasma
  * @license MIT
@@ -16,39 +17,68 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 本プラグインはプラグイン開発者向けです。
  *
  * 以下のように記述することで、対象の選択ウィンドウの
  * スクロール方向を縦から横に変更します。
  * Window_HorizontalScrollMixIn(windowClass: Window_Selectable);
+ *
  */
 
 (() => {
   'use strict';
 
-  function Window_HorizontalScrollMixIn(windowClass) {
+  function Window_HorizontalScrollMixIn(windowClass, options) {
+    windowClass.itemWidth = function () {
+      return Math.floor(this.innerWidth / this.maxPageCols());
+    };
+    windowClass.itemHeight = function () {
+      return Math.floor(this.innerHeight / this.maxRows());
+    };
+    windowClass.row = function () {
+      return this.index() % this.maxRows();
+    };
     windowClass.maxRows = function () {
-      return 1;
+      return options?.maxRows || 1;
+    };
+    windowClass.maxPageCols = function () {
+      return options?.maxPageCols || 4;
+    };
+    windowClass.maxPageItems = function () {
+      return this.maxPageCols() * this.maxRows();
     };
     windowClass.overallWidth = function () {
-      return this.itemWidth() * this.maxItems();
+      return this.itemWidth() * Math.ceil(this.maxItems() / this.maxRows());
     };
     windowClass.itemRect = function (index) {
+      const maxRows = this.maxRows();
       const itemWidth = this.itemWidth();
       const itemHeight = this.itemHeight();
       const colSpacing = this.colSpacing();
       const rowSpacing = this.rowSpacing();
-      const col = index;
-      const row = 0;
+      const col = Math.floor(index / maxRows);
+      const row = index % maxRows;
       const x = col * itemWidth + colSpacing / 2 - this.scrollBaseX();
       const y = row * itemHeight + rowSpacing / 2 - this.scrollBaseY();
       const width = itemWidth - colSpacing;
       const height = itemHeight - rowSpacing;
       return new Rectangle(x, y, width, height);
     };
-    windowClass.cursorDown = function () {};
-    windowClass.cursorUp = function () {};
+    windowClass.cursorDown = function (wrap) {
+      const index = this.index();
+      const maxItems = this.maxItems();
+      if (index < maxItems - 1 || wrap) {
+        this.smoothSelect((index + 1) % maxItems);
+      }
+    };
+    windowClass.cursorUp = function (wrap) {
+      const index = Math.max(0, this.index());
+      const maxItems = this.maxItems();
+      if (index > 0 || wrap) {
+        this.smoothSelect((index - 1 + maxItems) % maxItems);
+      }
+    };
     windowClass.ensureCursorVisible = function (smooth) {
       if (this._cursorAll) {
         this.scrollTo(0, 0);
