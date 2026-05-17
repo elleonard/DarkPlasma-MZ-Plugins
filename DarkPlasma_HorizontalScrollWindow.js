@@ -1,10 +1,11 @@
-// DarkPlasma_HorizontalScrollWindow 1.1.0
+// DarkPlasma_HorizontalScrollWindow 1.1.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/05/17 1.1.0 表示行数の変更に対応
+ * 2026/05/17 1.1.1 スクロールの挙動修正
+ *            1.1.0 表示行数の変更に対応
  * 2022/11/15 1.0.0 最初のバージョン
  */
 
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 本プラグインはプラグイン開発者向けです。
  *
  * 以下のように記述することで、対象の選択ウィンドウの
@@ -38,6 +39,9 @@
     };
     windowClass.row = function () {
       return this.index() % this.maxRows();
+    };
+    windowClass.col = function () {
+      return Math.floor(this.index() / this.maxRows());
     };
     windowClass.maxRows = function () {
       return options?.maxRows || 1;
@@ -79,13 +83,29 @@
         this.smoothSelect((index - 1 + maxItems) % maxItems);
       }
     };
+    windowClass.cursorRight = function (wrap) {
+      const index = this.index();
+      const maxItems = this.maxItems();
+      const maxRows = this.maxRows();
+      if (index < maxItems - maxRows || wrap) {
+        this.smoothSelect((index + maxRows) % maxItems);
+      }
+    };
+    windowClass.cursorLeft = function (wrap) {
+      const index = Math.max(0, this.index());
+      const maxItems = this.maxItems();
+      const maxRows = this.maxRows();
+      if (index >= maxRows || wrap) {
+        this.smoothSelect((index - maxRows + maxItems) % maxItems);
+      }
+    };
     windowClass.ensureCursorVisible = function (smooth) {
       if (this._cursorAll) {
         this.scrollTo(0, 0);
       } else if (this.innerWidth > 0 && this.index() >= 0) {
         const scrollX = this.scrollX();
-        const targetLeftXMin = this.index() * this.itemWidth();
-        const targetLeftXMax = (this.index() - this.maxCols() + 1) * this.itemWidth();
+        const targetLeftXMin = this.col() * this.itemWidth();
+        const targetLeftXMax = targetLeftXMin + this.itemWidth() - this.innerWidth;
         if (scrollX > targetLeftXMin) {
           if (smooth) {
             this.smoothScrollTo(targetLeftXMin, 0);
