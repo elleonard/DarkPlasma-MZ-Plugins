@@ -2,6 +2,7 @@
 
 declare interface Window_Selectable {
   maxPageCols(): number;
+  col(): number;
 }
 
 type HorizontalScrollWindowOptions = {

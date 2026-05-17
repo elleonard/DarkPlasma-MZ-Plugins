@@ -13,6 +13,10 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     return this.index() % this.maxRows();
   };
 
+  windowClass.col = function () {
+    return Math.floor(this.index() / this.maxRows());
+  };
+
   windowClass.maxRows = function () {
     return options?.maxRows || 1;
   };
@@ -48,15 +52,33 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     const index = this.index();
     const maxItems = this.maxItems();
     if (index < maxItems - 1 || wrap) {
-        this.smoothSelect((index + 1) % maxItems);
+      this.smoothSelect((index + 1) % maxItems);
     }
   };
 
-  windowClass.cursorUp = function (wrap) { 
+  windowClass.cursorUp = function (wrap) {
     const index = Math.max(0, this.index());
     const maxItems = this.maxItems();
     if (index > 0 || wrap) {
-        this.smoothSelect((index - 1 + maxItems) % maxItems);
+      this.smoothSelect((index - 1 + maxItems) % maxItems);
+    }
+  };
+
+  windowClass.cursorRight = function (wrap) {
+    const index = this.index();
+    const maxItems = this.maxItems();
+    const maxRows = this.maxRows();
+    if (index < maxItems - maxRows || wrap) {
+      this.smoothSelect((index + maxRows) % maxItems);
+    }
+  };
+
+  windowClass.cursorLeft = function (wrap) {
+    const index = Math.max(0, this.index());
+    const maxItems = this.maxItems();
+    const maxRows = this.maxRows();
+    if (index >= maxRows || wrap) {
+      this.smoothSelect((index - maxRows + maxItems) % maxItems);
     }
   };
 
@@ -65,8 +87,8 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
       this.scrollTo(0, 0);
     } else if (this.innerWidth > 0 && this.index() >= 0) {
       const scrollX = this.scrollX();
-      const targetLeftXMin = this.index() * this.itemWidth();
-      const targetLeftXMax = (this.index() - this.maxCols() + 1) * this.itemWidth();
+      const targetLeftXMin = this.col() * this.itemWidth();
+      const targetLeftXMax = targetLeftXMin + this.itemWidth() - this.innerWidth;
       if (scrollX > targetLeftXMin) {
         if (smooth) {
           this.smoothScrollTo(targetLeftXMin, 0);
