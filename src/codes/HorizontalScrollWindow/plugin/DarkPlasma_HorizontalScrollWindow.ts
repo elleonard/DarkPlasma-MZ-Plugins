@@ -17,6 +17,14 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     return Math.floor(this.index() / this.maxRows());
   };
 
+  windowClass.leftCol = function () {
+    return Math.floor(this.scrollX() / this.itemWidth());
+  };
+
+  windowClass.maxCols = function () {
+    return Math.max(Math.ceil(this.maxItems() / this.maxRows()), 1);
+  };
+
   windowClass.maxRows = function () {
     return options?.maxRows || 1;
   };
@@ -80,6 +88,31 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     if (index >= maxRows || wrap) {
       this.smoothSelect((index - maxRows + maxItems) % maxItems);
     }
+  };
+
+  windowClass.cursorPagedown = function () {
+    const index = this.index();
+    const maxItems = this.maxItems();
+    if (this.leftCol() + this.maxPageCols() < this.maxCols()) {
+      this.smoothScrollRight(this.maxPageCols());
+      this.select(Math.min(index + this.maxPageItems(), maxItems - 1));
+    }
+  };
+
+  windowClass.cursorPageup = function () {
+    const index = this.index();
+    if (this.leftCol() > 0) {
+      this.smoothScrollLeft(this.maxPageCols());
+      this.select(Math.max(index - this.maxPageItems(), 0));
+    }
+  };
+
+  windowClass.smoothScrollLeft = function (n) {
+    this.smoothScrollBy(-this.itemWidth() * n, 0);
+  };
+
+  windowClass.smoothScrollRight = function (n) {
+    this.smoothScrollBy(this.itemWidth() * n, 0);
   };
 
   windowClass.ensureCursorVisible = function (smooth) {

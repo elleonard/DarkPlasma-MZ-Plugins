@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/05/17",
+    version: "1.1.2",
+    description: "pageup, pagedownの挙動修正",
+  },
+  {
     version: "1.1.1",
     description: "スクロールの挙動修正",
   },

@@ -3,6 +3,10 @@
 declare interface Window_Selectable {
   maxPageCols(): number;
   col(): number;
+  leftCol(): number;
+
+  smoothScrollLeft(n: number): void;
+  smoothScrollRight(n: number): void;
 }
 
 type HorizontalScrollWindowOptions = {
