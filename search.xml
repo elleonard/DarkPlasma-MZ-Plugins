@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>マップシーンに戻った時にアニメーションを再開する</title>
+      <link href="/DarkPlasma-MZ-Plugins/2026/05/19/resume-map-animation/"/>
+      <url>/DarkPlasma-MZ-Plugins/2026/05/19/resume-map-animation/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>マップシーンから他のシーン（メニュー・ショップ・戦闘など）に移行し、マップシーンに戻った時、移行前に再生中だったアニメーションを再開します。</p><p>公式DLC <a href="https://store.steampowered.com/app/4417260/RPGMZ__Memories_In_Breeze/?curator_clanid=38018723">Memories In Breeze</a> で並列処理で再生し続けるアニメーションが、メニューを開くとウェイトの関係で一時的に非表示になってしまうことによる違和感を軽減できます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_ResumeMapAnimation.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>食いしばり特徴</title>
       <link href="/DarkPlasma-MZ-Plugins/2026/05/06/guts-trait/"/>
       <url>/DarkPlasma-MZ-Plugins/2026/05/06/guts-trait/</url>
