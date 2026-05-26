@@ -17,21 +17,21 @@ PluginManager.registerCommand(pluginName, command_loadFormation, function (args)
 
 function Game_Party_SaveFormationMixIn(gameParty: Game_Party) {
   gameParty.initializeMemberFormations = function () {
-    this._savedMemberFormations = new Map();
+    this._savedMemberFormations = {};
   };
 
   gameParty.saveMemberFormation = function (key) {
     if (!this._savedMemberFormations) {
       this.initializeMemberFormations();
     }
-    this._savedMemberFormations?.set(key, [...this._actors]);
+    this._savedMemberFormations![key] = [...this._actors];
   };
 
   gameParty.loadMemberFormation = function (key) {
     if (!this._savedMemberFormations) {
       this.initializeMemberFormations();
     }
-    const members = this._savedMemberFormations?.get(key);
+    const members = this._savedMemberFormations?.[key];
     if (members) {
       this._actors = [...members];
       $gamePlayer.refresh();
