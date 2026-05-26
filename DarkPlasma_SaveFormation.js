@@ -1,9 +1,10 @@
-// DarkPlasma_SaveFormation 1.0.0
+// DarkPlasma_SaveFormation 1.0.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/26 1.0.1 セーブしたデータが正常にロードできない不具合を修正
  * 2026/04/19 1.0.0 最初のバージョン
  */
 
@@ -32,7 +33,7 @@
  * @type string
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * パーティの並び順を保存して復元するプラグインコマンドを提供します。
  *
  * 復元の際にパーティメンバーの構成が変更されていた場合
@@ -77,19 +78,19 @@
   });
   function Game_Party_SaveFormationMixIn(gameParty) {
     gameParty.initializeMemberFormations = function () {
-      this._savedMemberFormations = new Map();
+      this._savedMemberFormations = {};
     };
     gameParty.saveMemberFormation = function (key) {
       if (!this._savedMemberFormations) {
         this.initializeMemberFormations();
       }
-      this._savedMemberFormations?.set(key, [...this._actors]);
+      this._savedMemberFormations[key] = [...this._actors];
     };
     gameParty.loadMemberFormation = function (key) {
       if (!this._savedMemberFormations) {
         this.initializeMemberFormations();
       }
-      const members = this._savedMemberFormations?.get(key);
+      const members = this._savedMemberFormations?.[key];
       if (members) {
         this._actors = [...members];
         $gamePlayer.refresh();
