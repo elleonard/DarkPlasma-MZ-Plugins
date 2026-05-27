@@ -1,10 +1,11 @@
-// DarkPlasma_GamepadSettingBase 1.0.0
-// Copyright (c) 2023 DarkPlasma
+// DarkPlasma_GamepadSettingBase 1.0.1
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2023/05/23 1.0.0 公開
+ * 2026/05/27 1.0.1 configをTypeScript移行
+ * 2023/05/23 1.0.0 最初のバージョン
  */
 
 /*:
@@ -35,7 +36,7 @@
  * @default 124
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * オプションにゲームパッド設定を提供します。
  *
  * テキスト中で \GAMEPAD[操作名] と入力すると
@@ -70,6 +71,7 @@
  * @desc キーまたはゲームパッドのボタンの番号を設定します。
  * @text キー番号
  * @type number
+ * @default 0
  *
  * @param action
  * @desc キーを押した際の動作を表す文字列を設定します。
@@ -77,6 +79,7 @@
  * @type select
  * @option menu
  * @option special2
+ * @default menu
  */
 (() => {
   'use strict';
@@ -90,26 +93,35 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    keyMapper: JSON.parse(
-      pluginParameters.keyMapper || '[{"keyCode":"77","action":"menu"},{"keyCode":"83","action":"special2"}]'
-    ).map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          keyCode: Number(parsed.keyCode || 0),
-          action: String(parsed.action || ``),
-        };
-      })(e || '{}');
-    }),
-    gamepadMapper: JSON.parse(pluginParameters.gamepadMapper || '[{"keyCode":"6","action":"special2"}]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          keyCode: Number(parsed.keyCode || 0),
-          action: String(parsed.action || ``),
-        };
-      })(e || '{}');
-    }),
+    keyMapper: pluginParameters.keyMapper
+      ? JSON.parse(pluginParameters.keyMapper).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  keyCode: Number(parsed.keyCode || 0),
+                  action: String(parsed.action || `menu`),
+                };
+              })(e)
+            : { keyCode: 0, action: 'menu' };
+        })
+      : [
+          { keyCode: 77, action: 'menu' },
+          { keyCode: 83, action: 'special2' },
+        ],
+    gamepadMapper: pluginParameters.gamepadMapper
+      ? JSON.parse(pluginParameters.gamepadMapper).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  keyCode: Number(parsed.keyCode || 0),
+                  action: String(parsed.action || `menu`),
+                };
+              })(e)
+            : { keyCode: 0, action: 'menu' };
+        })
+      : [{ keyCode: 6, action: 'special2' }],
     colsWidth: Number(pluginParameters.colsWidth || 124),
   };
 
@@ -236,7 +248,7 @@
         ['menu', '決定'],
         ['battle', '決定'],
       ]),
-      'Z/Enter'
+      'Z/Enter',
     ),
     Input.createInputSymbol(
       'cancel',
@@ -246,7 +258,7 @@
         ['menu', 'キャンセル'],
         ['battle', 'キャンセル'],
       ]),
-      'X'
+      'X',
     ),
     Input.createInputSymbol(
       'menu',
@@ -256,7 +268,7 @@
         ['menu', '-'],
         ['battle', '-'],
       ]),
-      'M'
+      'M',
     ),
     Input.createInputSymbol(
       'pageup',
@@ -266,7 +278,7 @@
         ['menu', 'アクター切替'],
         ['battle', '-'],
       ]),
-      'Q/PageUp'
+      'Q/PageUp',
     ),
     Input.createInputSymbol(
       'pagedown',
@@ -276,7 +288,7 @@
         ['menu', 'アクター切替'],
         ['battle', '-'],
       ]),
-      'W/PageDown'
+      'W/PageDown',
     ),
     Input.createInputSymbol(
       'shift',
@@ -286,7 +298,7 @@
         ['menu', '-'],
         ['battle', '-'],
       ]),
-      'Shift'
+      'Shift',
     ),
     Input.createInputSymbol(
       'special2',
@@ -296,7 +308,7 @@
         ['menu', '-'],
         ['battle', '-'],
       ]),
-      'S'
+      'S',
     ),
   ];
   function ConfigManager_GamepadMixIn() {
@@ -465,7 +477,7 @@
     }
     drawHeader() {
       const HEADER_TEXTS = ['操作', 'ボタン'].concat(
-        Input.inputBehaviorKeys().map((key) => Input.inputBehaviorKeyName(key))
+        Input.inputBehaviorKeys().map((key) => Input.inputBehaviorKeyName(key)),
       );
       HEADER_TEXTS.forEach((text, index) => {
         this.drawText(text, index * (this.colsWidth() + this.colsPadding()), 0, this.colsWidth(), 'center');
@@ -481,7 +493,7 @@
           rect.x + this.colsWidth() + this.colsPadding(),
           rect.y,
           this.colsWidth(),
-          'center'
+          'center',
         );
         Input.inputBehaviorKeys().forEach((key, i) => {
           this.drawText(
@@ -489,7 +501,7 @@
             rect.x + (this.colsWidth() + this.colsPadding()) * (2 + i),
             rect.y,
             this.colsWidth(),
-            'center'
+            'center',
           );
         });
       } else {
@@ -500,7 +512,7 @@
             rect.x + this.colsWidth(),
             rect.y,
             this.colsWidth() * 4,
-            'center'
+            'center',
           );
         } else if (index === inputSymbols.length + 1) {
           this.drawText('設定を保存', rect.x, rect.y, this.colsWidth(), 'left');
