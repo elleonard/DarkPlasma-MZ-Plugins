@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
 
 declare namespace PluginManagerEx {
   function convertEscapeCharacters(text: string, data: any): string;

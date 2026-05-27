@@ -1,6 +1,6 @@
 /// <reference path="./GamepadSettingBase.d.ts" />
 
-import { settings } from "./_build/DarkPlasma_GamepadSettingBase_parameters";
+import { settings } from "../config/_build/DarkPlasma_GamepadSettingBase_parameters";
 
 settings.keyMapper.forEach(mapping => {
   Input.keyMapper[mapping.keyCode] = mapping.action;
