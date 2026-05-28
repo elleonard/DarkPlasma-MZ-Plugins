@@ -1,9 +1,11 @@
-// DarkPlasma_SkillDetail 2.0.1
-// Copyright (c) 2022 DarkPlasma
+// DarkPlasma_SkillDetail 2.1.0
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/29 2.1.0 詳細ウィンドウへのアイテムセットインターフェースを追加
+ *                  configをTypeScript移行
  * 2024/04/20 2.0.1 共通化した実装を基底プラグインに分離
  * 2024/04/17 2.0.0 実装をItemDetailに合わせる
  *                  Window_SkillDetailMixInを削除
@@ -37,7 +39,7 @@
  * @default shift
  *
  * @help
- * version: 2.0.1
+ * version: 2.1.0
  * スキルウィンドウのスキルにカーソルを合わせて特定のボタンを押すと
  * スキル詳細説明画面を開きます。
  *
@@ -46,8 +48,8 @@
  * ～～～～。>
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_CustomKeyHandler version:1.3.0
- * DarkPlasma_DisplayDatabaseDetailWindow version:1.0.0
+ * DarkPlasma_CustomKeyHandler version:2.0.0
+ * DarkPlasma_DisplayDatabaseDetailWindow version:1.0.1
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
  * DarkPlasma_DisplayDatabaseDetailWindow
