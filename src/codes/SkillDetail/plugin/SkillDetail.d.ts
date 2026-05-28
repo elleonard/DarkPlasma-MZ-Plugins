@@ -1,8 +1,8 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../AutoLineBreak/AutoLineBreak.d.ts" />
-/// <reference path="../CustomKeyHandler/CustomKeyHandler.d.ts" />
-/// <reference path="../CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
-/// <reference path="../DisplayDatabaseDetailWindow/plugin/DisplayDatabaseDetailWindow.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../AutoLineBreak/AutoLineBreak.d.ts" />
+/// <reference path="../../CustomKeyHandler/plugin/CustomKeyHandler.d.ts" />
+/// <reference path="../../CustomKeyHandler/plugin/CustomKeyHandlerExport.d.ts" />
+/// <reference path="../../DisplayDatabaseDetailWindow/plugin/DisplayDatabaseDetailWindow.d.ts" />
 
 declare namespace MZ {
   interface Skill {

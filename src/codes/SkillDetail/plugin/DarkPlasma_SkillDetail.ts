@@ -1,4 +1,6 @@
-import { settings } from './_build/DarkPlasma_SkillDetail_parameters';
+/// <reference path="./SkillDetail.d.ts" />
+
+import { settings } from '../config/_build/DarkPlasma_SkillDetail_parameters';
 
 const _DataManager_extractMetadata = DataManager.extractMetadata;
 DataManager.extractMetadata = function (data) {
