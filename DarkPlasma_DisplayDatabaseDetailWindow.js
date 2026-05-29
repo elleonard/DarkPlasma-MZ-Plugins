@@ -51,7 +51,7 @@
       return true;
     }
     drawDetail(detail) {
-      this.drawTextEx(detail, 0, this.baseLineY());
+      this.drawTextEx(detail, 0, this.baseLineY(), this.innerWidth);
     }
     baseLineY() {
       return -(this.scrollBaseY() / this.scrollBlockHeight()) * this.lineHeight();
@@ -109,6 +109,9 @@
     const _setHelpWindowItem = windowClass.setHelpWindowItem;
     windowClass.setHelpWindowItem = function (item) {
       _setHelpWindowItem.call(this, item);
+      this.setDetailWindowItem(item);
+    };
+    windowClass.setDetailWindowItem = function (item) {
       this._detailWindow?.setItem(item);
     };
     const _isCursorMovable = windowClass.isCursorMovable;
