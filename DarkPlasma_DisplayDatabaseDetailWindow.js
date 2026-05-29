@@ -1,9 +1,10 @@
-// DarkPlasma_DisplayDatabaseDetailWindow 1.0.1
+// DarkPlasma_DisplayDatabaseDetailWindow 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/05/29 1.1.0 詳細ウィンドウにアイテムをセットするインターフェース追加
  * 2024/04/26 1.0.1 詳細説明の前後にある空白を無視する
  * 2024/04/20 1.0.0 公開
  */
@@ -17,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * ウィンドウにデータベース項目の
  * 詳細説明を表示するための基底を提供します。
  *
