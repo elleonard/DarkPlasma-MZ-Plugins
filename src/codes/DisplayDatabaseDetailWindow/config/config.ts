@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/05/29",
+    version: "1.1.0",
+    description: "詳細ウィンドウにアイテムをセットするインターフェース追加",
+  },
+  {
     date: "2024/04/26",
     version: "1.0.1",
     description: "詳細説明の前後にある空白を無視する",
