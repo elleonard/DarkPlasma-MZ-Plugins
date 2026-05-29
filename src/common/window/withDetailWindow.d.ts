@@ -6,7 +6,7 @@ declare interface Window_Selectable {
   _detailWindow?: Window_DetailText;
   
   setDetailWindow(detailWindow: Window_DetailText): void;
-  updateDetailWindowItem(item: DataManager.NoteHolder|null): void;
+  setDetailWindowItem(item: DataManager.NoteHolder|null): void;
 }
 
 declare function Window_WithDetailWindowMixIn(openDetailKey: string, windowClass: Window_Selectable): void;

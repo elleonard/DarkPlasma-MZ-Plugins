@@ -10,10 +10,10 @@ export function Window_WithDetailWindowMixIn(openDetailKey: string, windowClass:
   const _setHelpWindowItem = windowClass.setHelpWindowItem;
   windowClass.setHelpWindowItem = function (item) {
     _setHelpWindowItem.call(this, item);
-    this.updateDetailWindowItem(item as DataManager.NoteHolder);
+    this.setDetailWindowItem(item as DataManager.NoteHolder);
   };
 
-  windowClass.updateDetailWindowItem = function (item) {
+  windowClass.setDetailWindowItem = function (item) {
     this._detailWindow?.setItem(item);
   };
 

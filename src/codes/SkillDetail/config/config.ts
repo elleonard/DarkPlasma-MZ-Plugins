@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/05/29",
+    version: "3.0.0",
+    description: "詳細ウィンドウへのアイテムセットインターフェース命名を修正",
+  },
+  {
     version: "2.1.0",
     description: "詳細ウィンドウへのアイテムセットインターフェースを追加",
   },
