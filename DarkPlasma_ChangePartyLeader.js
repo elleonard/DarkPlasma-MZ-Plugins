@@ -1,10 +1,12 @@
-// DarkPlasma_ChangePartyLeader 1.0.0
-// Copyright (c) 2022 DarkPlasma
+// DarkPlasma_ChangePartyLeader 1.0.1
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2022/11/06 1.0.0 公開
+ * 2026/05/30 1.0.1 リーダーを変更するコマンド実行時に、変更後のリーダーが現在と同じ場合に、実行直前のリーダーが記録されない不具合の修正
+ *                  configをTypeScript移行
+ * 2022/11/06 1.0.0 最初のバージョン
  */
 
 /*:
@@ -21,13 +23,14 @@
  * @arg actorId
  * @text アクター
  * @type actor
+ * @default 0
  *
  * @command resetLeader
  * @text リーダーを元に戻す
  * @desc リーダーを変更プラグインコマンド実行直前の状態に戻します。
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 先頭のパーティメンバーを、現在パーティメンバーにいるアクターに
  * 入れ替えるプラグインコマンドを提供します。
  *
@@ -58,10 +61,13 @@
   PluginManager.registerCommand(pluginName, command_changeLeader, function (args) {
     const parsedArgs = parseArgs_changeLeader(args);
     const actor = $gameActors.actor(parsedArgs.actorId);
-    if (!actor || actor.index() === 0) {
+    if (!actor) {
       return;
     }
     this._leaderActorIdBeforeChange = $gameParty.leader().actorId();
+    if (actor.index() === 0) {
+      return;
+    }
     $gameParty.swapOrder(0, actor.index());
   });
   PluginManager.registerCommand(pluginName, command_resetLeader, function () {
