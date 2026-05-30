@@ -5,15 +5,8 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
-    date: "2026/05/29",
-    version: "3.0.0",
-    description: "詳細ウィンドウへのアイテムセットインターフェース命名を修正",
-  },
-  {
-    version: "2.1.0",
-    description: "詳細ウィンドウへのアイテムセットインターフェースを追加",
-  },
-  {
+    date: "2026/05/30",
+    version: "2.0.2",
     description: "configをTypeScript移行",
   },
   {
@@ -86,7 +79,7 @@ export const config = new ConfigDefinitionBuilder(
   })
   .withBaseDependency({
     name: "DarkPlasma_DisplayDatabaseDetailWindow",
-    version: "1.0.1",
+    version: "1.1.0",
     order: 'after',
   })
   .withHelp(dedent`スキルウィンドウのスキルにカーソルを合わせて特定のボタンを押すと
