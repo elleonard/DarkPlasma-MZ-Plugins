@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/06/07",
+    version: "5.8.0",
+    description: "表示座標関連インターフェース追加",
+  },
+  {
     version: "5.7.0",
     description: "表示座標関連インターフェース追加",
   },

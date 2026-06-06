@@ -724,6 +724,14 @@ class Window_EnemyBookStatus extends Window_Selectable {
     return this.textWidth("999999");
   }
 
+  paramNameWidth() {
+    return 160;
+  }
+
+  paramWidth() {
+    return this.textWidth("999999");
+  }
+
   /**
    * レベルを描画する
    */
@@ -745,9 +753,9 @@ class Window_EnemyBookStatus extends Window_Selectable {
     const enemy = this._enemy!;
     [...Array(8).keys()].forEach((i) => {
       this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.param(i), x, y, 160);
+      this.drawText(TextManager.param(i), x, y, this.paramNameWidth());
       this.resetTextColor();
-      this.drawText(`${enemy.params[i]}`, x + 160, y, 60, 'right');
+      this.drawText(`${enemy.params[i]}`, x + this.paramNameWidth(), y, this.paramWidth(), 'right');
       y += lineHeight;
     });
   }
