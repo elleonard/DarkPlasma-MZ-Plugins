@@ -127,12 +127,31 @@ declare interface Window_EnemyBookStatus extends Window_Selectable {
   drawNoEffectElementsAndStates(x: number, y: number, width: number): void;
   drawNoEffectsLabel(x: number, y: number, width: number): void;
 
+  columnX(col: number): number;
+  columnWidth(): number;
+  levelX(): number;
+  levelY(): number;
+  statusX(): number;
+  statusY(): number;
+  expAndGoldX(): number;
+  expAndGoldY(): number;
+  dropItemsX(): number;
+  dropItemsY(): number;
+  weakX(): number;
+  weakY(): number;
+  weakAndResistWidth(): number;
+  resistX(): number;
+  resistY(): number;
+  noEffectX(): number;
+  noEffectY(): number;
   descriptionX(): number;
   descriptionY(): number;
+  descriptionWidth(): number;
+  expWidth(): number;
+  goldWidth(): number;
 
   isExcludedResistState(stateId: number): boolean;
   stateRate(stateId: number): number;
-
 }
 
 declare interface Window_Command {
