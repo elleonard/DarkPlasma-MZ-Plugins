@@ -1,9 +1,10 @@
-// DarkPlasma_EnemyBook 5.6.0
+// DarkPlasma_EnemyBook 5.7.0
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/07 5.7.0 表示座標関連インターフェース追加
  * 2026/01/08 5.6.0 ドロップアイテム描画インターフェース追加
  * 2025/12/22 5.5.0 ステータスウィンドウをSelectableに変更
  * 2024/10/28 5.4.0 セーブデータに含むクラス名の命名を見直し
@@ -204,7 +205,7 @@
  * @desc Clear enemy book.
  *
  * @help
- * version: 5.6.0
+ * version: 5.7.0
  * The original plugin is RMMV official plugin written by Yoji Ojima.
  * Arranged by DarkPlasma.
  *
@@ -405,7 +406,7 @@
  * @desc 図鑑の内容を初期化します。
  *
  * @help
- * version: 5.6.0
+ * version: 5.7.0
  * このプラグインはYoji Ojima氏によって書かれたRPGツクール公式プラグインを元に
  * DarkPlasmaが改変を加えたものです。
  *
@@ -1102,6 +1103,9 @@
       this._enemySprite.y = settings.enemyImageView.y;
       this.addChildToBack(this._enemySprite);
     }
+    maxCols() {
+      return 2;
+    }
     contentsHeight() {
       const maxHeight = this.height;
       return maxHeight - this.itemPadding() * 2;
@@ -1156,32 +1160,81 @@
       this.drawText(enemy.name, 0, 0, 0);
       this.drawPage();
     }
+    columnX(col) {
+      return this.columnWidth() * col + Math.floor(this.itemPadding() / 2);
+    }
+    columnWidth() {
+      return Math.floor(this.contentsWidth() / this.maxCols()) - this.itemPadding();
+    }
+    levelX() {
+      return this.columnX(1);
+    }
+    levelY() {
+      return 0;
+    }
+    statusX() {
+      return this.columnX(1);
+    }
+    statusY() {
+      return this.lineHeight() + this.itemPadding();
+    }
+    expAndGoldX() {
+      return this.columnX(0);
+    }
+    expAndGoldY() {
+      return this.lineHeight() * 9 + this.itemPadding();
+    }
+    dropItemsX() {
+      return this.columnX(0);
+    }
+    dropItemsY() {
+      return this.lineHeight() * 6 + this.itemPadding();
+    }
+    weakX() {
+      return this.columnX(0);
+    }
+    weakY() {
+      return this.lineHeight() * 10 + this.itemPadding();
+    }
+    weakAndResistWidth() {
+      return this.columnWidth();
+    }
+    resistX() {
+      return this.columnX(0);
+    }
+    resistY() {
+      return this.lineHeight() * (11 + this._weakLines) + this.itemPadding();
+    }
+    noEffectX() {
+      return this.columnX(0);
+    }
+    noEffectY() {
+      return this.lineHeight() * (12 + this._weakLines + this._resistLines) + this.itemPadding();
+    }
     drawPage() {
       const enemy = this._enemy;
       const lineHeight = this.lineHeight();
-      this.drawLevel(this.contentsWidth() / 2 + this.itemPadding() / 2, 0);
-      this.drawStatus(this.contentsWidth() / 2 + this.itemPadding() / 2, lineHeight + this.itemPadding());
-      this.drawExpAndGold(this.itemPadding(), lineHeight * 9 + this.itemPadding());
-      const rewardsWidth = this.contentsWidth() / 2;
-      const dropItemWidth = rewardsWidth;
-      this.drawDropItems(0, lineHeight * 6 + this.itemPadding(), dropItemWidth);
-      const weakAndResistWidth = this.contentsWidth() / 2;
+      this.drawLevel(this.levelX(), this.levelY());
+      this.drawStatus(this.statusX(), this.statusY());
+      this.drawExpAndGold(this.expAndGoldX(), this.expAndGoldY());
+      this.drawDropItems(this.dropItemsX(), this.dropItemsY(), this.columnWidth());
       this._weakLines = 1;
       this._resistLines = 1;
-      this.drawWeakElementsAndStates(0, lineHeight * 10 + this.itemPadding(), weakAndResistWidth);
-      this.drawResistElementsAndStates(0, lineHeight * (11 + this._weakLines) + this.itemPadding(), weakAndResistWidth);
+      this.drawWeakElementsAndStates(this.weakX(), this.weakY(), this.weakAndResistWidth());
+      this.drawResistElementsAndStates(this.resistX(), this.resistY(), this.weakAndResistWidth());
       if (settings.devideResistAndNoEffect) {
-        this.drawNoEffectElementsAndStates(
-          0,
-          lineHeight * (12 + this._weakLines + this._resistLines) + this.itemPadding(),
-          weakAndResistWidth,
-        );
+        this.drawNoEffectElementsAndStates(this.noEffectX(), this.noEffectY(), this.weakAndResistWidth());
       }
       if (enemy.meta.desc1) {
-        this.drawTextEx(String(enemy.meta.desc1), this.descriptionX(), this.descriptionY());
+        this.drawTextEx(String(enemy.meta.desc1), this.descriptionX(), this.descriptionY(), this.descriptionWidth());
       }
       if (enemy.meta.desc2) {
-        this.drawTextEx(String(enemy.meta.desc2), this.descriptionX(), this.descriptionY() + lineHeight);
+        this.drawTextEx(
+          String(enemy.meta.desc2),
+          this.descriptionX(),
+          this.descriptionY() + lineHeight,
+          this.descriptionWidth(),
+        );
       }
     }
     descriptionX() {
@@ -1189,6 +1242,15 @@
     }
     descriptionY() {
       return this.itemPadding() + this.lineHeight() * 14;
+    }
+    descriptionWidth() {
+      return this.innerWidth - this.descriptionX();
+    }
+    expWidth() {
+      return this.textWidth('999999');
+    }
+    goldWidth() {
+      return this.textWidth('999999');
     }
     /**
      * レベルを描画する
@@ -1222,16 +1284,14 @@
     drawExpAndGold(x, y) {
       const enemy = this._enemy;
       this.resetTextColor();
-      this.drawText(`${enemy.exp}`, x, y, 0);
-      x += this.textWidth(`${enemy.exp}`) + 6;
+      this.drawText(`${enemy.exp}`, x, y, this.expWidth(), 'right');
       this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.expA, x, y, 0);
-      x += this.textWidth(TextManager.expA + '  ');
+      this.drawText(TextManager.expA, this.expWidth() + 6, y, 0);
+      const goldX = x + this.expWidth() + 6 + this.textWidth(TextManager.expA + '  ');
       this.resetTextColor();
-      this.drawText(`${enemy.gold}`, x, y, 0);
-      x += this.textWidth(`${enemy.gold}`) + 6;
+      this.drawText(`${enemy.gold}`, goldX, y, this.goldWidth(), 'right');
       this.changeTextColor(this.systemColor());
-      this.drawText(TextManager.currencyUnit, x, y, 0);
+      this.drawText(TextManager.currencyUnit, goldX + this.goldWidth() + 6, y, 0);
     }
     /**
      * ドロップアイテムを描画する
