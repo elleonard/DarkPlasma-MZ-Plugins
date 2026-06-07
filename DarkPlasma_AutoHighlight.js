@@ -26,6 +26,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @base DarkPlasma_SetColorByCode
+ * @orderAfter DarkPlasma_PartialTextColor
  *
  * @param highlightGroups
  * @desc ハイライトする際の色と語句を設定します。
@@ -39,6 +40,12 @@
  * @type string[]
  * @default ["Window_Message"]
  *
+ * @param drawTextWithPartialColor
+ * @desc drawText方式も部分一致で色付けいます。要拡張プラグイン
+ * @text drawText方式部分一致対応
+ * @type boolean
+ * @default false
+ *
  * @help
  * version: 2.4.0
  * 指定した語句を指定した色でハイライトします。
@@ -47,8 +54,13 @@
  *     drawText方式: 完全一致
  *     drawTextEx方式: 部分一致
  *
+ *     設定でdrawText方式を部分一致に対応させる場合、
+ *     DarkPlasma_PartialTextColorが必要になります。
+ *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_SetColorByCode version:1.0.0
+ * 下記プラグインと共に利用する場合、それよりも下に追加してください。
+ * DarkPlasma_PartialTextColor
  */
 /*~struct~HighlightGroup:
  * @param title
@@ -158,6 +170,7 @@
           return String(e || ``);
         })
       : ['Window_Message'],
+    drawTextWithPartialColor: String(pluginParameters.drawTextWithPartialColor || false) === 'true',
   };
 
   function ColorManagerMixIn(colorManager) {
@@ -313,13 +326,17 @@
     const _drawText = windowClass.drawText;
     windowClass.drawText = function (text, x, y, maxWidth, align) {
       if (this.isHighlightWindow()) {
-        const autoHighlightColor = highlightWords.findColorByWord(text);
-        if (autoHighlightColor !== undefined) {
-          const originalTextColor = this.contents.textColor;
-          this.changeTextColor(autoHighlightColor);
-          _drawText.call(this, text, x, y, maxWidth, align);
-          this.changeTextColor(originalTextColor);
-          return;
+        if (settings.drawTextWithPartialColor) {
+          text = highlightWords.highlightText(String(text));
+        } else {
+          const autoHighlightColor = highlightWords.findColorByWord(text);
+          if (autoHighlightColor !== undefined) {
+            const originalTextColor = this.contents.textColor;
+            this.changeTextColor(autoHighlightColor);
+            _drawText.call(this, text, x, y, maxWidth, align);
+            this.changeTextColor(originalTextColor);
+            return;
+          }
         }
       }
       _drawText.call(this, text, x, y, maxWidth, align);
