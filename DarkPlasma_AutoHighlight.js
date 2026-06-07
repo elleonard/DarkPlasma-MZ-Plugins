@@ -1,9 +1,10 @@
-// DarkPlasma_AutoHighlight 2.3.0
+// DarkPlasma_AutoHighlight 2.4.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/07 2.4.0 ハイライトワード設定インターフェースを追加
  * 2026/04/11 2.3.0 選択ウィンドウなどに対応
  * 2026/03/31 2.2.0 ハイライトグループ設定に敵キャラを追加
  * 2026/01/08 2.1.0 ハイライトグループ設定に武器・防具を追加
@@ -39,7 +40,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 2.3.0
+ * version: 2.4.0
  * 指定した語句を指定した色でハイライトします。
  *
  *     テキストの描画方式により、ハイライトの方法が異なります。
@@ -247,9 +248,6 @@
     }
   }
   const highlightWords = new HighlightWords();
-  /**
-   * @param {Scene_Boot.prototype} sceneBoot
-   */
   function Scene_Boot_AutoHighlightMixIn(sceneBoot) {
     const _start = sceneBoot.start;
     sceneBoot.start = function () {
@@ -257,6 +255,9 @@
       /**
        * データベースのロードが完了しているので、ハイライトテキストを設定する。
        */
+      this.setupHighlightWords();
+    };
+    sceneBoot.setupHighlightWords = function () {
       settings.highlightGroups.forEach((highlightGroup) => {
         highlightGroup.texts.forEach((text) => {
           if (text) {
