@@ -1,6 +1,6 @@
 import { ConfigDefinitionBuilder } from '../../../../modules/config/configDefinitionBuilder.js';
 import { PluginHistorySchema } from '../../../../modules/config/configSchema.js';
-import { createStruct, createStringParam, createColorParam, createStringArrayParam, createDatabaseArrayParam, createStructArrayParam } from '../../../../modules/config/createParameter.js';
+import { createStruct, createStringParam, createColorParam, createStringArrayParam, createDatabaseArrayParam, createStructArrayParam, createBooleanParam } from '../../../../modules/config/createParameter.js';
 
 const histories: PluginHistorySchema[] = [
   {
@@ -140,6 +140,11 @@ const parameters = [
       default: ["Window_Message"],
     }
   ),
+  createBooleanParam("drawTextWithPartialColor", {
+    text: "drawText方式部分一致対応",
+    description: "drawText方式も部分一致で色付けいます。要拡張プラグイン",
+    default: false,
+  }),
 ];
 
 export const config = new ConfigDefinitionBuilder(
@@ -154,9 +159,15 @@ export const config = new ConfigDefinitionBuilder(
     name: "DarkPlasma_SetColorByCode",
     version: "1.0.0",
   })
+  .withOrderAfterDependency({
+    name: "DarkPlasma_PartialTextColor",
+  })
   .withHelp(`指定した語句を指定した色でハイライトします。
     
     テキストの描画方式により、ハイライトの方法が異なります。
     drawText方式: 完全一致
-    drawTextEx方式: 部分一致`)
+    drawTextEx方式: 部分一致
+    
+    設定でdrawText方式を部分一致に対応させる場合、
+    DarkPlasma_PartialTextColorが必要になります。`)
   .build();

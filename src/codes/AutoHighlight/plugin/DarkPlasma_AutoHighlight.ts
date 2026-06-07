@@ -171,13 +171,17 @@ function Window_AutoHighlightMixIn(windowClass: Window_Base) {
   const _drawText = windowClass.drawText;
   windowClass.drawText = function (text, x, y, maxWidth, align) {
     if (this.isHighlightWindow()) {
-      const autoHighlightColor = highlightWords.findColorByWord(text);
-      if (autoHighlightColor !== undefined) {
-        const originalTextColor = this.contents.textColor;
-        this.changeTextColor(autoHighlightColor);
-        _drawText.call(this, text, x, y, maxWidth, align);
-        this.changeTextColor(originalTextColor);
-        return;
+      if (settings.drawTextWithPartialColor) {
+        text = highlightWords.highlightText(String(text));
+      } else {
+        const autoHighlightColor = highlightWords.findColorByWord(text);
+        if (autoHighlightColor !== undefined) {
+          const originalTextColor = this.contents.textColor;
+          this.changeTextColor(autoHighlightColor);
+          _drawText.call(this, text, x, y, maxWidth, align);
+          this.changeTextColor(originalTextColor);
+          return;
+        }
       }
     }
     _drawText.call(this, text, x, y, maxWidth, align);
