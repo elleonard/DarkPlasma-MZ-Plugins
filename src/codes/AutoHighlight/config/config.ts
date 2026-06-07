@@ -4,6 +4,11 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/07",
+    version: "2.4.0",
+    description: "ハイライトワード設定インターフェースを追加",
+  },
+  {
     date: "2026/04/11",
     version: "2.3.0",
     description: "選択ウィンドウなどに対応",

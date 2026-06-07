@@ -101,9 +101,6 @@ class HighlightWord {
 
 const highlightWords = new HighlightWords();
 
-/**
- * @param {Scene_Boot.prototype} sceneBoot
- */
 function Scene_Boot_AutoHighlightMixIn(sceneBoot: Scene_Boot) {
   const _start = sceneBoot.start;
   sceneBoot.start = function () {
@@ -111,6 +108,10 @@ function Scene_Boot_AutoHighlightMixIn(sceneBoot: Scene_Boot) {
     /**
      * データベースのロードが完了しているので、ハイライトテキストを設定する。
      */
+    this.setupHighlightWords();
+  };
+
+  sceneBoot.setupHighlightWords = function () {
     settings.highlightGroups.forEach((highlightGroup) => {
       highlightGroup.texts.forEach((text) => {
         if (text) {
