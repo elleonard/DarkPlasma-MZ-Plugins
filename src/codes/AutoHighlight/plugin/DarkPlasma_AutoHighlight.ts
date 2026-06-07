@@ -189,3 +189,5 @@ function Window_AutoHighlightMixIn(windowClass: Window_Base) {
 }
 
 Window_AutoHighlightMixIn(Window_Base.prototype);
+
+globalThis.highlightWords = highlightWords;

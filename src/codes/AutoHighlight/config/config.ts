@@ -5,6 +5,10 @@ import { createStruct, createStringParam, createColorParam, createStringArrayPar
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/06/07",
+    version: "2.5.0",
+    description: "ハイライトワードクラスインスタンスを外部公開",
+  },
+  {
     version: "2.4.0",
     description: "ハイライトワード設定インターフェースを追加",
   },
