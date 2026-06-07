@@ -1,10 +1,11 @@
-// DarkPlasma_UnderlineWord 1.0.0
+// DarkPlasma_UnderlineWord 1.1.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/06/07 1.0.0 公開
+ * 2026/06/07 1.1.0 下線を引く対象を追加するインターフェースを追加
+ *            1.0.0 公開
  */
 
 /*:
@@ -30,7 +31,7 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 1.0.0
+ * version: 1.1.0
  * 指定した語句に下線を自動で描画します。
  *
  * プラグインパラメータで語句と下線の色・太さを設定してください。
@@ -181,13 +182,16 @@
   }
   const underlineWords = new UnderlineWords();
   function Scene_Boot_UnderlineWordMixIn(sceneBoot) {
+    sceneBoot.addUnderlineWordEntry = function (word, color, lineWidth) {
+      underlineWords.add(new UnderlineWordEntry(word, color, lineWidth));
+    };
     const _start = sceneBoot.start;
     sceneBoot.start = function () {
       _start.call(this);
       settings.underlineGroups.forEach((group) => {
         group.texts.forEach((text) => {
           if (text) {
-            underlineWords.add(new UnderlineWordEntry(text, group.color, group.lineWidth));
+            this.addUnderlineWordEntry(text, group.color, group.lineWidth);
           }
         });
       });
