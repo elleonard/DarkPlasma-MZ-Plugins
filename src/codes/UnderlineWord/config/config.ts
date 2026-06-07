@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/06/07",
+    version: "1.1.0",
+    description: "下線を引く対象を追加するインターフェースを追加",
+  },
+  {
     version: "1.0.0",
     description: "公開",
   }

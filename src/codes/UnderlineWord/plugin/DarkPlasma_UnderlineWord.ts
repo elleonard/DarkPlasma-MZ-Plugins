@@ -91,13 +91,17 @@ class UnderlineWords {
 const underlineWords = new UnderlineWords();
 
 function Scene_Boot_UnderlineWordMixIn(sceneBoot: Scene_Boot) {
+  sceneBoot.addUnderlineWordEntry = function (word, color, lineWidth) {
+    underlineWords.add(new UnderlineWordEntry(word, color, lineWidth));
+  };
+
   const _start = sceneBoot.start;
   sceneBoot.start = function () {
     _start.call(this);
     settings.underlineGroups.forEach((group) => {
       group.texts.forEach((text) => {
         if (text) {
-          underlineWords.add(new UnderlineWordEntry(text, group.color, group.lineWidth));
+          this.addUnderlineWordEntry(text, group.color, group.lineWidth);
         }
       });
     });
