@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>指定した語句に下線を引く</title>
+      <link href="/DarkPlasma-MZ-Plugins/2026/06/08/underline-word/"/>
+      <url>/DarkPlasma-MZ-Plugins/2026/06/08/underline-word/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>指定した語句に下線を自動で描画します。</p><h1 id="使用例"><a href="#使用例" class="headerlink" title="使用例"></a>使用例</h1><p><img src="/DarkPlasma-MZ-Plugins/2026/06/08/underline-word/underline-word.png" alt="使用例" title="使用例"></p><p>プラグインパラメータで語句と色・太さを設定することができます。<br>また、 <code>\UL[色, 太さ]語句\UL[]</code> のような記法で手動で下線を引くこともできます。</p><h1 id="ダウンロードページへのリンク"><a href="#ダウンロードページへのリンク" class="headerlink" title="ダウンロードページへのリンク"></a>ダウンロードページへのリンク</h1><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_UnderlineWord.js">GitHub</a><br>ダウンロード方法については <a href="/DarkPlasma-MZ-Plugins/2021/12/30/about/" title="このブログは何？">このブログは何？</a> を参照してください。</p><h2 id="前提プラグイン"><a href="#前提プラグイン" class="headerlink" title="前提プラグイン"></a>前提プラグイン</h2><h3 id="直線を描画する"><a href="#直線を描画する" class="headerlink" title="直線を描画する"></a>直線を描画する</h3><p><a href="https://github.com/elleonard/DarkPlasma-MZ-Plugins/blob/release/DarkPlasma_DrawLine.js">GitHub</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> プラグイン解説 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> テキスト </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>マップシーンに戻った時にアニメーションを再開する</title>
       <link href="/DarkPlasma-MZ-Plugins/2026/05/19/resume-map-animation/"/>
       <url>/DarkPlasma-MZ-Plugins/2026/05/19/resume-map-animation/</url>
@@ -357,9 +382,9 @@
       
         <tags>
             
-            <tag> テキスト </tag>
-            
             <tag> 装備 </tag>
+            
+            <tag> テキスト </tag>
             
         </tags>
       
@@ -901,9 +926,9 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> MV版あり </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
@@ -1007,9 +1032,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> システム </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> セーブデータ </tag>
             
@@ -1092,11 +1117,11 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> テキスト </tag>
             
             <tag> MV版あり </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
@@ -1173,9 +1198,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> システム </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> セーブデータ </tag>
             
@@ -1202,9 +1227,9 @@
       
         <tags>
             
-            <tag> イベント </tag>
-            
             <tag> 戦闘 </tag>
+            
+            <tag> イベント </tag>
             
         </tags>
       
@@ -1229,8 +1254,6 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> 装備 </tag>
             
             <tag> 職業 </tag>
@@ -1238,6 +1261,8 @@
             <tag> アクター </tag>
             
             <tag> ステート </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> 特徴 </tag>
             
@@ -1295,9 +1320,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> ステート </tag>
+            
+            <tag> MV版あり </tag>
             
             <tag> 戦闘 </tag>
             
@@ -1453,9 +1478,9 @@
       
         <tags>
             
-            <tag> MV版あり </tag>
-            
             <tag> 装備 </tag>
+            
+            <tag> MV版あり </tag>
             
         </tags>
       
@@ -1563,9 +1588,9 @@
             
             <tag> ステート </tag>
             
-            <tag> 特徴 </tag>
-            
             <tag> パーティ </tag>
+            
+            <tag> 特徴 </tag>
             
         </tags>
       
