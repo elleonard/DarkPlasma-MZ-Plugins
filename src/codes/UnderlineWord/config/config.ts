@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/08",
+    version: "1.1.1",
+    description: "下線の色が想定外の値になる不具合を修正",
+  },
+  {
     date: "2026/06/07",
     version: "1.1.0",
     description: "下線を引く対象を追加するインターフェースを追加",
@@ -89,5 +94,8 @@ export const config = new ConfigDefinitionBuilder(
     プラグインパラメータで語句と下線の色・太さを設定してください。
     指定したウィンドウで表示されるテキスト内の語句に下線が描画されます。
 
-    drawTextEx方式（メッセージウィンドウなど）の部分一致に対応しています。`)
+    drawTextEx方式（メッセージウィンドウなど）の部分一致に対応しています。
+
+    下記の記法を使用し、手動で下線を引くこともできます。
+    \\UL[色,線幅]下線を引く\\UL[]`)
   .build();

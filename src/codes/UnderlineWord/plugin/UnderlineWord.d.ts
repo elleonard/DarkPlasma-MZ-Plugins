@@ -3,7 +3,9 @@
 
 declare namespace Window_Base {
   interface TextState {
-    underlineWord?: string | null;
+    underlineColor?: string | null;
+    underlineLineWidth?: number;
+    underlineStartX?: number;
   }
 }
 
@@ -12,5 +14,6 @@ declare interface Scene_Boot {
 }
 
 declare interface Window_Base {
+  drawUnderline(textState: Window_Base.TextState): void;
   isUnderlineWindow(): boolean;
 }

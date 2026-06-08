@@ -83,7 +83,8 @@ class UnderlineWords {
       return text;
     }
     return text.replace(this.getRegExp(), (match) => {
-      return `\x1bUL[${match}]${match}\x1bUL[]`;
+      const info = this.findColorInfoByWord(match);
+      return `\x1bUL[${info?.color ?? 0},${info?.lineWidth ?? 1}]${match}\x1bUL[]`;
     });
   }
 }
@@ -120,6 +121,17 @@ function Window_UnderlineWordMixIn(windowBase: Window_Base) {
     return text;
   };
 
+  const _processNewLine = windowBase.processNewLine;
+  windowBase.processNewLine = function (textState) {
+    if (textState.underlineColor) {
+      this.drawUnderline(textState);
+    }
+    _processNewLine.call(this, textState);
+    if (textState.underlineColor) {
+      textState.underlineStartX = textState.x;
+    }
+  };
+
   const _processEscapeCharacter = windowBase.processEscapeCharacter;
   windowBase.processEscapeCharacter = function (code, textState) {
     if (code === 'UL') {
@@ -127,26 +139,25 @@ function Window_UnderlineWordMixIn(windowBase: Window_Base) {
       const arr = regExp.exec(textState.text.slice(textState.index));
       if (arr) {
         textState.index += arr[0].length;
-        textState.underlineWord = arr[1] || null;
+        if (arr[1]) {
+          const [color, lineWidth] = arr[1].split(',');
+          textState.underlineColor = color;
+          textState.underlineLineWidth = Number(lineWidth);
+          textState.underlineStartX = textState.x;
+        } else if (textState.underlineColor) {
+          this.drawUnderline(textState);
+          textState.underlineColor = null;
+        }
       }
       return;
     }
     _processEscapeCharacter.call(this, code, textState);
   };
 
-  const _flushTextState = windowBase.flushTextState;
-  windowBase.flushTextState = function (textState) {
-    const beforeX = textState.x;
-    _flushTextState.call(this, textState);
-    const word = textState.underlineWord;
-    if (word) {
-      const afterX = textState.x;
-      const info = underlineWords.findColorInfoByWord(word);
-      if (info) {
-        const underlineY = textState.y + this.lineHeight() - info.lineWidth;
-        this.contents.drawLine(beforeX, underlineY, afterX, underlineY, info.lineWidth, info.color);
-      }
-    }
+  windowBase.drawUnderline = function (textState) {
+    const lineWidth = textState.underlineLineWidth ?? 1;
+    const underlineY = textState.y + this.lineHeight() - lineWidth;
+    this.contents.drawLine(textState.underlineStartX ?? textState.x, underlineY, textState.x, underlineY, lineWidth, textState.underlineColor!);
   };
 
   windowBase.isUnderlineWindow = function () {
