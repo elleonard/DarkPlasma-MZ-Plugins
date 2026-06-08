@@ -1,6 +1,6 @@
 /// <reference path="./NameWindow.d.ts" />
 
-import { settings } from './_build/DarkPlasma_NameWindow_parameters';
+import { settings } from '../config/_build/DarkPlasma_NameWindow_parameters.js';
 
 function ColorManager_NameWindowMixIn(colorManager: typeof ColorManager) {
   /**
@@ -94,8 +94,11 @@ function Window_Message_NameWindowMixIn(windowClass: Window_Message) {
       const speakerReg = new RegExp('^(.+)(「|（)', 'gi');
       const speaker = speakerReg.exec(text);
       if (speaker !== null) {
-        let target = speaker[1].replace('\x1b}', '');
+        let target = speaker[1];
         const eraseTarget = target;
+        settings.ignoreAutoNameControlCharacters.forEach(c => {
+          target = target.replaceAll(new RegExp(`\\x1b${c}\\[.*?\\]`, "gi"), '');
+        });
         if (settings.forceAutoNameColor) {
           target = target.replace(/\x1bC\[(#?[0-9a-fA-F]*)\]/gi, '');
         }
