@@ -1,9 +1,11 @@
-// DarkPlasma_NameWindow 2.0.5
-// Copyright (c) 2020 DarkPlasma
+// DarkPlasma_NameWindow 2.1.0
+// Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/08 2.1.0 configをTypeScript移行
+ *                  自動名前で無視する制御文字を追加
  * 2024/07/08 2.0.5 ゲーム中にアクター名を変更した場合、変更後の名前に色設定を適用できない不具合を修正
  * 2023/06/02 2.0.4 自動名前色強制パラメータで、#から始まるカラーコードを無視できない不具合を修正
  * 2023/05/15 2.0.3 プラグインパラメータの型を変更
@@ -46,23 +48,31 @@
  * @type boolean
  * @default true
  *
+ * @param ignoreAutoNameControlCharacters
+ * @desc 自動名前検出において指定した制御文字を無視します。
+ * @text 自動名前で無視する制御文字
+ * @type string[]
+ * @default ["UL","}"]
+ *
  * @help
- * version: 2.0.5
+ * version: 2.1.0
  * メッセージテキストに以下のように記述すると名前ウィンドウを表示します。
  *
- * \n<***>
+ *
+ * <***>
  *
  * また、以下のように入力するとIDに対応するアクター名を名前ウィンドウに表示します。
  *
- * \ndp<アクターID>
+ *
+ * dp<アクターID>
  */
 /*~struct~ActorColor:
  * @param actor
  * @text アクター
  * @type actor
+ * @default 0
  *
  * @param color
- * @desc 名前の色。色番号
  * @text 名前の色
  * @type color
  * @default 6
@@ -82,17 +92,26 @@
     defaultTextColor: pluginParameters.defaultTextColor?.startsWith('#')
       ? String(pluginParameters.defaultTextColor)
       : Number(pluginParameters.defaultTextColor || 6),
-    actorColors: JSON.parse(pluginParameters.actorColors || '[]').map((e) => {
-      return ((parameter) => {
-        const parsed = JSON.parse(parameter);
-        return {
-          actor: Number(parsed.actor || 0),
-          color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 6),
-        };
-      })(e || '{}');
-    }),
+    actorColors: pluginParameters.actorColors
+      ? JSON.parse(pluginParameters.actorColors).map((e) => {
+          return e
+            ? ((parameter) => {
+                const parsed = JSON.parse(parameter);
+                return {
+                  actor: Number(parsed.actor || 0),
+                  color: parsed.color?.startsWith('#') ? String(parsed.color) : Number(parsed.color || 6),
+                };
+              })(e)
+            : { actor: 0, color: 6 };
+        })
+      : [],
     autoNameWindow: String(pluginParameters.autoNameWindow || false) === 'true',
     forceAutoNameColor: String(pluginParameters.forceAutoNameColor || true) === 'true',
+    ignoreAutoNameControlCharacters: pluginParameters.ignoreAutoNameControlCharacters
+      ? JSON.parse(pluginParameters.ignoreAutoNameControlCharacters).map((e) => {
+          return String(e || ``);
+        })
+      : ['UL', '}'],
   };
 
   function ColorManager_NameWindowMixIn(colorManager) {
@@ -178,8 +197,11 @@
         const speakerReg = new RegExp('^(.+)(「|（)', 'gi');
         const speaker = speakerReg.exec(text);
         if (speaker !== null) {
-          let target = speaker[1].replace('\x1b}', '');
+          let target = speaker[1];
           const eraseTarget = target;
+          settings.ignoreAutoNameControlCharacters.forEach((c) => {
+            target = target.replaceAll(new RegExp(`\\x1b${c}\\[.*?\\]`, 'gi'), '');
+          });
           if (settings.forceAutoNameColor) {
             target = target.replace(/\x1bC\[(#?[0-9a-fA-F]*)\]/gi, '');
           }

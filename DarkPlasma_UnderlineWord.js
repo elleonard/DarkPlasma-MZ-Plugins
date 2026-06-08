@@ -1,9 +1,10 @@
-// DarkPlasma_UnderlineWord 1.1.0
+// DarkPlasma_UnderlineWord 1.1.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/08 1.1.1 下線の色が想定外の値になる不具合を修正
  * 2026/06/07 1.1.0 下線を引く対象を追加するインターフェースを追加
  *            1.0.0 公開
  */
@@ -31,13 +32,16 @@
  * @default ["Window_Message"]
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  * 指定した語句に下線を自動で描画します。
  *
  * プラグインパラメータで語句と下線の色・太さを設定してください。
  * 指定したウィンドウで表示されるテキスト内の語句に下線が描画されます。
  *
  * drawTextEx方式（メッセージウィンドウなど）の部分一致に対応しています。
+ *
+ * 下記の記法を使用し、手動で下線を引くこともできます。
+ * \UL[色,線幅]下線を引く\UL[]
  *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_DrawLine version:1.0.0
@@ -176,7 +180,8 @@
         return text;
       }
       return text.replace(this.getRegExp(), (match) => {
-        return `\x1bUL[${match}]${match}\x1bUL[]`;
+        const info = this.findColorInfoByWord(match);
+        return `\x1bUL[${info?.color ?? 0},${info?.lineWidth ?? 1}]${match}\x1bUL[]`;
       });
     }
   }
@@ -207,6 +212,16 @@
       }
       return text;
     };
+    const _processNewLine = windowBase.processNewLine;
+    windowBase.processNewLine = function (textState) {
+      if (textState.underlineColor) {
+        this.drawUnderline(textState);
+      }
+      _processNewLine.call(this, textState);
+      if (textState.underlineColor) {
+        textState.underlineStartX = textState.x;
+      }
+    };
     const _processEscapeCharacter = windowBase.processEscapeCharacter;
     windowBase.processEscapeCharacter = function (code, textState) {
       if (code === 'UL') {
@@ -214,25 +229,31 @@
         const arr = regExp.exec(textState.text.slice(textState.index));
         if (arr) {
           textState.index += arr[0].length;
-          textState.underlineWord = arr[1] || null;
+          if (arr[1]) {
+            const [color, lineWidth] = arr[1].split(',');
+            textState.underlineColor = color;
+            textState.underlineLineWidth = Number(lineWidth);
+            textState.underlineStartX = textState.x;
+          } else if (textState.underlineColor) {
+            this.drawUnderline(textState);
+            textState.underlineColor = null;
+          }
         }
         return;
       }
       _processEscapeCharacter.call(this, code, textState);
     };
-    const _flushTextState = windowBase.flushTextState;
-    windowBase.flushTextState = function (textState) {
-      const beforeX = textState.x;
-      _flushTextState.call(this, textState);
-      const word = textState.underlineWord;
-      if (word) {
-        const afterX = textState.x;
-        const info = underlineWords.findColorInfoByWord(word);
-        if (info) {
-          const underlineY = textState.y + this.lineHeight() - info.lineWidth;
-          this.contents.drawLine(beforeX, underlineY, afterX, underlineY, info.lineWidth, info.color);
-        }
-      }
+    windowBase.drawUnderline = function (textState) {
+      const lineWidth = textState.underlineLineWidth ?? 1;
+      const underlineY = textState.y + this.lineHeight() - lineWidth;
+      this.contents.drawLine(
+        textState.underlineStartX ?? textState.x,
+        underlineY,
+        textState.x,
+        underlineY,
+        lineWidth,
+        textState.underlineColor,
+      );
     };
     windowBase.isUnderlineWindow = function () {
       return settings.targetWindows.some((targetWindow) => this.constructor.name === targetWindow);
