@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/14",
+    version: "1.1.0",
+    description: "例外設定用インターフェース追加",
+  },
+  {
     date: "2026/03/04",
     version: "1.0.4",
     description: "メッセージ表示中に不必要に高い負荷がかかる不具合を修正",

@@ -6,7 +6,13 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
   const _create = sceneClass.create;
   sceneClass.create = function () {
     _create.call(this);
-    this.createMessageWindows();
+    if (this.mustCreateMessageWindow()) {
+      this.createMessageWindows();
+    }
+  };
+
+  sceneClass.mustCreateMessageWindow = function () {
+    return true;
   };
 
   sceneClass.isMessageWindowClosing = function () {

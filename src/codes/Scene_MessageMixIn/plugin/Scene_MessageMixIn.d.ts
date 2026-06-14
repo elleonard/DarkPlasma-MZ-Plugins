@@ -9,6 +9,7 @@ declare interface Scene_Base {
   _numberInputWindow: Window_NumberInput;
   _eventItemWindow: Window_EventItem;
 
+  mustCreateMessageWindow(): boolean;
   isMessageWindowClosing(): boolean;
   createMessageWindows(): void;
 
