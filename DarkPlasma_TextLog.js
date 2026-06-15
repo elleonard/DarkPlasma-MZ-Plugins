@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 2.3.0
+// DarkPlasma_TextLog 2.3.1
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/16 2.3.1 configをTypeScript移行
  * 2025/07/08 2.3.0 スクリプトを用いてマップからログシーンを開く手段を追加
  * 2024/03/14 2.2.0 パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更
  * 2023/12/23 2.1.1 ゲーム開始直後にテキストを持たないイベントを実行すると自動区切り線が挿入される不具合を修正
@@ -124,15 +125,15 @@
  * @desc 上下キーによるスクロールの速さを設定します。大きいほど速くなります。
  * @text スクロール速さ
  * @type number
- * @default 1
  * @min 1
+ * @default 1
  *
  * @param scrollSpeedHigh
  * @desc PageUp/PageDownキーによるスクロールの速さを設定します。
  * @text 高速スクロール速さ
  * @type number
- * @default 10
  * @min 1
+ * @default 10
  *
  * @param maxLogMessages
  * @desc ログメッセージを保持する件数を設定します。増やしすぎるとゲームの挙動に影響し得ることに注意してください。
@@ -153,7 +154,7 @@
  * @type string
  *
  * @help
- * version: 2.3.0
+ * version: 2.3.1
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -194,9 +195,11 @@
 
   const settings = {
     disableLoggingSwitch: Number(pluginParameters.disableLoggingSwitch || 0),
-    openLogKeys: JSON.parse(pluginParameters.openLogKeys || '["tab"]').map((e) => {
-      return String(e || ``);
-    }),
+    openLogKeys: pluginParameters.openLogKeys
+      ? JSON.parse(pluginParameters.openLogKeys).map((e) => {
+          return String(e || ``);
+        })
+      : ['tab'],
     disableLogWindowSwitch: Number(pluginParameters.disableLogWindowSwitch || 0),
     lineSpacing: Number(pluginParameters.lineSpacing || 0),
     messageSpacing: Number(pluginParameters.messageSpacing || 0),
@@ -208,9 +211,11 @@
     smoothBackFromLog: String(pluginParameters.smoothBackFromLog || true) === 'true',
     backgroundImage: String(pluginParameters.backgroundImage || ``),
     showLogWindowFrame: String(pluginParameters.showLogWindowFrame || true) === 'true',
-    escapeCharacterCodes: JSON.parse(pluginParameters.escapeCharacterCodes || '[]').map((e) => {
-      return String(e || ``);
-    }),
+    escapeCharacterCodes: pluginParameters.escapeCharacterCodes
+      ? JSON.parse(pluginParameters.escapeCharacterCodes).map((e) => {
+          return String(e || ``);
+        })
+      : [],
     scrollSpeed: Number(pluginParameters.scrollSpeed || 1),
     scrollSpeedHigh: Number(pluginParameters.scrollSpeedHigh || 10),
     maxLogMessages: Number(pluginParameters.maxLogMessages || 200),
@@ -642,7 +647,12 @@
        */
       const x = 4;
       this._messages.forEach((message) => {
-        this.drawTextEx(message.text(), x, height + Math.floor(settings.lineSpacing / 2) - this.scrollBaseY());
+        this.drawTextEx(
+          message.text(),
+          x,
+          height + Math.floor(settings.lineSpacing / 2) - this.scrollBaseY(),
+          this.innerWidth,
+        );
         height += message.height;
       });
     }
