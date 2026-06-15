@@ -1,9 +1,9 @@
 /// <reference path="./TextLog.d.ts" />
 
-import { pluginName } from "../../common/pluginName";
-import { command_insertLogSplitter, command_insertTextLog, command_showTextLog, parseArgs_insertTextLog } from "./_build/DarkPlasma_TextLog_commands";
-import { settings } from "./_build/DarkPlasma_TextLog_parameters";
-import { Window_ObtainEscapeParamTextMixIn } from '../../common/window/obtainEscapeParamText';
+import { pluginName } from "../../../common/pluginName";
+import { command_insertLogSplitter, command_insertTextLog, command_showTextLog, parseArgs_insertTextLog } from "../config/_build/DarkPlasma_TextLog_commands";
+import { settings } from "../config/_build/DarkPlasma_TextLog_parameters";
+import { Window_ObtainEscapeParamTextMixIn } from '../../../common/window/obtainEscapeParamText';
 
 PluginManager.registerCommand(pluginName, command_showTextLog, function(args) {
   SceneManager.push(Scene_TextLog);
@@ -512,7 +512,7 @@ class Window_TextLog extends Window_Selectable {
      */
     const x = 4;
     this._messages.forEach(message => {
-      this.drawTextEx(message.text(), x, height + Math.floor(settings.lineSpacing/2) - this.scrollBaseY());
+      this.drawTextEx(message.text(), x, height + Math.floor(settings.lineSpacing/2) - this.scrollBaseY(), this.innerWidth);
       height += message.height;
     });
   }

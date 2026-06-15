@@ -1,4 +1,4 @@
-/// <reference path="../../typings/rmmz.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
 
 declare interface EvacuatedMessageAndSubWindows {
   _messageWindow: Window_Message;
