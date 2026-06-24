@@ -6,6 +6,8 @@
 /**
  * 2026/06/24 2.0.0 configをTypeScript移行
  *                  旧形式の記述サポートを終了
+ *                  特徴の展開を遅延評価に変更
+ *                  属性有効度乗算、属性有効度加算を追加
  * 2024/11/05 1.2.3 通常能力値乗算が効かない不具合を修正
  *                  競合により特殊能力値加算、追加能力値乗算が効かない不具合を修正
  *                  AddSParamTrait、MultiplyXParamTraitとの順序を明示
@@ -31,10 +33,12 @@
  * @base DarkPlasma_MultiplyXParamTrait
  * @base DarkPlasma_AddSParamTrait
  * @base DarkPlasma_AllocateUniqueTraitDataId
+ * @base DarkPlasma_LazyExtractData
  * @orderAfter DarkPlasma_FilterEquip
  * @orderAfter DarkPlasma_MultiplyXParamTrait
  * @orderAfter DarkPlasma_AddSParamTrait
  * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
+ * @orderAfter DarkPlasma_LazyExtractData
  *
  * @help
  * version: 2.0.0
@@ -57,11 +61,15 @@
  * 床ダメージ率*0:
  * <partyAbility:sparamRate:fdr:0>
  *
+ * 火属性有効度*110％:
+ * <partyAbility:elementRate:火:110>
+ *
  * 上記すべてを設定する
  * <partyAbility:
  *   paramPlus:mhp:10
  *   xparamPlus:cri:20
  *   sparamRate:fdr:0
+ *   elementRate:火:110
  * >
  *
  * [trait]:
@@ -71,6 +79,8 @@
  *   xparamRate: 追加能力値乗算
  *   sparamPlus: 特殊能力値加算
  *   sparamRate: 特殊能力値乗算(※2)
+ *   elementRate: 属性有効度乗算
+ *   elementRatePlus: 属性有効度加算(※3)
  *
  * param系特徴の[data]:
  *   mhp: 最大HP
@@ -112,15 +122,20 @@
  * ※2: 特殊能力値乗算
  * パーティ能力による乗算は加算の後に行います。
  *
+ * ※3: 属性有効度加算
+ * パーティ能力による加算は乗算の対象外になります。
+ *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_MultiplyXParamTrait version:1.0.1
  * DarkPlasma_AddSParamTrait version:1.0.2
  * DarkPlasma_AllocateUniqueTraitDataId version:1.1.0
+ * DarkPlasma_LazyExtractData version:1.0.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_FilterEquip
  * DarkPlasma_MultiplyXParamTrait
  * DarkPlasma_AddSParamTrait
  * DarkPlasma_AllocateUniqueTraitDataId
+ * DarkPlasma_LazyExtractData
  */
 
 (() => {
@@ -130,10 +145,14 @@
     return arguments[1];
   });
 
+  function hasTraits(data) {
+    return 'traits' in data;
+  }
+
   const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
   const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mrg', 'trg'];
   const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'];
-  const paramDataIds = {
+  const paramDataIds = () => ({
     plus: PARAM_KEYS.map((_, paramId) =>
       uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_PARAM, paramId, () =>
         TextManager.param(paramId),
@@ -144,8 +163,8 @@
         TextManager.param(paramId),
       ),
     ),
-  };
-  const xparamDataIds = {
+  });
+  const xparamDataIds = () => ({
     plus: XPARAM_KEYS.map((_, paramId) =>
       uniqueTraitDataIdCache.allocate(
         pluginName,
@@ -162,8 +181,8 @@
         TextManager.xparam ? TextManager.xparam(paramId) : '',
       ),
     ),
-  };
-  const sparamDataIds = {
+  });
+  const sparamDataIds = () => ({
     plus: SPARAM_KEYS.map((_, paramId) =>
       uniqueTraitDataIdCache.allocate(
         pluginName,
@@ -180,8 +199,27 @@
         TextManager.sparam ? TextManager.sparam(paramId) : '',
       ),
     ),
+  });
+  const elementDataIds = () => {
+    return {
+      rate: $dataSystem.elements
+        .filter((e) => e)
+        .map((_, index) => {
+          return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_ELEMENT_RATE, index, '属性有効度');
+        }),
+      plus: $dataSystem.elements
+        .filter((e) => e)
+        .map((_, index) => {
+          return uniqueTraitDataIdCache.allocate(
+            pluginName,
+            Game_BattlerBase.TRAIT_ELEMENT_RATE,
+            index + $dataSystem.elements.length,
+            '属性有効度',
+          );
+        }),
+    };
   };
-  const partyAbilityDataIds = {
+  const partyAbilityDataIds = () => ({
     param: {
       plus: PARAM_KEYS.map((_, paramId) =>
         uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId, () =>
@@ -233,15 +271,48 @@
         ),
       ),
     },
-  };
+    element: {
+      rate: $dataSystem.elements
+        .filter((e) => e)
+        .map((_, index) => {
+          return uniqueTraitDataIdCache.allocate(
+            pluginName,
+            Game_BattlerBase.TRAIT_PARTY_ABILITY,
+            index + PARAM_KEYS.length * 2 + XPARAM_KEYS.length * 2 + SPARAM_KEYS.length * 2,
+            '属性有効度',
+          );
+        }),
+      plus: $dataSystem.elements
+        .filter((e) => e)
+        .map((_, index) => {
+          return uniqueTraitDataIdCache.allocate(
+            pluginName,
+            Game_BattlerBase.TRAIT_PARTY_ABILITY,
+            index +
+              PARAM_KEYS.length * 2 +
+              XPARAM_KEYS.length * 2 +
+              SPARAM_KEYS.length * 2 +
+              $dataSystem.elements.length,
+            '属性有効度',
+          );
+        }),
+    },
+  });
   function DataManager_PartyAbilityTraitMixIn(dataManager) {
     const _extractMetadata = dataManager.extractMetadata;
     dataManager.extractMetadata = function (data) {
       _extractMetadata.call(this, data);
-      if ('traits' in data) {
+      if (hasTraits(data)) {
         if (data.meta.partyAbility) {
-          data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
+          this.pushLazyExtractData(data);
         }
+      }
+    };
+    const _lazyExtractMetadata = dataManager.lazyExtractMetadata;
+    dataManager.lazyExtractMetadata = function (data) {
+      _lazyExtractMetadata.call(this, data);
+      if (hasTraits(data) && data.meta.partyAbility) {
+        data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
       }
     };
     dataManager.parsePartyAbility = function (meta) {
@@ -268,6 +339,9 @@
           case 'sparamPlus':
           case 'sparamRate':
             return SPARAM_KEYS.indexOf(metaTokens[1]);
+          case 'elementRate':
+          case 'elementRatePlus':
+            return $dataSystem.elements.indexOf(metaTokens[1]);
           default:
             throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
         }
@@ -286,6 +360,9 @@
           case 'sparamPlus':
           case 'sparamRate':
             return Game_BattlerBase.TRAIT_SPARAM;
+          case 'elementRate':
+          case 'elementRatePlus':
+            return Game_BattlerBase.TRAIT_ELEMENT_RATE;
           default:
             throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
         }
@@ -293,17 +370,21 @@
       const dataIds = (() => {
         switch (metaTokens[0]) {
           case 'paramPlus':
-            return [partyAbilityDataIds.param.plus[paramId], paramDataIds.plus[paramId]];
+            return [partyAbilityDataIds().param.plus[paramId], paramDataIds().plus[paramId]];
           case 'paramRate':
-            return [partyAbilityDataIds.param.rate[paramId], paramDataIds.rate[paramId]];
+            return [partyAbilityDataIds().param.rate[paramId], paramDataIds().rate[paramId]];
           case 'xparamPlus':
-            return [partyAbilityDataIds.xparam.plus[paramId], xparamDataIds.plus[paramId]];
+            return [partyAbilityDataIds().xparam.plus[paramId], xparamDataIds().plus[paramId]];
           case 'xparamRate':
-            return [partyAbilityDataIds.xparam.rate[paramId], xparamDataIds.rate[paramId]];
+            return [partyAbilityDataIds().xparam.rate[paramId], xparamDataIds().rate[paramId]];
           case 'sparamPlus':
-            return [partyAbilityDataIds.sparam.plus[paramId], sparamDataIds.plus[paramId]];
+            return [partyAbilityDataIds().sparam.plus[paramId], sparamDataIds().plus[paramId]];
           case 'sparamRate':
-            return [partyAbilityDataIds.sparam.rate[paramId], sparamDataIds.rate[paramId]];
+            return [partyAbilityDataIds().sparam.rate[paramId], sparamDataIds().rate[paramId]];
+          case 'elementRate':
+            return [partyAbilityDataIds().element.rate[paramId], elementDataIds().rate[paramId]];
+          case 'elementRatePlus':
+            return [partyAbilityDataIds().element.plus[paramId], elementDataIds().plus[paramId]];
           default:
             throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
         }
@@ -367,6 +448,19 @@
     gameBattlerBase.sparamRateByPartyAbility = function (paramId) {
       return 1;
     };
+    const _elementRate = gameBattlerBase.elementRate;
+    gameBattlerBase.elementRate = function (elementId) {
+      return (
+        _elementRate.call(this, elementId) * this.elementRateByPartyAbility(elementId) +
+        this.elementRatePlusByPartyAbility(elementId)
+      );
+    };
+    gameBattlerBase.elementRateByPartyAbility = function (elementId) {
+      return 1;
+    };
+    gameBattlerBase.elementRatePlusByPartyAbility = function (elementId) {
+      return 0;
+    };
   }
   Game_BattlerBase_PartyAbilityTraitMixIn(Game_BattlerBase.prototype);
   function Game_Actor_PartyAbilityTraitMixIn(gameActor) {
@@ -396,6 +490,12 @@
     gameActor.sparamRateByPartyAbility = function (paramId) {
       return (this._tempParty || $gameParty).sparamRateByPartyAbility(paramId);
     };
+    gameActor.elementRateByPartyAbility = function (elementId) {
+      return (this._tempParty || $gameParty).elementRateByPartyAbility(elementId);
+    };
+    gameActor.elementRatePlusByPartyAbility = function (elementId) {
+      return (this._tempParty || $gameParty).elementRatePlusByPartyAbility(elementId);
+    };
   }
   Game_Actor_PartyAbilityTraitMixIn(Game_Actor.prototype);
   function Game_Party_PartyAbilityTraitMixIn(gameParty) {
@@ -405,7 +505,7 @@
     gameParty.paramPlusByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.param.plus[paramId].id),
+          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().param.plus[paramId].id),
         0,
       );
     };
@@ -415,7 +515,7 @@
     gameParty.paramRateByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.param.rate[paramId].id),
+          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().param.rate[paramId].id),
         1,
       );
     };
@@ -425,7 +525,7 @@
     gameParty.xparamPlusByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.xparam.plus[paramId].id),
+          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().xparam.plus[paramId].id),
         0,
       );
     };
@@ -435,7 +535,7 @@
     gameParty.xparamRateByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.xparam.rate[paramId].id),
+          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().xparam.rate[paramId].id),
         1,
       );
     };
@@ -445,7 +545,7 @@
     gameParty.sparamPlusByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.sparam.plus[paramId].id),
+          result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().sparam.plus[paramId].id),
         0,
       );
     };
@@ -455,8 +555,24 @@
     gameParty.sparamRateByPartyAbility = function (paramId) {
       return this.allMembers().reduce(
         (result, actor) =>
-          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds.sparam.rate[paramId].id),
+          result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().sparam.rate[paramId].id),
         1,
+      );
+    };
+    gameParty.elementRateByPartyAbility = function (elementId) {
+      return this.allMembers().reduce(
+        (result, actor) =>
+          result *
+          actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().element.rate[elementId].id),
+        1,
+      );
+    };
+    gameParty.elementRatePlusByPartyAbility = function (elementId) {
+      return this.allMembers().reduce(
+        (result, actor) =>
+          result +
+          actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().element.plus[elementId].id),
+        0,
       );
     };
   }
