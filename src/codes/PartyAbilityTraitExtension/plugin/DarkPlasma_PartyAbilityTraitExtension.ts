@@ -1,4 +1,5 @@
-import { pluginName } from '../../common/pluginName';
+/// <reference path="./PartyAbilityTraitExtension.d.ts" />
+import { pluginName } from '../../../common/pluginName';
 
 const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'] as const;
 
@@ -91,43 +92,6 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
    */
   dataManager.parsePartyAbilityLine = function (line) {
     const metaTokens = line.split(":").map(token => token.trim());
-    /**
-     * 旧形式
-     */
-    if (metaTokens.length === 2) {
-      const value = Number(metaTokens[1]);
-      const paramId = PARAM_KEYS.indexOf(metaTokens[0] as typeof PARAM_KEYS[number]);
-      if (paramId >= 0) {
-        return [
-          {
-            code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
-            dataId: partyAbilityDataIds.param.plus[paramId].id,
-            value: value,
-          },
-          {
-            code: Game_BattlerBase.TRAIT_PARAM,
-            dataId: paramDataIds.plus[paramId].id,
-            value: value,
-          },
-        ];
-      }
-      const sparamId = SPARAM_KEYS.indexOf(metaTokens[0] as typeof SPARAM_KEYS[number]);
-      if (sparamId >= 0) {
-        return [
-          {
-            code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
-            dataId: partyAbilityDataIds.sparam.rate[sparamId].id,
-            value: value/100,
-          },
-          {
-            code: Game_BattlerBase.TRAIT_SPARAM,
-            dataId: sparamDataIds.rate[sparamId].id,
-            value: value/100,
-          },
-        ];
-      }
-      throw Error(`パーティ能力特徴の記述が不正です: ${line}`);
-    }
     const paramId = (() => {
       switch (metaTokens[0]) {
         case "paramPlus":
