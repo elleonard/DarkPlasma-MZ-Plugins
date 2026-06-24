@@ -1,9 +1,11 @@
-// DarkPlasma_PartyAbilityTraitExtension 1.2.3
+// DarkPlasma_PartyAbilityTraitExtension 2.0.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/24 2.0.0 configをTypeScript移行
+ *                  旧形式の記述サポートを終了
  * 2024/11/05 1.2.3 通常能力値乗算が効かない不具合を修正
  *                  競合により特殊能力値加算、追加能力値乗算が効かない不具合を修正
  *                  AddSParamTrait、MultiplyXParamTraitとの順序を明示
@@ -30,12 +32,12 @@
  * @base DarkPlasma_AddSParamTrait
  * @base DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_FilterEquip
- * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
  * @orderAfter DarkPlasma_MultiplyXParamTrait
  * @orderAfter DarkPlasma_AddSParamTrait
+ * @orderAfter DarkPlasma_AllocateUniqueTraitDataId
  *
  * @help
- * version: 1.2.3
+ * version: 2.0.0
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -110,52 +112,15 @@
  * ※2: 特殊能力値乗算
  * パーティ能力による乗算は加算の後に行います。
  *
- * 以下の構文は非推奨です。
- * 互換性のために維持していますが、
- * 次のメジャーバージョンアップで廃止されます。
- * <partyAbility:[effect]:[value]>
- * パーティ全体に[effect]で指定した効果を、効果量[value]で付与します。
- *
- * [effect]:
- *   mhp: 最大HP加算
- *   mmp: 最大MP加算
- *   atk: 攻撃力加算
- *   def: 防御力加算
- *   mat: 魔法攻撃力加算
- *   mdf: 魔法防御力加算
- *   agi: 敏捷性加算
- *   luk: 運加算
- *
- *   tgr: 狙われ率乗算
- *   grd: 防御効果率乗算
- *   rec: 回復効果率乗算
- *   pha: 薬の知識乗算
- *   mcr: MP消費率乗算
- *   tcr: TPチャージ率乗算
- *   pdr: 物理ダメージ率乗算
- *   mdr: 魔法ダメージ率乗算
- *   fdr: 床ダメージ率乗算
- *   exr: 経験値獲得率乗算
- *
- * 設定例
- * 最大HP+10:
- * <partyAbility:mhp:10>
- *
- * 床ダメージ率*0:
- * <partyAbility:fdr:0>
- *
- * MP消費率 80％:
- * <partyAbility:mcr:80>
- *
  * 本プラグインの利用には下記プラグインを必要とします。
  * DarkPlasma_MultiplyXParamTrait version:1.0.1
  * DarkPlasma_AddSParamTrait version:1.0.2
  * DarkPlasma_AllocateUniqueTraitDataId version:1.1.0
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_FilterEquip
- * DarkPlasma_AllocateUniqueTraitDataId
  * DarkPlasma_MultiplyXParamTrait
  * DarkPlasma_AddSParamTrait
+ * DarkPlasma_AllocateUniqueTraitDataId
  */
 
 (() => {
@@ -292,43 +257,6 @@
      */
     dataManager.parsePartyAbilityLine = function (line) {
       const metaTokens = line.split(':').map((token) => token.trim());
-      /**
-       * 旧形式
-       */
-      if (metaTokens.length === 2) {
-        const value = Number(metaTokens[1]);
-        const paramId = PARAM_KEYS.indexOf(metaTokens[0]);
-        if (paramId >= 0) {
-          return [
-            {
-              code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
-              dataId: partyAbilityDataIds.param.plus[paramId].id,
-              value: value,
-            },
-            {
-              code: Game_BattlerBase.TRAIT_PARAM,
-              dataId: paramDataIds.plus[paramId].id,
-              value: value,
-            },
-          ];
-        }
-        const sparamId = SPARAM_KEYS.indexOf(metaTokens[0]);
-        if (sparamId >= 0) {
-          return [
-            {
-              code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
-              dataId: partyAbilityDataIds.sparam.rate[sparamId].id,
-              value: value / 100,
-            },
-            {
-              code: Game_BattlerBase.TRAIT_SPARAM,
-              dataId: sparamDataIds.rate[sparamId].id,
-              value: value / 100,
-            },
-          ];
-        }
-        throw Error(`パーティ能力特徴の記述が不正です: ${line}`);
-      }
       const paramId = (() => {
         switch (metaTokens[0]) {
           case 'paramPlus':
