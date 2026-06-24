@@ -3,6 +3,7 @@
 /// <reference path="../../FilterEquip/FilterEquip.d.ts" />
 /// <reference path="../../MultiplyXParamTrait/plugin/MultiplyXParamTrait.d.ts" />
 /// <reference path="../../AddSParamTrait/plugin/AddSParamTrait.d.ts" />
+/// <reference path="../../LazyExtractData/plugin/LazyExtractData.d.ts" />
 
 declare namespace DataManager {
   function parsePartyAbility(meta: string): MZ.Trait[];
@@ -16,6 +17,8 @@ declare interface Game_BattlerBase {
   xparamRateByPartyAbility(paramId: number): number;
   sparamPlusByPartyAbility(paramId: number): number;
   sparamRateByPartyAbility(paramId: number): number;
+  elementRateByPartyAbility(elementId: number): number;
+  elementRatePlusByPartyAbility(elementId: number): number;
 }
 
 declare interface Game_Actor {
@@ -31,4 +34,6 @@ declare interface Game_Party {
   xparamRateByPartyAbility(paramId: number): number;
   sparamPlusByPartyAbility(paramId: number): number;
   sparamRateByPartyAbility(paramId: number): number;
+  elementRateByPartyAbility(elementId: number): number;
+  elementRatePlusByPartyAbility(elementId: number): number;
 }

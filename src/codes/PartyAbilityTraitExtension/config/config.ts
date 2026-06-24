@@ -13,6 +13,12 @@ const histories: PluginHistorySchema[] = [
     description: "旧形式の記述サポートを終了",
   },
   {
+    description: "特徴の展開を遅延評価に変更",
+  },
+  {
+    description: "属性有効度乗算、属性有効度加算を追加",
+  },
+  {
     date: "2024/11/05",
     version: "1.2.3",
     description: "通常能力値乗算が効かない不具合を修正",
@@ -88,6 +94,11 @@ export const config = new ConfigDefinitionBuilder(
     version: "1.1.0",
     order: 'after',
   })
+  .withBaseDependency({
+    name: "DarkPlasma_LazyExtractData",
+    version: "1.0.0",
+    order: 'after',
+  })
   .withOrderAfterDependency({ name: "DarkPlasma_FilterEquip" })
   .withHelp(dedent`パーティ能力特徴を追加します。
     アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
@@ -108,11 +119,15 @@ export const config = new ConfigDefinitionBuilder(
     床ダメージ率*0:
     <partyAbility:sparamRate:fdr:0>
 
+    火属性有効度*110％:
+    <partyAbility:elementRate:火:110>
+
     上記すべてを設定する
     <partyAbility:
       paramPlus:mhp:10
       xparamPlus:cri:20
       sparamRate:fdr:0
+      elementRate:火:110
     >
 
     [trait]:
@@ -122,6 +137,8 @@ export const config = new ConfigDefinitionBuilder(
       xparamRate: 追加能力値乗算
       sparamPlus: 特殊能力値加算
       sparamRate: 特殊能力値乗算(※2)
+      elementRate: 属性有効度乗算
+      elementRatePlus: 属性有効度加算(※3)
 
     param系特徴の[data]:
       mhp: 最大HP
@@ -161,5 +178,8 @@ export const config = new ConfigDefinitionBuilder(
     パーティ能力による加算は乗算の対象外になります。
 
     ※2: 特殊能力値乗算
-    パーティ能力による乗算は加算の後に行います。`)
+    パーティ能力による乗算は加算の後に行います。
+    
+    ※3: 属性有効度加算
+    パーティ能力による加算は乗算の対象外になります。`)
   .build();
