@@ -1,9 +1,10 @@
-// DarkPlasma_AddSParamTrait 2.0.0
+// DarkPlasma_AddSParamTrait 2.0.1
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/25 2.0.1 エラーメッセージで不具合のデータが特定できるように変更
  * 2025/07/21 2.0.0 限界値設定をDarkPlasma_LimitSParamに分離
  *                  特殊能力値追加プラグイン用にインターフェース追加
  * 2024/12/19 1.2.0 複数の特徴を指定できる記法を追加
@@ -27,7 +28,7 @@
  * @orderBefore DarkPlasma_LimitSParam
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.1
  * アクター、職業、装備、敵キャラ、ステートのメモ欄に指定の記述を行うことで
  * 特殊能力値を加算する特徴を追加します。
  * エディタで指定できる乗算特徴を適用した後に、この設定値が加算されます。
@@ -91,7 +92,11 @@
       _extractMetadata.call(this, data);
       if ('traits' in data) {
         if (data.meta.addSParam) {
-          data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
+          try {
+            data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
+          } catch {
+            throw Error(`エラーが発生しました。${data.id}: ${data.name}`);
+          }
         }
       }
     };

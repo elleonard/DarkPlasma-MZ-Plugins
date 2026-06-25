@@ -1,9 +1,10 @@
-// DarkPlasma_FilterEquip 1.5.1
+// DarkPlasma_FilterEquip 1.5.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/25 1.5.2 configをTypeScript移行
  * 2025/08/23 1.5.1 不要な依存の記述を削除
  * 2025/01/31 1.5.0 同名の特徴をマージする
  * 2024/11/04 1.4.0 同名の特徴データをマージする
@@ -41,6 +42,7 @@
  * @desc 絞り込み画面で表示する特殊能力値の特徴名を設定します。
  * @text 特徴名
  * @type struct<TraitName>
+ * @default {"elementRate":"属性耐性","debuffRate":"弱体耐性","stateRate":"ステート耐性","stateResist":"ステート無効","xparam":"追加能力値","sparam":"特殊能力値","attackElement":"攻撃時属性","attackState":"攻撃時ステート","attackSpeed":"攻撃速度補正","attackTimes":"攻撃追加回数","attackSkill":"攻撃スキル","stypeAdd":"スキルタイプ追加","stypeSeal":"スキルタイプ封印","skillAdd":"スキル追加","skillSeal":"スキル封印","equipWtype":"武器タイプ装備","equipAtype":"防具タイプ装備","equipLock":"装備固定","equipSeal":"装備封印","slotType":"スロットタイプ","actionPlus":"行動回数追加","specialFlag":"特殊フラグ","partyAbility":"パーティ能力"}
  *
  * @param selectedItemColor
  * @desc 絞り込みONの項目の色を設定します。
@@ -59,7 +61,7 @@
  * @default shift
  *
  * @help
- * version: 1.5.1
+ * version: 1.5.2
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
@@ -101,9 +103,9 @@
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_CustomKeyHandler
  * 下記プラグインと共に利用する場合、それよりも上に追加してください。
- * DarkPlasma_PartyAbilityTraitExtension version:1.1.0
- * DarkPlasma_FilterEquip_RecentlyGained version:1.0.0
- * DarkPlasma_AllocateUniqueTraitDataId version:1.0.0
+ * DarkPlasma_PartyAbilityTraitExtension
+ * DarkPlasma_FilterEquip_RecentlyGained
+ * DarkPlasma_AllocateUniqueTraitDataId
  */
 /*~struct~TraitName:
  * @param elementRate
@@ -256,34 +258,60 @@
   const pluginParameters = pluginParametersOf(pluginName);
 
   const settings = {
-    traitName: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        elementRate: String(parsed.elementRate || `属性耐性`),
-        debuffRate: String(parsed.debuffRate || `弱体耐性`),
-        stateRate: String(parsed.stateRate || `ステート耐性`),
-        stateResist: String(parsed.stateResist || `ステート無効`),
-        xparam: String(parsed.xparam || `追加能力値`),
-        sparam: String(parsed.sparam || `特殊能力値`),
-        attackElement: String(parsed.attackElement || `攻撃時属性`),
-        attackState: String(parsed.attackState || `攻撃時ステート`),
-        attackSpeed: String(parsed.attackSpeed || `攻撃速度補正`),
-        attackTimes: String(parsed.attackTimes || `攻撃追加回数`),
-        attackSkill: String(parsed.attackSkill || `攻撃スキル`),
-        stypeAdd: String(parsed.stypeAdd || `スキルタイプ追加`),
-        stypeSeal: String(parsed.stypeSeal || `スキルタイプ封印`),
-        skillAdd: String(parsed.skillAdd || `スキル追加`),
-        skillSeal: String(parsed.skillSeal || `スキル封印`),
-        equipWtype: String(parsed.equipWtype || `武器タイプ装備`),
-        equipAtype: String(parsed.equipAtype || `防具タイプ装備`),
-        equipLock: String(parsed.equipLock || `装備固定`),
-        equipSeal: String(parsed.equipSeal || `装備封印`),
-        slotType: String(parsed.slotType || `スロットタイプ`),
-        actionPlus: String(parsed.actionPlus || `行動回数追加`),
-        specialFlag: String(parsed.specialFlag || `特殊フラグ`),
-        partyAbility: String(parsed.partyAbility || `パーティ能力`),
-      };
-    })(pluginParameters.traitName || '{}'),
+    traitName: pluginParameters.traitName
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            elementRate: String(parsed.elementRate || `属性耐性`),
+            debuffRate: String(parsed.debuffRate || `弱体耐性`),
+            stateRate: String(parsed.stateRate || `ステート耐性`),
+            stateResist: String(parsed.stateResist || `ステート無効`),
+            xparam: String(parsed.xparam || `追加能力値`),
+            sparam: String(parsed.sparam || `特殊能力値`),
+            attackElement: String(parsed.attackElement || `攻撃時属性`),
+            attackState: String(parsed.attackState || `攻撃時ステート`),
+            attackSpeed: String(parsed.attackSpeed || `攻撃速度補正`),
+            attackTimes: String(parsed.attackTimes || `攻撃追加回数`),
+            attackSkill: String(parsed.attackSkill || `攻撃スキル`),
+            stypeAdd: String(parsed.stypeAdd || `スキルタイプ追加`),
+            stypeSeal: String(parsed.stypeSeal || `スキルタイプ封印`),
+            skillAdd: String(parsed.skillAdd || `スキル追加`),
+            skillSeal: String(parsed.skillSeal || `スキル封印`),
+            equipWtype: String(parsed.equipWtype || `武器タイプ装備`),
+            equipAtype: String(parsed.equipAtype || `防具タイプ装備`),
+            equipLock: String(parsed.equipLock || `装備固定`),
+            equipSeal: String(parsed.equipSeal || `装備封印`),
+            slotType: String(parsed.slotType || `スロットタイプ`),
+            actionPlus: String(parsed.actionPlus || `行動回数追加`),
+            specialFlag: String(parsed.specialFlag || `特殊フラグ`),
+            partyAbility: String(parsed.partyAbility || `パーティ能力`),
+          };
+        })(pluginParameters.traitName)
+      : {
+          elementRate: '属性耐性',
+          debuffRate: '弱体耐性',
+          stateRate: 'ステート耐性',
+          stateResist: 'ステート無効',
+          xparam: '追加能力値',
+          sparam: '特殊能力値',
+          attackElement: '攻撃時属性',
+          attackState: '攻撃時ステート',
+          attackSpeed: '攻撃速度補正',
+          attackTimes: '攻撃追加回数',
+          attackSkill: '攻撃スキル',
+          stypeAdd: 'スキルタイプ追加',
+          stypeSeal: 'スキルタイプ封印',
+          skillAdd: 'スキル追加',
+          skillSeal: 'スキル封印',
+          equipWtype: '武器タイプ装備',
+          equipAtype: '防具タイプ装備',
+          equipLock: '装備固定',
+          equipSeal: '装備封印',
+          slotType: 'スロットタイプ',
+          actionPlus: '行動回数追加',
+          specialFlag: '特殊フラグ',
+          partyAbility: 'パーティ能力',
+        },
     selectedItemColor: pluginParameters.selectedItemColor?.startsWith('#')
       ? String(pluginParameters.selectedItemColor)
       : Number(pluginParameters.selectedItemColor || 2),
@@ -429,6 +457,9 @@
     };
   }
   Scene_Equip_FilterEquipMixIn(Scene_Equip.prototype);
+  Game_BattlerBase.TRAIT_NAME = function (traitId) {
+    return TRAIT_NAMES[traitId] || '';
+  };
   const TRAIT_NAMES = {
     [Game_BattlerBase.TRAIT_ELEMENT_RATE]: settings.traitName.elementRate,
     [Game_BattlerBase.TRAIT_DEBUFF_RATE]: settings.traitName.debuffRate,
@@ -793,7 +824,7 @@
      */
     isIncludedItem(equip) {
       if (this._traits.every((trait) => !trait.isIncluded())) {
-        // 全表示
+        // フィルタなしは全表示
         return true;
       }
       const itemTraits = this._equipToTraits(equip);
@@ -820,6 +851,9 @@
       );
     }
   }
+  /**
+   * 絞り込み用特徴
+   */
   class EquipFilter_Trait {
     /**
      * @param {number} id 特徴ID
@@ -856,10 +890,14 @@
     allOff() {
       this._effects.forEach((effect) => effect.off());
     }
+    /**
+     * この特徴でフィルタするかどうか
+     */
     isIncluded() {
       return this._isIncluded;
     }
     /**
+     * 指定した特徴リストのうち、いずれかがこのフィルタ特徴と一致するか
      * @param {MZ.Trait[]} itemTraits 特徴一覧
      * @return {boolean}
      */
@@ -878,6 +916,9 @@
       return this._effects.some((effect) => effect.isIncluded() && traits.some((trait) => trait.dataId === effect.id));
     }
   }
+  /**
+   * 特徴のデータID
+   */
   class EquipFilter_Effect {
     /**
      * @param {number} id 効果ID
