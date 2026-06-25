@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/06/25",
+    version: "2.1.1",
+    description: "パースエラーをわかりやすく表示するように変更",
+  },
+  {
     version: "2.1.0",
     description: "全特徴をuniqueTraitIdCacheで確保するように変更",
   },

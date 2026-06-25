@@ -46,7 +46,11 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
   dataManager.lazyExtractMetadata = function (data) {
     _lazyExtractMetadata.call(this, data);
     if (hasTraits(data) && data.meta.partyAbility) {
-      data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
+      try {
+        data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
+      } catch (e) {
+        throw Error(`パーティ能力特徴を正常にパースできませんでした。 ${data.id}: ${data.name} :${e instanceof Error ? e.message : "不明なエラー"}`);
+      }
     }
   };
 
