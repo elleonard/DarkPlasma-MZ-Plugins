@@ -5,6 +5,17 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/25",
+    version: "2.1.0",
+    description: "全特徴をuniqueTraitIdCacheで確保するように変更",
+  },
+  {
+    description: "ステート有効度乗算、ステート有効度加算を追加",
+  },
+  {
+    description: "正常に動作しない不具合を修正",
+  },
+  {
     date: "2026/06/24",
     version: "2.0.0",
     description: "configをTypeScript移行",
@@ -90,8 +101,8 @@ export const config = new ConfigDefinitionBuilder(
     order: 'after',
   })
   .withBaseDependency({
-    name: "DarkPlasma_AllocateUniqueTraitDataId",
-    version: "1.1.0",
+    name: "DarkPlasma_AllocateUniqueTraitId",
+    version: "1.0.3",
     order: 'after',
   })
   .withBaseDependency({
@@ -122,12 +133,16 @@ export const config = new ConfigDefinitionBuilder(
     火属性有効度*110％:
     <partyAbility:elementRate:火:110>
 
+    ステートID4有効度+20％:
+    <partyAbility:stateRatePlus:4:20>
+
     上記すべてを設定する
     <partyAbility:
       paramPlus:mhp:10
       xparamPlus:cri:20
       sparamRate:fdr:0
       elementRate:火:110
+      stateRatePlus:4:20
     >
 
     [trait]:
@@ -139,6 +154,8 @@ export const config = new ConfigDefinitionBuilder(
       sparamRate: 特殊能力値乗算(※2)
       elementRate: 属性有効度乗算
       elementRatePlus: 属性有効度加算(※3)
+      stateRate: ステート有効度乗算
+      stateRatePlus: ステート有効度加算(※4)
 
     param系特徴の[data]:
       mhp: 最大HP
@@ -181,5 +198,8 @@ export const config = new ConfigDefinitionBuilder(
     パーティ能力による乗算は加算の後に行います。
     
     ※3: 属性有効度加算
+    パーティ能力による加算は乗算の対象外になります。
+    
+    ※4: ステート有効度加算
     パーティ能力による加算は乗算の対象外になります。`)
   .build();

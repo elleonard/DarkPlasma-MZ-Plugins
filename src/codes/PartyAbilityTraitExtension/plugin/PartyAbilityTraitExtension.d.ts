@@ -1,13 +1,13 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../AllocateUniqueTraitDataId/plugin/AllocateUniqueTraitDataId.d.ts" />
-/// <reference path="../../FilterEquip/FilterEquip.d.ts" />
+/// <reference path="../../AllocateUniqueTraitId/plugin/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../../FilterEquip/plugin/FilterEquip.d.ts" />
 /// <reference path="../../MultiplyXParamTrait/plugin/MultiplyXParamTrait.d.ts" />
 /// <reference path="../../AddSParamTrait/plugin/AddSParamTrait.d.ts" />
 /// <reference path="../../LazyExtractData/plugin/LazyExtractData.d.ts" />
 
 declare namespace DataManager {
   function parsePartyAbility(meta: string): MZ.Trait[];
-  function parsePartyAbilityLine(line: string): [MZ.Trait, MZ.Trait];
+  function parsePartyAbilityLine(line: string): MZ.Trait[];
 }
 
 declare interface Game_BattlerBase {
@@ -19,6 +19,8 @@ declare interface Game_BattlerBase {
   sparamRateByPartyAbility(paramId: number): number;
   elementRateByPartyAbility(elementId: number): number;
   elementRatePlusByPartyAbility(elementId: number): number;
+  stateRateByPartyAbility(stateId: number): number;
+  stateRatePlusByPartyAbility(stateId: number): number;
 }
 
 declare interface Game_Actor {
@@ -36,4 +38,6 @@ declare interface Game_Party {
   sparamRateByPartyAbility(paramId: number): number;
   elementRateByPartyAbility(elementId: number): number;
   elementRatePlusByPartyAbility(elementId: number): number;
+  stateRateByPartyAbility(stateId: number): number;
+  stateRatePlusByPartyAbility(stateId: number): number;
 }

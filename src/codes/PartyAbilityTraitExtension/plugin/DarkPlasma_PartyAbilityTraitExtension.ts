@@ -8,88 +8,28 @@ const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mr
 
 const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'] as const;
 
-type ParameterDataIds = {
-  plus: UniqueTraitDataId[];
-  rate: UniqueTraitDataId[];
-};
+const $paramPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 0, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARAM));
+const $paramRateTraitId = uniqueTraitIdCache.allocate(pluginName, 1, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARAM));
+const $xparamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 2, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_XPARAM));
+const $xparamRateTraitId = uniqueTraitIdCache.allocate(pluginName, 3, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_XPARAM));
+const $sparamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 4, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_SPARAM));
+const $sparamRateTraitId = uniqueTraitIdCache.allocate(pluginName, 5, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_SPARAM));
+const $elementRateTraitId = uniqueTraitIdCache.allocate(pluginName, 6, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_ELEMENT_RATE));
+const $elementRatePlusTraitId = uniqueTraitIdCache.allocate(pluginName, 7, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_ELEMENT_RATE));
+const $stateRateTraitId = uniqueTraitIdCache.allocate(pluginName, 8, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_STATE_RATE));
+const $stateRatePlusTraitId = uniqueTraitIdCache.allocate(pluginName, 9, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_STATE_RATE));
 
-const paramDataIds = (): ParameterDataIds => ({
-  plus: PARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_PARAM, paramId, () => TextManager.param(paramId))
-  ),
-  rate: PARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_PARAM, paramId + PARAM_KEYS.length, () => TextManager.param(paramId))
-  ),
-});
+const $partyParamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 10, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyParamRateTraitId = uniqueTraitIdCache.allocate(pluginName, 11, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyXparamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 12, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyXparamRateTraitId = uniqueTraitIdCache.allocate(pluginName, 13, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partySparamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 14, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partySparamRateTraitId = uniqueTraitIdCache.allocate(pluginName, 15, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyElementRateTraitId = uniqueTraitIdCache.allocate(pluginName, 16, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyElementRatePlusTraitId = uniqueTraitIdCache.allocate(pluginName, 17, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyStateRateTraitId = uniqueTraitIdCache.allocate(pluginName, 18, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
+const $partyStateRatePlusTraitId = uniqueTraitIdCache.allocate(pluginName, 19, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARTY_ABILITY));
 
-const xparamDataIds = (): ParameterDataIds => ({
-  plus: XPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_XPARAM, paramId, TextManager.xparam ? TextManager.xparam(paramId) : "")
-  ),
-  rate: XPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_XPARAM, paramId + XPARAM_KEYS.length, TextManager.xparam ? TextManager.xparam(paramId) : "")
-  ),
-});
-
-const sparamDataIds = (): ParameterDataIds => ({
-  plus: SPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_SPARAM, paramId, TextManager.sparam ? TextManager.sparam(paramId) : "")
-  ),
-  rate: SPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-    .allocate(pluginName, Game_BattlerBase.TRAIT_SPARAM, paramId + SPARAM_KEYS.length, TextManager.sparam ? TextManager.sparam(paramId) : "")
-  ),
-});
-
-const elementDataIds = (): ParameterDataIds => {
-  return {
-    rate: $dataSystem.elements.filter(e => e).map((_, index) => {
-      return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_ELEMENT_RATE, index, "属性有効度");
-    }),
-    plus: $dataSystem.elements.filter(e => e).map((_, index) => {
-      return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_ELEMENT_RATE, index + $dataSystem.elements.length, "属性有効度");
-    }),
-  }
-};
-
-const partyAbilityDataIds = (): {
-  param: ParameterDataIds;
-  xparam: ParameterDataIds;
-  sparam: ParameterDataIds;
-  element: ParameterDataIds;
-} => ({
-  param: {
-    plus: PARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId, () => TextManager.param(paramId))
-    ),
-    rate: PARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId + PARAM_KEYS.length, () => TextManager.param(paramId))
-    ),
-  },
-  xparam: {
-    plus: XPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId + PARAM_KEYS.length * 2, TextManager.xparam ? TextManager.xparam(paramId) : "")
-    ),
-    rate: XPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId + PARAM_KEYS.length * 2 + XPARAM_KEYS.length, TextManager.xparam ? TextManager.xparam(paramId) : "")
-    ),
-  },
-  sparam: {
-    plus: SPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId + PARAM_KEYS.length * 2 + XPARAM_KEYS.length * 2, TextManager.sparam ? TextManager.sparam(paramId) : "")
-    ),
-    rate: SPARAM_KEYS.map((_, paramId) => uniqueTraitDataIdCache
-      .allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, paramId + PARAM_KEYS.length * 2 + XPARAM_KEYS.length * 2 + SPARAM_KEYS.length, TextManager.sparam ? TextManager.sparam(paramId) : "")
-    ),
-  },
-  element: {
-    rate: $dataSystem.elements.filter(e => e).map((_, index) => {
-      return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, index + PARAM_KEYS.length * 2 + XPARAM_KEYS.length * 2 + SPARAM_KEYS.length * 2, "属性有効度")
-    }),
-    plus: $dataSystem.elements.filter(e => e).map((_, index) => {
-      return uniqueTraitDataIdCache.allocate(pluginName, Game_BattlerBase.TRAIT_PARTY_ABILITY, index + PARAM_KEYS.length * 2 + XPARAM_KEYS.length * 2 + SPARAM_KEYS.length * 2 + $dataSystem.elements.length, "属性有効度")
-    }),
-  }
-});
 
 function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
   const _extractMetadata = dataManager.extractMetadata;
@@ -114,11 +54,6 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
     return meta.trim().split("\n").flatMap(line => this.parsePartyAbilityLine(line));
   };
 
-  /**
-   * metaタグを必要な特徴の組に変換する
-   * 実際のパラメータ計算に用いるのはパーティ能力特徴
-   * パラメータ系特徴は装備の絞り込みプラグイン用に追加だけし、効果を発揮しない
-   */
   dataManager.parsePartyAbilityLine = function (line) {
     const metaTokens = line.split(":").map(token => token.trim());
     const paramId = (() => {
@@ -135,6 +70,10 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
         case "elementRate":
         case "elementRatePlus":
           return $dataSystem.elements.indexOf(metaTokens[1]);
+        case "stateRate":
+          return $dataStates.findIndex(state => state?.id === Number(metaTokens[1]));
+        case "stateRatePlus":
+          return $dataStates.findIndex(state => state?.id === Number(metaTokens[1]));
         default:
           throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
       }
@@ -145,60 +84,87 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
     const traitId = (() => {
       switch (metaTokens[0]) {
         case "paramPlus":
+          return $paramPlusTraitId.id;
         case "paramRate":
-          return Game_BattlerBase.TRAIT_PARAM;
+          return $paramRateTraitId.id;
         case "xparamPlus":
+          return $xparamPlusTraitId.id;
         case "xparamRate":
-          return Game_BattlerBase.TRAIT_XPARAM;
+          return $xparamRateTraitId.id;
         case "sparamPlus":
+          return $sparamPlusTraitId.id;
         case "sparamRate":
-          return Game_BattlerBase.TRAIT_SPARAM;
+          return $sparamRateTraitId.id;
         case "elementRate":
+          return $elementRateTraitId.id;
         case "elementRatePlus":
-          return Game_BattlerBase.TRAIT_ELEMENT_RATE;
+          return $elementRatePlusTraitId.id;
+        case "stateRate":
+          return $stateRateTraitId.id;
+        case "stateRatePlus":
+          return $stateRatePlusTraitId.id;
         default:
           throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
       }
     })();
-    const dataIds: [UniqueTraitDataId, UniqueTraitDataId] = (() => {
+    const partyTraitId = (() => {
       switch (metaTokens[0]) {
         case "paramPlus":
-          return [partyAbilityDataIds().param.plus[paramId], paramDataIds().plus[paramId]];
+          return $partyParamPlusTraitId.id;
         case "paramRate":
-          return [partyAbilityDataIds().param.rate[paramId], paramDataIds().rate[paramId]];
+          return $partyParamRateTraitId.id;
         case "xparamPlus":
-          return [partyAbilityDataIds().xparam.plus[paramId], xparamDataIds().plus[paramId]];
+          return $partyXparamPlusTraitId.id;
         case "xparamRate":
-          return [partyAbilityDataIds().xparam.rate[paramId], xparamDataIds().rate[paramId]];
+          return $partyXparamRateTraitId.id;
         case "sparamPlus":
-          return [partyAbilityDataIds().sparam.plus[paramId], sparamDataIds().plus[paramId]];
+          return $partySparamPlusTraitId.id;
         case "sparamRate":
-          return [partyAbilityDataIds().sparam.rate[paramId], sparamDataIds().rate[paramId]];
+          return $partySparamRateTraitId.id;
         case "elementRate":
-          return [partyAbilityDataIds().element.rate[paramId], elementDataIds().rate[paramId]];
+          return $partyElementRateTraitId.id;
         case "elementRatePlus":
-          return [partyAbilityDataIds().element.plus[paramId], elementDataIds().plus[paramId]];
+          return $partyElementRatePlusTraitId.id;
+        case "stateRate":
+          return $partyStateRateTraitId.id;
+        case "stateRatePlus":
+          return $partyStateRatePlusTraitId.id;
         default:
           throw Error(`パーティ能力特徴種別の記述が不正です: ${metaTokens[0]}`);
       }
     })();
     const value = metaTokens[0] === "paramPlus" ? Number(metaTokens[2]) : Number(metaTokens[2]) / 100;
     return [
-      {
-        code: Game_BattlerBase.TRAIT_PARTY_ABILITY,
-        dataId: dataIds[0].id,
-        value: value,
-      },
-      {
-        code: traitId,
-        dataId: dataIds[1].id,
-        value: value,
-      },
+      { code: traitId, dataId: paramId, value: value },
+      { code: partyTraitId, dataId: paramId, value: value },
     ];
   };
 }
 
 DataManager_PartyAbilityTraitMixIn(DataManager);
+
+const _TRAIT_NAME = Game_BattlerBase.TRAIT_NAME;
+Game_BattlerBase.TRAIT_NAME = function (traitId) {
+  const name = _TRAIT_NAME?.call(this, traitId);
+  if (name) {
+    return name;
+  }
+  switch (traitId) {
+    case Game_BattlerBase.TRAIT_PARAM:
+      return "通常能力値";
+    case Game_BattlerBase.TRAIT_XPARAM:
+      return "追加能力値";
+    case Game_BattlerBase.TRAIT_SPARAM:
+      return "特殊能力値";
+    case Game_BattlerBase.TRAIT_ELEMENT_RATE:
+      return "属性有効度";
+    case Game_BattlerBase.TRAIT_STATE_RATE:
+      return "ステート有効度";
+    case Game_BattlerBase.TRAIT_PARTY_ABILITY:
+      return "パーティ能力";
+  }
+  return "";
+};
 
 function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   const _paramBasePlus = gameBattlerBase.paramBasePlus;
@@ -211,11 +177,11 @@ function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBa
     return _paramRate.call(this, paramId) * this.paramRateByPartyAbility(paramId);
   };
 
-  gameBattlerBase.paramPlusByPartyAbility = function (paramId) {
+  gameBattlerBase.paramPlusByPartyAbility = function (_paramId) {
     return 0;
   };
 
-  gameBattlerBase.paramRateByPartyAbility = function (paramId) {
+  gameBattlerBase.paramRateByPartyAbility = function (_paramId) {
     return 1;
   };
 
@@ -229,11 +195,11 @@ function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBa
     return _xparamRate.call(this, paramId) * this.xparamRateByPartyAbility(paramId);
   };
 
-  gameBattlerBase.xparamPlusByPartyAbility = function (paramId) {
+  gameBattlerBase.xparamPlusByPartyAbility = function (_paramId) {
     return 0;
   };
 
-  gameBattlerBase.xparamRateByPartyAbility = function (paramId) {
+  gameBattlerBase.xparamRateByPartyAbility = function (_paramId) {
     return 1;
   };
 
@@ -247,11 +213,11 @@ function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBa
     return _sparamPlus.call(this, paramId) + this.sparamPlusByPartyAbility(paramId);
   };
 
-  gameBattlerBase.sparamPlusByPartyAbility = function (paramId) {
+  gameBattlerBase.sparamPlusByPartyAbility = function (_paramId) {
     return 0;
   };
 
-  gameBattlerBase.sparamRateByPartyAbility = function (paramId) {
+  gameBattlerBase.sparamRateByPartyAbility = function (_paramId) {
     return 1;
   };
 
@@ -260,13 +226,26 @@ function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBa
     return _elementRate.call(this, elementId) * this.elementRateByPartyAbility(elementId) + this.elementRatePlusByPartyAbility(elementId);
   };
 
-  gameBattlerBase.elementRateByPartyAbility = function (elementId) {
+  gameBattlerBase.elementRateByPartyAbility = function (_elementId) {
     return 1;
   };
 
-  gameBattlerBase.elementRatePlusByPartyAbility = function (elementId) {
+  gameBattlerBase.elementRatePlusByPartyAbility = function (_elementId) {
     return 0;
-  }
+  };
+
+  const _stateRate = gameBattlerBase.stateRate;
+  gameBattlerBase.stateRate = function (stateId) {
+    return _stateRate.call(this, stateId) * this.stateRateByPartyAbility(stateId) + this.stateRatePlusByPartyAbility(stateId);
+  };
+
+  gameBattlerBase.stateRateByPartyAbility = function (_stateId) {
+    return 1;
+  };
+
+  gameBattlerBase.stateRatePlusByPartyAbility = function (_stateId) {
+    return 0;
+  };
 }
 
 Game_BattlerBase_PartyAbilityTraitMixIn(Game_BattlerBase.prototype);
@@ -312,63 +291,108 @@ function Game_Actor_PartyAbilityTraitMixIn(gameActor: Game_Actor) {
   gameActor.elementRatePlusByPartyAbility = function (elementId) {
     return (this._tempParty || $gameParty).elementRatePlusByPartyAbility(elementId);
   };
+
+  gameActor.stateRateByPartyAbility = function (stateId) {
+    return (this._tempParty || $gameParty).stateRateByPartyAbility(stateId);
+  };
+
+  gameActor.stateRatePlusByPartyAbility = function (stateId) {
+    return (this._tempParty || $gameParty).stateRatePlusByPartyAbility(stateId);
+  };
 }
 
 Game_Actor_PartyAbilityTraitMixIn(Game_Actor.prototype);
 
 function Game_Party_PartyAbilityTraitMixIn(gameParty: Game_Party) {
-  /**
-   * 通常能力値を加算するパーティ能力のパーティ全体の合計
-   */
   gameParty.paramPlusByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().param.plus[paramId].id), 0);
+    return this.allMembers().reduce((result, actor) => result + actor.traitsSum($paramPlusTraitId.id, paramId), 0);
   };
 
-  /**
-   * 通常能力値を乗算するパーティ能力のパーティ全体の倍率
-   */
   gameParty.paramRateByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().param.rate[paramId].id), 1);
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi($paramRateTraitId.id, paramId), 1);
   };
 
-  /**
-   * 追加能力値を加算するパーティ能力のパーティ全体の合計
-   */
   gameParty.xparamPlusByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().xparam.plus[paramId].id), 0);
+    return this.allMembers().reduce((result, actor) => result + actor.traitsSum($xparamPlusTraitId.id, paramId), 0);
   };
 
-  /**
-   * 追加能力値を蒸散するパーティ能力のパーティ全体の倍率
-   */
   gameParty.xparamRateByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().xparam.rate[paramId].id), 1);
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi($xparamRateTraitId.id, paramId), 1);
   };
 
-  /**
-   * 特殊能力値を加算するパーティ能力のパーティ全体の合計
-   */
   gameParty.sparamPlusByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().sparam.plus[paramId].id), 0);
+    return this.allMembers().reduce((result, actor) => result + actor.traitsSum($sparamPlusTraitId.id, paramId), 0);
   };
 
-  /**
-   * 特殊能力値を乗算するパーティ能力のパーティ全体の倍率
-   */
   gameParty.sparamRateByPartyAbility = function (paramId) {
-    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().sparam.rate[paramId].id), 1);
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi($sparamRateTraitId.id, paramId), 1);
   };
 
   gameParty.elementRateByPartyAbility = function (elementId) {
-    return this.allMembers().reduce((result, actor) => result * actor.traitsPi(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().element.rate[elementId].id), 1);
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi($elementRateTraitId.id, elementId), 1);
   };
 
   gameParty.elementRatePlusByPartyAbility = function (elementId) {
-    return this.allMembers().reduce((result, actor) => result + actor.traitsSum(Game_BattlerBase.TRAIT_PARTY_ABILITY, partyAbilityDataIds().element.plus[elementId].id), 0);
+    return this.allMembers().reduce((result, actor) => result + actor.traitsSum($elementRatePlusTraitId.id, elementId), 0);
+  };
+
+  gameParty.stateRateByPartyAbility = function (stateId) {
+    return this.allMembers().reduce((result, actor) => result * actor.traitsPi($stateRateTraitId.id, stateId), 1);
+  };
+
+  gameParty.stateRatePlusByPartyAbility = function (stateId) {
+    return this.allMembers().reduce((result, actor) => result + actor.traitsSum($stateRatePlusTraitId.id, stateId), 0);
   };
 }
 
 Game_Party_PartyAbilityTraitMixIn(Game_Party.prototype);
+
+function Scene_Equip_PartyAbilityTraitMixIn(sceneEquip: Scene_Equip) {
+  const _equipFilterBuilder = sceneEquip.equipFilterBuilder;
+  sceneEquip.equipFilterBuilder = function (equips) {
+    return _equipFilterBuilder.call(this, equips)
+      .withTrait($paramPlusTraitId.id)
+      .withTrait($paramRateTraitId.id)
+      .withTrait($xparamPlusTraitId.id)
+      .withTrait($xparamRateTraitId.id)
+      .withTrait($sparamPlusTraitId.id)
+      .withTrait($sparamRateTraitId.id)
+      .withTrait($elementRateTraitId.id)
+      .withTrait($elementRatePlusTraitId.id)
+      .withTrait($stateRateTraitId.id)
+      .withTrait($stateRatePlusTraitId.id)
+      .withTrait($partyParamPlusTraitId.id)
+      .withTrait($partyParamRateTraitId.id)
+      .withTrait($partyXparamPlusTraitId.id)
+      .withTrait($partyXparamRateTraitId.id)
+      .withTrait($partySparamPlusTraitId.id)
+      .withTrait($partySparamRateTraitId.id)
+      .withTrait($partyElementRateTraitId.id)
+      .withTrait($partyElementRatePlusTraitId.id)
+      .withTrait($partyStateRateTraitId.id)
+      .withTrait($partyStateRatePlusTraitId.id)
+      .withTraitToEffectNameRule((traitId, dataId) => {
+        if (traitId === $paramPlusTraitId.id || traitId === $paramRateTraitId.id ||
+            traitId === $partyParamPlusTraitId.id || traitId === $partyParamRateTraitId.id)
+          return TextManager.param(dataId) || null;
+        if (traitId === $xparamPlusTraitId.id || traitId === $xparamRateTraitId.id ||
+            traitId === $partyXparamPlusTraitId.id || traitId === $partyXparamRateTraitId.id)
+          return (TextManager.xparam ? TextManager.xparam(dataId) : null) || null;
+        if (traitId === $sparamPlusTraitId.id || traitId === $sparamRateTraitId.id ||
+            traitId === $partySparamPlusTraitId.id || traitId === $partySparamRateTraitId.id)
+          return (TextManager.sparam ? TextManager.sparam(dataId) : null) || null;
+        if (traitId === $elementRateTraitId.id || traitId === $elementRatePlusTraitId.id ||
+            traitId === $partyElementRateTraitId.id || traitId === $partyElementRatePlusTraitId.id)
+          return $dataSystem.elements[dataId] || null;
+        if (traitId === $stateRateTraitId.id || traitId === $stateRatePlusTraitId.id ||
+            traitId === $partyStateRateTraitId.id || traitId === $partyStateRatePlusTraitId.id)
+          return $dataStates[dataId]?.name || null;
+        return null;
+      });
+  };
+}
+
+Scene_Equip_PartyAbilityTraitMixIn(Scene_Equip.prototype);
 
 function Window_EquipStatus_PartyAbilityTraitMixIn(windowEquipStatus: Window_EquipStatus) {
   const _setTempActor = windowEquipStatus.setTempActor;
