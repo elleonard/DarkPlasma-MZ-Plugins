@@ -12,7 +12,11 @@ function DataManager_AddSParamTraitMixIn(dataManager: typeof DataManager) {
     _extractMetadata.call(this, data);
     if ("traits" in data) {
       if (data.meta.addSParam) {
-        data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
+        try {
+          data.traits.push(...this.parseAddSParamTraits(String(data.meta.addSParam)));
+        } catch {
+          throw Error(`エラーが発生しました。${data.id}: ${data.name}`);
+        }
       }
     }
   };

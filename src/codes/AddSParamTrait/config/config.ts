@@ -4,6 +4,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/25",
+    version: "2.0.1",
+    description: "エラーメッセージで不具合のデータが特定できるように変更",
+  },
+  {
     date: "2025/07/21",
     version: "2.0.0",
     description: "限界値設定をDarkPlasma_LimitSParamに分離",
