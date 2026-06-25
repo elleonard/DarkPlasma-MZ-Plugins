@@ -1,5 +1,5 @@
 /// <reference path="./FilterEquip.d.ts" />
-import { settings } from './_build/DarkPlasma_FilterEquip_parameters';
+import { settings } from '../config/_build/DarkPlasma_FilterEquip_parameters';
 
 const FILTER_HANDLER_NAME = 'filter';
 
@@ -19,13 +19,13 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     _create.call(this);
     this.createFilterWindows();
   };
-  
+
   const _createItemWindow = sceneEquip.createItemWindow;
   sceneEquip.createItemWindow = function () {
     _createItemWindow.call(this);
     this._itemWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterOpen.bind(this));
   };
-  
+
   /**
    * 装備の絞り込み機能用のウィンドウを生成する
    */
@@ -34,7 +34,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterWindowLayer.x = (Graphics.width - Graphics.boxWidth) / 2;
     this._filterWindowLayer.y = (Graphics.height - Graphics.boxHeight) / 2;
     this.addChild(this._filterWindowLayer);
-  
+
     this._filterTraitWindow = new Window_EquipFilterTrait(this.equipFilterTraitWindowRect());
     this._filterTraitWindow.setHandler('ok', this.onFilterTraitOk.bind(this));
     this._filterTraitWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
@@ -42,7 +42,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterTraitWindow.setItemWindow(this._itemWindow);
     this._filterTraitWindow.hide();
     this._filterWindowLayer.addChild(this._filterTraitWindow);
-  
+
     this._filterEffectWindow = new Window_EquipFilterEffect(this.equipFilterEffectWindowRect());
     this._filterEffectWindow.setHandler(FILTER_HANDLER_NAME, this.onFilterClose.bind(this));
     this._filterEffectWindow.setHandler('cancel', this.onFilterEffectCancel.bind(this));
@@ -50,15 +50,15 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterEffectWindow.setFilterTraitWindow(this._filterTraitWindow);
     this._filterEffectWindow.hide();
     this._filterWindowLayer.addChild(this._filterEffectWindow);
-  
+
     this.refreshFilter();
   };
-  
+
   sceneEquip.equipFilterTraitWindowRect = function () {
     const y = this._statusWindow.paramY(0);
     return new Rectangle(0, y, this._statusWindow.width / 2, Graphics.boxHeight - y - this._helpWindow.height);
   };
-  
+
   sceneEquip.equipFilterEffectWindowRect = function () {
     return new Rectangle(
       this._filterTraitWindow.width,
@@ -67,7 +67,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
       this._filterTraitWindow.height
     );
   };
-  
+
   /**
    * 絞り込み用データの更新
    */
@@ -80,7 +80,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
         return this.equipFilterBuilder(equips).build();
       });
   };
-  
+
   /**
    * 絞り込み用データビルダー
    * @param {MZ.Weapon[]|MZ.Armor[]} equips 装備データ一覧
@@ -89,7 +89,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
   sceneEquip.equipFilterBuilder = function (equips: (MZ.Weapon|MZ.Armor)[]): EquipFilterBuilder {
     return new EquipFilterBuilder(equips);
   };
-  
+
   const _onActorChange = sceneEquip.onActorChange;
   sceneEquip.onActorChange = function () {
     this.refreshFilter();
@@ -97,13 +97,13 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterEffectWindow.setFilter(this._filters[0]);
     _onActorChange.call(this);
   };
-  
+
   const _executeEquipChange = sceneEquip.executeEquipChange;
   sceneEquip.executeEquipChange = function () {
     _executeEquipChange.call(this);
     this.refreshFilter();
   };
-  
+
   /**
    * 絞り込みモード開始
    */
@@ -116,7 +116,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterTraitWindow.select(0);
     this._filterTraitWindow.scrollTo(0, 0);
   };
-  
+
   /**
    * 絞り込みモード終了
    */
@@ -131,7 +131,7 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
   sceneEquip.isFilterMode = function () {
     return this._filterTraitWindow.active || this._filterEffectWindow.active;
   };
-  
+
   sceneEquip.onFilterTraitOk = function () {
     this._filterTraitWindow.deactivate();
     const slotId = this._slotWindow.index();
@@ -141,18 +141,18 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
     this._filterEffectWindow.select(0);
     this._filterEffectWindow.scrollTo(0, 0);
   };
-  
+
   sceneEquip.onFilterEffectCancel = function () {
     this._filterEffectWindow.hide();
     this._filterTraitWindow.activate();
   };
-  
+
   const _onSlotOk = sceneEquip.onSlotOk;
   sceneEquip.onSlotOk = function (this: Scene_Equip) {
     this._itemWindow.setFilter(this._filters[this._slotWindow.index()]);
     _onSlotOk.call(this);
   };
-  
+
   const _onItemCancel = sceneEquip.onItemCancel;
   sceneEquip.onItemCancel = function () {
     _onItemCancel.call(this);
@@ -161,6 +161,10 @@ function Scene_Equip_FilterEquipMixIn(sceneEquip: Scene_Equip) {
 }
 
 Scene_Equip_FilterEquipMixIn(Scene_Equip.prototype);
+
+Game_BattlerBase.TRAIT_NAME = function (traitId) {
+  return TRAIT_NAMES[traitId] || "";
+};
 
 const TRAIT_NAMES = {
   [Game_BattlerBase.TRAIT_ELEMENT_RATE]: settings.traitName.elementRate,
@@ -564,7 +568,7 @@ class EquipFilter {
    */
   isIncludedItem(equip: MZ.Weapon|MZ.Armor): boolean {
     if (this._traits.every((trait) => !trait.isIncluded())) {
-      // 全表示
+      // フィルタなしは全表示
       return true;
     }
     const itemTraits = this._equipToTraits(equip);
@@ -592,6 +596,9 @@ class EquipFilter {
   }
 }
 
+/**
+ * 絞り込み用特徴
+ */
 class EquipFilter_Trait {
   _id: number;
   _name: string;
@@ -641,11 +648,15 @@ class EquipFilter_Trait {
     this._effects.forEach((effect) => effect.off());
   }
 
+  /**
+   * この特徴でフィルタするかどうか
+   */
   isIncluded() {
     return this._isIncluded;
   }
 
   /**
+   * 指定した特徴リストのうち、いずれかがこのフィルタ特徴と一致するか
    * @param {MZ.Trait[]} itemTraits 特徴一覧
    * @return {boolean}
    */
@@ -666,6 +677,9 @@ class EquipFilter_Trait {
   }
 }
 
+/**
+ * 特徴のデータID
+ */
 class EquipFilter_Effect {
   _id: number;
   _name: string;
@@ -872,12 +886,12 @@ function Window_EquipItem_FilterEquipMixIn(windowClass: Window_EquipItem) {
       this.refresh();
     }
   };
-  
+
   const _includes = windowClass.includes;
   windowClass.includes = function (item) {
     return _includes.call(this, item) && (!this._filter || this._filter.isIncludedItem(item));
   };
-  
+
 }
 
 Window_EquipItem_FilterEquipMixIn(Window_EquipItem.prototype);
@@ -887,4 +901,3 @@ declare global {
   var EquipFilterBuilder: _EquipFilterBuilder;
 }
 globalThis.EquipFilterBuilder = EquipFilterBuilder;
-

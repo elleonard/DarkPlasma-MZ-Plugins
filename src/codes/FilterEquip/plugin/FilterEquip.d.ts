@@ -1,8 +1,8 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
-/// <reference path="../ParameterText/ParameterText.d.ts" />
-/// <reference path="../CustomKeyHandler/CustomKeyHandler.d.ts" />
-/// <reference path="../CustomKeyHandler/CustomKeyHandlerExport.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../AllocateUniqueTraitId/plugin/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../../ParameterText/ParameterText.d.ts" />
+/// <reference path="../../CustomKeyHandler/plugin/CustomKeyHandler.d.ts" />
+/// <reference path="../../CustomKeyHandler/plugin/CustomKeyHandlerExport.d.ts" />
 
 declare namespace ColorManager {
   function filterOnColor(): string;
@@ -27,6 +27,10 @@ declare interface EquipFilterBuilder {
 declare interface EquipFilter {
   allOff(): void;
   isIncludedItem(equip: MZ.Weapon|MZ.Armor): boolean;
+}
+
+declare namespace Game_BattlerBase {
+  function TRAIT_NAME(traitId: number): string;
 }
 
 declare interface Scene_Equip {
