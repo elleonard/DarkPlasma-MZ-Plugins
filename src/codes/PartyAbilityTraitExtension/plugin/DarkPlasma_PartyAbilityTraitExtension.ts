@@ -8,6 +8,29 @@ const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mr
 
 const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'] as const;
 
+const _TRAIT_NAME = Game_BattlerBase.TRAIT_NAME;
+Game_BattlerBase.TRAIT_NAME = function (traitId) {
+  const name = _TRAIT_NAME?.call(this, traitId);
+  if (name) {
+    return name;
+  }
+  switch (traitId) {
+    case Game_BattlerBase.TRAIT_PARAM:
+      return "通常能力値";
+    case Game_BattlerBase.TRAIT_XPARAM:
+      return "追加能力値";
+    case Game_BattlerBase.TRAIT_SPARAM:
+      return "特殊能力値";
+    case Game_BattlerBase.TRAIT_ELEMENT_RATE:
+      return "属性有効度";
+    case Game_BattlerBase.TRAIT_STATE_RATE:
+      return "ステート有効度";
+    case Game_BattlerBase.TRAIT_PARTY_ABILITY:
+      return "パーティ能力";
+  }
+  return "";
+};
+
 const $paramPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 0, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARAM));
 const $paramRateTraitId = uniqueTraitIdCache.allocate(pluginName, 1, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_PARAM));
 const $xparamPlusTraitId = uniqueTraitIdCache.allocate(pluginName, 2, Game_BattlerBase.TRAIT_NAME(Game_BattlerBase.TRAIT_XPARAM));
@@ -146,29 +169,6 @@ function DataManager_PartyAbilityTraitMixIn(dataManager: typeof DataManager) {
 }
 
 DataManager_PartyAbilityTraitMixIn(DataManager);
-
-const _TRAIT_NAME = Game_BattlerBase.TRAIT_NAME;
-Game_BattlerBase.TRAIT_NAME = function (traitId) {
-  const name = _TRAIT_NAME?.call(this, traitId);
-  if (name) {
-    return name;
-  }
-  switch (traitId) {
-    case Game_BattlerBase.TRAIT_PARAM:
-      return "通常能力値";
-    case Game_BattlerBase.TRAIT_XPARAM:
-      return "追加能力値";
-    case Game_BattlerBase.TRAIT_SPARAM:
-      return "特殊能力値";
-    case Game_BattlerBase.TRAIT_ELEMENT_RATE:
-      return "属性有効度";
-    case Game_BattlerBase.TRAIT_STATE_RATE:
-      return "ステート有効度";
-    case Game_BattlerBase.TRAIT_PARTY_ABILITY:
-      return "パーティ能力";
-  }
-  return "";
-};
 
 function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase: Game_BattlerBase) {
   const _paramBasePlus = gameBattlerBase.paramBasePlus;
