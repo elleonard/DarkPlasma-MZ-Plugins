@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/26",
+    version: "1.1.0",
+    description: "PartyAbilityTraitExtension 2.1.2に対応",
+  },
+  {
     date: "2024/11/30",
     version: "1.0.1",
     description: "PartyAbilityTraitExtensionとの依存関係明記",
@@ -60,7 +65,7 @@ export const config = new ConfigDefinitionBuilder(
   .withParameters(parameters)
   .withBaseDependency({
     name: "DarkPlasma_PartyAbilityTraitExtension",
-    version: "1.2.3",
+    version: "2.1.2",
     order: "after",
   })
   .withHelp(dedent`DarkPlasma_PartyAbilityTraitExtensionで追加するパーティ能力特徴をキャッシュし、

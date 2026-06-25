@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
 /// <reference path="../../PartyAbilityTraitExtension/plugin/PartyAbilityTraitExtension.d.ts" />
 
-type PartyAbilityTraitType = "paramPlus"|"paramRate"|"xparamPlus"|"xparamRate"|"sparamPlus"|"sparamRate";
+type PartyAbilityTraitType = "paramPlus"|"paramRate"|"xparamPlus"|"xparamRate"|"sparamPlus"|"sparamRate"|"elementRate"|"elementRatePlus"|"stateRate"|"stateRatePlus";
 type PartyAbilityTraitId = [PartyAbilityTraitType, number];
 
 declare interface Game_Temp {

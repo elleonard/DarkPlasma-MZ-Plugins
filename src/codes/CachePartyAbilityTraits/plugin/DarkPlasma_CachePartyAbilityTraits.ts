@@ -55,6 +55,10 @@ function Game_Party_CachePartyAbilityTraitsMixIn(gameParty: Game_Party) {
   gameParty.xparamRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.xparamRateByPartyAbility, "xparamRate");
   gameParty.sparamPlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.sparamPlusByPartyAbility, "sparamPlus");
   gameParty.sparamRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.sparamRateByPartyAbility, "sparamRate");
+  gameParty.elementRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.elementRateByPartyAbility, "elementRate");
+  gameParty.elementRatePlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.elementRatePlusByPartyAbility, "elementRatePlus");
+  gameParty.stateRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.stateRateByPartyAbility, "stateRate");
+  gameParty.stateRatePlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(gameParty.stateRatePlusByPartyAbility, "stateRatePlus");
 
   gameParty.setIgnorePartyAbilityCache = function () {
     this._ignorePartyAbilityCache = true;
