@@ -1,5 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../FilterEquip/FilterEquip.d.ts" />
+/// <reference path="../../FilterEquip/plugin/FilterEquip.d.ts" />
 
 declare var uniqueTraitDataIdCache: UniqueTraitDataIdCache;
 

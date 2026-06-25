@@ -1,5 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../PartyAbilityTraitExtension/PartyAbilityTraitExtension.d.ts" />
+/// <reference path="../../PartyAbilityTraitExtension/plugin/PartyAbilityTraitExtension.d.ts" />
 
 type PartyAbilityTraitType = "paramPlus"|"paramRate"|"xparamPlus"|"xparamRate"|"sparamPlus"|"sparamRate";
 type PartyAbilityTraitId = [PartyAbilityTraitType, number];
