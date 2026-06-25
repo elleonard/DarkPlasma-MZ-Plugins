@@ -1,5 +1,5 @@
 /// <reference path="./AllocateUniqueTraitId.d.ts" />
-import { settings } from './_build/DarkPlasma_AllocateUniqueTraitId_parameters';
+import { settings } from '../config/_build/DarkPlasma_AllocateUniqueTraitId_parameters';
 
 let uniqueTraitId = settings.startIdOfUniqueTraitId;
 
