@@ -1,10 +1,11 @@
-// DarkPlasma_PartyAbilityTraitExtension 2.1.0
+// DarkPlasma_PartyAbilityTraitExtension 2.1.1
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/06/25 2.1.0 全特徴をuniqueTraitIdCacheで確保するように変更
+ * 2026/06/25 2.1.1 パースエラーをわかりやすく表示するように変更
+ *            2.1.0 全特徴をuniqueTraitIdCacheで確保するように変更
  *                  ステート有効度乗算、ステート有効度加算を追加
  *                  正常に動作しない不具合を修正
  * 2026/06/24 2.0.0 configをTypeScript移行
@@ -44,7 +45,7 @@
  * @orderAfter DarkPlasma_LazyExtractData
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -278,7 +279,13 @@
     dataManager.lazyExtractMetadata = function (data) {
       _lazyExtractMetadata.call(this, data);
       if (hasTraits(data) && data.meta.partyAbility) {
-        data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
+        try {
+          data.traits.push(...this.parsePartyAbility(String(data.meta.partyAbility)));
+        } catch (e) {
+          throw Error(
+            `パーティ能力特徴を正常にパースできませんでした。 ${data.id}: ${data.name} :${e instanceof Error ? e.message : '不明なエラー'}`,
+          );
+        }
       }
     };
     dataManager.parsePartyAbility = function (meta) {
