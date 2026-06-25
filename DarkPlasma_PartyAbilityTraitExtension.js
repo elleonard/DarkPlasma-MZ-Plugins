@@ -1,10 +1,11 @@
-// DarkPlasma_PartyAbilityTraitExtension 2.1.1
+// DarkPlasma_PartyAbilityTraitExtension 2.1.2
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/06/25 2.1.1 パースエラーをわかりやすく表示するように変更
+ * 2026/06/25 2.1.2 FilterEquipがないとエラーで止まってしまう不具合を修正
+ *            2.1.1 パースエラーをわかりやすく表示するように変更
  *            2.1.0 全特徴をuniqueTraitIdCacheで確保するように変更
  *                  ステート有効度乗算、ステート有効度加算を追加
  *                  正常に動作しない不具合を修正
@@ -45,7 +46,7 @@
  * @orderAfter DarkPlasma_LazyExtractData
  *
  * @help
- * version: 2.1.1
+ * version: 2.1.2
  * パーティ能力特徴を追加します。
  * アクター/職業/装備/ステートのメモ欄に指定の記述を行うことで、
  * パーティ全体に効果を及ぼす特徴を付与できます。
@@ -165,6 +166,28 @@
   const PARAM_KEYS = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'];
   const XPARAM_KEYS = ['hit', 'eva', 'cri', 'cev', 'mev', 'mrf', 'cnt', 'hrg', 'mrg', 'trg'];
   const SPARAM_KEYS = ['tgr', 'grd', 'rec', 'pha', 'mcr', 'tcr', 'pdr', 'mdr', 'fdr', 'exr'];
+  const _TRAIT_NAME = Game_BattlerBase.TRAIT_NAME;
+  Game_BattlerBase.TRAIT_NAME = function (traitId) {
+    const name = _TRAIT_NAME?.call(this, traitId);
+    if (name) {
+      return name;
+    }
+    switch (traitId) {
+      case Game_BattlerBase.TRAIT_PARAM:
+        return '通常能力値';
+      case Game_BattlerBase.TRAIT_XPARAM:
+        return '追加能力値';
+      case Game_BattlerBase.TRAIT_SPARAM:
+        return '特殊能力値';
+      case Game_BattlerBase.TRAIT_ELEMENT_RATE:
+        return '属性有効度';
+      case Game_BattlerBase.TRAIT_STATE_RATE:
+        return 'ステート有効度';
+      case Game_BattlerBase.TRAIT_PARTY_ABILITY:
+        return 'パーティ能力';
+    }
+    return '';
+  };
   const $paramPlusTraitId = uniqueTraitIdCache.allocate(
     pluginName,
     0,
@@ -381,28 +404,6 @@
     };
   }
   DataManager_PartyAbilityTraitMixIn(DataManager);
-  const _TRAIT_NAME = Game_BattlerBase.TRAIT_NAME;
-  Game_BattlerBase.TRAIT_NAME = function (traitId) {
-    const name = _TRAIT_NAME?.call(this, traitId);
-    if (name) {
-      return name;
-    }
-    switch (traitId) {
-      case Game_BattlerBase.TRAIT_PARAM:
-        return '通常能力値';
-      case Game_BattlerBase.TRAIT_XPARAM:
-        return '追加能力値';
-      case Game_BattlerBase.TRAIT_SPARAM:
-        return '特殊能力値';
-      case Game_BattlerBase.TRAIT_ELEMENT_RATE:
-        return '属性有効度';
-      case Game_BattlerBase.TRAIT_STATE_RATE:
-        return 'ステート有効度';
-      case Game_BattlerBase.TRAIT_PARTY_ABILITY:
-        return 'パーティ能力';
-    }
-    return '';
-  };
   function Game_BattlerBase_PartyAbilityTraitMixIn(gameBattlerBase) {
     const _paramBasePlus = gameBattlerBase.paramBasePlus;
     gameBattlerBase.paramBasePlus = function (paramId) {
