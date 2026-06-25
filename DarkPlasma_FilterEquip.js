@@ -1,10 +1,11 @@
-// DarkPlasma_FilterEquip 1.5.2
+// DarkPlasma_FilterEquip 1.6.0
 // Copyright (c) 2021 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
- * 2026/06/25 1.5.2 configをTypeScript移行
+ * 2026/06/25 1.6.0 特徴名解決のためのインターフェースを追加
+ *                  configをTypeScript移行
  * 2025/08/23 1.5.1 不要な依存の記述を削除
  * 2025/01/31 1.5.0 同名の特徴をマージする
  * 2024/11/04 1.4.0 同名の特徴データをマージする
@@ -61,7 +62,7 @@
  * @default shift
  *
  * @help
- * version: 1.5.2
+ * version: 1.6.0
  * 装備の特徴による絞り込み機能を提供します。
  *
  * 装備選択中にshiftキーを押すことで絞り込みモードを開始します。
