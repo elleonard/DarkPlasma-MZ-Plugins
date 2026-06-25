@@ -1,9 +1,10 @@
-// DarkPlasma_CachePartyAbilityTraits 1.0.1
+// DarkPlasma_CachePartyAbilityTraits 1.1.0
 // Copyright (c) 2024 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/26 1.1.0 PartyAbilityTraitExtension 2.1.2に対応
  * 2024/11/30 1.0.1 PartyAbilityTraitExtensionとの依存関係明記
  *                  パーティ能力特徴による能力差分表示の色が正常に変化しない不具合を修正
  *            1.0.0 公開
@@ -27,7 +28,7 @@
  * @default {"changeEquip":"true","changeState":"true","changeClass":"true"}
  *
  * @help
- * version: 1.0.1
+ * version: 1.1.0
  * DarkPlasma_PartyAbilityTraitExtensionで追加するパーティ能力特徴をキャッシュし、
  * 再計算を抑制します。
  * パーティ能力特徴によってパフォーマンスに影響が出ていると感じた場合にお試しください。
@@ -39,7 +40,7 @@
  * - 職業が変わった時
  *
  * 本プラグインの利用には下記プラグインを必要とします。
- * DarkPlasma_PartyAbilityTraitExtension version:1.2.3
+ * DarkPlasma_PartyAbilityTraitExtension version:2.1.2
  * 下記プラグインと共に利用する場合、それよりも下に追加してください。
  * DarkPlasma_PartyAbilityTraitExtension
  */
@@ -144,6 +145,22 @@
     gameParty.sparamRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(
       gameParty.sparamRateByPartyAbility,
       'sparamRate',
+    );
+    gameParty.elementRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(
+      gameParty.elementRateByPartyAbility,
+      'elementRate',
+    );
+    gameParty.elementRatePlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(
+      gameParty.elementRatePlusByPartyAbility,
+      'elementRatePlus',
+    );
+    gameParty.stateRateByPartyAbility = _calcPartyAbilityTraitMethodWithCache(
+      gameParty.stateRateByPartyAbility,
+      'stateRate',
+    );
+    gameParty.stateRatePlusByPartyAbility = _calcPartyAbilityTraitMethodWithCache(
+      gameParty.stateRatePlusByPartyAbility,
+      'stateRatePlus',
     );
     gameParty.setIgnorePartyAbilityCache = function () {
       this._ignorePartyAbilityCache = true;
