@@ -1,9 +1,10 @@
-// DarkPlasma_NameWindow 2.1.0
+// DarkPlasma_NameWindow 2.1.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/06/26 2.1.1 インスタンス未生成のアクターに対応
  * 2026/06/08 2.1.0 configをTypeScript移行
  *                  自動名前で無視する制御文字を追加
  * 2024/07/08 2.0.5 ゲーム中にアクター名を変更した場合、変更後の名前に色設定を適用できない不具合を修正
@@ -55,7 +56,7 @@
  * @default ["UL","}"]
  *
  * @help
- * version: 2.1.0
+ * version: 2.1.1
  * メッセージテキストに以下のように記述すると名前ウィンドウを表示します。
  *
  *
@@ -143,7 +144,15 @@
      * アクター名からアクターを取得する
      */
     gameActors.byName = function (name) {
-      return this._data.find((actor) => actor && actor.name() === name) || null;
+      const actor = this._data.find((actor) => actor?.name() === name);
+      if (actor) {
+        return actor;
+      }
+      const actorId = $dataActors.find((a) => a?.name === name)?.id;
+      if (actorId) {
+        return this.actor(actorId);
+      }
+      return null;
     };
   }
   Game_Actors_NameWindowMixIn(Game_Actors.prototype);
