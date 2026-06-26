@@ -34,7 +34,15 @@ function Game_Actors_NameWindowMixIn(gameActors: Game_Actors) {
    * アクター名からアクターを取得する
    */
   gameActors.byName = function (name) {
-    return this._data.find((actor) => actor && actor.name() === name) || null;
+    const actor = this._data.find(actor => actor?.name() === name);
+    if (actor) {
+      return actor;
+    }
+    const actorId = $dataActors.find(a => a?.name === name)?.id;
+    if (actorId) {
+      return this.actor(actorId);
+    }
+    return null;
   };
 }
 

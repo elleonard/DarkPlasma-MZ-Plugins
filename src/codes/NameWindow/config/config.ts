@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/06/26",
+    version: "2.1.1",
+    description: "インスタンス未生成のアクターに対応",
+  },
+  {
     date: "2026/06/08",
     version: "2.1.0",
     description: "configをTypeScript移行",
