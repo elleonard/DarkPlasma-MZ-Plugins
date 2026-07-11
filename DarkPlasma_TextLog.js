@@ -1,9 +1,10 @@
-// DarkPlasma_TextLog 2.3.1
+// DarkPlasma_TextLog 2.3.2
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/07/11 2.3.2 プラグインコマンドで追加したテキストに含まれる変数制御文字が、展開時点の値を記録しない不具合を修正
  * 2026/06/16 2.3.1 configをTypeScript移行
  * 2025/07/08 2.3.0 スクリプトを用いてマップからログシーンを開く手段を追加
  * 2024/03/14 2.2.0 パラメータを消去する制御文字の設定を、無視する制御文字の設定に変更
@@ -154,7 +155,7 @@
  * @type string
  *
  * @help
- * version: 2.3.1
+ * version: 2.3.2
  * イベントで表示されたテキストをログとして保持、表示します。
  * ログはセーブデータには保持されません。
  *
@@ -239,9 +240,10 @@
   PluginManager.registerCommand(pluginName, command_showTextLog, function (args) {
     SceneManager.push(Scene_TextLog);
   });
+  const baseWindow = () => new Window_Base(new Rectangle(0, 0, 0, 0));
   PluginManager.registerCommand(pluginName, command_insertTextLog, function (args) {
     const parsedArgs = parseArgs_insertTextLog(args);
-    $gameTemp.eventTextLog().pushLog('', parsedArgs.text);
+    $gameTemp.eventTextLog().pushLog('', baseWindow().convertEscapeCharacters(parsedArgs.text));
   });
   PluginManager.registerCommand(pluginName, command_insertLogSplitter, function (args) {
     $gameTemp.eventTextLog().pushSplitter();
