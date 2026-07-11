@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/07/11",
+    version: "2.3.2",
+    description: "プラグインコマンドで追加したテキストに含まれる変数制御文字が、展開時点の値を記録しない不具合を修正",
+  },
+  {
     date: "2026/06/16",
     version: "2.3.1",
     description: "configをTypeScript移行",

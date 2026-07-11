@@ -9,9 +9,11 @@ PluginManager.registerCommand(pluginName, command_showTextLog, function(args) {
   SceneManager.push(Scene_TextLog);
 });
 
+const baseWindow = () => new Window_Base(new Rectangle(0, 0, 0, 0));
+
 PluginManager.registerCommand(pluginName, command_insertTextLog, function(args) {
   const parsedArgs = parseArgs_insertTextLog(args);
-  $gameTemp.eventTextLog().pushLog("", parsedArgs.text);
+  $gameTemp.eventTextLog().pushLog("", baseWindow().convertEscapeCharacters(parsedArgs.text));
 });
 
 PluginManager.registerCommand(pluginName, command_insertLogSplitter, function(args) {
