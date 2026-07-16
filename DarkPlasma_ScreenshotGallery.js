@@ -1,11 +1,13 @@
-// DarkPlasma_ScreenshotGallery 2.0.0
+// DarkPlasma_ScreenshotGallery 2.0.2
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/07/16 2.0.2 スクリーンショット一覧が最新順に表示されない不具合を修正
+ * 2026/07/16 2.0.1 configをTypeScript移行
  * 2024/12/21 2.0.0 スクリーンショットの設定変更プラグインコマンドを別プラグインに分離
- *            1.2.0 スクリーンショットの設定を変更するプラグインコマンドを追加
+ * 2024/12/21 1.2.0 スクリーンショットの設定を変更するプラグインコマンドを追加
  * 2023/10/20 1.1.1 ロード時のディレクトリパスを統一
  *                  何も選択していない状態で決定キーを押すと操作不能になる不具合を修正
  * 2023/10/13 1.1.0 撮影時にフラッシュ・プレビューする機能を追加
@@ -56,12 +58,12 @@
  * @param se
  * @text 効果音
  * @type struct<Se>
- * @default {"name":"Switch2", "volume":"90", "pitch":"100", "pan":"0"}
+ * @default {"name":"Switch2","volume":"90","pitch":"100","pan":"0"}
  *
  * @param flash
  * @text フラッシュ
  * @type struct<Flash>
- * @default {"red":"255", "green":"255", "blue":"255", "power":"170", "frame":"30"}
+ * @default {"red":"255","green":"255","blue":"255","power":"170","duration":"30"}
  *
  * @param directory
  * @text 保存先フォルダ名
@@ -77,13 +79,13 @@
  * @param preview
  * @text プレビュー設定
  * @type struct<Preview>
- * @default {"show":"true", "frameWidth":"4", "duration":"60", "rect":"{\"x\":\"16\", \"y\":\"16\", \"width\":\"102\", \"height\":\"78\"}"}
+ * @default {"show":"true","frameWidth":"4","duration":"60","rect":"{\"x\":\"16\",\"y\":\"16\",\"width\":\"102\",\"height\":\"78\"}"}
  *
  * @command sceneScreenshot
  * @text スクショギャラリーを開く
  *
  * @help
- * version: 2.0.0
+ * version: 2.0.2
  * スクリーンショットの撮影、保存を可能とし
  * 保存したスクリーンショットをゲーム内で閲覧するシーンを提供します。
  *
@@ -105,74 +107,53 @@
  * @param volume
  * @text 音量
  * @type number
- * @default 90
  * @max 100
+ * @default 90
  *
  * @param pitch
  * @text ピッチ
  * @type number
- * @default 100
- * @min 50
  * @max 150
+ * @min 50
+ * @default 100
  *
  * @param pan
  * @text 位相
  * @type number
- * @default 0
- * @min -100
  * @max 100
+ * @min -100
+ * @default 0
  */
 /*~struct~Flash:
  * @param red
  * @text 赤
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param green
  * @text 緑
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param blue
  * @text 青
  * @type number
- * @default 255
  * @max 255
+ * @default 255
  *
  * @param power
  * @text 強さ
  * @type number
- * @default 170
  * @max 255
+ * @default 170
  *
  * @param duration
  * @text 時間(フレーム)
  * @type number
- * @default 30
  * @min 1
- */
-/*~struct~Preview:
- * @param show
- * @text プレビューを表示する
- * @type boolean
- * @default true
- *
- * @param frameWidth
- * @text フレーム幅
- * @type number
- * @default 4
- *
- * @param duration
- * @text 表示時間(フレーム)
- * @type number
- * @default 60
- *
- * @param rect
- * @text 位置とサイズ
- * @type struct<Rectangle>
- * @default {"x":"16", "y":"16", "width":"102", "height":"78"}
+ * @default 30
  */
 /*~struct~Rectangle:
  * @param x
@@ -195,6 +176,27 @@
  * @type number
  * @default 78
  */
+/*~struct~Preview:
+ * @param show
+ * @text プレビューを表示する
+ * @type boolean
+ * @default true
+ *
+ * @param frameWidth
+ * @text フレーム幅
+ * @type number
+ * @default 4
+ *
+ * @param duration
+ * @text 表示時間(フレーム)
+ * @type number
+ * @default 60
+ *
+ * @param rect
+ * @text 位置とサイズ
+ * @type struct<Rectangle>
+ * @default {"x":"16","y":"16","width":"102","height":"78"}
+ */
 (() => {
   'use strict';
 
@@ -209,51 +211,58 @@
   const settings = {
     key: String(pluginParameters.key || `control`),
     tweetKey: String(pluginParameters.tweetKey || `shift`),
-    scenes: JSON.parse(pluginParameters.scenes || '["Scene_Base"]').map((e) => {
-      return String(e || ``);
-    }),
+    scenes: pluginParameters.scenes
+      ? JSON.parse(pluginParameters.scenes).map((e) => {
+          return String(e || ``);
+        })
+      : ['Scene_Base'],
     format: String(pluginParameters.format || `png`),
-    se: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        name: String(parsed.name || ``),
-        volume: Number(parsed.volume || 90),
-        pitch: Number(parsed.pitch || 100),
-        pan: Number(parsed.pan || 0),
-      };
-    })(pluginParameters.se || '{"name":"Switch2", "volume":"90", "pitch":"100", "pan":"0"}'),
-    flash: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        red: Number(parsed.red || 255),
-        green: Number(parsed.green || 255),
-        blue: Number(parsed.blue || 255),
-        power: Number(parsed.power || 170),
-        duration: Number(parsed.duration || 30),
-      };
-    })(pluginParameters.flash || '{"red":"255", "green":"255", "blue":"255", "power":"170", "frame":"30"}'),
-    directory: String(pluginParameters.directory || `screenshot`),
-    maxView: Number(pluginParameters.maxView || 30),
-    preview: ((parameter) => {
-      const parsed = JSON.parse(parameter);
-      return {
-        show: String(parsed.show || true) === 'true',
-        frameWidth: Number(parsed.frameWidth || 4),
-        duration: Number(parsed.duration || 60),
-        rect: ((parameter) => {
+    se: pluginParameters.se
+      ? ((parameter) => {
           const parsed = JSON.parse(parameter);
           return {
-            x: Number(parsed.x || 16),
-            y: Number(parsed.y || 16),
-            width: Number(parsed.width || 102),
-            height: Number(parsed.height || 78),
+            name: String(parsed.name || ``),
+            volume: Number(parsed.volume || 90),
+            pitch: Number(parsed.pitch || 100),
+            pan: Number(parsed.pan || 0),
           };
-        })(parsed.rect || '{"x":"16", "y":"16", "width":"102", "height":"78"}'),
-      };
-    })(
-      pluginParameters.preview ||
-        '{"show":"true", "frameWidth":"4", "duration":"60", "rect":"{\\"x\\":\\"16\\", \\"y\\":\\"16\\", \\"width\\":\\"102\\", \\"height\\":\\"78\\"}"}',
-    ),
+        })(pluginParameters.se)
+      : { name: 'Switch2', volume: 90, pitch: 100, pan: 0 },
+    flash: pluginParameters.flash
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            red: Number(parsed.red || 255),
+            green: Number(parsed.green || 255),
+            blue: Number(parsed.blue || 255),
+            power: Number(parsed.power || 170),
+            duration: Number(parsed.duration || 30),
+          };
+        })(pluginParameters.flash)
+      : { red: 255, green: 255, blue: 255, power: 170, duration: 30 },
+    directory: String(pluginParameters.directory || `screenshot`),
+    maxView: Number(pluginParameters.maxView || 30),
+    preview: pluginParameters.preview
+      ? ((parameter) => {
+          const parsed = JSON.parse(parameter);
+          return {
+            show: String(parsed.show || true) === 'true',
+            frameWidth: Number(parsed.frameWidth || 4),
+            duration: Number(parsed.duration || 60),
+            rect: parsed.rect
+              ? ((parameter) => {
+                  const parsed = JSON.parse(parameter);
+                  return {
+                    x: Number(parsed.x || 16),
+                    y: Number(parsed.y || 16),
+                    width: Number(parsed.width || 102),
+                    height: Number(parsed.height || 78),
+                  };
+                })(parsed.rect)
+              : { x: 16, y: 16, width: 102, height: 78 },
+          };
+        })(pluginParameters.preview)
+      : { show: true, frameWidth: 4, duration: 60, rect: { x: 16, y: 16, width: 102, height: 78 } },
   };
 
   const command_sceneScreenshot = 'sceneScreenshot';
@@ -300,8 +309,9 @@
         .readdirSync(dirpath, { withFileTypes: true })
         .filter((dirent) => dirent.isFile())
         .map((dirent) => dirent.name.replace(/\..+$/, ''))
+        .sort((a, b) => (a < b ? 1 : a > b ? -1 : 0))
         .slice(0, settings.maxView);
-      return filenames.map((filename) => this.loadScreenshot(filename)).reverse();
+      return filenames.map((filename) => this.loadScreenshot(filename));
     };
     imageManager.validScreenshotCount = function () {
       return this.loadAllScreenshot().length;
