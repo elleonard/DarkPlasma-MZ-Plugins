@@ -1,8 +1,8 @@
 /// <reference path="./ScreenshotGallery.d.ts" />
 
-import { settings } from "./_build/DarkPlasma_ScreenshotGallery_parameters";
-import { pluginName } from "../../common/pluginName";
-import { command_sceneScreenshot } from "./_build/DarkPlasma_ScreenshotGallery_commands";
+import { settings } from "../config/_build/DarkPlasma_ScreenshotGallery_parameters";
+import { pluginName } from "../../../common/pluginName";
+import { command_sceneScreenshot } from "../config/_build/DarkPlasma_ScreenshotGallery_commands";
 
 function SceneManager_ScreenshotGalleryMixIn(sceneManager: typeof SceneManager) {
   sceneManager.saveScreenshot = function (format) {
@@ -63,8 +63,9 @@ function ImageManager_ScreenshotGalleryMixIn(imageManager: typeof ImageManager) 
     const filenames: string[] = fs.readdirSync(dirpath, { withFileTypes: true })
       .filter((dirent: any) => dirent.isFile())
       .map((dirent: any) => (dirent.name as string).replace(/\..+$/, ""))
+      .sort((a: string, b: string) => a < b ? 1 : a > b ? -1 : 0)
       .slice(0, settings.maxView);
-    return filenames.map(filename => this.loadScreenshot(filename)).reverse();
+    return filenames.map(filename => this.loadScreenshot(filename));
   };
 
   imageManager.validScreenshotCount = function () {

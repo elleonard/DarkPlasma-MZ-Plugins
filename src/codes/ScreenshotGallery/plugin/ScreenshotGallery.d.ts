@@ -1,5 +1,5 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../TweetScreenshot/plugin/TweetScreenshot.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../TweetScreenshot/plugin/TweetScreenshot.d.ts" />
 
 declare interface Bitmap {
   drawFrame(x: number, y: number, width: number, height: number, thick: number, color: string): void;
