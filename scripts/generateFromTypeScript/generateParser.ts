@@ -27,6 +27,7 @@ export function generateParser(config: PluginConfigSchema, parameter: PluginPara
     case 'common_event':
     case 'icon':
     case 'map':
+    case 'tileset':
       return numberParser(parameter, objectName);
     case 'boolean':
       return booleanParser(parameter, objectName);
