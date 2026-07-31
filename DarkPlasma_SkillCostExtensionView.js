@@ -136,7 +136,7 @@
         x,
         y,
         width,
-        'right'
+        'right',
       );
     };
     windowClass.drawVariableCost = function (skill, x, y, width) {

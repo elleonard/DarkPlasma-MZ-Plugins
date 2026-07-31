@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.3.4
+// DarkPlasma_SkillCostExtension 1.3.5
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/07/31 1.3.5 configをTypeScript化
  * 2023/05/15 1.3.4 typescript移行
  * 2022/04/19 1.3.3 コストの記述が不正であった場合にエラーでゲームを止めるように変更
  * 2021/07/05 1.3.2 MZ 1.3.2に対応
@@ -34,7 +35,7 @@
  * @default true
  *
  * @help
- * version: 1.3.4
+ * version: 1.3.5
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
  *
  * <SkillCost:
