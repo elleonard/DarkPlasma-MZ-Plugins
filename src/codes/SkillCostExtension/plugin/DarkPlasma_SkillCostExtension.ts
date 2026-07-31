@@ -1,6 +1,6 @@
 /// <reference path="./SkillCostExtension.d.ts" />
 
-import { settings } from './_build/DarkPlasma_SkillCostExtension_parameters';
+import { settings } from '../config/_build/DarkPlasma_SkillCostExtension_parameters';
 
 /**
  * ターン中に選択したスキル
@@ -325,5 +325,3 @@ function Window_BattleItem_SkillCostExtensionMixIn(windowClass: Window_BattleIte
 }
 
 Window_BattleItem_SkillCostExtensionMixIn(Window_BattleItem.prototype);
-
-

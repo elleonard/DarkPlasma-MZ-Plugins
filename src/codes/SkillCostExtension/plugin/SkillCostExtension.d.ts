@@ -1,5 +1,5 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../ConsumeItemImmediately/ConsumeItemImmediately.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../ConsumeItemImmediately/ConsumeItemImmediately.d.ts" />
 
 type SkillCostIdAndCount = {
   id: number;

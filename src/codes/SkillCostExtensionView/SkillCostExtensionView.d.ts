@@ -1,5 +1,5 @@
 /// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../SkillCostExtension/SkillCostExtension.d.ts" />
+/// <reference path="../SkillCostExtension/plugin/SkillCostExtension.d.ts" />
 
 declare namespace ColorManager {
   function hpCostColor(): string;
