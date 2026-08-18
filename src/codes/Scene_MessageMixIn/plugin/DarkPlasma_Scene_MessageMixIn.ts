@@ -144,9 +144,9 @@ function Window_Message_KeepGoldWindowYMixIn(windowMessage: Window_Message) {
 
   const _updatePlacement = windowMessage.updatePlacement;
   windowMessage.updatePlacement = function () {
-    const goldWindowY = this._goldWindow.y;
+    const goldWindowY = this._goldWindow?.y || 0;
     _updatePlacement.call(this);
-    if (this._mustKeepGoldWindowY) {
+    if (this._mustKeepGoldWindowY && this._goldWindow) {
       this._goldWindow.y = goldWindowY;
     }
   };

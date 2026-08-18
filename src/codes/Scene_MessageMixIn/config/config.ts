@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/08/18",
+    version: "1.1.1",
+    description: "お金ウィンドウ生成前にupdatePlacementを呼び出すとエラーが起きる不具合を修正",
+  },
+  {
     date: "2026/06/14",
     version: "1.1.0",
     description: "例外設定用インターフェース追加",
