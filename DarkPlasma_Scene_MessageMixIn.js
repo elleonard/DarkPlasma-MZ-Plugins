@@ -1,9 +1,10 @@
-// DarkPlasma_Scene_MessageMixIn 1.1.0
+// DarkPlasma_Scene_MessageMixIn 1.1.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/08/18 1.1.1 お金ウィンドウ生成前にupdatePlacementを呼び出すとエラーが起きる不具合を修正
  * 2026/06/14 1.1.0 例外設定用インターフェース追加
  * 2026/03/04 1.0.4 メッセージ表示中に不必要に高い負荷がかかる不具合を修正
  *                  configをTypeScript移行
@@ -28,7 +29,7 @@
  * @default []
  *
  * @help
- * version: 1.1.0
+ * version: 1.1.1
  *
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
@@ -176,9 +177,9 @@
     };
     const _updatePlacement = windowMessage.updatePlacement;
     windowMessage.updatePlacement = function () {
-      const goldWindowY = this._goldWindow.y;
+      const goldWindowY = this._goldWindow?.y || 0;
       _updatePlacement.call(this);
-      if (this._mustKeepGoldWindowY) {
+      if (this._mustKeepGoldWindowY && this._goldWindow) {
         this._goldWindow.y = goldWindowY;
       }
     };
