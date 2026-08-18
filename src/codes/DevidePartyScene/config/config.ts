@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/08/18",
+    version: "2.1.0",
+    description: "分割パーティ数上限を4に変更",
+  },
+  {
     date: "2025/10/11",
     version: "2.0.0",
     description: "パーティの初期位置設定を変更 (Breaking Change)",
@@ -71,7 +76,7 @@ const commandOpen: PluginCommandSchema = createCommand("open", {
       text: "パーティ数",
       description: "分割後のパーティ数",
       min: 2,
-      max: 3,
+      max: 4,
       default: 2,
     }),
     createStructArrayParam("parties", {
