@@ -1,9 +1,10 @@
-// DarkPlasma_DevidePartyScene 2.0.0
+// DarkPlasma_DevidePartyScene 2.1.0
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/08/18 2.1.0 分割パーティ数上限を4に変更
  * 2025/10/11 2.0.0 パーティの初期位置設定を変更 (Breaking Change)
  *                  パーティメンバーの数が足りない場合に分割シーンを開けないように変更
  * 2025/07/13 1.1.1 キャラグラが大きい場合の表示を調整
@@ -41,7 +42,7 @@
  * @desc 分割後のパーティ数
  * @text パーティ数
  * @type number
- * @max 3
+ * @max 4
  * @min 2
  * @default 2
  * @arg parties
@@ -50,7 +51,7 @@
  * @default []
  *
  * @help
- * version: 2.0.0
+ * version: 2.1.0
  * パーティを分割するシーンを提供します。
  *
  * 本プラグインの利用には下記プラグインを必要とします。
