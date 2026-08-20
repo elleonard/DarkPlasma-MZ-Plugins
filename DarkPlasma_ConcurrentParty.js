@@ -1,9 +1,10 @@
-// DarkPlasma_ConcurrentParty 1.4.0
+// DarkPlasma_ConcurrentParty 1.4.1
 // Copyright (c) 2025 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/08/20 1.4.1 切り替え禁止スイッチが効かない不具合を修正
  * 2025/08/14 1.4.0 イベントをパーティとして表示するプラグインコマンドを追加
  * 2025/08/09 1.3.0 パーティ分割状態を取得するプラグインコマンドを追加
  * 2025/07/13 1.2.0 分割したパーティの空欄表現を変更
@@ -166,7 +167,7 @@
  * @default 0
  *
  * @help
- * version: 1.4.0
+ * version: 1.4.1
  * パーティを分割し、操作を切り替えて並行で進むシステムを提供します。
  *
  * プラグインコマンドでパーティを分割することができます。
@@ -618,7 +619,9 @@
       }
     };
     sceneMap.isChangePartyEnabled = function () {
-      return !$gamePlayer.isMoving() && !$gameMap.isEventRunning();
+      return (
+        !$gamePlayer.isMoving() && !$gameMap.isEventRunning() && !$gameVariables.value(settings.disableChangeSwitch)
+      );
     };
     sceneMap.isChangeToNextPartyCalled = function () {
       return Input.isTriggered(settings.nextPartyButton);
