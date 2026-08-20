@@ -6,6 +6,10 @@ import { dedent } from '@qnighy/dedent';
 const histories: PluginHistorySchema[] = [
   {
     date: "2026/08/20",
+    version: "1.4.2",
+    description: "切り替え禁止スイッチが効かない不具合を修正",
+  },
+  {
     version: "1.4.1",
     description: "切り替え禁止スイッチが効かない不具合を修正",
   },

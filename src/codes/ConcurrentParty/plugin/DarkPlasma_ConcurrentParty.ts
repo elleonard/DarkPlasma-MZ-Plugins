@@ -354,7 +354,7 @@ function Scene_Map_ConcurrentPartyMixIn(sceneMap: Scene_Map) {
   };
 
   sceneMap.isChangePartyEnabled = function () {
-    return !$gamePlayer.isMoving() && !$gameMap.isEventRunning() && !$gameVariables.value(settings.disableChangeSwitch);
+    return !$gamePlayer.isMoving() && !$gameMap.isEventRunning() && !$gameSwitches.value(settings.disableChangeSwitch);
   };
 
   sceneMap.isChangeToNextPartyCalled = function () {
