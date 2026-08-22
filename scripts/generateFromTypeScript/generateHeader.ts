@@ -376,7 +376,7 @@ function escapeStructParam(param: { [key: string]: any }) {
   for (const key in param) {
     const value = param[key];
     if (Array.isArray(value)) {
-      result[key] = JSON.stringify(value.map((n) => escapeStructParam(n)));
+      result[key] = JSON.stringify(value.map((n) => typeof n === 'object' ? escapeStructParam(n) : String(n)));
     } else if (typeof value === 'object') {
       result[key] = escapeStructParam(value);
     } else {

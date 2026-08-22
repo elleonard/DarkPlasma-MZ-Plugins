@@ -111,5 +111,7 @@ export function paramToType(pluginId: string, param: PluginParameterSchema): str
       return `${structTypeName(pluginId, param.struct)}[]`;
     case "dummy":
       throw new Error("ダミーパラメータの型は存在しません。");
+    default:
+      throw new Error(`不正な型です。 ${param.type}`);
   }
 }
