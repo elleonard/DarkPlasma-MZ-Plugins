@@ -1,9 +1,10 @@
-// DarkPlasma_HorizontalScrollWindow 1.1.2
+// DarkPlasma_HorizontalScrollWindow 1.2.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/09/05 1.2.0 WindowItemRectOptionsと併用できるように拡張
  * 2026/05/17 1.1.2 pageup, pagedownの挙動修正
  *            1.1.1 スクロールの挙動修正
  *            1.1.0 表示行数の変更に対応
@@ -19,7 +20,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.1.2
+ * version: 1.2.0
  * 本プラグインはプラグイン開発者向けです。
  *
  * 以下のように記述することで、対象の選択ウィンドウの
@@ -33,10 +34,10 @@
 
   function Window_HorizontalScrollMixIn(windowClass, options) {
     windowClass.itemWidth = function () {
-      return Math.floor(this.innerWidth / this.maxPageCols());
+      return this.itemRectOptions().itemWidth || Math.floor(this.innerWidth / this.maxPageCols());
     };
     windowClass.itemHeight = function () {
-      return Math.floor(this.innerHeight / this.maxRows());
+      return this.itemRectOptions().itemHeight || Math.floor(this.innerHeight / this.maxRows());
     };
     windowClass.row = function () {
       return this.index() % this.maxRows();
@@ -70,8 +71,8 @@
       const rowSpacing = this.rowSpacing();
       const col = Math.floor(index / maxRows);
       const row = index % maxRows;
-      const x = col * itemWidth + colSpacing / 2 - this.scrollBaseX();
-      const y = row * itemHeight + rowSpacing / 2 - this.scrollBaseY();
+      const x = col * itemWidth + colSpacing / 2 - this.scrollBaseX() + this.itemRectOffsetX();
+      const y = row * itemHeight + rowSpacing / 2 - this.scrollBaseY() + this.itemRectOffsetY();
       const width = itemWidth - colSpacing;
       const height = itemHeight - rowSpacing;
       return new Rectangle(x, y, width, height);
@@ -173,6 +174,21 @@
       this._upArrowSprite.rotation = (270 * Math.PI) / 180;
       this._upArrowSprite.move(q, h / 2);
     };
+    if (!windowClass.itemRectOptions) {
+      windowClass.itemRectOptions = function () {
+        return {};
+      };
+    }
+    if (!windowClass.itemRectOffsetX) {
+      windowClass.itemRectOffsetX = function () {
+        return 0;
+      };
+    }
+    if (!windowClass.itemRectOffsetY) {
+      windowClass.itemRectOffsetY = function () {
+        return 0;
+      };
+    }
   }
   globalThis.Window_HorizontalScrollMixIn = Window_HorizontalScrollMixIn;
 })();
