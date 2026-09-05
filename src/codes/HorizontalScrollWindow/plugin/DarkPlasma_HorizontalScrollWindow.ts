@@ -2,11 +2,11 @@
 
 function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: HorizontalScrollWindowOptions) {
   windowClass.itemWidth = function () {
-    return Math.floor(this.innerWidth / this.maxPageCols());
+    return this.itemRectOptions().itemWidth || Math.floor(this.innerWidth / this.maxPageCols());
   };
 
   windowClass.itemHeight = function () {
-    return Math.floor(this.innerHeight / this.maxRows());
+    return this.itemRectOptions().itemHeight || Math.floor(this.innerHeight / this.maxRows());
   };
 
   windowClass.row = function () {
@@ -49,8 +49,8 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     const rowSpacing = this.rowSpacing();
     const col = Math.floor(index / maxRows);
     const row = index % maxRows;
-    const x = col * itemWidth + colSpacing / 2 - this.scrollBaseX();
-    const y = row * itemHeight + rowSpacing / 2 - this.scrollBaseY();
+    const x = col * itemWidth + colSpacing / 2 - this.scrollBaseX() + this.itemRectOffsetX();
+    const y = row * itemHeight + rowSpacing / 2 - this.scrollBaseY() + this.itemRectOffsetY();
     const width = itemWidth - colSpacing;
     const height = itemHeight - rowSpacing;
     return new Rectangle(x, y, width, height);
@@ -163,6 +163,24 @@ function Window_HorizontalScrollMixIn(windowClass: Window_Selectable, options?: 
     this._upArrowSprite.rotation = 270 * Math.PI / 180;
     this._upArrowSprite.move(q, h / 2);
   };
+
+  if (!windowClass.itemRectOptions) {
+    windowClass.itemRectOptions = function () {
+      return {};
+    };
+  }
+
+  if (!windowClass.itemRectOffsetX) {
+    windowClass.itemRectOffsetX = function () {
+      return 0;
+    };
+  }
+
+  if (!windowClass.itemRectOffsetY) {
+    windowClass.itemRectOffsetY = function () {
+      return 0;
+    };
+  }
 }
 
 globalThis.Window_HorizontalScrollMixIn = Window_HorizontalScrollMixIn;

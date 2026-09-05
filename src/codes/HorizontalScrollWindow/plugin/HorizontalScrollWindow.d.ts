@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../WindowItemRectOptions/plugin/WindowItemRectOptions.d.ts" />
 
 declare interface Window_Selectable {
   maxPageCols(): number;

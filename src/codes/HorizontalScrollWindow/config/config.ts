@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/09/05",
+    version: "1.2.0",
+    description: "WindowItemRectOptionsと併用できるように拡張",
+  },
+  {
     date: "2026/05/17",
     version: "1.1.2",
     description: "pageup, pagedownの挙動修正",
