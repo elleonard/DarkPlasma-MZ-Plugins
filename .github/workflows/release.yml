@@ -23,9 +23,9 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
       - name: Get yarn cache
         id: yarn-cache
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
