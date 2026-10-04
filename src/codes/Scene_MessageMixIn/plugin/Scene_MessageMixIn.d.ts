@@ -24,6 +24,10 @@ declare interface Scene_Base {
   eventItemWindowRect(): Rectangle;
   associateWindows(): void;
 
+  messageWindowAssociatedGoldWindowOptions(): Window_Message_AssociatedWindowOptions;
+  /**
+   * @depreceated
+   */
   mustKeepGoldWindowY(): boolean;
 }
 
@@ -34,8 +38,23 @@ declare interface Window_Selectable {
   isAssociatedWithMessageWindow(): boolean;
 }
 
-declare interface Window_Message {
-  _mustKeepGoldWindowY: boolean;
+type Window_Message_AssociatedWindowOptions = {
+  keepGoldWindowY?: boolean;
+  keepGoldWindowOpen?: boolean;
+};
 
+declare interface Window_Message {
+  _associatedWindowOptions?: Window_Message_AssociatedWindowOptions;
+
+  setAssociatedWindowOptions(options: Window_Message_AssociatedWindowOptions): void;
+  defaultAssociatedWindowOptions(): Window_Message_AssociatedWindowOptions;
+  associatedWindowOptions(): Window_Message_AssociatedWindowOptions;
+
+  keepGoldWindowY(): boolean;
+  keepGoldWindowOpen(): boolean;
+
+  /**
+   * @deprecated use setAssociatedWindowOptions
+   */
   setMustKeepGoldWindowY(mustKeep: boolean): void;
 }

@@ -5,6 +5,14 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/10/04",
+    version: "1.2.0",
+    description: "メッセージ終了時にお金ウィンドウを閉じないオプションを追加",
+  },
+  {
+    description: "お金ウィンドウのY座標固定オプションの指定方法を変更",
+  },
+  {
     date: "2026/08/18",
     version: "1.1.1",
     description: "お金ウィンドウ生成前にupdatePlacementを呼び出すとエラーが起きる不具合を修正",

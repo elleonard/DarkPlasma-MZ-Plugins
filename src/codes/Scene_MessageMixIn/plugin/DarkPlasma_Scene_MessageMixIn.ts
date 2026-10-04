@@ -37,13 +37,22 @@ function Scene_MessageMixIn(sceneClass: Scene_Base) {
 
   sceneClass.createMessageWindow = function () {
     this._messageWindow = new Window_Message(this.messageWindowRect());
-    this._messageWindow.setMustKeepGoldWindowY(this.mustKeepGoldWindowY());
+    this._messageWindow.setAssociatedWindowOptions(this.messageWindowAssociatedGoldWindowOptions());
     this._messageWindowLayer.addChild(this._messageWindow);
   };
 
   if (!sceneClass.mustKeepGoldWindowY) {
     sceneClass.mustKeepGoldWindowY = function () {
       return this.constructor.name === "Scene_Shop";
+    };
+  }
+
+  if (!sceneClass.messageWindowAssociatedGoldWindowOptions) {
+    sceneClass.messageWindowAssociatedGoldWindowOptions = function () {
+      return {
+        keepGoldWindowOpen: this.constructor.name === "Scene_Shop",
+        keepGoldWindowY: this.mustKeepGoldWindowY(),
+      };
     };
   }
 
@@ -139,16 +148,54 @@ Window_Selectable_MessageMixIn(Window_Selectable.prototype);
 
 function Window_Message_KeepGoldWindowYMixIn(windowMessage: Window_Message) {
   windowMessage.setMustKeepGoldWindowY = function (mustKeep) {
-    this._mustKeepGoldWindowY = mustKeep;
+    this.setAssociatedWindowOptions({ keepGoldWindowY: mustKeep });
+  };
+
+  windowMessage.setAssociatedWindowOptions = function (options) {
+    if (!this._associatedWindowOptions) {
+      this._associatedWindowOptions = this.defaultAssociatedWindowOptions();
+    }
+    (Object.keys(options) as (keyof Window_Message_AssociatedWindowOptions)[]).forEach(key => {
+      this._associatedWindowOptions![key] = options[key];
+    });
+  };
+  
+  windowMessage.defaultAssociatedWindowOptions = function () {
+    return {};
+  };
+
+  windowMessage.associatedWindowOptions = function () {
+    if (!this._associatedWindowOptions) {
+      this._associatedWindowOptions = this.defaultAssociatedWindowOptions();
+    }
+    return this._associatedWindowOptions;
+  };
+
+  windowMessage.keepGoldWindowOpen = function () {
+    return this.associatedWindowOptions().keepGoldWindowOpen || false;
+  };
+
+  windowMessage.keepGoldWindowY = function () {
+    return this.associatedWindowOptions().keepGoldWindowY || false;
   };
 
   const _updatePlacement = windowMessage.updatePlacement;
   windowMessage.updatePlacement = function () {
     const goldWindowY = this._goldWindow?.y || 0;
     _updatePlacement.call(this);
-    if (this._mustKeepGoldWindowY && this._goldWindow) {
+    if (this.keepGoldWindowY() && this._goldWindow) {
       this._goldWindow.y = goldWindowY;
     }
+  };
+
+  const _terminateMessage = windowMessage.terminateMessage;
+  windowMessage.terminateMessage = function () {
+    const _close = this._goldWindow.close;
+    if (this.keepGoldWindowOpen()) {
+      this._goldWindow.close = () => {};
+    }
+    _terminateMessage.call(this);
+    this._goldWindow.close = _close;
   };
 }
 
