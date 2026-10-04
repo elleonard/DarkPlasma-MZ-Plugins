@@ -1,9 +1,11 @@
-// DarkPlasma_Scene_MessageMixIn 1.1.1
+// DarkPlasma_Scene_MessageMixIn 1.2.0
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/10/04 1.2.0 メッセージ終了時にお金ウィンドウを閉じないオプションを追加
+ *                  お金ウィンドウのY座標固定オプションの指定方法を変更
  * 2026/08/18 1.1.1 お金ウィンドウ生成前にupdatePlacementを呼び出すとエラーが起きる不具合を修正
  * 2026/06/14 1.1.0 例外設定用インターフェース追加
  * 2026/03/04 1.0.4 メッセージ表示中に不必要に高い負荷がかかる不具合を修正
@@ -29,7 +31,7 @@
  * @default []
  *
  * @help
- * version: 1.1.1
+ * version: 1.2.0
  *
  * パラメータで指定したシーンにメッセージウィンドウを表示できるようになります。
  *
@@ -87,12 +89,20 @@
     };
     sceneClass.createMessageWindow = function () {
       this._messageWindow = new Window_Message(this.messageWindowRect());
-      this._messageWindow.setMustKeepGoldWindowY(this.mustKeepGoldWindowY());
+      this._messageWindow.setAssociatedWindowOptions(this.messageWindowAssociatedGoldWindowOptions());
       this._messageWindowLayer.addChild(this._messageWindow);
     };
     if (!sceneClass.mustKeepGoldWindowY) {
       sceneClass.mustKeepGoldWindowY = function () {
         return this.constructor.name === 'Scene_Shop';
+      };
+    }
+    if (!sceneClass.messageWindowAssociatedGoldWindowOptions) {
+      sceneClass.messageWindowAssociatedGoldWindowOptions = function () {
+        return {
+          keepGoldWindowOpen: this.constructor.name === 'Scene_Shop',
+          keepGoldWindowY: this.mustKeepGoldWindowY(),
+        };
       };
     }
     sceneClass.messageWindowRect = function () {
@@ -173,15 +183,47 @@
   Window_Selectable_MessageMixIn(Window_Selectable.prototype);
   function Window_Message_KeepGoldWindowYMixIn(windowMessage) {
     windowMessage.setMustKeepGoldWindowY = function (mustKeep) {
-      this._mustKeepGoldWindowY = mustKeep;
+      this.setAssociatedWindowOptions({ keepGoldWindowY: mustKeep });
+    };
+    windowMessage.setAssociatedWindowOptions = function (options) {
+      if (!this._associatedWindowOptions) {
+        this._associatedWindowOptions = this.defaultAssociatedWindowOptions();
+      }
+      Object.keys(options).forEach((key) => {
+        this._associatedWindowOptions[key] = options[key];
+      });
+    };
+    windowMessage.defaultAssociatedWindowOptions = function () {
+      return {};
+    };
+    windowMessage.associatedWindowOptions = function () {
+      if (!this._associatedWindowOptions) {
+        this._associatedWindowOptions = this.defaultAssociatedWindowOptions();
+      }
+      return this._associatedWindowOptions;
+    };
+    windowMessage.keepGoldWindowOpen = function () {
+      return this.associatedWindowOptions().keepGoldWindowOpen || false;
+    };
+    windowMessage.keepGoldWindowY = function () {
+      return this.associatedWindowOptions().keepGoldWindowY || false;
     };
     const _updatePlacement = windowMessage.updatePlacement;
     windowMessage.updatePlacement = function () {
       const goldWindowY = this._goldWindow?.y || 0;
       _updatePlacement.call(this);
-      if (this._mustKeepGoldWindowY && this._goldWindow) {
+      if (this.keepGoldWindowY() && this._goldWindow) {
         this._goldWindow.y = goldWindowY;
       }
+    };
+    const _terminateMessage = windowMessage.terminateMessage;
+    windowMessage.terminateMessage = function () {
+      const _close = this._goldWindow.close;
+      if (this.keepGoldWindowOpen()) {
+        this._goldWindow.close = () => {};
+      }
+      _terminateMessage.call(this);
+      this._goldWindow.close = _close;
     };
   }
   Window_Message_KeepGoldWindowYMixIn(Window_Message.prototype);
