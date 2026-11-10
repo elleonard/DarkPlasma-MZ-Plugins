@@ -1,5 +1,5 @@
 /// <reference path="../../../typings/rmmz.d.ts" />
-/// <reference path="../../AllocateUniqueTraitId/AllocateUniqueTraitId.d.ts" />
+/// <reference path="../../AllocateUniqueTraitId/plugin/AllocateUniqueTraitId.d.ts" />
 /// <reference path="../../StateWithValue/plugin/StateWithValue.d.ts" />
 
 declare namespace MZ {
