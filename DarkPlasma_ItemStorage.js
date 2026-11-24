@@ -1,9 +1,11 @@
-// DarkPlasma_ItemStorage 1.7.0
+// DarkPlasma_ItemStorage 1.8.0
 // Copyright (c) 2022 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/11/24 1.8.0 configをTypeScript化
+ *                  倉庫に預けられる判定で預ける個数を指定可能にする
  * 2024/04/13 1.7.0 可能な限り預ける, 可能な限り引き出すプラグインコマンドの追加
  * 2023/12/17 1.6.1 倉庫に預けられる判定を整理
  * 2023/10/25 1.6.0 倉庫に預けるまたは引き出す数ウィンドウのインターフェースを公開
@@ -48,23 +50,23 @@
  * @command openStorage
  * @text 倉庫を開く
  * @arg item
- * @text アイテム表示
  * @desc カテゴリにアイテムを表示するか
+ * @text アイテム表示
  * @type boolean
  * @default true
  * @arg weapon
- * @text 武器表示
  * @desc カテゴリに武器を表示するか
+ * @text 武器表示
  * @type boolean
  * @default true
  * @arg armor
- * @text 防具表示
  * @desc カテゴリに防具を表示するか
+ * @text 防具表示
  * @type boolean
  * @default true
  * @arg keyItem
- * @text 大事なもの表示
  * @desc カテゴリに大事なものを表示するか
+ * @text 大事なもの表示
  * @type boolean
  * @default false
  *
@@ -74,15 +76,19 @@
  * @arg item
  * @text アイテムを預ける
  * @type boolean
+ * @default false
  * @arg weapon
  * @text 武器を預ける
  * @type boolean
+ * @default false
  * @arg armor
  * @text 防具を預ける
  * @type boolean
+ * @default false
  * @arg keyItem
  * @text 大事なものを預ける
  * @type boolean
+ * @default false
  *
  * @command fetchAll
  * @text 可能な限り引き出す
@@ -90,18 +96,22 @@
  * @arg item
  * @text アイテムを引き出す
  * @type boolean
+ * @default false
  * @arg weapon
  * @text 武器を引き出す
  * @type boolean
+ * @default false
  * @arg armor
  * @text 防具を引き出す
  * @type boolean
+ * @default false
  * @arg keyItem
  * @text 大事なものを引き出す
  * @type boolean
+ * @default false
  *
  * @help
- * version: 1.7.0
+ * version: 1.8.0
  * アイテム倉庫シーンを提供します。
  * プラグインコマンドで倉庫を開くことができます。
  */
@@ -136,19 +146,19 @@
 
   function parseArgs_storeAll(args) {
     return {
-      item: String(args.item || undefined) === 'true',
-      weapon: String(args.weapon || undefined) === 'true',
-      armor: String(args.armor || undefined) === 'true',
-      keyItem: String(args.keyItem || undefined) === 'true',
+      item: String(args.item || false) === 'true',
+      weapon: String(args.weapon || false) === 'true',
+      armor: String(args.armor || false) === 'true',
+      keyItem: String(args.keyItem || false) === 'true',
     };
   }
 
   function parseArgs_fetchAll(args) {
     return {
-      item: String(args.item || undefined) === 'true',
-      weapon: String(args.weapon || undefined) === 'true',
-      armor: String(args.armor || undefined) === 'true',
-      keyItem: String(args.keyItem || undefined) === 'true',
+      item: String(args.item || false) === 'true',
+      weapon: String(args.weapon || false) === 'true',
+      armor: String(args.armor || false) === 'true',
+      keyItem: String(args.keyItem || false) === 'true',
     };
   }
 
@@ -322,8 +332,11 @@
     fetchItem(item, amount) {
       this.storeItem(item, -amount);
     }
-    canStoreItem(item) {
-      return this.numItems(item) < settings.maxItems;
+    canStoreItem(item, amount) {
+      if (amount === undefined) {
+        amount = 1;
+      }
+      return this.numItems(item) + amount <= settings.maxItems;
     }
   }
   /**

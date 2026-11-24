@@ -1,9 +1,11 @@
-// DarkPlasma_AutoStoreItemToStorage 1.0.0
+// DarkPlasma_AutoStoreItemToStorage 1.0.1
 // Copyright (c) 2023 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/11/24 1.0.1 設定値をTypeScript移行
+ *                  Game_Party#gainItemの型定義変更に追従
  * 2023/04/16 1.0.0 公開
  */
 
@@ -18,7 +20,7 @@
  * @base DarkPlasma_ItemStorage
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 入手するアイテムのうち、
  * 所持限界を超える数を自動で倉庫に送ります。
  *
@@ -60,7 +62,7 @@
   function Game_Party_AutoStoreItemMixIn(gameParty) {
     const _gainItem = gameParty.gainItem;
     gameParty.gainItem = function (item, amount, includeEquip) {
-      if ($gameTemp.isAutoStoreItemEnabled()) {
+      if ($gameTemp.isAutoStoreItemEnabled() && item) {
         const autoStoreAmount = this.autoStoreAmount(item, amount);
         if (autoStoreAmount > 0) {
           this.storageItems().storeItem(item, autoStoreAmount);
