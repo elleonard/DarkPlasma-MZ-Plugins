@@ -38,7 +38,7 @@ Game_Temp_AutoStoreItemMixIn(Game_Temp.prototype);
 function Game_Party_AutoStoreItemMixIn(gameParty: Game_Party) {
   const _gainItem = gameParty.gainItem;
   gameParty.gainItem = function (item, amount, includeEquip) {
-    if ($gameTemp.isAutoStoreItemEnabled()) {
+    if ($gameTemp.isAutoStoreItemEnabled() && item) {
       const autoStoreAmount = this.autoStoreAmount(item, amount);
       if (autoStoreAmount > 0) {
         this.storageItems().storeItem(item, autoStoreAmount);

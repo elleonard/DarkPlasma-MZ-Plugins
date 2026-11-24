@@ -1,5 +1,5 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../ItemStorage/plugin/ItemStorage.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../ItemStorage/plugin/ItemStorage.d.ts" />
 
 declare interface Game_Temp {
   _isAutoStoreItemEnabled: boolean;
