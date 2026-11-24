@@ -1,9 +1,10 @@
-// DarkPlasma_SkillCostExtension 1.3.5
+// DarkPlasma_SkillCostExtension 1.3.6
 // Copyright (c) 2020 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/11/24 1.3.6 HP,お金,アイテム,変数コスト0以下の場合に支払い可否判定をしない
  * 2026/07/31 1.3.5 configをTypeScript化
  * 2023/05/15 1.3.4 typescript移行
  * 2022/04/19 1.3.3 コストの記述が不正であった場合にエラーでゲームを止めるように変更
@@ -35,7 +36,7 @@
  * @default true
  *
  * @help
- * version: 1.3.5
+ * version: 1.3.6
  * スキルのメモ欄に以下のように記述するとコストを追加できます。
  *
  * <SkillCost:
@@ -303,17 +304,21 @@
       return [];
     };
     gameBattlerBase.canPaySkillHpCost = function (skill) {
-      return this._hp > this.skillHpCost(skill);
+      const cost = this.skillHpCost(skill);
+      return cost <= 0 || this._hp > cost;
     };
     gameBattlerBase.canPaySkillGoldCost = function (skill) {
-      return $gameParty.gold() >= this.skillGoldCost(skill);
+      const cost = this.skillGoldCost(skill);
+      return cost <= 0 || $gameParty.gold() >= cost;
     };
     gameBattlerBase.canPaySkillItemCost = function (skill) {
-      return !this.skillItemCosts(skill).some((item) => $gameParty.numItemsForDisplay($dataItems[item.id]) < item.num);
+      return this.skillItemCosts(skill).every(
+        (item) => item.num <= 0 || $gameParty.numItemsForDisplay($dataItems[item.id]) >= item.num,
+      );
     };
     gameBattlerBase.canPaySkillVariableCost = function (skill) {
-      return !this.skillVariableCosts(skill).some((variable) => {
-        return $gameVariables.value(variable.id) < variable.num;
+      return this.skillVariableCosts(skill).every((variable) => {
+        return variable.num <= 0 || $gameVariables.value(variable.id) >= variable.num;
       });
     };
     const _canPaySkillCost = gameBattlerBase.canPaySkillCost;
