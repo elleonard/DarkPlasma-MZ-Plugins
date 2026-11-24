@@ -1,5 +1,5 @@
-/// <reference path="../../typings/rmmz.d.ts" />
-/// <reference path="../OrderEquip/OrderEquip.d.ts" />
+/// <reference path="../../../typings/rmmz.d.ts" />
+/// <reference path="../../OrderEquip/OrderEquip.d.ts" />
 
 declare interface StorageCategories {
   categories(): string[];
@@ -17,7 +17,7 @@ declare interface Game_StorageItems {
   hasItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
   allItems(): (MZ.Item|MZ.Weapon|MZ.Armor)[];
   maxItems(): number;
-  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean;
+  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount?: number): boolean;
 }
 
 declare interface Game_Temp {

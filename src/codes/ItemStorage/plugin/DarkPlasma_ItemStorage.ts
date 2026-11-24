@@ -1,7 +1,7 @@
-import { orderIdSort } from '../../common/orderIdSort';
-import { pluginName } from '../../common/pluginName';
-import { command_fetchAll, command_openStorage, command_storeAll, parseArgs_fetchAll, parseArgs_openStorage, parseArgs_storeAll } from './_build/DarkPlasma_ItemStorage_commands';
-import { settings } from './_build/DarkPlasma_ItemStorage_parameters';
+import { orderIdSort } from '../../../common/orderIdSort';
+import { pluginName } from '../../../common/pluginName';
+import { command_fetchAll, command_openStorage, command_storeAll, parseArgs_fetchAll, parseArgs_openStorage, parseArgs_storeAll } from '../config/_build/DarkPlasma_ItemStorage_commands';
+import { settings } from '../config/_build/DarkPlasma_ItemStorage_parameters';
 
 PluginManager.registerCommand(pluginName, command_openStorage, function (args) {
   const parsedArgs = parseArgs_openStorage(args);
@@ -195,8 +195,11 @@ class Game_StorageItems {
     this.storeItem(item, -amount);
   }
 
-  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor): boolean {
-    return this.numItems(item) < settings.maxItems;
+  canStoreItem(item: MZ.Item|MZ.Weapon|MZ.Armor, amount?: number): boolean {
+    if (amount === undefined) {
+      amount = 1;
+    }
+    return this.numItems(item) + amount <= settings.maxItems;
   }
 }
 
