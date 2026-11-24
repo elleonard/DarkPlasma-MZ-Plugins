@@ -241,20 +241,23 @@ function Game_BattlerBase_SkillCostExtensionMixIn(gameBattlerBase: Game_BattlerB
   };
 
   gameBattlerBase.canPaySkillHpCost = function (skill) {
-    return this._hp > this.skillHpCost(skill);
+    const cost = this.skillHpCost(skill);
+    return cost <= 0 || this._hp > cost;
   };
 
   gameBattlerBase.canPaySkillGoldCost = function (skill) {
-    return $gameParty.gold() >= this.skillGoldCost(skill);
+    const cost = this.skillGoldCost(skill);
+    return cost <= 0 || $gameParty.gold() >= cost;
   };
 
   gameBattlerBase.canPaySkillItemCost = function (skill) {
-    return !this.skillItemCosts(skill).some((item) => $gameParty.numItemsForDisplay($dataItems[item.id]) < item.num);
+    return this.skillItemCosts(skill)
+      .every((item) => item.num <= 0 || $gameParty.numItemsForDisplay($dataItems[item.id]) >= item.num);
   };
 
   gameBattlerBase.canPaySkillVariableCost = function (skill) {
-    return !this.skillVariableCosts(skill).some((variable) => {
-      return $gameVariables.value(variable.id) < variable.num;
+    return this.skillVariableCosts(skill).every((variable) => {
+      return variable.num <= 0 || $gameVariables.value(variable.id) >= variable.num;
     });
   };
 

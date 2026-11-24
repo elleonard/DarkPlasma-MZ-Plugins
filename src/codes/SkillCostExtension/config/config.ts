@@ -5,6 +5,11 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/11/24",
+    version: "1.3.6",
+    description: "HP,お金,アイテム,変数コスト0以下の場合に支払い可否判定をしない",
+  },
+  {
     date: "2026/07/31",
     version: "1.3.5",
     description: "configをTypeScript化",

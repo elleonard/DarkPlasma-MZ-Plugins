@@ -8,6 +8,7 @@ DarkPlasma_*.js
 src/common/**/*.js
 src/excludes/
 src/excludeCommon/
+src/excludePlugins/
 src/.gitignore
 src/.gitattributes
 release/
