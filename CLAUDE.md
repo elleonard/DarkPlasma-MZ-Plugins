@@ -21,3 +21,4 @@ src/codes, src/excludes 以下のディレクトリは、それぞれが独立�
 - `yarn generate (プラグイン識別名) e` - src/excludes以下にプラグインのプロジェクトを作成します
 - `yarn build:config --target (プラグイン識別名)` - 対象プラグインのconfigをビルドします。 `--exclude` オプションを追加するとsrc/excludes以下のプラグインを対象にします。
 - `yarn build --target (プラグイン識別名)` - 対象プラグインをビルドします。 `--exclude` オプションを追加するとsrc/excludes以下のプラグインを対象にします。
+- `yarn clean:dist` - ビルド済みプラグインの成果物をクリアします。ビルド前に実行します。

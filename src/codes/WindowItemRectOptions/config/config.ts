@@ -5,6 +5,14 @@ import { dedent } from '@qnighy/dedent';
 
 const histories: PluginHistorySchema[] = [
   {
+    date: "2026/11/27",
+    version: "1.0.1",
+    description: "カーソル自動スクロールにオフセット設定を適用",
+  },
+  {
+    description: "スクロール可能な高さに縦方向オフセットを含める",
+  },
+  {
     date: "2026/08/22",
     version: "1.0.0",
     description: "最初のバージョン",

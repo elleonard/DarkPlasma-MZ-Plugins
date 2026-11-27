@@ -18,4 +18,6 @@ declare interface Window_Selectable {
 
   itemRectOffsetX(): number;
   itemRectOffsetY(): number;
+
+  itemTop(row: number): number;
 }
