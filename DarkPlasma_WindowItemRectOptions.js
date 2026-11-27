@@ -1,9 +1,11 @@
-// DarkPlasma_WindowItemRectOptions 1.0.0
+// DarkPlasma_WindowItemRectOptions 1.0.1
 // Copyright (c) 2026 DarkPlasma
 // This software is released under the MIT license.
 // http://opensource.org/licenses/mit-license.php
 
 /**
+ * 2026/11/27 1.0.1 カーソル自動スクロールにオフセット設定を適用
+ *                  スクロール可能な高さに縦方向オフセットを含める
  * 2026/08/22 1.0.0 最初のバージョン
  */
 
@@ -16,7 +18,7 @@
  * @url https://github.com/elleonard/DarkPlasma-MZ-Plugins/tree/release
  *
  * @help
- * version: 1.0.0
+ * version: 1.0.1
  * 以下のインターフェースで選択肢ウィンドウの矩形領域をカスタマイズできます。
  *
  * Window_Selectable.prototype.setItemRectOptions(options: WindowItemRectOptions): void;
@@ -81,6 +83,37 @@
       rect.x += this.itemRectOffsetX();
       rect.y += this.itemRectOffsetY();
       return rect;
+    };
+    const _overallHeight = windowSelectable.overallHeight;
+    windowSelectable.overallHeight = function () {
+      return _overallHeight.call(this) + this.itemRectOffsetY();
+    };
+    windowSelectable.itemTop = function (row) {
+      return row * this.itemHeight() + this.itemRectOffsetY();
+    };
+    const _ensureCursorVisible = windowSelectable.ensureCursorVisible;
+    windowSelectable.ensureCursorVisible = function (smooth) {
+      if (this._cursorAll) {
+        _ensureCursorVisible.call(this, smooth);
+      } else if (this.innerHeight > 0 && this.row() >= 0) {
+        const scrollY = this.scrollY();
+        const itemTop = this.itemTop(this.row());
+        const itemBottom = itemTop + this.itemHeight();
+        const scrollMin = itemBottom - this.innerHeight;
+        if (scrollY > itemTop) {
+          if (smooth) {
+            this.smoothScrollTo(0, itemTop);
+          } else {
+            this.scrollTo(0, itemTop);
+          }
+        } else if (scrollY < scrollMin) {
+          if (smooth) {
+            this.smoothScrollTo(0, scrollMin);
+          } else {
+            this.scrollTo(0, scrollMin);
+          }
+        }
+      }
     };
   }
   Window_Selectable_ItemRectOptionsMixIn(Window_Selectable.prototype);
